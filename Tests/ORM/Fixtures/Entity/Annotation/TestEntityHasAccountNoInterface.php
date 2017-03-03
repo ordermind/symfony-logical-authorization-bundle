@@ -8,35 +8,26 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
 /**
- * TestEntity
+ * TestEntityHasAccountNoInterface
  *
- * @ORM\Table(name="testentities_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityRepository")
+ * @ORM\Table(name="testentities_hasaccount_annotation")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityHasAccountNoInterfaceRepository")
  * @LogicalAuthorization({
  *   "create": {
- *     "role": "ROLE_ADMIN"
+ *     "flag": "has_account"
  *   },
  *   "read": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
+ *     "flag": "has_account"
  *   },
  *   "update": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
+ *     "flag": "has_account"
  *   },
  *   "delete": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
+ *     "flag": "has_account"
  *   }
  * })
  */
-class TestEntity implements ModelInterface
+class TestEntityHasAccountNoInterface
 {
     /**
      * @var int
@@ -53,10 +44,10 @@ class TestEntity implements ModelInterface
      * @ORM\Column(name="field1", type="string", length=255)
      * @LogicalAuthorization({
      *   "get": {
-     *     "role": "ROLE_ADMIN"
+     *     "flag": "has_account"
      *   },
      *   "set": {
-     *     "role": "ROLE_ADMIN"
+     *     "flag": "has_account"
      *   }
      * })
      */
@@ -98,7 +89,7 @@ class TestEntity implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestEntity
+     * @return TestEntityHasAccountNoInterface
      */
     public function setField1($field1)
     {
@@ -122,7 +113,7 @@ class TestEntity implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestEntity
+     * @return TestEntityHasAccountNoInterface
      */
     public function setField2($field2)
     {
@@ -146,7 +137,7 @@ class TestEntity implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestEntity
+     * @return TestEntityHasAccountNoInterface
      */
     public function setField3($field3)
     {

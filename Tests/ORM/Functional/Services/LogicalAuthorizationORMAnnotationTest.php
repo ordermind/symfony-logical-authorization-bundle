@@ -10,11 +10,16 @@ class LogicalAuthorizationORMAnnotationTest extends LogicalAuthorizationORMBase
   protected function setUp() {
     parent::setUp();
 
-    $this->testEntityRepositoryManager = $this->container->get('repository_manager.test_entity_annotation');
+    $this->testEntityRoleAuthorRepositoryManager = $this->container->get('repository_manager.test_entity_roleauthor_annotation');
+    $this->testEntityHasAccountNoInterfaceRepositoryManager = $this->container->get('repository_manager.test_entity_hasaccount_annotation');
     $this->testEntityNoBypassRepositoryManager = $this->container->get('repository_manager.test_entity_nobypass_annotation');
     $this->testUserRepositoryManager = $this->container->get('repository_manager.test_user_annotation');
 
-    $this->deleteAll($this->testEntityRepositoryManager);
+    $this->deleteAll(array(
+      $this->testEntityRoleAuthorRepositoryManager,
+      $this->testEntityHasAccountNoInterfaceRepositoryManager,
+      $this->testEntityNoBypassRepositoryManager,
+    ));
     $this->addUsers();
   }
 }

@@ -36,12 +36,14 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->client = static::createClient();
   }
 
-  protected function deleteAll($repositoryManager) {
-    $modelManagers = $repositoryManager->findAll();
-    foreach($modelManagers as $modelManager) {
-      $modelManager->delete(false);
+  protected function deleteAll($managers) {
+    foreach($managers as $repositoryManager) {
+      $modelManagers = $repositoryManager->findAll();
+      foreach($modelManagers as $modelManager) {
+        $modelManager->delete(false);
+      }
+      $repositoryManager->getObjectManager()->flush();
     }
-    $repositoryManager->getObjectManager()->flush();
   }
 
   protected function addUsers() {
@@ -75,8 +77,9 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   /*------------RepositoryManager event tests------------*/
 
   public function testOnUnknownResultRoleAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
     $this->testEntityOperations->createTestEntity(static::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-unknown-result', static::$admin_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $entities_count = $response->getContent();
@@ -84,8 +87,9 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   }
 
   public function testOnUnknownResultRoleDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
     $this->testEntityOperations->createTestEntity(static::$admin_user);
-    $entities_count = $this->sendRequestAs('GET', '/test/count-unknown-result', static::$authenticated_user);
+    $entities_count = $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $entities_count = $response->getContent();
@@ -96,8 +100,9 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   }
 
   public function testOnUnknownResultFlagBypassAccessAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
     $this->testEntityOperations->createTestEntity(static::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-unknown-result', static::$superadmin_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $entities_count = $response->getContent();
@@ -107,7 +112,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   public function testOnUnknownResultFlagBypassAccessDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
     $this->testEntityOperations->createTestEntity(static::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-unknown-result', static::$superadmin_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result-nobypass', static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $entities_count = $response->getContent();

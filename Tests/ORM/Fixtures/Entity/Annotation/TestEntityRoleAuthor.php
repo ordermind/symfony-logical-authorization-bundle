@@ -8,30 +8,35 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
 /**
- * TestEntityNoBypass
+ * TestEntityRoleAuthor
  *
- * @ORM\Table(name="testentities_nobypass_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityNoBypassRepository")
+ * @ORM\Table(name="testentities_roleauthor_annotation")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityRoleAuthorRepository")
  * @LogicalAuthorization({
  *   "create": {
- *     "no_bypass": true,
- *     FALSE
+ *     "role": "ROLE_ADMIN"
  *   },
  *   "read": {
- *     "no_bypass": true,
- *     FALSE
+ *     "OR": {
+ *       "role": "ROLE_ADMIN",
+ *       "flag": "is_author"
+ *     }
  *   },
  *   "update": {
- *     "no_bypass": true,
- *     FALSE
+ *     "OR": {
+ *       "role": "ROLE_ADMIN",
+ *       "flag": "is_author"
+ *     }
  *   },
  *   "delete": {
- *     "no_bypass": true,
- *     FALSE
+ *     "OR": {
+ *       "role": "ROLE_ADMIN",
+ *       "flag": "is_author"
+ *     }
  *   }
  * })
  */
-class TestEntityNoBypass implements ModelInterface
+class TestEntityRoleAuthor implements ModelInterface
 {
     /**
      * @var int
@@ -48,12 +53,10 @@ class TestEntityNoBypass implements ModelInterface
      * @ORM\Column(name="field1", type="string", length=255)
      * @LogicalAuthorization({
      *   "get": {
-     *     "no_bypass": true,
-     *     FALSE
+     *     "role": "ROLE_ADMIN"
      *   },
      *   "set": {
-     *     "no_bypass": true,
-     *     FALSE
+     *     "role": "ROLE_ADMIN"
      *   }
      * })
      */
@@ -95,7 +98,7 @@ class TestEntityNoBypass implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestEntityNoBypass
+     * @return TestEntityRoleAuthor
      */
     public function setField1($field1)
     {
@@ -119,7 +122,7 @@ class TestEntityNoBypass implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestEntityNoBypass
+     * @return TestEntityRoleAuthor
      */
     public function setField2($field2)
     {
@@ -143,7 +146,7 @@ class TestEntityNoBypass implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestEntityNoBypass
+     * @return TestEntityRoleAuthor
      */
     public function setField3($field3)
     {

@@ -1,9 +1,15 @@
 services:
-  repository_manager.test_entity_annotation:
+  repository_manager.test_entity_roleauthor_annotation:
     class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
-      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntity
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityRoleAuthor
+
+  repository_manager.test_entity_hasaccount_annotation:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityHasAccountNoInterface
 
   repository_manager.test_entity_nobypass_annotation:
     class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
@@ -19,5 +25,3 @@ services:
 
   test_entity_operations:
     class: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Services\TestEntityOperations
-    calls:
-        - [setRepositoryManager, ['@repository_manager.test_entity_annotation']]
