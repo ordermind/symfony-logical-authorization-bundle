@@ -32,12 +32,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->container = $kernel->getContainer();
     $this->laRoute = $this->container->get('ordermind_logical_authorization.service.logical_authorization_route');
     $this->laModel = $this->container->get('ordermind_logical_authorization.service.logical_authorization_model');
-    $this->testEntityRepositoryManager = $this->container->get('repository_manager.test_entity_annotation');
-    $this->testUserRepositoryManager = $this->container->get('repository_manager.test_user_annotation');
     $this->testEntityOperations = $this->container->get('test_entity_operations');
-
-    $this->deleteAll($this->testEntityRepositoryManager);
-    $this->addUsers();
     $this->client = static::createClient();
   }
 
