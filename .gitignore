@@ -1,0 +1,7 @@
+/app
+/vendor
+/composer*
+!/composer.json
+/*.sh
+/Tests/*/cache
+/Tests/*/logs

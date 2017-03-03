@@ -1,0 +1,17 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestUser:
+            algorithm: bcrypt
+            cost: 15
+
+    providers:
+        user_provider:
+            entity:
+                class: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestUser
+                property: username
+
+    firewalls:
+        default:
+            http_basic: ~

@@ -1,0 +1,101 @@
+services:
+
+  # Core services
+
+  ordermind_logical_authorization.cache_warmer.permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\PermissionsCacheWarmer
+    arguments: ['@ordermind_logical_authorization.service.permission_tree_manager']
+    tags:
+      - {name: kernel.cache_warmer}
+    public: false
+
+  ordermind_logical_authorization.service.logical_permissions_manager:
+    class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager
+
+  ordermind_logical_authorization.event_listener.route_authorization:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\RouteAuthorizationListener
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization_route']
+    tags:
+      - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
+
+  ordermind_logical_authorization.event_listener.add_route_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
+    arguments: ['@router']
+    tags:
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 254}
+
+  ordermind_logical_authorization.service.user_helper:
+    class: Ordermind\LogicalAuthorizationBundle\Services\UserHelper
+    arguments: ['@security.token_storage']
+
+  ordermind_logical_authorization.service.permission_tree_manager:
+    class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManager
+    arguments: [%kernel.root_dir%, '@ordermind_logical_authorization.service.logical_permissions_manager', '@event_dispatcher']
+
+  ordermind_logical_authorization.service.logical_authorization_route:
+    class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@router', '@ordermind_logical_authorization.service.user_helper']
+
+  ordermind_logical_authorization.service.logical_authorization_model:
+    class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@ordermind_logical_authorization.service.user_helper']
+
+  ordermind_logical_authorization.service.logical_authorization:
+    class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
+    arguments: ['@ordermind_logical_authorization.service.logical_permissions_manager', '@?logger']
+
+  # Permission type handlers
+
+  ordermind_logical_authorization.permission_type.flag:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager
+    tags:
+      - {name: ordermind_logical_authorization.tag.permission_type}
+
+  ordermind_logical_authorization.permission_type.flag.bypass_access:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess
+    tags:
+      - {name: ordermind_logical_authorization.tag.permission_type.flag}
+
+  ordermind_logical_authorization.permission_type.flag.has_account:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount
+    tags:
+      - {name: ordermind_logical_authorization.tag.permission_type.flag}
+
+  ordermind_logical_authorization.permission_type.flag.is_author:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor
+    tags:
+      - {name: ordermind_logical_authorization.tag.permission_type.flag}
+
+  ordermind_logical_authorization.permission_type.role:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role
+    tags:
+      - {name: ordermind_logical_authorization.tag.permission_type}
+
+  # Doctrine-related services
+
+  ordermind_logical_authorization.event_listener.add_doctrine_annotation_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrineAnnotationPermissions
+    arguments: ['@?doctrine', '@?annotation_reader']
+    tags:
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 255}
+
+  ordermind_logical_authorization.service.repository_manager_factory:
+      class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManagerFactory
+      calls:
+          - [setManagerRegistry, ['@ordermind_doctrine_manager.service.manager_registry']]
+          - [setModelManagerFactory, ['@ordermind_doctrine_manager.service.model_manager_factory']]
+          - [setDispatcher, ['@event_dispatcher']]
+          - [setUserHelper, ['@ordermind_logical_authorization.service.user_helper']]
+
+  ordermind_logical_authorization.event_subscriber.repository_manager:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\RepositoryManagerSubscriber
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization_model', '%ordermind_logical_authorization.config%']
+    tags:
+      - {name: kernel.event_subscriber}
+
+  ordermind_logical_authorization.event_subscriber.model_manager:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\ModelManagerSubscriber
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization_model']
+    tags:
+      - {name: kernel.event_subscriber}
+
