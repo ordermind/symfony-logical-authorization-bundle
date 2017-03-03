@@ -3,7 +3,6 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
@@ -44,7 +43,6 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuth
  */
 class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
 {
-  const bcryptStrength = 15;
   /**
    * @var string
    *
@@ -182,8 +180,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
    */
   public function setPassword($password)
   {
-    $encoder = new BCryptPasswordEncoder(static::bcryptStrength);
-    $this->password = $encoder->encodePassword($password, $this->getSalt());
+    $this->password = $password;
 
     return $this;
   }
