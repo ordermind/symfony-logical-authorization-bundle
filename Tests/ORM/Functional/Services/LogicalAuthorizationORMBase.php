@@ -147,11 +147,26 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   }
 
   public function testOnUnknownResultFlagIsAuthorAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnUnknownResultFlagIsAuthorDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnSingleModelResultRoleAllow() {
