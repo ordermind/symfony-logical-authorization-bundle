@@ -10,9 +10,22 @@ use Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface;
 class TestEntityOperations {
   private $repositoryManager;
 
-  public function __construct(RepositoryManagerInterface $repositoryManager) {
+  public function setRepositoryManager(RepositoryManagerInterface $repositoryManager) {
     $this->repositoryManager = $repositoryManager;
   }
+
+  public function getUnknownResult($bypassAccess = false) {
+    if($bypassAccess) {
+      $models = $this->repositoryManager->getRepository()->customMethod();
+      return $this->repositoryManager->wrapModels($models);
+    }
+    return $this->repositoryManager->customMethod();
+  }
+
+
+
+
+
 
   public function findTestEntities($bypassAccess = false) {
     if($bypassAccess) {

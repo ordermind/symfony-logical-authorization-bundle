@@ -8,27 +8,30 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
 /**
- * TestEntity
+ * TestEntityNoBypass
  *
- * @ORM\Table(name="testentities_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityRepository")
+ * @ORM\Table(name="testentities_nobypass_annotation")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityNoBypassRepository")
  * @LogicalAuthorization({
  *   "create": {
  *     "role": "ROLE_ADMIN"
  *   },
  *   "read": {
+ *     "no_bypass": true,
  *     "OR": {
  *       "role": "ROLE_ADMIN",
  *       "flag": "is_author"
  *     }
  *   },
  *   "update": {
+ *     "no_bypass": true,
  *     "OR": {
  *       "role": "ROLE_ADMIN",
  *       "flag": "is_author"
  *     }
  *   },
  *   "delete": {
+ *     "no_bypass": true,
  *     "OR": {
  *       "role": "ROLE_ADMIN",
  *       "flag": "is_author"
@@ -36,7 +39,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
  *   }
  * })
  */
-class TestEntity implements ModelInterface
+class TestEntityNoBypass implements ModelInterface
 {
     /**
      * @var int
@@ -53,9 +56,11 @@ class TestEntity implements ModelInterface
      * @ORM\Column(name="field1", type="string", length=255)
      * @LogicalAuthorization({
      *   "get": {
+     *     "no_bypass": true,
      *     "role": "ROLE_ADMIN"
      *   },
      *   "set": {
+     *     "no_bypass": true,
      *     "role": "ROLE_ADMIN"
      *   }
      * })

@@ -46,22 +46,22 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   protected function addUsers() {
     //Create new normal user
-    if(!self::$authenticated_user) {
-      self::$authenticated_user = $this->testUserRepositoryManager->create('authenticated_user', $this->user_credentials['authenticated_user'], [], 'user@email.com');
-      self::$authenticated_user->save();
+    if(!static::$authenticated_user) {
+      static::$authenticated_user = $this->testUserRepositoryManager->create('authenticated_user', $this->user_credentials['authenticated_user'], [], 'user@email.com');
+      static::$authenticated_user->save();
     }
 
     //Create new admin user
-    if(!self::$admin_user) {
-      self::$admin_user = $this->testUserRepositoryManager->create('admin_user', $this->user_credentials['admin_user'], ['ROLE_ADMIN'], 'admin@email.com');
-      self::$admin_user->save();
+    if(!static::$admin_user) {
+      static::$admin_user = $this->testUserRepositoryManager->create('admin_user', $this->user_credentials['admin_user'], ['ROLE_ADMIN'], 'admin@email.com');
+      static::$admin_user->save();
     }
 
     //Create superadmin user
-    if(!self::$superadmin_user) {
-      self::$superadmin_user = $this->testUserRepositoryManager->create('superadmin_user', $this->user_credentials['superadmin_user'], [], 'superadmin@email.com');
-      self::$superadmin_user->setBypassAccess(true);
-      self::$superadmin_user->save();
+    if(!static::$superadmin_user) {
+      static::$superadmin_user = $this->testUserRepositoryManager->create('superadmin_user', $this->user_credentials['superadmin_user'], [], 'superadmin@email.com');
+      static::$superadmin_user->setBypassAccess(true);
+      static::$superadmin_user->save();
     }
   }
 
@@ -75,19 +75,43 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   /*------------RepositoryManager event tests------------*/
 
   public function testOnUnknownResultRoleAllow() {
-
+    $this->testEntityOperations->createTestEntity(static::$admin_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result', static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnUnknownResultRoleDisallow() {
-
+    $this->testEntityOperations->createTestEntity(static::$admin_user);
+    $entities_count = $this->sendRequestAs('GET', '/test/count-unknown-result', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnUnknownResultFlagBypassAccessAllow() {
-
+    $this->testEntityOperations->createTestEntity(static::$admin_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnUnknownResultFlagBypassAccessDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->testEntityOperations->createTestEntity(static::$admin_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnUnknownResultFlagHasAccountAllow() {
@@ -337,114 +361,114 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   /*----Create----*/
 
-  public function testCreateEntityAllowRole() {
-    $this->sendRequestAs('POST', '/test/create-entity', self::$admin_user);
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(1, count($entities));
-  }
-
-  public function testCreateEntityDisallow() {
-    $this->sendRequestAs('POST', '/test/create-entity', self::$authenticated_user);
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(0, count($entities));
-  }
-
-  public function testCreateEntityBypass() {
-    $this->sendRequestAs('POST', '/test/create-entity', self::$superadmin_user);
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(1, count($entities));
-  }
+//   public function testCreateEntityAllowRole() {
+//     $this->sendRequestAs('POST', '/test/create-entity', static::$admin_user);
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(1, count($entities));
+//   }
+//
+//   public function testCreateEntityDisallow() {
+//     $this->sendRequestAs('POST', '/test/create-entity', static::$authenticated_user);
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(0, count($entities));
+//   }
+//
+//   public function testCreateEntityBypass() {
+//     $this->sendRequestAs('POST', '/test/create-entity', static::$superadmin_user);
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(1, count($entities));
+//   }
 
   /*----Read----*/
 
-  public function testReadEntitiesAllowRole() {
-    $this->testEntityOperations->createTestEntity(self::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-entities', self::$admin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
-
-  public function testReadEntitiesAllowAuthor() {
-    $this->testEntityOperations->createTestEntity(self::$authenticated_user);
-    $this->sendRequestAs('GET', '/test/count-entities', self::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
-
-  public function testReadEntitiesDisallow() {
-    $this->testEntityOperations->createTestEntity(self::$admin_user);
-    $entities_count = $this->sendRequestAs('GET', '/test/count-entities', self::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(0, $entities_count);
-    //Kolla att entiteten fortfarande finns i databasen
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(1, count($entities));
-  }
-
-  public function testReadEntitiesNoBypass() {
-    $this->testEntityOperations->createTestEntity(self::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-entities', self::$superadmin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(0, $entities_count);
-    //Kolla att entiteten fortfarande finns i databasen
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(1, count($entities));
-  }
-
-  public function testReadEntitiesLazyLoadAllowRole() {
-    $this->testEntityOperations->createTestEntity(self::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-entities-lazy', self::$admin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
-
-  public function testReadEntitiesLazyLoadAllowAuthor() {
-    $this->testEntityOperations->createTestEntity(self::$authenticated_user);
-    $this->sendRequestAs('GET', '/test/count-entities-lazy', self::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
-
-  public function testReadEntitiesLazyLoadDisallow() {
-    $this->testEntityOperations->createTestEntity(self::$admin_user);
-    $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy', self::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(0, $entities_count);
-    //Kolla att entiteten fortfarande finns i databasen
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(1, count($entities));
-  }
-
-  public function testReadEntitiesLazyLoadNoBypass() {
-    $this->testEntityOperations->createTestEntity(self::$admin_user);
-    $this->sendRequestAs('GET', '/test/count-entities-lazy', self::$superadmin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(0, $entities_count);
-    //Kolla att entiteten fortfarande finns i databasen
-    $entities = $this->testEntityOperations->findTestEntities();
-    $this->assertEquals(1, count($entities));
-  }
+//   public function testReadEntitiesAllowRole() {
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->sendRequestAs('GET', '/test/count-entities', static::$admin_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(1, $entities_count);
+//   }
+//
+//   public function testReadEntitiesAllowAuthor() {
+//     $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+//     $this->sendRequestAs('GET', '/test/count-entities', static::$authenticated_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(1, $entities_count);
+//   }
+//
+//   public function testReadEntitiesDisallow() {
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $entities_count = $this->sendRequestAs('GET', '/test/count-entities', static::$authenticated_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(0, $entities_count);
+//     //Kolla att entiteten fortfarande finns i databasen
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(1, count($entities));
+//   }
+//
+//   public function testReadEntitiesNoBypass() {
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->sendRequestAs('GET', '/test/count-entities', static::$superadmin_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(0, $entities_count);
+//     //Kolla att entiteten fortfarande finns i databasen
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(1, count($entities));
+//   }
+//
+//   public function testReadEntitiesLazyLoadAllowRole() {
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$admin_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(1, $entities_count);
+//   }
+//
+//   public function testReadEntitiesLazyLoadAllowAuthor() {
+//     $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+//     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$authenticated_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(1, $entities_count);
+//   }
+//
+//   public function testReadEntitiesLazyLoadDisallow() {
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$authenticated_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(0, $entities_count);
+//     //Kolla att entiteten fortfarande finns i databasen
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(1, count($entities));
+//   }
+//
+//   public function testReadEntitiesLazyLoadNoBypass() {
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$superadmin_user);
+//     $response = $this->client->getResponse();
+//     $this->assertEquals(200, $response->getStatusCode());
+//     $entities_count = $response->getContent();
+//     $this->assertEquals(0, $entities_count);
+//     //Kolla att entiteten fortfarande finns i databasen
+//     $entities = $this->testEntityOperations->findTestEntities();
+//     $this->assertEquals(1, count($entities));
+//   }
 
 //   /*----Read field-----*/
 //   public function testReadField1AllowRole() {
-//     $this->testEntityOperations->createTestEntity(self::$admin_user);
-//     $this->sendRequestAs('GET', '/test/read-field-1', self::$admin_user);
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->sendRequestAs('GET', '/test/read-field-1', static::$admin_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
 //     $entities_count = $response->getContent();
@@ -453,7 +477,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
 //   /*----Update field----*/
 //   public function testUpdateEntityAllowRole() {
-//     $this->testEntityOperations->createTestEntity(self::$admin_user);
-//     $this->sendRequestAs('GET', '/test/count-entities', self::$admin_user);
+//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->sendRequestAs('GET', '/test/count-entities', static::$admin_user);
 //   }
 }

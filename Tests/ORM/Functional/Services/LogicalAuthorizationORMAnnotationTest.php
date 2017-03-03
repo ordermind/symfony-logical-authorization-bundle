@@ -11,6 +11,7 @@ class LogicalAuthorizationORMAnnotationTest extends LogicalAuthorizationORMBase
     parent::setUp();
 
     $this->testEntityRepositoryManager = $this->container->get('repository_manager.test_entity_annotation');
+    $this->testEntityNoBypassRepositoryManager = $this->container->get('repository_manager.test_entity_nobypass_annotation');
     $this->testUserRepositoryManager = $this->container->get('repository_manager.test_user_annotation');
 
     $this->deleteAll($this->testEntityRepositoryManager);

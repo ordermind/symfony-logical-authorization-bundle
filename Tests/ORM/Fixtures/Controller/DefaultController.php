@@ -12,27 +12,21 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use AppBundle\Entity\TestEntity;
 
 class DefaultController extends Controller {
-  /**
-    * @Route("/authenticated", name="test_authenticated", options={
-    *  "logical_authorization": {
-    *     "role": "ROLE_USER"
-    *   }
-    * })
-    */
-  public function authenticatedAction(Request $request) {
-    return new Response('');
-  }
 
   /**
-    * @Route("/admin", name="test_admin", options={
-    *  "logical_authorization": {
-    *     "role": "ROLE_ADMIN"
-    *   }
-    * })
+    * @Route("/count-unknown-result", name="unknown_result")
+    * @Method({"GET"})
     */
-  public function adminAction(Request $request) {
-    return new Response('');
+  public function countUnknownResultAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $result = $operations->getUnknownResult();
+    return new Response(count($result));
   }
+
+
+
+
+
 
   /**
     * @Route("/create-entity", name="test_create_entity")
