@@ -72,6 +72,267 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     ));
   }
 
+  /*------------RepositoryManager event tests------------*/
+
+  public function testOnUnknownResultRoleAllow() {
+
+  }
+
+  public function testOnUnknownResultRoleDisallow() {
+
+  }
+
+  public function testOnUnknownResultFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnUnknownResultFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnUnknownResultFlagHasAccountAllow() {
+
+  }
+
+  public function testOnUnknownResultFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnUnknownResultFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnUnknownResultFlagIsAuthorDisallow() {
+
+  }
+
+  public function testOnSingleModelResultRoleAllow() {
+
+  }
+
+  public function testOnSingleModelResultRoleDisallow() {
+
+  }
+
+  public function testOnSingleModelResultFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnSingleModelResultFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnSingleModelResultFlagHasAccountAllow() {
+
+  }
+
+  public function testOnSingleModelResultFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnSingleModelResultFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnSingleModelResultFlagIsAuthorDisallow() {
+
+  }
+
+
+  public function testOnMultipleModelResultRoleAllow() {
+
+  }
+
+  public function testOnMultipleModelResultRoleDisallow() {
+
+  }
+
+  public function testOnMultipleModelResultFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnMultipleModelResultFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnMultipleModelResultFlagHasAccountAllow() {
+
+  }
+
+  public function testOnMultipleModelResultFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnMultipleModelResultFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnMultipleModelResultFlagIsAuthorDisallow() {
+
+  }
+
+  public function testOnBeforeCreateRoleAllow() {
+
+  }
+
+  public function testOnBeforeCreateRoleDisallow() {
+
+  }
+
+  public function testOnBeforeCreateFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnBeforeCreateFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnBeforeCreateFlagHasAccountAllow() {
+
+  }
+
+  public function testOnBeforeCreateFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnBeforeCreateFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnBeforeCreateFlagIsAuthorDisallow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultRoleAllow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultRoleDisallow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultFlagHasAccountAllow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnLazyModelCollectionResultFlagIsAuthorDisallow() {
+
+  }
+
+  /*----------ModelManager event tests------------*/
+
+  public function testOnBeforeMethodCallRoleAllow() {
+
+  }
+
+  public function testOnBeforeMethodCallRoleDisallow() {
+
+  }
+
+  public function testOnBeforeMethodCallFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnBeforeMethodCallFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnBeforeMethodCallFlagHasAccountAllow() {
+
+  }
+
+  public function testOnBeforeMethodCallFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnBeforeMethodCallFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnBeforeMethodCallFlagIsAuthorDisallow() {
+
+  }
+
+  public function testOnBeforeSaveRoleAllow() {
+
+  }
+
+  public function testOnBeforeSaveRoleDisallow() {
+
+  }
+
+  public function testOnBeforeSaveFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnBeforeSaveFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnBeforeSaveFlagHasAccountAllow() {
+
+  }
+
+  public function testOnBeforeSaveFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnBeforeSaveFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnBeforeSaveFlagIsAuthorDisallow() {
+
+  }
+
+  public function testOnBeforeDeleteRoleAllow() {
+
+  }
+
+  public function testOnBeforeDeleteRoleDisallow() {
+
+  }
+
+  public function testOnBeforeDeleteFlagBypassAccessAllow() {
+
+  }
+
+  public function testOnBeforeDeleteFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnBeforeDeleteFlagHasAccountAllow() {
+
+  }
+
+  public function testOnBeforeDeleteFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnBeforeDeleteFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnBeforeDeleteFlagIsAuthorDisallow() {
+
+  }
+
   /*------------Entity tests------------*/
 
   /*----Create----*/
