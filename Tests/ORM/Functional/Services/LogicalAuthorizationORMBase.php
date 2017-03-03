@@ -3,6 +3,7 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Functional\Services;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
 
 abstract class LogicalAuthorizationORMBase extends WebTestCase {
   protected static $superadmin_user;
@@ -79,6 +80,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   }
 
   /*------------RepositoryManager event tests------------*/
+
+  /*---onUnknownResult---*/
 
   public function testOnUnknownResultRoleAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
@@ -169,38 +172,105 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->assertEquals(1, count($entities));
   }
 
-  public function testOnSingleModelResultRoleAllow() {
+  /*---onSingleModelResult---*/
 
+  public function testOnSingleModelResultRoleAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
   }
 
   public function testOnSingleModelResultRoleDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
   }
 
   public function testOnSingleModelResultFlagBypassAccessAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
   }
 
   public function testOnSingleModelResultFlagBypassAccessDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-nobypass/' . $model->getId(), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
   }
 
   public function testOnSingleModelResultFlagHasAccountAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-hasaccount/' . $model->getId(), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
   }
 
   public function testOnSingleModelResultFlagHasAccountDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-hasaccount/' . $model->getId());
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
   }
 
   public function testOnSingleModelResultFlagIsAuthorAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
   }
 
   public function testOnSingleModelResultFlagIsAuthorDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $model = $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
   }
 
+  /*---onMultipleModelResult---*/
 
   public function testOnMultipleModelResultRoleAllow() {
 
@@ -234,6 +304,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   }
 
+  /*---onBeforeCreate---*/
+
   public function testOnBeforeCreateRoleAllow() {
 
   }
@@ -265,6 +337,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   public function testOnBeforeCreateFlagIsAuthorDisallow() {
 
   }
+
+  /*---onLazyModelCollectionResult---*/
 
   public function testOnLazyModelCollectionResultRoleAllow() {
 
@@ -300,6 +374,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   /*----------ModelManager event tests------------*/
 
+  /*---onBeforeMethodCall---*/
+
   public function testOnBeforeMethodCallRoleAllow() {
 
   }
@@ -332,6 +408,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   }
 
+  /*---onBeforeSave---*/
+
   public function testOnBeforeSaveRoleAllow() {
 
   }
@@ -363,6 +441,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   public function testOnBeforeSaveFlagIsAuthorDisallow() {
 
   }
+
+  /*---onBeforeDelete---*/
 
   public function testOnBeforeDeleteRoleAllow() {
 

@@ -22,7 +22,13 @@ class TestEntityOperations {
     return $this->repositoryManager->customMethod();
   }
 
-
+  public function getSingleResult($id, $bypassAccess = false) {
+    if($bypassAccess) {
+      $model = $this->repositoryManager->getRepository()->find($id);
+      return $this->repositoryManager->wrapModel($model);
+    }
+    return $this->repositoryManager->find($id);
+  }
 
 
 

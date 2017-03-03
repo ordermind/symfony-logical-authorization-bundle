@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use AppBundle\Entity\TestEntity;
@@ -45,6 +46,42 @@ class DefaultController extends Controller {
     $result = $operations->getUnknownResult();
     return new Response(count($result));
   }
+
+  /**
+    * @Route("/find-single-model-result-roleauthor/{id}", name="find_single_model_result_roleauthor")
+    * @Method({"GET"})
+    */
+  public function findSingleModelResultRoleAuthorAction(Request $request, $id) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
+    $result = $operations->getSingleResult($id);
+    return new JsonResponse((bool) $result);
+  }
+
+  /**
+    * @Route("/find-single-model-result-hasaccount/{id}", name="find_single_model_result_hasaccount")
+    * @Method({"GET"})
+    */
+  public function findSingleModelResultHasAccountAction(Request $request, $id) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_hasaccount_annotation'));
+    $result = $operations->getSingleResult($id);
+    return new JsonResponse((bool) $result);
+  }
+
+  /**
+    * @Route("/find-single-model-result-nobypass/{id}", name="find_single_model_result_nobypass")
+    * @Method({"GET"})
+    */
+  public function findSingleModelResultNoBypassAction(Request $request, $id) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
+    $result = $operations->getSingleResult($id);
+    return new JsonResponse((bool) $result);
+  }
+
+
+
 
 
 
