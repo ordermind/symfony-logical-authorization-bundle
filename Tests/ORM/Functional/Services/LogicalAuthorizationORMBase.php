@@ -124,6 +124,9 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->assertEquals(200, $response->getStatusCode());
     $entities_count = $response->getContent();
     $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnUnknownResultFlagHasAccountAllow() {
@@ -195,7 +198,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
   }
 
   public function testOnSingleModelResultFlagBypassAccessAllow() {
@@ -219,7 +222,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
   }
 
   public function testOnSingleModelResultFlagHasAccountAllow() {
@@ -243,7 +246,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
   }
 
   public function testOnSingleModelResultFlagIsAuthorAllow() {
@@ -267,41 +270,101 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
   }
 
   /*---onMultipleModelResult---*/
 
   public function testOnMultipleModelResultRoleAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnMultipleModelResultRoleDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $entities_count = $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnMultipleModelResultFlagBypassAccessAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnMultipleModelResultFlagBypassAccessDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-nobypass', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnMultipleModelResultFlagHasAccountAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-hasaccount', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnMultipleModelResultFlagHasAccountDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-hasaccount');
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnMultipleModelResultFlagIsAuthorAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnMultipleModelResultFlagIsAuthorDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestEntity();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   /*---onBeforeCreate---*/

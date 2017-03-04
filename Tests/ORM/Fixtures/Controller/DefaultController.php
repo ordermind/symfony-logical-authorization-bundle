@@ -15,7 +15,7 @@ use AppBundle\Entity\TestEntity;
 class DefaultController extends Controller {
 
   /**
-    * @Route("/count-unknown-result-roleauthor", name="unknown_result_roleauthor")
+    * @Route("/count-unknown-result-roleauthor", name="count_unknown_result_roleauthor")
     * @Method({"GET"})
     */
   public function countUnknownResultRoleAuthorAction(Request $request) {
@@ -26,7 +26,7 @@ class DefaultController extends Controller {
   }
 
   /**
-    * @Route("/count-unknown-result-hasaccount", name="unknown_result_hasaccount")
+    * @Route("/count-unknown-result-hasaccount", name="count_unknown_result_hasaccount")
     * @Method({"GET"})
     */
   public function countUnknownResultHasAccountAction(Request $request) {
@@ -37,7 +37,7 @@ class DefaultController extends Controller {
   }
 
   /**
-    * @Route("/count-unknown-result-nobypass", name="unknown_result_nobypass")
+    * @Route("/count-unknown-result-nobypass", name="count_unknown_result_nobypass")
     * @Method({"GET"})
     */
   public function countUnknownResultNoBypassAction(Request $request) {
@@ -54,7 +54,7 @@ class DefaultController extends Controller {
   public function findSingleModelResultRoleAuthorAction(Request $request, $id) {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
-    $result = $operations->getSingleResult($id);
+    $result = $operations->getSingleModelResult($id);
     return new JsonResponse((bool) $result);
   }
 
@@ -65,7 +65,7 @@ class DefaultController extends Controller {
   public function findSingleModelResultHasAccountAction(Request $request, $id) {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get('repository_manager.test_entity_hasaccount_annotation'));
-    $result = $operations->getSingleResult($id);
+    $result = $operations->getSingleModelResult($id);
     return new JsonResponse((bool) $result);
   }
 
@@ -76,11 +76,42 @@ class DefaultController extends Controller {
   public function findSingleModelResultNoBypassAction(Request $request, $id) {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
-    $result = $operations->getSingleResult($id);
+    $result = $operations->getSingleModelResult($id);
     return new JsonResponse((bool) $result);
   }
 
+  /**
+    * @Route("/count-multiple-model-result-roleauthor", name="count_multiple_model_result_roleauthor")
+    * @Method({"GET"})
+    */
+  public function countMultipleModelResultRoleAuthorAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
+    $result = $operations->getMultipleModelResult();
+    return new Response(count($result));
+  }
 
+  /**
+    * @Route("/count-multiple-model-result-hasaccount", name="count_multiple_model_result_hasaccount")
+    * @Method({"GET"})
+    */
+  public function countMultipleModelResultHasAccountAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_hasaccount_annotation'));
+    $result = $operations->getMultipleModelResult();
+    return new Response(count($result));
+  }
+
+  /**
+    * @Route("/count-multiple-model-result-nobypass", name="count_multiple_model_result_nobypass")
+    * @Method({"GET"})
+    */
+  public function countMultipleModelResultNoBypassAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
+    $result = $operations->getMultipleModelResult();
+    return new Response(count($result));
+  }
 
 
 
