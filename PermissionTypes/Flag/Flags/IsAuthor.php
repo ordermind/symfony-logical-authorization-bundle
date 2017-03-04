@@ -23,6 +23,9 @@ class IsAuthor implements FlagInterface {
     }
     $model = $context['model'];
     if(!($model instanceof ModelInterface)) {
+      if(is_string($model) && class_exists($model)) {
+        throw new \InvalidArgumentException('A class string was passed instead of a model for evaluating the ' . $this->getName() . ' flag. Are you trying to use the ' . $this->getName() . ' flag in a "create" permission? That is not possible because a model can\'t have an author until after it is created.');
+      }
       throw new \InvalidArgumentException('The model class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface to be able to evaluate the ' . $this->getName() . ' flag.');
     }
 

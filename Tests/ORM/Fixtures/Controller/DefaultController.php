@@ -113,45 +113,45 @@ class DefaultController extends Controller {
     return new Response(count($result));
   }
 
-
-
-
-
   /**
-    * @Route("/create-entity-roleauthor", name="test_create_entity_roleauthor")
+    * @Route("/create-entity-roleauthor", name="create_entity_roleauthor")
     * @Method({"POST"})
     */
   public function createEntityRoleAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
-    $operations->createTestEntity($user);
-    return new Response('');
+    $modelManager = $operations->createTestModel($user);
+    return new JsonResponse((bool) $modelManager);
   }
 
   /**
-    * @Route("/create-entity-hasaccount", name="test_create_entity_hasaccount")
+    * @Route("/create-entity-hasaccount", name="create_entity_hasaccount")
     * @Method({"POST"})
     */
   public function createEntityHasAccountAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get('repository_manager.test_entity_hasaccount_annotation'));
-    $operations->createTestEntity($user);
-    return new Response('');
+    $modelManager = $operations->createTestModel($user);
+    return new JsonResponse((bool) $modelManager);
   }
 
   /**
-    * @Route("/create-entity-nobypass", name="test_create_entity_nobypass")
+    * @Route("/create-entity-nobypass", name="create_entity_nobypass")
     * @Method({"POST"})
     */
   public function createEntityNoBypassAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
-    $operations->createTestEntity($user);
-    return new Response('');
+    $modelManager = $operations->createTestModel($user);
+    return new JsonResponse((bool) $modelManager);
   }
+
+
+
+
 
   /**
     * @Route("/count-entities-roleauthor", name="test_count_entities_roleauthor")

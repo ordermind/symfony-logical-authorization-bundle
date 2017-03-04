@@ -110,7 +110,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultRoleAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -120,7 +120,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultRoleDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $entities_count = $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -133,7 +133,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultFlagBypassAccessAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -143,7 +143,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultFlagBypassAccessDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-unknown-result-nobypass', static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -156,7 +156,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultFlagHasAccountAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-unknown-result-hasaccount', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -166,7 +166,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultFlagHasAccountDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-unknown-result-hasaccount');
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -179,7 +179,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultFlagIsAuthorAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+    $this->testEntityOperations->createTestModel(static::$authenticated_user);
     $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -189,7 +189,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnUnknownResultFlagIsAuthorDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-unknown-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -204,8 +204,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnSingleModelResultRoleAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$admin_user);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $modelManager->getId(), static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
@@ -215,21 +215,21 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnSingleModelResultRoleDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$authenticated_user);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $modelManager->getId(), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
   }
 
   public function testOnSingleModelResultFlagBypassAccessAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$superadmin_user);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $modelManager->getId(), static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
@@ -239,21 +239,21 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnSingleModelResultFlagBypassAccessDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-nobypass/' . $model->getId(), static::$superadmin_user);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-nobypass/' . $modelManager->getId(), static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
   }
 
   public function testOnSingleModelResultFlagHasAccountAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-hasaccount/' . $model->getId(), static::$authenticated_user);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-hasaccount/' . $modelManager->getId(), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
@@ -263,21 +263,21 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnSingleModelResultFlagHasAccountDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-hasaccount/' . $model->getId());
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-hasaccount/' . $modelManager->getId());
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
   }
 
   public function testOnSingleModelResultFlagIsAuthorAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity(static::$authenticated_user);
-    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$authenticated_user);
+    $modelManager = $this->testEntityOperations->createTestModel(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $modelManager->getId(), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
@@ -287,22 +287,22 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnSingleModelResultFlagIsAuthorDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $model = $this->testEntityOperations->createTestEntity();
-    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $model->getId(), static::$authenticated_user);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result-roleauthor/' . $modelManager->getId(), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $decoder = new JsonDecode();
     $entity_found = $decoder->decode($response->getContent(), 'json');
     $this->assertFalse($entity_found);
     //Kolla att entiteten fortfarande finns i databasen
-    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($model->getId()));
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
   }
 
   /*---onMultipleModelResult---*/
 
   public function testOnMultipleModelResultRoleAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -312,7 +312,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultRoleDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $entities_count = $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -325,7 +325,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultFlagBypassAccessAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -335,7 +335,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultFlagBypassAccessDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-nobypass', static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -348,7 +348,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultFlagHasAccountAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-hasaccount', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -358,7 +358,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultFlagHasAccountDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-hasaccount');
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -371,7 +371,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultFlagIsAuthorAllow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+    $this->testEntityOperations->createTestModel(static::$authenticated_user);
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -381,7 +381,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   public function testOnMultipleModelResultFlagIsAuthorDisallow() {
     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-    $this->testEntityOperations->createTestEntity();
+    $this->testEntityOperations->createTestModel();
     $this->sendRequestAs('GET', '/test/count-multiple-model-result-roleauthor', static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -395,35 +395,63 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   /*---onBeforeCreate---*/
 
   public function testOnBeforeCreateRoleAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->sendRequestAs('POST', '/test/create-entity-roleauthor', static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_created);
   }
 
   public function testOnBeforeCreateRoleDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->sendRequestAs('POST', '/test/create-entity-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_created);
   }
 
   public function testOnBeforeCreateFlagBypassAccessAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->sendRequestAs('POST', '/test/create-entity-roleauthor', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_created);
   }
 
   public function testOnBeforeCreateFlagBypassAccessDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->sendRequestAs('POST', '/test/create-entity-nobypass', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_created);
   }
 
   public function testOnBeforeCreateFlagHasAccountAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->sendRequestAs('POST', '/test/create-entity-hasaccount', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_created);
   }
 
   public function testOnBeforeCreateFlagHasAccountDisallow() {
-
-  }
-
-  public function testOnBeforeCreateFlagIsAuthorAllow() {
-
-  }
-
-  public function testOnBeforeCreateFlagIsAuthorDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->sendRequestAs('POST', '/test/create-entity-hasaccount');
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_created);
   }
 
   /*---onLazyModelCollectionResult---*/
@@ -589,7 +617,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   /*----Read----*/
 
 //   public function testReadEntitiesAllowRole() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $this->sendRequestAs('GET', '/test/count-entities', static::$admin_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -598,7 +626,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesAllowAuthor() {
-//     $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
 //     $this->sendRequestAs('GET', '/test/count-entities', static::$authenticated_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -607,7 +635,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesDisallow() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $entities_count = $this->sendRequestAs('GET', '/test/count-entities', static::$authenticated_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -619,7 +647,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesNoBypass() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $this->sendRequestAs('GET', '/test/count-entities', static::$superadmin_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -631,7 +659,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesLazyLoadAllowRole() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$admin_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -640,7 +668,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesLazyLoadAllowAuthor() {
-//     $this->testEntityOperations->createTestEntity(static::$authenticated_user);
+//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
 //     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$authenticated_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -649,7 +677,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesLazyLoadDisallow() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$authenticated_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -661,7 +689,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 //   }
 //
 //   public function testReadEntitiesLazyLoadNoBypass() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$superadmin_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -674,7 +702,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
 //   /*----Read field-----*/
 //   public function testReadField1AllowRole() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $this->sendRequestAs('GET', '/test/read-field-1', static::$admin_user);
 //     $response = $this->client->getResponse();
 //     $this->assertEquals(200, $response->getStatusCode());
@@ -684,7 +712,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
 //   /*----Update field----*/
 //   public function testUpdateEntityAllowRole() {
-//     $this->testEntityOperations->createTestEntity(static::$admin_user);
+//     $this->testEntityOperations->createTestModel(static::$admin_user);
 //     $this->sendRequestAs('GET', '/test/count-entities', static::$admin_user);
 //   }
 }

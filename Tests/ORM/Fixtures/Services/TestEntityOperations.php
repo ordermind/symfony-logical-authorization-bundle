@@ -38,6 +38,25 @@ class TestEntityOperations {
     return $this->repositoryManager->findAll();
   }
 
+  public function createTestModel($user = null) {
+    if($user && $user instanceof ModelManagerInterface) {
+      $this->repositoryManager->setObjectManager($user->getObjectManager());
+      $user = $user->getModel();
+      $modelManager = $this->repositoryManager->create();
+      $modelManager->setAuthor($user);
+    }
+    else {
+      $modelManager = $this->repositoryManager->create();
+    }
+    if($modelManager) {
+      $modelManager->save();
+    }
+
+    return $modelManager;
+  }
+
+
+
 
 
 
@@ -61,23 +80,6 @@ class TestEntityOperations {
       $modelManagers[$i] = $this->repositoryManager->wrapModel($model);
     }
     return $modelManagers;
-  }
-
-  public function createTestEntity($user = null) {
-    if($user && $user instanceof ModelManagerInterface) {
-      $this->repositoryManager->setObjectManager($user->getObjectManager());
-      $user = $user->getModel();
-      $modelManager = $this->repositoryManager->create();
-      $modelManager->setAuthor($user);
-    }
-    else {
-      $modelManager = $this->repositoryManager->create();
-    }
-    if($modelManager) {
-      $modelManager->save();
-    }
-
-    return $modelManager;
   }
 
   public function updateTestEntity(ModelManagerInterface $entity) {
