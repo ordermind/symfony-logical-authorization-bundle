@@ -14,13 +14,12 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     'admin_user' => 'adminpass',
     'superadmin_user' => 'superadminpass',
   ];
-  protected $laRoute;
-  protected $laModel;
-  protected $em;
-  protected $testEntityRepositoryManager;
+  protected $load_services = array();
+  protected $testEntityRoleAuthorRepositoryManager;
+  protected $testEntityHasAccountNoInterfaceRepositoryManager;
+  protected $testEntityNoBypassRepositoryManager;
   protected $testUserRepositoryManager;
   protected $testEntityOperations;
-  protected $container;
   protected $client;
 
   /**
@@ -30,11 +29,37 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     require_once __DIR__.'/../../AppKernel.php';
     $kernel = new \AppKernel('test', true);
     $kernel->boot();
-    $this->container = $kernel->getContainer();
-    $this->laRoute = $this->container->get('ordermind_logical_authorization.service.logical_authorization_route');
-    $this->laModel = $this->container->get('ordermind_logical_authorization.service.logical_authorization_model');
-    $this->testEntityOperations = $this->container->get('test_entity_operations');
     $this->client = static::createClient();
+
+    $this->load_services['testEntityOperations'] = 'test_entity_operations';
+    $container = $kernel->getContainer();
+    foreach($this->load_services as $property_name => $service_name) {
+      $this->$property_name = $container->get($service_name);
+    }
+
+    $this->deleteAll(array(
+      $this->testEntityRoleAuthorRepositoryManager,
+      $this->testEntityHasAccountNoInterfaceRepositoryManager,
+      $this->testEntityNoBypassRepositoryManager,
+    ));
+
+    $this->addUsers();
+  }
+
+  /**
+   * This method is run after each public test method
+   *
+   * It is important to reset all non-static properties to minimize memory leaks.
+   */
+  protected function tearDown() {
+    $this->testEntityRoleAuthorRepositoryManager = null;
+    $this->testEntityHasAccountNoInterfaceRepositoryManager = null;
+    $this->testEntityNoBypassRepositoryManager = null;
+    $this->testUserRepositoryManager = null;
+    $this->testEntityOperations = null;
+    $this->client = null;
+
+    parent::tearDown();
   }
 
   protected function deleteAll($managers) {
