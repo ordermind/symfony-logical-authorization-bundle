@@ -457,35 +457,95 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   /*---onLazyModelCollectionResult---*/
 
   public function testOnLazyModelCollectionResultRoleAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-roleauthor', static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnLazyModelCollectionResultRoleDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnLazyModelCollectionResultFlagBypassAccessAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-roleauthor', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnLazyModelCollectionResultFlagBypassAccessDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-nobypass', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnLazyModelCollectionResultFlagHasAccountAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-hasaccount', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnLazyModelCollectionResultFlagHasAccountDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-hasaccount');
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   public function testOnLazyModelCollectionResultFlagIsAuthorAllow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnLazyModelCollectionResultFlagIsAuthorDisallow() {
-
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy-roleauthor', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
   }
 
   /*----------ModelManager event tests------------*/

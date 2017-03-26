@@ -114,6 +114,39 @@ class DefaultController extends Controller {
   }
 
   /**
+    * @Route("/count-entities-lazy-roleauthor", name="test_count_entities_lazy_roleauthor")
+    * @Method({"GET"})
+    */
+  public function countEntitiesLazyLoadRoleAuthorAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
+    $collection = $operations->getLazyLoadedModelResult();
+    return new Response(count($collection));
+  }
+
+  /**
+    * @Route("/count-entities-lazy-hasaccount", name="test_count_entities_lazy_hasaccount")
+    * @Method({"GET"})
+    */
+  public function countEntitiesLazyLoadHasAccountAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_hasaccount_annotation'));
+    $collection = $operations->getLazyLoadedModelResult();
+    return new Response(count($collection));
+  }
+
+  /**
+    * @Route("/count-entities-lazy-nobypass", name="test_count_entities_lazy_nobypass")
+    * @Method({"GET"})
+    */
+  public function countEntitiesLazyLoadNoBypassAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
+    $collection = $operations->getLazyLoadedModelResult();
+    return new Response(count($collection));
+  }
+
+  /**
     * @Route("/create-entity-roleauthor", name="create_entity_roleauthor")
     * @Method({"POST"})
     */
@@ -186,38 +219,7 @@ class DefaultController extends Controller {
     return new Response(count($entities));
   }
 
-  /**
-    * @Route("/count-entities-lazy-roleauthor", name="test_count_entities_lazy_roleauthor")
-    * @Method({"GET"})
-    */
-  public function countEntitiesLazyLoadRoleAuthorAction(Request $request) {
-    $operations = $this->get('test_entity_operations');
-    $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
-    $collection = $operations->findTestEntitiesLazyLoad();
-    return new Response(count($collection));
-  }
 
-  /**
-    * @Route("/count-entities-lazy-hasaccount", name="test_count_entities_lazy_hasaccount")
-    * @Method({"GET"})
-    */
-  public function countEntitiesLazyLoadHasAccountAction(Request $request) {
-    $operations = $this->get('test_entity_operations');
-    $operations->setRepositoryManager($this->get('repository_manager.test_entity_hasaccount_annotation'));
-    $collection = $operations->findTestEntitiesLazyLoad();
-    return new Response(count($collection));
-  }
-
-  /**
-    * @Route("/count-entities-lazy-nobypass", name="test_count_entities_lazy_nobypass")
-    * @Method({"GET"})
-    */
-  public function countEntitiesLazyLoadNoBypassAction(Request $request) {
-    $operations = $this->get('test_entity_operations');
-    $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
-    $collection = $operations->findTestEntitiesLazyLoad();
-    return new Response(count($collection));
-  }
 
   /**
     * @Route("/read-field-1-roleauthor", name="test_read_field1_roleauthor")

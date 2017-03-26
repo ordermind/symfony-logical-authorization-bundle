@@ -38,6 +38,13 @@ class TestEntityOperations {
     return $this->repositoryManager->findAll();
   }
 
+  public function getLazyLoadedModelResult($bypassAccess = false) {
+    if($bypassAccess) {
+      return $this->repositoryManager->getRepository()->matching(Criteria::create());
+    }
+    return $this->repositoryManager->matching(Criteria::create());
+  }
+
   public function createTestModel($user = null) {
     if($user && $user instanceof ModelManagerInterface) {
       $this->repositoryManager->setObjectManager($user->getObjectManager());
