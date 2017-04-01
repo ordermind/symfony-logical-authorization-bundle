@@ -550,37 +550,87 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   /*----------ModelManager event tests------------*/
 
-  /*---onBeforeMethodCall---*/
+  /*---onBeforeMethodCall getter---*/
 
-  public function testOnBeforeMethodCallRoleAllow() {
+  public function testOnBeforeMethodCallGetterRoleAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter-role', static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter-role', static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter-role', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter-nobypass', static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagHasAccountAllow() {
 
   }
 
-  public function testOnBeforeMethodCallRoleDisallow() {
+  public function testOnBeforeMethodCallGetterFlagHasAccountDisallow() {
 
   }
 
-  public function testOnBeforeMethodCallFlagBypassAccessAllow() {
+  public function testOnBeforeMethodCallGetterFlagIsAuthorAllow() {
 
   }
 
-  public function testOnBeforeMethodCallFlagBypassAccessDisallow() {
+  public function testOnBeforeMethodCallGetterFlagIsAuthorDisallow() {
 
   }
 
-  public function testOnBeforeMethodCallFlagHasAccountAllow() {
+  /*---onBeforeMethodCall setter---*/
+
+  public function testOnBeforeMethodCallSetterRoleAllow() {
 
   }
 
-  public function testOnBeforeMethodCallFlagHasAccountDisallow() {
+  public function testOnBeforeMethodCallSetterRoleDisallow() {
 
   }
 
-  public function testOnBeforeMethodCallFlagIsAuthorAllow() {
+  public function testOnBeforeMethodCallSetterFlagBypassAccessAllow() {
 
   }
 
-  public function testOnBeforeMethodCallFlagIsAuthorDisallow() {
+  public function testOnBeforeMethodCallSetterFlagBypassAccessDisallow() {
+
+  }
+
+  public function testOnBeforeMethodCallSetterFlagHasAccountAllow() {
+
+  }
+
+  public function testOnBeforeMethodCallSetterFlagHasAccountDisallow() {
+
+  }
+
+  public function testOnBeforeMethodCallSetterFlagIsAuthorAllow() {
+
+  }
+
+  public function testOnBeforeMethodCallSetterFlagIsAuthorDisallow() {
 
   }
 

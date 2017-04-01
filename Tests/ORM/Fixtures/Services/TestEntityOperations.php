@@ -45,57 +45,45 @@ class TestEntityOperations {
     return $this->repositoryManager->matching(Criteria::create());
   }
 
-  public function createTestModel($user = null) {
+  public function createTestModel($user = null, $bypassAccess = false) {
     if($user && $user instanceof ModelManagerInterface) {
       $this->repositoryManager->setObjectManager($user->getObjectManager());
-      $user = $user->getModel();
-      $modelManager = $this->repositoryManager->create();
-      $modelManager->setAuthor($user);
+    }
+
+    if($bypassAccess) {
+      $class = $this->repositoryManager->getClassName();
+      $model = new $class();
+      $modelManager = $this->repositoryManager->wrapModel($model);
     }
     else {
       $modelManager = $this->repositoryManager->create();
     }
+
     if($modelManager) {
+      if($user && $user instanceof ModelManagerInterface) {
+        $user = $user->getModel();
+        $modelManager->setAuthor($user);
+      }
       $modelManager->save();
     }
 
     return $modelManager;
   }
 
-
-
-
-
-
-  public function findTestEntities($bypassAccess = false) {
+  public function callMethodGetter(ModelManagerInterface $modelManager, $bypassAccess = false) {
     if($bypassAccess) {
-      $models = $this->repositoryManager->getRepository()->findAll();
-      return $this->repositoryManager->wrapModels($models);
+      return $modelManager->getModel()->getField1();
     }
-    return $this->repositoryManager->findAll();
+    return $modelManager->getField1();
   }
 
-  public function findTestEntitiesLazyLoad($bypassAccess = false) {
+  public function callMethodSetter(ModelManagerInterface $modelManager, $bypassAccess = false) {
     if($bypassAccess) {
-      $collection = $this->repositoryManager->getRepository()->matching(Criteria::create());
+      $modelManager->getModel()->setField1('test');
     }
     else {
-      $collection = $this->repositoryManager->matching(Criteria::create());
+      $modelManager->setField1('test');
     }
-    $modelManagers = [];
-    foreach($collection as $i => $model) {
-      $modelManagers[$i] = $this->repositoryManager->wrapModel($model);
-    }
-    return $modelManagers;
-  }
-
-  public function updateTestEntity(ModelManagerInterface $entity) {
-    $modelManager->setField1('test1');
-    $modelManager->getObjectManager()->flush();
-  }
-
-  public function updateTestEntitySucceed(ModelManagerInterface $entity) {
-    $modelManager->setField2('test2');
-    $modelManager->getObjectManager()->flush();
+    return $modelManager;
   }
 }

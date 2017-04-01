@@ -1,6 +1,56 @@
 <?php
 
+namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class ModelTestController extends Controller {
+
+  /**
+    * @Route("/call-method-getter-role", name="call_method_getter_role")
+    * @Method({"GET"})
+    */
+  public function callMethodGetterRoleAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
+    $modelManager = $operations->createTestModel(null, true);
+    $operations->callMethodSetter($modelManager, true);
+
+    return new Response($operations->callMethodGetter($modelManager));
+  }
+
+  /**
+    * @Route("/call-method-getter-nobypass", name="call_method_getter_nobypass")
+    * @Method({"GET"})
+    */
+  public function callMethodGetterNoBypassAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
+    $modelManager = $operations->createTestModel(null, true);
+    $operations->callMethodSetter($modelManager, true);
+
+    return new Response($operations->callMethodGetter($modelManager));
+  }
+
+  /**
+    * @Route("/call-method-getter-author", name="call_method_getter_author")
+    * @Method({"GET"})
+    */
+  public function callMethodGetterAuthorAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get('repository_manager.test_entity_roleauthor_annotation'));
+    $modelManager = $operations->createTestModel($user, true);
+    $operations->callMethodSetter($modelManager, true);
+
+    return new Response($operations->callMethodGetter($modelManager));
+  }
+}
 
 //   /**
 //     * @Route("/count-entities-roleauthor", name="test_count_entities_roleauthor")
@@ -112,17 +162,17 @@
 //     return new Response('');
 //   }
 //
-  /**
-    * @Route("/update-entity-nobypass", name="test_update_entity_nobypass")
-    * @Method({"POST"})
-    */
-  public function updateEntityNoBypassAction(Request $request) {
-    $operations = $this->get('test_entity_operations');
-    $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
-    $entities = $operations->findTestEntities(true);
-    if($entities) {
-      $entity = array_shift($entities);
-      $operations->updateTestEntity($entity);
-    }
-    return new Response('');
-  }
+//   /**
+//     * @Route("/update-entity-nobypass", name="test_update_entity_nobypass")
+//     * @Method({"POST"})
+//     */
+//   public function updateEntityNoBypassAction(Request $request) {
+//     $operations = $this->get('test_entity_operations');
+//     $operations->setRepositoryManager($this->get('repository_manager.test_entity_nobypass_annotation'));
+//     $entities = $operations->findTestEntities(true);
+//     if($entities) {
+//       $entity = array_shift($entities);
+//       $operations->updateTestEntity($entity);
+//     }
+//     return new Response('');
+//   }
