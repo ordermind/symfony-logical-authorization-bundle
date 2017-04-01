@@ -48,6 +48,7 @@ class TestEntityOperations {
   public function createTestModel($user = null, $bypassAccess = false) {
     if($user && $user instanceof ModelManagerInterface) {
       $this->repositoryManager->setObjectManager($user->getObjectManager());
+      $user = $user->getModel();
     }
 
     if($bypassAccess) {
@@ -60,8 +61,7 @@ class TestEntityOperations {
     }
 
     if($modelManager) {
-      if($user && $user instanceof ModelManagerInterface) {
-        $user = $user->getModel();
+      if($user) {
         $modelManager->setAuthor($user);
       }
       $modelManager->save();
