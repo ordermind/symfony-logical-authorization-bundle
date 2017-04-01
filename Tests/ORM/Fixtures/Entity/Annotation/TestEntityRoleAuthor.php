@@ -53,10 +53,12 @@ class TestEntityRoleAuthor implements ModelInterface
      * @ORM\Column(name="field1", type="string", length=255)
      * @LogicalAuthorization({
      *   "get": {
-     *     "role": "ROLE_ADMIN"
+     *     "role": "ROLE_ADMIN",
+     *     "flag": "is_author"
      *   },
      *   "set": {
-     *     "role": "ROLE_ADMIN"
+     *     "role": "ROLE_ADMIN",
+     *     "flag": "is_author"
      *   }
      * })
      */
