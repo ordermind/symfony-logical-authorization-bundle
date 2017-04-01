@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use AppBundle\Entity\TestEntity;
 
-class DefaultController extends Controller {
+class RepositoryTestController extends Controller {
 
   /**
     * @Route("/count-unknown-result-roleauthor", name="count_unknown_result_roleauthor")
