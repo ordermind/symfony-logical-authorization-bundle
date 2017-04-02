@@ -63,7 +63,7 @@ class DefaultController extends Controller {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel();
-    return new JsonResponse((bool) $modelManager);
+    return new JsonResponse(is_object($modelManager) && $modelManager instanceof \Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface);
   }
 
   /**
@@ -127,8 +127,9 @@ class DefaultController extends Controller {
   public function saveModelCreateAction(Request $request) {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel();
-    return new JsonResponse((bool) $modelManager);
+    $operations->createTestModel();
+    $result = $operations->getMultipleModelResult(true);
+    return new Response(count($result));
   }
 
   /**
@@ -139,7 +140,11 @@ class DefaultController extends Controller {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel(null, true);
-    return new JsonResponse((bool) $modelManager->save());
+    $operations->callMethodSetter($modelManager, true);
+    $modelManager->save();
+    $modelManager->getObjectManager()->detach($modelManager->getModel());
+    $persistedModelManager = $operations->getSingleModelResult($modelManager->getModel()->getId(), true);
+    return new Response($operations->callMethodGetter($persistedModelManager, true));
   }
 
   /**
@@ -151,7 +156,38 @@ class DefaultController extends Controller {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
-    return new JsonResponse((bool) $modelManager->save());
+    $operations->callMethodSetter($modelManager, true);
+    $modelManager->save();
+    $modelManager->getObjectManager()->detach($modelManager->getModel());
+    $persistedModelManager = $operations->getSingleModelResult($modelManager->getModel()->getId(), true);
+    return new Response($operations->callMethodGetter($persistedModelManager, true));
+  }
+
+  /**
+    * @Route("/delete-model", name="delete_model")
+    * @Method({"GET"})
+    */
+  public function deleteModelAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel(null, true);
+    $modelManager->delete();
+    $result = $operations->getMultipleModelResult(true);
+    return new Response(count($result));
+  }
+
+  /**
+    * @Route("/delete-model-author", name="delete_model_author")
+    * @Method({"GET"})
+    */
+  public function deleteModelAuthorAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel($user, true);
+    $modelManager->delete();
+    $result = $operations->getMultipleModelResult(true);
+    return new Response(count($result));
   }
 
 }

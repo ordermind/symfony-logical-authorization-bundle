@@ -682,54 +682,48 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_created = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_created);
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnBeforeSaveCreateRoleDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_created = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_created);
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnBeforeSaveCreateFlagBypassAccessAllow() {
     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_created = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_created);
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnBeforeSaveCreateFlagBypassAccessDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_created = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_created);
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnBeforeSaveCreateFlagHasAccountAllow() {
     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_created = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_created);
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnBeforeSaveCreateFlagHasAccountDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_created = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_created);
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   /*---onBeforeSave update---*/
@@ -738,229 +732,129 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateRoleDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateFlagBypassAccessAllow() {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateFlagBypassAccessDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateFlagHasAccountAllow() {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateFlagHasAccountDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateFlagIsAuthorAllow() {
     $this->sendRequestAs('GET', '/test/save-model-update-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertTrue($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeSaveUpdateFlagIsAuthorDisallow() {
     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']));
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
-    $decoder = new JsonDecode();
-    $entity_updated = $decoder->decode($response->getContent(), 'json');
-    $this->assertFalse($entity_updated);
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   /*---onBeforeDelete---*/
 
   public function testOnBeforeDeleteRoleAllow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnBeforeDeleteRoleDisallow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnBeforeDeleteFlagBypassAccessAllow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnBeforeDeleteFlagBypassAccessDisallow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnBeforeDeleteFlagHasAccountAllow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnBeforeDeleteFlagHasAccountDisallow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
 
   public function testOnBeforeDeleteFlagIsAuthorAllow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
   }
 
   public function testOnBeforeDeleteFlagIsAuthorDisallow() {
-
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
   }
-
-  /*------------Entity tests------------*/
-
-  /*----Create----*/
-
-//   public function testCreateEntityAllowRole() {
-//     $this->sendRequestAs('GET', '/test/create-entity', static::$admin_user);
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testCreateEntityDisallow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', static::$authenticated_user);
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(0, count($entities));
-//   }
-//
-//   public function testCreateEntityBypass() {
-//     $this->sendRequestAs('GET', '/test/create-entity', static::$superadmin_user);
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(1, count($entities));
-//   }
-
-  /*----Read----*/
-
-//   public function testReadEntitiesAllowRole() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $this->sendRequestAs('GET', '/test/count-entities', static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testReadEntitiesAllowAuthor() {
-//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
-//     $this->sendRequestAs('GET', '/test/count-entities', static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testReadEntitiesDisallow() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $entities_count = $this->sendRequestAs('GET', '/test/count-entities', static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testReadEntitiesNoBypass() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $this->sendRequestAs('GET', '/test/count-entities', static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testReadEntitiesLazyLoadAllowRole() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testReadEntitiesLazyLoadAllowAuthor() {
-//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testReadEntitiesLazyLoadDisallow() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testReadEntitiesLazyLoadNoBypass() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->findTestEntities();
-//     $this->assertEquals(1, count($entities));
-//   }
-
-//   /*----Read field-----*/
-//   public function testReadField1AllowRole() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $this->sendRequestAs('GET', '/test/read-field-1', static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-
-//   /*----Update field----*/
-//   public function testUpdateEntityAllowRole() {
-//     $this->testEntityOperations->createTestModel(static::$admin_user);
-//     $this->sendRequestAs('GET', '/test/count-entities', static::$admin_user);
-//   }
 }
