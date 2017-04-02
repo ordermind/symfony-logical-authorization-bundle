@@ -64,7 +64,14 @@ class TestEntityOperations {
       if($user) {
         $modelManager->setAuthor($user);
       }
-      $modelManager->save();
+      if($bypassAccess) {
+        $om = $modelManager->getObjectManager();
+        $om->persist($modelManager->getModel());
+        $om->flush();
+      }
+      else {
+        $modelManager->save();
+      }
     }
 
     return $modelManager;

@@ -613,35 +613,67 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   /*---onBeforeMethodCall setter---*/
 
   public function testOnBeforeMethodCallSetterRoleAllow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterRoleDisallow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterFlagBypassAccessAllow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterFlagBypassAccessDisallow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterFlagHasAccountAllow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterFlagHasAccountDisallow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterFlagIsAuthorAllow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
   }
 
   public function testOnBeforeMethodCallSetterFlagIsAuthorDisallow() {
-
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
   }
 
   /*---onBeforeSave---*/

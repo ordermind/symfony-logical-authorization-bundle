@@ -71,7 +71,7 @@ class DefaultController extends Controller {
     * @Route("/call-method-getter", name="call_method_getter")
     * @Method({"GET"})
     */
-  public function callMethodGetterRoleAction(Request $request) {
+  public function callMethodGetterAction(Request $request) {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel(null, true);
@@ -92,6 +92,33 @@ class DefaultController extends Controller {
     $operations->callMethodSetter($modelManager, true);
 
     return new Response($operations->callMethodGetter($modelManager));
+  }
+
+  /**
+    * @Route("/call-method-setter", name="call_method_setter")
+    * @Method({"GET"})
+    */
+  public function callMethodSetterAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel(null, true);
+    $operations->callMethodSetter($modelManager);
+
+    return new Response($operations->callMethodGetter($modelManager, true));
+  }
+
+  /**
+    * @Route("/call-method-setter-author", name="call_method_setter_author")
+    * @Method({"GET"})
+    */
+  public function callMethodSetterAuthorAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel($user, true);
+    $operations->callMethodSetter($modelManager);
+
+    return new Response($operations->callMethodGetter($modelManager, true));
   }
 
 }
