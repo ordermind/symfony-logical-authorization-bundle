@@ -57,13 +57,12 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/create-entity", name="create_entity")
-    * @Method({"POST"})
+    * @Method({"GET"})
     */
-  public function createEntityRoleAuthorAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+  public function createEntityAction(Request $request) {
     $operations = $this->get('test_entity_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel($user);
+    $modelManager = $operations->createTestModel();
     return new JsonResponse((bool) $modelManager);
   }
 
@@ -119,6 +118,40 @@ class DefaultController extends Controller {
     $operations->callMethodSetter($modelManager);
 
     return new Response($operations->callMethodGetter($modelManager, true));
+  }
+
+  /**
+    * @Route("/save-model-create", name="save_model_create")
+    * @Method({"GET"})
+    */
+  public function saveModelCreateAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel();
+    return new JsonResponse((bool) $modelManager);
+  }
+
+  /**
+    * @Route("/save-model-update", name="save_model_update")
+    * @Method({"GET"})
+    */
+  public function saveModelUpdateAction(Request $request) {
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel(null, true);
+    return new JsonResponse((bool) $modelManager->save());
+  }
+
+  /**
+    * @Route("/save-model-update-author", name="save_model_update_author")
+    * @Method({"GET"})
+    */
+  public function saveModelUpdateAuthorAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $operations = $this->get('test_entity_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel($user, true);
+    return new JsonResponse((bool) $modelManager->save());
   }
 
 }
