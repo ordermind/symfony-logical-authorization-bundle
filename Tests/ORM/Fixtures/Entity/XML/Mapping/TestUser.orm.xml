@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestUser" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestUserRepository" table="testusers_xml">
+    <logical-authorization>
+      <create>
+        <role>ROLE_ADMIN</role>
+      </create>
+      <read>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </read>
+      <update>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </update>
+      <delete>
+        <no_bypass>
+          <flag>is_author</flag>
+        </no_bypass>
+        <AND>
+          <role>ROLE_ADMIN</role>
+          <flag>
+            <NOT>is_author</NOT>
+          </flag>
+        </AND>
+      </delete>
+    </logical-authorization>
+
+    <id name="id" type="guid" column="id">
+      <generator strategy="UUID"/>
+    </id>
+
+    <field name="username" column="username" type="string" length="25" />
+    <logical-authorization field="username">
+      <get>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </get>
+      <set>
+        <role>ROLE_ADMIN</role>
+      </set>
+    </logical-authorization>
+
+    <field name="password" column="password" type="string" length="64" />
+
+    <logical-authorization field="oldPassword">
+      <set>
+        <no_bypass>true</no_bypass>
+        <flag>is_author</flag>
+      </set>
+    </logical-authorization>
+
+    <field name="roles" column="roles" type="json_array" />
+    <logical-authorization field="roles">
+      <get>
+        <role>ROLE_ADMIN</role>
+      </get>
+      <set>
+        <AND>
+          <role>ROLE_ADMIN</role>
+          <flag>
+            <NOT>is_author</NOT>
+          </flag>
+        </AND>
+      </set>
+    </logical-authorization>
+
+    <field name="email" column="email" type="string" length="60" />
+
+    <field name="bypassAccess" column="bypassAccess" type="boolean" />
+
+  </entity>
+</doctrine-mapping>
