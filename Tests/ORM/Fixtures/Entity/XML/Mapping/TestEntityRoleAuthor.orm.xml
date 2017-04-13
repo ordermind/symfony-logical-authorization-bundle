@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityRoleAuthorRepository" table="testentities_roleauthor_xml">
+    <logical-authorization>
+      <create>
+        <role>ROLE_ADMIN</role>
+      </create>
+      <read>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </read>
+      <update>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </update>
+      <delete>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </delete>
+    </logical-authorization>
+
+    <id name="id" type="integer" column="id">
+      <generator strategy="AUTO"/>
+    </id>
+
+    <field name="field1" column="field1" type="string" length="255" />
+    <logical-authorization field="field1">
+      <get>
+        <role>ROLE_ADMIN</role>
+        <flag>is_author</flag>
+      </get>
+      <set>
+        <role>ROLE_ADMIN</role>
+        <flag>is_author</flag>
+      </set>
+    </logical-authorization>
+
+    <field name="field2" column="field2" type="string" length="255" />
+
+    <field name="field3" column="field3" type="string" length="255" />
+
+    <many-to-one field="author" target-entity="TestUser">
+      <join-column name="authorId" referenced-column-name="id" />
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
+
