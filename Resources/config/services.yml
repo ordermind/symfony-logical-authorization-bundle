@@ -73,11 +73,16 @@ services:
 
   # Doctrine-related services
 
-  ordermind_logical_authorization.event_listener.add_doctrine_annotation_permissions:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrineAnnotationPermissions
-    arguments: ['@?doctrine', '@?annotation_reader']
+  ordermind_logical_authorization.event_listener.add_doctrine_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrinePermissions
+    arguments:
+      - '@?doctrine'
+      - "@=container.hasParameter('doctrine.orm.metadata.annotation.class') ? parameter('doctrine.orm.metadata.annotation.class') : ''"
+      - "@=container.hasParameter('doctrine.orm.metadata.xml.class') ? parameter('doctrine.orm.metadata.xml.class') : ''"
+      - "@=container.hasParameter('doctrine.orm.metadata.yml.class') ? parameter('doctrine.orm.metadata.yml.class') : ''"
+    #arguments: ['@?doctrine', '%?doctrine.orm.metadata.annotation.class%', '%?doctrine.orm.metadata.xml.class%', '%?doctrine.orm.metadata.yml.class%']
     tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 255}
+      - {name: kernel.event_subscriber, priority: 255}
 
   ordermind_logical_authorization.service.repository_manager_factory:
       class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManagerFactory

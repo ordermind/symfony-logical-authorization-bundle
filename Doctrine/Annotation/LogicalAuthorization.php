@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine;
+namespace Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation;
 
 /**
  * @Annotation

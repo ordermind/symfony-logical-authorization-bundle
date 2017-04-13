@@ -1,7 +1,3 @@
-ordermind_logical_authorization:
-    resource: "@OrdermindLogicalAuthorizationBundle/Resources/config/routing.yml"
-    prefix:   /
-
 test_routes:
     resource: "@OrdermindLogicalAuthorizationBundle/Tests/ORM/Fixtures/Controller/"
     type:     annotation

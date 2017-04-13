@@ -3,7 +3,7 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorization;
+use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 

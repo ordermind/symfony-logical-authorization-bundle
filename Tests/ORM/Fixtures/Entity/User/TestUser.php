@@ -4,7 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorization;
+use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
 
 /**
