@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityNoBypass" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityNoBypassRepository" table="testentities_nobypass_xml">
+    <logical-authorization>
+      <create>
+        <no_bypass>true</no_bypass>
+        FALSE
+      </create>
+      <read>
+        <no_bypass>true</no_bypass>
+        FALSE
+      </read>
+      <update>
+        <no_bypass>true</no_bypass>
+        FALSE
+      </update>
+      <delete>
+        <no_bypass>true</no_bypass>
+        FALSE
+      </delete>
+    </logical-authorization>
+
+    <id name="id" type="integer" column="id">
+      <generator strategy="AUTO"/>
+    </id>
+
+    <field name="field1" column="field1" type="string" length="255" />
+    <logical-authorization field="field1">
+      <get>
+        <no_bypass>true</no_bypass>
+        FALSE
+      </get>
+      <set>
+        <no_bypass>true</no_bypass>
+        FALSE
+      </set>
+    </logical-authorization>
+
+    <field name="field2" column="field2" type="string" length="255" />
+
+    <field name="field3" column="field3" type="string" length="255" />
+
+    <many-to-one field="author" target-entity="TestUser">
+      <join-column name="authorId" referenced-column-name="id" />
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
+
+

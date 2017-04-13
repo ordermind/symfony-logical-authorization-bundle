@@ -7,77 +7,17 @@ use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizatio
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
-/**
- * TestEntityNoBypass
- *
- * @ORM\Table(name="testentities_nobypass_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityNoBypassRepository")
- * @LogicalAuthorization({
- *   "create": {
- *     "no_bypass": true,
- *     FALSE
- *   },
- *   "read": {
- *     "no_bypass": true,
- *     FALSE
- *   },
- *   "update": {
- *     "no_bypass": true,
- *     FALSE
- *   },
- *   "delete": {
- *     "no_bypass": true,
- *     FALSE
- *   }
- * })
- */
 class TestEntityNoBypass implements ModelInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field1", type="string", length=255)
-     * @LogicalAuthorization({
-     *   "get": {
-     *     "no_bypass": true,
-     *     FALSE
-     *   },
-     *   "set": {
-     *     "no_bypass": true,
-     *     FALSE
-     *   }
-     * })
-     */
     private $field1 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field2", type="string", length=255)
-     */
     private $field2 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field3", type="string", length=255)
-     */
     private $field3 = '';
 
-    /**
-     * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="TestUser")
-     * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
-     */
     protected $author;
 
     /**
