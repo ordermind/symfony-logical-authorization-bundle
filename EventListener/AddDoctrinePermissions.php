@@ -4,6 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
@@ -15,7 +16,7 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
   protected $xmlDriverClass;
   protected $ymlDriverClass;
 
-  public function __construct($doctrine = null, $annotationDriverClass = null, $xmlDriverClass = null, $ymlDriverClass = null) {
+  public function __construct(ManagerRegistry $doctrine = null, $annotationDriverClass = null, $xmlDriverClass = null, $ymlDriverClass = null) {
     $this->doctrine = $doctrine;
     $this->annotationDriverClass = $annotationDriverClass;
     $this->xmlDriverClass = $xmlDriverClass;
@@ -35,7 +36,6 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
   public function addPermissions(AddPermissionsEvent $event) {
     if(is_null($this->doctrine)) return;
 
-    $entities = array();
     $object_managers = $this->doctrine->getManagers();
     foreach($object_managers as $om) {
       $metadataDriverImplementation = $om->getConfiguration()->getMetadataDriverImpl();
