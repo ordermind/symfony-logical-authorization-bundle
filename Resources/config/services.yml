@@ -80,7 +80,6 @@ services:
       - "@=container.hasParameter('doctrine.orm.metadata.annotation.class') ? parameter('doctrine.orm.metadata.annotation.class') : ''"
       - "@=container.hasParameter('doctrine.orm.metadata.xml.class') ? parameter('doctrine.orm.metadata.xml.class') : ''"
       - "@=container.hasParameter('doctrine.orm.metadata.yml.class') ? parameter('doctrine.orm.metadata.yml.class') : ''"
-    #arguments: ['@?doctrine', '%?doctrine.orm.metadata.annotation.class%', '%?doctrine.orm.metadata.xml.class%', '%?doctrine.orm.metadata.yml.class%']
     tags:
       - {name: kernel.event_subscriber, priority: 255}
 
