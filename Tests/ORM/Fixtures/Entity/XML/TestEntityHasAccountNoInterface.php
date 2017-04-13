@@ -1,9 +1,8 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 

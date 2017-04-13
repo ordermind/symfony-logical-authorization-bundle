@@ -3,7 +3,6 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
 
 class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
