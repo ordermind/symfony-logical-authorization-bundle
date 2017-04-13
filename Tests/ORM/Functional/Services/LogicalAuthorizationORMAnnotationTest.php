@@ -12,7 +12,6 @@ class LogicalAuthorizationORMAnnotationTest extends LogicalAuthorizationORMBase
       'testEntityRoleAuthorRepositoryManager' => 'repository_manager.test_entity_roleauthor_annotation',
       'testEntityHasAccountNoInterfaceRepositoryManager' => 'repository_manager.test_entity_hasaccount_annotation',
       'testEntityNoBypassRepositoryManager' => 'repository_manager.test_entity_nobypass_annotation',
-      'testUserRepositoryManager' => 'repository_manager.test_user_annotation',
     );
 
     parent::setUp();

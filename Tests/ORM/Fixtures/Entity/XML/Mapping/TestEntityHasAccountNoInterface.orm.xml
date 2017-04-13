@@ -38,7 +38,7 @@
 
     <field name="field3" column="field3" type="string" length="255" />
 
-    <many-to-one field="author" target-entity="TestUser">
+    <many-to-one field="author" target-entity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser">
       <join-column name="authorId" referenced-column-name="id" />
     </many-to-one>
 

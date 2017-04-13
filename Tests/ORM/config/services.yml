@@ -1,4 +1,14 @@
 services:
+  test_entity_operations:
+    class: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Services\TestEntityOperations
+
+  repository_manager.test_user:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser
+
+  # Annotation repositories
   repository_manager.test_entity_roleauthor_annotation:
     class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
@@ -17,11 +27,21 @@ services:
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityNoBypass
 
-  repository_manager.test_user_annotation:
+  # XML repositories
+  repository_manager.test_entity_roleauthor_xml:
     class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
-      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestUser
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityRoleAuthor
 
-  test_entity_operations:
-    class: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Services\TestEntityOperations
+  repository_manager.test_entity_hasaccount_xml:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityHasAccountNoInterface
+
+  repository_manager.test_entity_nobypass_xml:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityNoBypass

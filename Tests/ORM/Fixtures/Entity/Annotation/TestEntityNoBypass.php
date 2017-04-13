@@ -75,7 +75,7 @@ class TestEntityNoBypass implements ModelInterface
 
     /**
      * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="TestUser")
+     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;

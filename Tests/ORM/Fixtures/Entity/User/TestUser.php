@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -10,8 +10,8 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuth
 /**
  * TestUser
  *
- * @ORM\Table(name="testusers_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestUserRepository")
+ * @ORM\Table(name="testusers")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\TestUserRepository")
  * @LogicalAuthorization({
  *   "create": {
  *     "role": "ROLE_ADMIN"

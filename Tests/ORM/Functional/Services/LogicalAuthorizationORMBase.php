@@ -31,6 +31,7 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $kernel->boot();
     $this->client = static::createClient();
 
+    $this->load_services['testUserRepositoryManager'] = 'repository_manager.test_user';
     $this->load_services['testEntityOperations'] = 'test_entity_operations';
     $container = $kernel->getContainer();
     foreach($this->load_services as $property_name => $service_name) {
@@ -52,9 +53,13 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
    * It is important to reset all non-static properties to minimize memory leaks.
    */
   protected function tearDown() {
+    $this->testEntityRoleAuthorRepositoryManager->getObjectManager()->getConnection()->close();
     $this->testEntityRoleAuthorRepositoryManager = null;
+    $this->testEntityHasAccountNoInterfaceRepositoryManager->getObjectManager()->getConnection()->close();
     $this->testEntityHasAccountNoInterfaceRepositoryManager = null;
+    $this->testEntityNoBypassRepositoryManager->getObjectManager()->getConnection()->close();
     $this->testEntityNoBypassRepositoryManager = null;
+    $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
     $this->testUserRepositoryManager = null;
     $this->testEntityOperations = null;
     $this->client = null;
@@ -74,19 +79,19 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
 
   protected function addUsers() {
     //Create new normal user
-    if(!static::$authenticated_user) {
+    if(!static::$authenticated_user || get_class(static::$authenticated_user->getModel()) !== $this->testUserRepositoryManager->getClassName()) {
       static::$authenticated_user = $this->testUserRepositoryManager->create('authenticated_user', $this->user_credentials['authenticated_user'], [], 'user@email.com');
       static::$authenticated_user->save();
     }
 
     //Create new admin user
-    if(!static::$admin_user) {
+    if(!static::$admin_user || get_class(static::$admin_user->getModel()) !== $this->testUserRepositoryManager->getClassName()) {
       static::$admin_user = $this->testUserRepositoryManager->create('admin_user', $this->user_credentials['admin_user'], ['ROLE_ADMIN'], 'admin@email.com');
       static::$admin_user->save();
     }
 
     //Create superadmin user
-    if(!static::$superadmin_user) {
+    if(!static::$superadmin_user || get_class(static::$superadmin_user->getModel()) !== $this->testUserRepositoryManager->getClassName()) {
       static::$superadmin_user = $this->testUserRepositoryManager->create('superadmin_user', $this->user_credentials['superadmin_user'], [], 'superadmin@email.com');
       static::$superadmin_user->setBypassAccess(true);
       static::$superadmin_user->save();
