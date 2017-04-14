@@ -71,13 +71,13 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
         }
       }
       foreach($reflectionClass->getProperties() as $property) {
-        $propertyName = $property->getName();
+        $fieldName = $property->getName();
         $propertyAnnotations = $annotationReader->getPropertyAnnotations($property);
         foreach ($propertyAnnotations as $annotation) {
           if ($annotation instanceof LogicalAuthorization) {
             if(!isset($permissions['models'])) $permissions['models'] = [];
             if(!isset($permissions['models'][$entityName])) $permissions['models'][$entityName] = ['fields' => []];
-            $permissions['models'][$entityName]['fields'][$propertyName] = $annotation->getPermissions();
+            $permissions['models'][$entityName]['fields'][$fieldName] = $annotation->getPermissions();
           }
         }
       }
@@ -87,12 +87,57 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
 
   protected function addXMLPermissions(AddPermissionsEvent $event, MappingDriver $driver) {
     $classes = $driver->getAllClassNames();
+    $permissions = [];
     foreach($classes as $class) {
-      $element = $driver->getElement($class);
+      $xmlRoot = $driver->getElement($class);
+      $entityName = (string) $xmlRoot['name'];
       // Parse XML structure in $element
-      //-----
-//       print_r($element);
+      if(isset($xmlRoot->{'logical-authorization'})) {
+        if(!isset($permissions['models'])) $permissions['models'] = [];
+        $permissions['models'][$entityName] = $this->parseXMLPermissionsElementRecursive($xmlRoot->{'logical-authorization'});
+      }
+      if(isset($xmlRoot->field)) {
+        foreach($xmlRoot->field as $field) {
+          $fieldName = (string) $field['name'];
+          if(isset($field->{'logical-authorization'})) {
+            if(!isset($permissions['models'])) $permissions['models'] = [];
+            if(!isset($permissions['models'][$entityName])) $permissions['models'][$entityName] = ['fields' => []];
+            $permissions['models'][$entityName]['fields'][$fieldName] = $this->parseXMLPermissionsElementRecursive($field->{'logical-authorization'});
+          }
+        }
+      }
     }
+    $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));
+  }
+  protected function parseXMLPermissionsElementRecursive($element) {
+    $permissions = [];
+    $children = $element->children();
+    foreach($children as $key => $child) {
+      if($subchildren = $child->children()) {
+        $parsed_child = $this->parseXMLPermissionsElementRecursive($child);
+      }
+      else {
+        $str_child = (string) $child;
+        $lowercase_child = strtolower($str_child);
+        if($lowercase_child === 'true') {
+          $parsed_child = TRUE;
+        }
+        elseif($lowercase_child === 'false') {
+          $parsed_child = FALSE;
+        }
+        else {
+          $parsed_child = $str_child;
+        }
+      }
+      if($key === 'value') {
+        $permissions[] = $parsed_child;
+      }
+      else {
+        $permissions[$key] = $parsed_child;
+      }
+    }
+
+    return $permissions;
   }
 
   protected function addYMLPermissions(AddPermissionsEvent $event, MappingDriver $driver) {

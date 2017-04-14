@@ -7,24 +7,38 @@
   <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityRoleAuthorRepository" table="testentities_roleauthor_xml">
     <logical-authorization>
       <create>
-        <role>ROLE_ADMIN</role>
+        <role>
+          <value>ROLE_ADMIN</value>
+        </role>
       </create>
       <read>
         <OR>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
+          <role>
+            <value>ROLE_ADMIN</value>
+          </role>
+          <flag>
+            <value>is_author</value>
+          </flag>
         </OR>
       </read>
       <update>
         <OR>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
+          <role>
+            <value>ROLE_ADMIN</value>
+          </role>
+          <flag>
+            <value>is_author</value>
+          </flag>
         </OR>
       </update>
       <delete>
         <OR>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
+          <role>
+            <value>ROLE_ADMIN</value>
+          </role>
+          <flag>
+            <value>is_author</value>
+          </flag>
         </OR>
       </delete>
     </logical-authorization>
@@ -33,17 +47,26 @@
       <generator strategy="AUTO"/>
     </id>
 
-    <field name="field1" column="field1" type="string" length="255" />
-    <logical-authorization field="field1">
-      <get>
-        <role>ROLE_ADMIN</role>
-        <flag>is_author</flag>
-      </get>
-      <set>
-        <role>ROLE_ADMIN</role>
-        <flag>is_author</flag>
-      </set>
-    </logical-authorization>
+    <field name="field1" column="field1" type="string" length="255">
+      <logical-authorization>
+        <get>
+          <role>
+            <value>ROLE_ADMIN</value>
+          </role>
+          <flag>
+            <value>is_author</value>
+          </flag>
+        </get>
+        <set>
+          <role>
+            <value>ROLE_ADMIN</value>
+          </role>
+          <flag>
+            <value>is_author</value>
+          </flag>
+        </set>
+      </logical-authorization>
+    </field>
 
     <field name="field2" column="field2" type="string" length="255" />
 

@@ -123,743 +123,743 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->assertEquals(1, $entities_count);
   }
 
-//   public function testOnUnknownResultRoleDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $entities_count = $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getUnknownResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnUnknownResultFlagBypassAccessAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnUnknownResultFlagBypassAccessDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getUnknownResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnUnknownResultFlagHasAccountAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnUnknownResultFlagHasAccountDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getUnknownResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnUnknownResultFlagIsAuthorAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
-//     $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnUnknownResultFlagIsAuthorDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getUnknownResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   /*---onSingleModelResult---*/
-//
-//   public function testOnSingleModelResultRoleAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_found);
-//   }
-//
-//   public function testOnSingleModelResultRoleDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_found);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
-//   }
-//
-//   public function testOnSingleModelResultFlagBypassAccessAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_found);
-//   }
-//
-//   public function testOnSingleModelResultFlagBypassAccessDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_found);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
-//   }
-//
-//   public function testOnSingleModelResultFlagHasAccountAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_found);
-//   }
-//
-//   public function testOnSingleModelResultFlagHasAccountDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_found);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
-//   }
-//
-//   public function testOnSingleModelResultFlagIsAuthorAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel(static::$authenticated_user);
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_found);
-//   }
-//
-//   public function testOnSingleModelResultFlagIsAuthorDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $modelManager = $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_found = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_found);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
-//   }
-//
-//   /*---onMultipleModelResult---*/
-//
-//   public function testOnMultipleModelResultRoleAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnMultipleModelResultRoleDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $entities_count = $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getMultipleModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnMultipleModelResultFlagBypassAccessAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnMultipleModelResultFlagBypassAccessDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getMultipleModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnMultipleModelResultFlagHasAccountAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnMultipleModelResultFlagHasAccountDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getMultipleModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnMultipleModelResultFlagIsAuthorAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnMultipleModelResultFlagIsAuthorDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getMultipleModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   /*---onBeforeCreate---*/
-//
-//   public function testOnBeforeCreateRoleAllow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_created = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_created);
-//   }
-//
-//   public function testOnBeforeCreateRoleDisallow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_created = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_created);
-//   }
-//
-//   public function testOnBeforeCreateFlagBypassAccessAllow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_created = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_created);
-//   }
-//
-//   public function testOnBeforeCreateFlagBypassAccessDisallow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_created = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_created);
-//   }
-//
-//   public function testOnBeforeCreateFlagHasAccountAllow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_created = $decoder->decode($response->getContent(), 'json');
-//     $this->assertTrue($entity_created);
-//   }
-//
-//   public function testOnBeforeCreateFlagHasAccountDisallow() {
-//     $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $decoder = new JsonDecode();
-//     $entity_created = $decoder->decode($response->getContent(), 'json');
-//     $this->assertFalse($entity_created);
-//   }
-//
-//   /*---onLazyModelCollectionResult---*/
-//
-//   public function testOnLazyModelCollectionResultRoleAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnLazyModelCollectionResultRoleDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getLazyLoadedModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnLazyModelCollectionResultFlagBypassAccessAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnLazyModelCollectionResultFlagBypassAccessDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getLazyLoadedModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnLazyModelCollectionResultFlagHasAccountAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnLazyModelCollectionResultFlagHasAccountDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getLazyLoadedModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   public function testOnLazyModelCollectionResultFlagIsAuthorAllow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel(static::$authenticated_user);
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnLazyModelCollectionResultFlagIsAuthorDisallow() {
-//     $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
-//     $this->testEntityOperations->createTestModel();
-//     $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//     //Kolla att entiteten fortfarande finns i databasen
-//     $entities = $this->testEntityOperations->getLazyLoadedModelResult();
-//     $this->assertEquals(1, count($entities));
-//   }
-//
-//   /*----------ModelManager event tests------------*/
-//
-//   /*---onBeforeMethodCall getter---*/
-//
-//   public function testOnBeforeMethodCallGetterRoleAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterRoleDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterFlagBypassAccessAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterFlagBypassAccessDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterFlagHasAccountAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterFlagHasAccountDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterFlagIsAuthorAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallGetterFlagIsAuthorDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   /*---onBeforeMethodCall setter---*/
-//
-//   public function testOnBeforeMethodCallSetterRoleAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterRoleDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterFlagBypassAccessAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterFlagBypassAccessDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterFlagHasAccountAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterFlagHasAccountDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterFlagIsAuthorAllow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeMethodCallSetterFlagIsAuthorDisallow() {
-//     $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   /*---onBeforeSave create---*/
-//
-//   public function testOnBeforeSaveCreateRoleAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnBeforeSaveCreateRoleDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   public function testOnBeforeSaveCreateFlagBypassAccessAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnBeforeSaveCreateFlagBypassAccessDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   public function testOnBeforeSaveCreateFlagHasAccountAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnBeforeSaveCreateFlagHasAccountDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   /*---onBeforeSave update---*/
-//
-//   public function testOnBeforeSaveUpdateRoleAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateRoleDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateFlagBypassAccessAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateFlagBypassAccessDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateFlagHasAccountAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateFlagHasAccountDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateFlagIsAuthorAllow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertSame('test', $field_value);
-//   }
-//
-//   public function testOnBeforeSaveUpdateFlagIsAuthorDisallow() {
-//     $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $field_value = $response->getContent();
-//     $this->assertNotSame('test', $field_value);
-//   }
-//
-//   /*---onBeforeDelete---*/
-//
-//   public function testOnBeforeDeleteRoleAllow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteRoleDisallow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteFlagBypassAccessAllow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteFlagBypassAccessDisallow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteFlagHasAccountAllow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteFlagHasAccountDisallow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteFlagIsAuthorAllow() {
-//     $this->sendRequestAs('GET', '/test/delete-model-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(0, $entities_count);
-//   }
-//
-//   public function testOnBeforeDeleteFlagIsAuthorDisallow() {
-//     $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']));
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $entities_count = $response->getContent();
-//     $this->assertEquals(1, $entities_count);
-//   }
+  public function testOnUnknownResultRoleDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $entities_count = $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnUnknownResultFlagBypassAccessAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnUnknownResultFlagBypassAccessDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnUnknownResultFlagHasAccountAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnUnknownResultFlagHasAccountDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnUnknownResultFlagIsAuthorAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnUnknownResultFlagIsAuthorDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getUnknownResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  /*---onSingleModelResult---*/
+
+  public function testOnSingleModelResultRoleAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
+  }
+
+  public function testOnSingleModelResultRoleDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
+  }
+
+  public function testOnSingleModelResultFlagBypassAccessAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
+  }
+
+  public function testOnSingleModelResultFlagBypassAccessDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
+  }
+
+  public function testOnSingleModelResultFlagHasAccountAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
+  }
+
+  public function testOnSingleModelResultFlagHasAccountDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
+  }
+
+  public function testOnSingleModelResultFlagIsAuthorAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_found);
+  }
+
+  public function testOnSingleModelResultFlagIsAuthorDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $modelManager = $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/find-single-model-result/' . $modelManager->getId(), array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_found = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_found);
+    //Kolla att entiteten fortfarande finns i databasen
+    $this->assertTrue((bool) $this->testEntityOperations->getSingleModelResult($modelManager->getId()));
+  }
+
+  /*---onMultipleModelResult---*/
+
+  public function testOnMultipleModelResultRoleAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnMultipleModelResultRoleDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $entities_count = $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnMultipleModelResultFlagBypassAccessAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnMultipleModelResultFlagBypassAccessDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnMultipleModelResultFlagHasAccountAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnMultipleModelResultFlagHasAccountDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnMultipleModelResultFlagIsAuthorAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnMultipleModelResultFlagIsAuthorDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-multiple-model-result', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getMultipleModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  /*---onBeforeCreate---*/
+
+  public function testOnBeforeCreateRoleAllow() {
+    $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_created);
+  }
+
+  public function testOnBeforeCreateRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_created);
+  }
+
+  public function testOnBeforeCreateFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_created);
+  }
+
+  public function testOnBeforeCreateFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_created);
+  }
+
+  public function testOnBeforeCreateFlagHasAccountAllow() {
+    $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertTrue($entity_created);
+  }
+
+  public function testOnBeforeCreateFlagHasAccountDisallow() {
+    $this->sendRequestAs('GET', '/test/create-entity', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $decoder = new JsonDecode();
+    $entity_created = $decoder->decode($response->getContent(), 'json');
+    $this->assertFalse($entity_created);
+  }
+
+  /*---onLazyModelCollectionResult---*/
+
+  public function testOnLazyModelCollectionResultRoleAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnLazyModelCollectionResultRoleDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $entities_count = $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnLazyModelCollectionResultFlagBypassAccessAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnLazyModelCollectionResultFlagBypassAccessDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityNoBypassRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnLazyModelCollectionResultFlagHasAccountAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnLazyModelCollectionResultFlagHasAccountDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityHasAccountNoInterfaceRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  public function testOnLazyModelCollectionResultFlagIsAuthorAllow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel(static::$authenticated_user);
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnLazyModelCollectionResultFlagIsAuthorDisallow() {
+    $this->testEntityOperations->setRepositoryManager($this->testEntityRoleAuthorRepositoryManager);
+    $this->testEntityOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-entities-lazy', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+    //Kolla att entiteten fortfarande finns i databasen
+    $entities = $this->testEntityOperations->getLazyLoadedModelResult();
+    $this->assertEquals(1, count($entities));
+  }
+
+  /*----------ModelManager event tests------------*/
+
+  /*---onBeforeMethodCall getter---*/
+
+  public function testOnBeforeMethodCallGetterRoleAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagHasAccountAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagHasAccountDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagIsAuthorAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallGetterFlagIsAuthorDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-getter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  /*---onBeforeMethodCall setter---*/
+
+  public function testOnBeforeMethodCallSetterRoleAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterFlagHasAccountAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterFlagHasAccountDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterFlagIsAuthorAllow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeMethodCallSetterFlagIsAuthorDisallow() {
+    $this->sendRequestAs('GET', '/test/call-method-setter', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  /*---onBeforeSave create---*/
+
+  public function testOnBeforeSaveCreateRoleAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnBeforeSaveCreateRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  public function testOnBeforeSaveCreateFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnBeforeSaveCreateFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  public function testOnBeforeSaveCreateFlagHasAccountAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnBeforeSaveCreateFlagHasAccountDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-create', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  /*---onBeforeSave update---*/
+
+  public function testOnBeforeSaveUpdateRoleAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateFlagHasAccountAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateFlagHasAccountDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateFlagIsAuthorAllow() {
+    $this->sendRequestAs('GET', '/test/save-model-update-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertSame('test', $field_value);
+  }
+
+  public function testOnBeforeSaveUpdateFlagIsAuthorDisallow() {
+    $this->sendRequestAs('GET', '/test/save-model-update', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $field_value = $response->getContent();
+    $this->assertNotSame('test', $field_value);
+  }
+
+  /*---onBeforeDelete---*/
+
+  public function testOnBeforeDeleteRoleAllow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  public function testOnBeforeDeleteRoleDisallow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnBeforeDeleteFlagBypassAccessAllow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  public function testOnBeforeDeleteFlagBypassAccessDisallow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityNoBypassRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnBeforeDeleteFlagHasAccountAllow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  public function testOnBeforeDeleteFlagHasAccountDisallow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityHasAccountNoInterfaceRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testOnBeforeDeleteFlagIsAuthorAllow() {
+    $this->sendRequestAs('GET', '/test/delete-model-author', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(0, $entities_count);
+  }
+
+  public function testOnBeforeDeleteFlagIsAuthorDisallow() {
+    $this->sendRequestAs('GET', '/test/delete-model', array('repository_manager_service' => $this->load_services['testEntityRoleAuthorRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
 }

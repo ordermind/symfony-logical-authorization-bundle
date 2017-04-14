@@ -7,20 +7,28 @@
   <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityNoBypass" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityNoBypassRepository" table="testentities_nobypass_xml">
     <logical-authorization>
       <create>
-        <no_bypass>true</no_bypass>
-        FALSE
+        <no_bypass>
+          <value>true</value>
+        </no_bypass>
+        <value>FALSE</value>
       </create>
       <read>
-        <no_bypass>true</no_bypass>
-        FALSE
+        <no_bypass>
+          <value>true</value>
+        </no_bypass>
+        <value>FALSE</value>
       </read>
       <update>
-        <no_bypass>true</no_bypass>
-        FALSE
+        <no_bypass>
+          <value>true</value>
+        </no_bypass>
+        <value>FALSE</value>
       </update>
       <delete>
-        <no_bypass>true</no_bypass>
-        FALSE
+        <no_bypass>
+          <value>true</value>
+        </no_bypass>
+        <value>FALSE</value>
       </delete>
     </logical-authorization>
 
@@ -28,17 +36,22 @@
       <generator strategy="AUTO"/>
     </id>
 
-    <field name="field1" column="field1" type="string" length="255" />
-    <logical-authorization field="field1">
-      <get>
-        <no_bypass>true</no_bypass>
-        FALSE
-      </get>
-      <set>
-        <no_bypass>true</no_bypass>
-        FALSE
-      </set>
-    </logical-authorization>
+    <field name="field1" column="field1" type="string" length="255">
+      <logical-authorization>
+        <get>
+          <no_bypass>
+            <value>true</value>
+          </no_bypass>
+          <value>FALSE</value>
+        </get>
+        <set>
+          <no_bypass>
+            <value>true</value>
+          </no_bypass>
+          <value>FALSE</value>
+        </set>
+      </logical-authorization>
+    </field>
 
     <field name="field2" column="field2" type="string" length="255" />
 

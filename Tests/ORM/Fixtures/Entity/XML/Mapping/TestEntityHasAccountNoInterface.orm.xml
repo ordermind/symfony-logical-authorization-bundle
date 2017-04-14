@@ -7,16 +7,24 @@
   <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityHasAccountNoInterface" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityHasAccountNoInterfaceRepository" table="testentities_hasaccount_xml">
     <logical-authorization>
       <create>
-        <flag>has_account</flag>
+        <flag>
+          <value>has_account</value>
+        </flag>
       </create>
       <read>
-        <flag>has_account</flag>
+        <flag>
+          <value>has_account</value>
+        </flag>
       </read>
       <update>
-        <flag>has_account</flag>
+        <flag>
+          <value>has_account</value>
+        </flag>
       </update>
       <delete>
-        <flag>has_account</flag>
+        <flag>
+          <value>has_account</value>
+        </flag>
       </delete>
     </logical-authorization>
 
@@ -24,15 +32,20 @@
       <generator strategy="AUTO"/>
     </id>
 
-    <field name="field1" column="field1" type="string" length="255" />
-    <logical-authorization field="field1">
-      <get>
-        <flag>has_account</flag>
-      </get>
-      <set>
-        <flag>has_account</flag>
-      </set>
-    </logical-authorization>
+    <field name="field1" column="field1" type="string" length="255">
+      <logical-authorization>
+        <get>
+          <flag>
+            <value>has_account</value>
+          </flag>
+        </get>
+        <set>
+          <flag>
+            <value>has_account</value>
+          </flag>
+        </set>
+      </logical-authorization>
+    </field>
 
     <field name="field2" column="field2" type="string" length="255" />
 
