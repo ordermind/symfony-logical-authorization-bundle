@@ -1,0 +1,50 @@
+Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityRoleAuthor:
+  type: entity
+  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\YML\TestEntityRoleAuthorRepository
+  table: testentities_roleauthor_yml
+
+  logicalAuthorization:
+    create:
+      role: ROLE_ADMIN
+    read:
+      OR:
+        role: ROLE_ADMIN
+        flag: is_author
+    update:
+      OR:
+        role: ROLE_ADMIN
+        flag: is_author
+    delete:
+      OR:
+        role: ROLE_ADMIN
+        flag: is_author
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    field1:
+      type: string
+      length: 255
+      logicalAuthorization:
+        get:
+          role: ROLE_ADMIN
+          flag: is_author
+        set:
+          role: ROLE_ADMIN
+          flag: is_author
+    field2:
+      type: string
+      length: 255
+    field3:
+      type: string
+      length: 255
+  manyToOne:
+    author:
+      targetEntity: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser
+      joinColumn:
+        name: author_id
+        referencedColumnName: id

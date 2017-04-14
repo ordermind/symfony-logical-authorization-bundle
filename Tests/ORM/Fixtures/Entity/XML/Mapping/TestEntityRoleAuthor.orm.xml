@@ -7,38 +7,24 @@
   <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityRoleAuthorRepository" table="testentities_roleauthor_xml">
     <logical-authorization>
       <create>
-        <role>
-          <value>ROLE_ADMIN</value>
-        </role>
+        <role>ROLE_ADMIN</role>
       </create>
       <read>
         <OR>
-          <role>
-            <value>ROLE_ADMIN</value>
-          </role>
-          <flag>
-            <value>is_author</value>
-          </flag>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
         </OR>
       </read>
       <update>
         <OR>
-          <role>
-            <value>ROLE_ADMIN</value>
-          </role>
-          <flag>
-            <value>is_author</value>
-          </flag>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
         </OR>
       </update>
       <delete>
         <OR>
-          <role>
-            <value>ROLE_ADMIN</value>
-          </role>
-          <flag>
-            <value>is_author</value>
-          </flag>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
         </OR>
       </delete>
     </logical-authorization>
@@ -50,20 +36,12 @@
     <field name="field1" column="field1" type="string" length="255">
       <logical-authorization>
         <get>
-          <role>
-            <value>ROLE_ADMIN</value>
-          </role>
-          <flag>
-            <value>is_author</value>
-          </flag>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
         </get>
         <set>
-          <role>
-            <value>ROLE_ADMIN</value>
-          </role>
-          <flag>
-            <value>is_author</value>
-          </flag>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
         </set>
       </logical-authorization>
     </field>
@@ -73,7 +51,7 @@
     <field name="field3" column="field3" type="string" length="255" />
 
     <many-to-one field="author" target-entity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser">
-      <join-column name="authorId" referenced-column-name="id" />
+      <join-column name="author_id" referenced-column-name="id" />
     </many-to-one>
   </entity>
 </doctrine-mapping>

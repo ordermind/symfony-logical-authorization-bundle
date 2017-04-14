@@ -1,88 +1,22 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
-/**
- * TestEntityRoleAuthor
- *
- * @ORM\Table(name="testentities_roleauthor_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityRoleAuthorRepository")
- * @LogicalAuthorization({
- *   "create": {
- *     "role": "ROLE_ADMIN"
- *   },
- *   "read": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   },
- *   "update": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   },
- *   "delete": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   }
- * })
- */
 class TestEntityRoleAuthor implements ModelInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field1", type="string", length=255)
-     * @LogicalAuthorization({
-     *   "get": {
-     *     "role": "ROLE_ADMIN",
-     *     "flag": "is_author"
-     *   },
-     *   "set": {
-     *     "role": "ROLE_ADMIN",
-     *     "flag": "is_author"
-     *   }
-     * })
-     */
     private $field1 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field2", type="string", length=255)
-     */
     private $field2 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field3", type="string", length=255)
-     */
     private $field3 = '';
 
-    /**
-     * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     */
     protected $author;
 
     /**

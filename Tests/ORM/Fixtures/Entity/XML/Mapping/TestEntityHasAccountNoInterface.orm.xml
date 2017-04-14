@@ -7,24 +7,16 @@
   <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityHasAccountNoInterface" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityHasAccountNoInterfaceRepository" table="testentities_hasaccount_xml">
     <logical-authorization>
       <create>
-        <flag>
-          <value>has_account</value>
-        </flag>
+        <flag>has_account</flag>
       </create>
       <read>
-        <flag>
-          <value>has_account</value>
-        </flag>
+        <flag>has_account</flag>
       </read>
       <update>
-        <flag>
-          <value>has_account</value>
-        </flag>
+        <flag>has_account</flag>
       </update>
       <delete>
-        <flag>
-          <value>has_account</value>
-        </flag>
+        <flag>has_account</flag>
       </delete>
     </logical-authorization>
 
@@ -35,14 +27,10 @@
     <field name="field1" column="field1" type="string" length="255">
       <logical-authorization>
         <get>
-          <flag>
-            <value>has_account</value>
-          </flag>
+          <flag>has_account</flag>
         </get>
         <set>
-          <flag>
-            <value>has_account</value>
-          </flag>
+          <flag>has_account</flag>
         </set>
       </logical-authorization>
     </field>
@@ -52,7 +40,7 @@
     <field name="field3" column="field3" type="string" length="255" />
 
     <many-to-one field="author" target-entity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser">
-      <join-column name="authorId" referenced-column-name="id" />
+      <join-column name="author_id" referenced-column-name="id" />
     </many-to-one>
 
   </entity>

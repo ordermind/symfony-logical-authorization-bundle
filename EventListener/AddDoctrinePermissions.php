@@ -61,23 +61,22 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
     $permissions = [];
     foreach($classes as $class) {
       $metadata = $om->getClassMetadata($class);
-      $entityName = $metadata->getName();
-      $reflectionClass = new \ReflectionClass($entityName);
+      $reflectionClass = new \ReflectionClass($class);
       $classAnnotations = $annotationReader->getClassAnnotations($reflectionClass);
       foreach ($classAnnotations as $annotation) {
         if ($annotation instanceof LogicalAuthorization) {
           if(!isset($permissions['models'])) $permissions['models'] = [];
-          $permissions['models'][$entityName] = $annotation->getPermissions();
+          $permissions['models'][$class] = $annotation->getPermissions();
         }
       }
       foreach($reflectionClass->getProperties() as $property) {
-        $fieldName = $property->getName();
+        $field_name = $property->getName();
         $propertyAnnotations = $annotationReader->getPropertyAnnotations($property);
         foreach ($propertyAnnotations as $annotation) {
           if ($annotation instanceof LogicalAuthorization) {
             if(!isset($permissions['models'])) $permissions['models'] = [];
-            if(!isset($permissions['models'][$entityName])) $permissions['models'][$entityName] = ['fields' => []];
-            $permissions['models'][$entityName]['fields'][$fieldName] = $annotation->getPermissions();
+            $permissions['models'] += [$class => ['fields' => []]];
+            $permissions['models'][$class]['fields'][$field_name] = $annotation->getPermissions();
           }
         }
       }
@@ -90,58 +89,84 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
     $permissions = [];
     foreach($classes as $class) {
       $xmlRoot = $driver->getElement($class);
-      $entityName = (string) $xmlRoot['name'];
       // Parse XML structure in $element
       if(isset($xmlRoot->{'logical-authorization'})) {
         if(!isset($permissions['models'])) $permissions['models'] = [];
-        $permissions['models'][$entityName] = $this->parseXMLPermissionsElementRecursive($xmlRoot->{'logical-authorization'});
+        $permissions['models'][$class] = json_decode(json_encode($xmlRoot->{'logical-authorization'}), TRUE);
       }
-      if(isset($xmlRoot->field)) {
-        foreach($xmlRoot->field as $field) {
-          $fieldName = (string) $field['name'];
-          if(isset($field->{'logical-authorization'})) {
-            if(!isset($permissions['models'])) $permissions['models'] = [];
-            if(!isset($permissions['models'][$entityName])) $permissions['models'][$entityName] = ['fields' => []];
-            $permissions['models'][$entityName]['fields'][$fieldName] = $this->parseXMLPermissionsElementRecursive($field->{'logical-authorization'});
+      foreach(['id', 'field'] as $field_key) {
+        if(isset($xmlRoot->{$field_key})) {
+          foreach($xmlRoot->{$field_key} as $field) {
+            $field_name = (string) $field['name'];
+            if(isset($field->{'logical-authorization'})) {
+              if(!isset($permissions['models'])) $permissions['models'] = [];
+              $permissions['models'] += [$class => ['fields' => []]];
+              $permissions['models'][$class]['fields'][$field_name] = json_decode(json_encode($field->{'logical-authorization'}), TRUE);
+            }
           }
         }
       }
     }
+    $permissions = $this->massagePermissionsRecursive($permissions);
     $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));
-  }
-  protected function parseXMLPermissionsElementRecursive($element) {
-    $permissions = [];
-    $children = $element->children();
-    foreach($children as $key => $child) {
-      if($subchildren = $child->children()) {
-        $parsed_child = $this->parseXMLPermissionsElementRecursive($child);
-      }
-      else {
-        $str_child = (string) $child;
-        $lowercase_child = strtolower($str_child);
-        if($lowercase_child === 'true') {
-          $parsed_child = TRUE;
-        }
-        elseif($lowercase_child === 'false') {
-          $parsed_child = FALSE;
-        }
-        else {
-          $parsed_child = $str_child;
-        }
-      }
-      if($key === 'value') {
-        $permissions[] = $parsed_child;
-      }
-      else {
-        $permissions[$key] = $parsed_child;
-      }
-    }
-
-    return $permissions;
   }
 
   protected function addYMLPermissions(AddPermissionsEvent $event, MappingDriver $driver) {
+    $classes = $driver->getAllClassNames();
+    $permissions = [];
+    foreach($classes as $class) {
+      $mapping = $driver->getElement($class);
+      if(isset($mapping['logicalAuthorization'])) {
+        if(!isset($permissions['models'])) $permissions['models'] = [];
+        $permissions['models'][$class] = $mapping['logicalAuthorization'];
+      }
+      foreach(['id', 'field'] as $field_key) {
+        if(isset($mapping[$field_key])) {
+          foreach($mapping[$field_key] as $field_name => $field_mapping) {
+            if(isset($field_mapping['logicalAuthorization'])) {
+              if(!isset($permissions['models'])) $permissions['models'] = [];
+              $permissions['models'] += [$class => ['fields' => []]];
+              $permissions['models'][$class]['fields'][$field_name] = $field_mapping['logicalAuthorization'];
+            }
+          }
+        }
+      }
+    }
+    $permissions = $this->massagePermissionsRecursive($permissions);
+    $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));
+  }
 
+  protected function massagePermissionsRecursive($permissions) {
+    $massaged_permissions = [];
+    foreach($permissions as $key => $value) {
+      if(is_array($value)) {
+        $parsed_value = $this->massagePermissionsRecursive($value);
+      }
+      elseif(is_string($value)) {
+        $lowercase_value = strtolower($value);
+        if($lowercase_value === 'true') {
+          $parsed_value = TRUE;
+        }
+        elseif($lowercase_value === 'false') {
+          $parsed_value = FALSE;
+        }
+        else {
+          $parsed_value = $value;
+        }
+      }
+      else {
+        $parsed_value = $value;
+      }
+
+      if($key === 'value') {
+        $massaged_permissions[] = $parsed_value;
+      }
+      else {
+        $massaged_permissions[$key] = $parsed_value;
+      }
+    }
+
+    return $massaged_permissions;
   }
 }
 

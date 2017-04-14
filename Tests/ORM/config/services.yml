@@ -45,3 +45,22 @@ services:
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityNoBypass
+
+  # YML repositories
+  repository_manager.test_entity_roleauthor_yml:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityRoleAuthor
+
+  repository_manager.test_entity_hasaccount_yml:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityHasAccountNoInterface
+
+  repository_manager.test_entity_nobypass_yml:
+    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityNoBypass
