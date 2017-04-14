@@ -1,13 +1,13 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services;
 
 use Doctrine\Common\Collections\Criteria;
 
 use Ordermind\DoctrineManagerBundle\Services\Manager\RepositoryManagerInterface;
 use Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface;
 
-class TestEntityOperations {
+class TestModelOperations {
   private $repositoryManager;
 
   public function setRepositoryManager(RepositoryManagerInterface $repositoryManager) {

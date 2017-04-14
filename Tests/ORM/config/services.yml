@@ -1,6 +1,6 @@
 services:
-  test_entity_operations:
-    class: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Services\TestEntityOperations
+  test_model_operations:
+    class: Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services\TestModelOperations
 
   repository_manager.test_user:
     class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager

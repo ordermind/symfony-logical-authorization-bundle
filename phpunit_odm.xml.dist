@@ -9,14 +9,14 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./Tests/ORM/bootstrap.php"
+         bootstrap="./Tests/ODM/bootstrap.php"
 >
     <php>
-        <server name="KERNEL_DIR" value="./Tests/ORM/" />
+        <server name="KERNEL_DIR" value="./Tests/ODM/" />
     </php>
     <testsuites>
-        <testsuite name="LogicalAuthorizationBundle ORM Test Suite">
-            <directory>./Tests/ORM/</directory>
+        <testsuite name="LogicalAuthorizationBundle ODM Test Suite">
+            <directory>./Tests/ODM/</directory>
         </testsuite>
     </testsuites>
 
