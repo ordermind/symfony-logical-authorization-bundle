@@ -17,6 +17,9 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^1.0",
         "doctrine/orm": "^2.0",
+        "doctrine/mongodb-odm-bundle": "^3.0",
+        "doctrine/mongodb-odm": "^1.0",
+        "doctrine/mongodb": "^1.0",
         "sensio/framework-extra-bundle": "^3.0",
         "phpunit/phpunit": ">=4.8"
     }

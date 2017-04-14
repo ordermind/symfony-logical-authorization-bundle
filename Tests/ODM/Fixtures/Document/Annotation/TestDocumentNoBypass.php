@@ -2,7 +2,7 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation;
 
-use Doctrine\ODM\Mapping as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
@@ -10,7 +10,6 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 /**
  * TestDocumentNoBypass
  *
- * @ODM\Table(name="testdocuments_nobypass_annotation")
  * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentNoBypassRepository")
  * @LogicalAuthorization({
  *   "create": {
@@ -36,16 +35,15 @@ class TestDocumentNoBypass implements ModelInterface
     /**
      * @var int
      *
-     * @ODM\Column(name="id", type="integer")
+     * @ODM\Field(name="id", type="integer")
      * @ODM\Id
-     * @ODM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ODM\Column(name="field1", type="string", length=255)
+     * @ODM\Field(name="field1", type="string")
      * @LogicalAuthorization({
      *   "get": {
      *     "no_bypass": true,
@@ -62,21 +60,20 @@ class TestDocumentNoBypass implements ModelInterface
     /**
      * @var string
      *
-     * @ODM\Column(name="field2", type="string", length=255)
+     * @ODM\Field(name="field2", type="string")
      */
     private $field2 = '';
 
     /**
      * @var string
      *
-     * @ODM\Column(name="field3", type="string", length=255)
+     * @ODM\Field(name="field3", type="string")
      */
     private $field3 = '';
 
     /**
      * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ODM\ManyToOne(targetDocument="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser")
-     * @ODM\JoinColumn(name="author_id", referencedColumnName="id")
+     * @ODM\ReferenceOne(targetDocument="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser")
      */
     protected $author;
 

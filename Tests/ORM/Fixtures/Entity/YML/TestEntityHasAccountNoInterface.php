@@ -2,7 +2,6 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML;
 
-use Doctrine\ORM\Mapping as ORM;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 

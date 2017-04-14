@@ -2,7 +2,6 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -10,7 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 
-class AddDoctrinePermissions implements EventSubscriberInterface {
+class AddDoctrinePermissions {
   protected $doctrine;
   protected $annotationDriverClass;
   protected $xmlDriverClass;
@@ -23,17 +22,7 @@ class AddDoctrinePermissions implements EventSubscriberInterface {
     $this->ymlDriverClass = $ymlDriverClass;
   }
 
-  public static function getSubscribedEvents() {
-    return array(
-      'logical_authorization.add_permissions' => array(
-        array(
-          'addPermissions',
-        ),
-      ),
-    );
-  }
-
-  public function addPermissions(AddPermissionsEvent $event) {
+  public function onAddPermissions(AddPermissionsEvent $event) {
     if(is_null($this->doctrine)) return;
 
     $object_managers = $this->doctrine->getManagers();

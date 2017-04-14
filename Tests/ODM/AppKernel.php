@@ -14,7 +14,7 @@ class AppKernel extends Kernel
         if (in_array($this->getEnvironment(), array('test'))) {
             $bundles[] = new Symfony\Bundle\FrameworkBundle\FrameworkBundle();
             $bundles[] = new Symfony\Bundle\SecurityBundle\SecurityBundle();
-            $bundles[] = new Doctrine\Bundle\DoctrineBundle\DoctrineBundle();
+            $bundles[] = new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle();
             $bundles[] = new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle();
             $bundles[] = new Ordermind\LogicalAuthorizationBundle\OrdermindLogicalAuthorizationBundle();
             $bundles[] = new Ordermind\DoctrineManagerBundle\OrdermindDoctrineManagerBundle();

@@ -1,7 +1,6 @@
 Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentNoBypass:
   type: document
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentNoBypassRepository
-  table: testdocuments_nobypass_yml
 
   logicalAuthorization:
     create:

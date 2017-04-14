@@ -29,45 +29,38 @@ framework:
     assets: ~
 
 # Doctrine Configuration
-doctrine:
-    dbal:
-        driver:   pdo_mysql
-        host:     127.0.0.1
-        port:     3306
-        dbname:   logauth
-        user:     root
-        password: ""
-        charset:  UTF8
-
-    orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-        mappings:
-            TestUser:
-                type: annotation
-                dir: "%kernel.root_dir%/Fixtures/Document/User"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User
-                alias: TestUser
-            TestEntities:
-                type: annotation
-                dir: "%kernel.root_dir%/Fixtures/Document/Annotation"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation
-                alias: TestEntities
-            TestEntitiesXML:
-                type: xml
-                dir: "%kernel.root_dir%/Fixtures/Document/XML/Mapping"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML
-                alias: TestEntitiesXML
-            TestEntitiesYML:
-                type: yml
-                dir: "%kernel.root_dir%/Fixtures/Document/YML/Mapping"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML
-                alias: TestEntitiesYML
+doctrine_mongodb:
+    connections:
+        default:
+            server: "mongodb://localhost:27017"
+    default_database: odm_test
+    document_managers:
+        default:
+          mappings:
+              TestUser:
+                  type: annotation
+                  dir: "%kernel.root_dir%/Fixtures/Document/User"
+                  is_bundle: false
+                  prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User
+                  alias: TestUser
+              TestDocuments:
+                  type: annotation
+                  dir: "%kernel.root_dir%/Fixtures/Document/Annotation"
+                  is_bundle: false
+                  prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation
+                  alias: TestDocuments
+              TestDocumentsXML:
+                  type: xml
+                  dir: "%kernel.root_dir%/Fixtures/Document/XML/Mapping"
+                  is_bundle: false
+                  prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML
+                  alias: TestDocumentsXML
+              TestDocumentsYML:
+                  type: yml
+                  dir: "%kernel.root_dir%/Fixtures/Document/YML/Mapping"
+                  is_bundle: false
+                  prefix: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML
+                  alias: TestDocumentsYML
 
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:

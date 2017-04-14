@@ -2,7 +2,7 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User;
 
-use Doctrine\ODM\Mapping as ODM;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
@@ -10,7 +10,6 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuth
 /**
  * TestUser
  *
- * @ODM\Table(name="testusers")
  * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\TestUserRepository")
  * @LogicalAuthorization({
  *   "create": {
@@ -46,16 +45,15 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
   /**
    * @var string
    *
-   * @ODM\Column(name="id", type="guid")
+   * @ODM\Field(name="id", type="guid")
    * @ODM\Id
-   * @ODM\GeneratedValue(strategy="UUID")
    */
   private $id;
 
   /**
    * @var string
    *
-   * @ODM\Column(name="username", type="string", length=25)
+   * @ODM\Field(name="username", type="string")
    * @LogicalAuthorization({
    *   "get": {
    *     "OR": {
@@ -73,7 +71,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
   /**
    * @var string
    *
-   * @ODM\Column(name="password", type="string", length=64)
+   * @ODM\Field(name="password", type="string")
    */
   private $password;
 
@@ -91,7 +89,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
   /**
    * @var array
    *
-   * @ODM\Column(name="roles", type="json_array")
+   * @ODM\Field(name="roles", type="json_array")
    * @LogicalAuthorization({
    *   "get": {
    *     "role": "ROLE_ADMIN"
@@ -111,14 +109,14 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
   /**
    * @var string
    *
-   * @ODM\Column(name="email", type="string", length=60)
+   * @ODM\Field(name="email", type="string")
    */
   private $email;
 
   /**
    * @var bool
    *
-   * @ODM\Column(name="bypassAccess", type="boolean")
+   * @ODM\Field(name="bypassAccess", type="boolean")
    */
   private $bypassAccess;
 

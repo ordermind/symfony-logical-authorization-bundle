@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mapping
     http://doctrine-project.org/schemas/odm/doctrine-mapping.xsd">
 
-  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentRoleAuthorRepository" table="testdocuments_roleauthor_xml">
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentRoleAuthorRepository">
     <logical-authorization>
       <create>
         <role>ROLE_ADMIN</role>

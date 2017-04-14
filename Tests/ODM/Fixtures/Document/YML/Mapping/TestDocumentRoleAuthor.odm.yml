@@ -1,7 +1,6 @@
 Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentRoleAuthor:
   type: document
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentRoleAuthorRepository
-  table: testdocuments_roleauthor_yml
 
   logicalAuthorization:
     create:

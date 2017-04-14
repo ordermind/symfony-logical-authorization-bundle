@@ -1,7 +1,6 @@
 Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentHasAccountNoInterface:
   type: document
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentHasAccountNoInterfaceRepository
-  table: testdocuments_hasaccount_yml
 
   logicalAuthorization:
     create:

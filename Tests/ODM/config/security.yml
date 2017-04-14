@@ -6,7 +6,7 @@ security:
 
     providers:
         user_provider:
-            entity:
+            mongodb:
                 class: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser
                 property: username
 

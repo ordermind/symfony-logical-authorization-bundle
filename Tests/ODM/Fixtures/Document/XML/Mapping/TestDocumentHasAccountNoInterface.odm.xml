@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mapping
     http://doctrine-project.org/schemas/odm/doctrine-mapping.xsd">
 
-  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentHasAccountNoInterface" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentHasAccountNoInterfaceRepository" table="testdocuments_hasaccount_xml">
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentHasAccountNoInterface" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentHasAccountNoInterfaceRepository">
     <logical-authorization>
       <create>
         <flag>has_account</flag>

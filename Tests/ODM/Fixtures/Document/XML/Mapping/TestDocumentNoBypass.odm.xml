@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mapping
     http://doctrine-project.org/schemas/odm/doctrine-mapping.xsd">
 
-  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentNoBypass" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentNoBypassRepository" table="testdocuments_nobypass_xml">
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentNoBypass" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentNoBypassRepository">
     <logical-authorization>
       <create>
         <no_bypass>true</no_bypass>
