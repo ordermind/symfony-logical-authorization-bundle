@@ -3,64 +3,64 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services\TestModelOperations
 
   repository_manager.test_user:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser
 
   # Annotation repositories
   repository_manager.test_entity_roleauthor_annotation:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityRoleAuthor
 
   repository_manager.test_entity_hasaccount_annotation:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityHasAccountNoInterface
 
   repository_manager.test_entity_nobypass_annotation:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityNoBypass
 
   # XML repositories
   repository_manager.test_entity_roleauthor_xml:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityRoleAuthor
 
   repository_manager.test_entity_hasaccount_xml:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityHasAccountNoInterface
 
   repository_manager.test_entity_nobypass_xml:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityNoBypass
 
   # YML repositories
   repository_manager.test_entity_roleauthor_yml:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityRoleAuthor
 
   repository_manager.test_entity_hasaccount_yml:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityHasAccountNoInterface
 
   repository_manager.test_entity_nobypass_yml:
-    class: Ordermind\DoctrineManagerBundle\ORM\Manager\RepositoryManager
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityNoBypass

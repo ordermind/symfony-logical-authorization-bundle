@@ -10,7 +10,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 /**
  * TestDocumentRoleAuthor
  *
- * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentRoleAuthorRepository")
+ * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentRoleAuthorRepository", collection="testdocuments_roleauthor_annotation")
  * @LogicalAuthorization({
  *   "create": {
  *     "role": "ROLE_ADMIN"

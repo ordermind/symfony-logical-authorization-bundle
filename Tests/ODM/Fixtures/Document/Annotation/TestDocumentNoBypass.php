@@ -10,7 +10,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 /**
  * TestDocumentNoBypass
  *
- * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentNoBypassRepository")
+ * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentNoBypassRepository", collection="testdocuments_nobypass_annotation")
  * @LogicalAuthorization({
  *   "create": {
  *     "no_bypass": true,

@@ -73,13 +73,23 @@ services:
 
   # Doctrine-related services
 
-  ordermind_logical_authorization.event_listener.add_doctrine_permissions:
+  ordermind_logical_authorization.event_listener.add_doctrine_orm_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrinePermissions
     arguments:
       - '@?doctrine'
       - "@=container.hasParameter('doctrine.orm.metadata.annotation.class') ? parameter('doctrine.orm.metadata.annotation.class') : ''"
       - "@=container.hasParameter('doctrine.orm.metadata.xml.class') ? parameter('doctrine.orm.metadata.xml.class') : ''"
       - "@=container.hasParameter('doctrine.orm.metadata.yml.class') ? parameter('doctrine.orm.metadata.yml.class') : ''"
+    tags:
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 255}
+
+  ordermind_logical_authorization.event_listener.add_doctrine_odm_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrinePermissions
+    arguments:
+      - '@?doctrine_mongodb'
+      - "@=container.hasParameter('doctrine_mongodb.odm.metadata.annotation.class') ? parameter('doctrine_mongodb.odm.metadata.annotation.class') : ''"
+      - "@=container.hasParameter('doctrine_mongodb.odm.metadata.xml.class') ? parameter('doctrine_mongodb.odm.metadata.xml.class') : ''"
+      - "@=container.hasParameter('doctrine_mongodb.odm.metadata.yml.class') ? parameter('doctrine_mongodb.odm.metadata.yml.class') : ''"
     tags:
       - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 255}
 

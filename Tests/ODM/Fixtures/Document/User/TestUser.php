@@ -10,7 +10,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuth
 /**
  * TestUser
  *
- * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\TestUserRepository")
+ * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\TestUserRepository", collection="testusers")
  * @LogicalAuthorization({
  *   "create": {
  *     "role": "ROLE_ADMIN"
@@ -89,7 +89,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
   /**
    * @var array
    *
-   * @ODM\Field(name="roles", type="json_array")
+   * @ODM\Field(name="roles", type="collection")
    * @LogicalAuthorization({
    *   "get": {
    *     "role": "ROLE_ADMIN"

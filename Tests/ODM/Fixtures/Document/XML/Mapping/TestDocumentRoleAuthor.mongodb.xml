@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentRoleAuthorRepository" collection="testdocuments_roleauthor_xml">
+    <logical-authorization>
+      <create>
+        <role>ROLE_ADMIN</role>
+      </create>
+      <read>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </read>
+      <update>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </update>
+      <delete>
+        <OR>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </OR>
+      </delete>
+    </logical-authorization>
+
+    <field name="id" id="true" />
+
+    <field name="field1" type="string">
+      <logical-authorization>
+        <get>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </get>
+        <set>
+          <role>ROLE_ADMIN</role>
+          <flag>is_author</flag>
+        </set>
+      </logical-authorization>
+    </field>
+
+    <field name="field2" type="string" />
+
+    <field name="field3" type="string" />
+
+    <reference-one field="author" target-document="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser" />
+  </document>
+</doctrine-mongo-mapping>
+

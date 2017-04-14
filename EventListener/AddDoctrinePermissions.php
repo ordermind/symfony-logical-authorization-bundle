@@ -10,22 +10,22 @@ use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 
 class AddDoctrinePermissions {
-  protected $doctrine;
+  protected $registryManager;
   protected $annotationDriverClass;
   protected $xmlDriverClass;
   protected $ymlDriverClass;
 
-  public function __construct(ManagerRegistry $doctrine = null, $annotationDriverClass = null, $xmlDriverClass = null, $ymlDriverClass = null) {
-    $this->doctrine = $doctrine;
+  public function __construct(ManagerRegistry $registryManager = null, $annotationDriverClass = null, $xmlDriverClass = null, $ymlDriverClass = null) {
+    $this->registryManager = $registryManager;
     $this->annotationDriverClass = $annotationDriverClass;
     $this->xmlDriverClass = $xmlDriverClass;
     $this->ymlDriverClass = $ymlDriverClass;
   }
 
   public function onAddPermissions(AddPermissionsEvent $event) {
-    if(is_null($this->doctrine)) return;
+    if(is_null($this->registryManager)) return;
 
-    $object_managers = $this->doctrine->getManagers();
+    $object_managers = $this->registryManager->getManagers();
     foreach($object_managers as $om) {
       $metadataDriverImplementation = $om->getConfiguration()->getMetadataDriverImpl();
       $drivers = $metadataDriverImplementation->getDrivers();

@@ -16,7 +16,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countUnknownResultAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $result = $operations->getUnknownResult();
     return new Response(count($result));
@@ -27,7 +27,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function findSingleModelResultAction(Request $request, $id) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $result = $operations->getSingleModelResult($id);
     return new JsonResponse((bool) $result);
@@ -38,7 +38,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countMultipleModelResultAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $result = $operations->getMultipleModelResult();
     return new Response(count($result));
@@ -49,7 +49,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countDocumentsLazyLoadAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $collection = $operations->getLazyLoadedModelResult();
     return new Response(count($collection));
@@ -60,7 +60,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function createDocumentAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel();
     return new JsonResponse(is_object($modelManager) && $modelManager instanceof \Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface);
@@ -71,7 +71,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function callMethodGetterAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel(null, true);
     $operations->callMethodSetter($modelManager, true);
@@ -85,7 +85,7 @@ class DefaultController extends Controller {
     */
   public function callMethodGetterAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
     $operations->callMethodSetter($modelManager, true);
@@ -98,7 +98,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function callMethodSetterAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel(null, true);
     $operations->callMethodSetter($modelManager);
@@ -112,7 +112,7 @@ class DefaultController extends Controller {
     */
   public function callMethodSetterAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
     $operations->callMethodSetter($modelManager);
@@ -125,7 +125,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function saveModelCreateAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $operations->createTestModel();
     $result = $operations->getMultipleModelResult(true);
@@ -137,7 +137,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function saveModelUpdateAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel(null, true);
     $operations->callMethodSetter($modelManager, true);
@@ -153,7 +153,7 @@ class DefaultController extends Controller {
     */
   public function saveModelUpdateAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
     $operations->callMethodSetter($modelManager, true);
@@ -168,7 +168,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function deleteModelAction(Request $request) {
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel(null, true);
     $modelManager->delete();
@@ -182,7 +182,7 @@ class DefaultController extends Controller {
     */
   public function deleteModelAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
-    $operations = $this->get('test_document_operations');
+    $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
     $modelManager->delete();

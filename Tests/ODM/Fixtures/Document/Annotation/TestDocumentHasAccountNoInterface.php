@@ -10,7 +10,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 /**
  * TestDocumentHasAccountNoInterface
  *
- * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentHasAccountNoInterfaceRepository")
+ * @ODM\Document(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\Annotation\TestDocumentHasAccountNoInterfaceRepository", collection="testdocuments_hasaccount_annotation")
  * @LogicalAuthorization({
  *   "create": {
  *     "flag": "has_account"

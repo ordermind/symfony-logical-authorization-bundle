@@ -61,15 +61,19 @@ class TestModelOperations {
     }
 
     if($modelManager) {
-      if($user) {
-        $modelManager->setAuthor($user);
-      }
       if($bypassAccess) {
+        $model = $modelManager->getModel();
+        if($user) {
+          $model->setAuthor($user);
+        }
         $om = $modelManager->getObjectManager();
-        $om->persist($modelManager->getModel());
+        $om->persist($model);
         $om->flush();
       }
       else {
+        if($user) {
+          $modelManager->setAuthor($user);
+        }
         $modelManager->save();
       }
     }

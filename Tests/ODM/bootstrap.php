@@ -34,6 +34,7 @@ $kernel->boot();
 $application = new Application($kernel);
 
 $dm = $kernel->getContainer()->get('doctrine.odm.mongodb.document_manager');
+
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
   'dm' => new \Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($dm),
 ));

@@ -1,6 +1,7 @@
 Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentNoBypass:
   type: document
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentNoBypassRepository
+  collection: testdocuments_nobypass_yml
 
   logicalAuthorization:
     create:
@@ -16,16 +17,11 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
       no_bypass: true
       value: false
 
-  id:
-    id:
-      type: integer
-      generator:
-        strategy: AUTO
-
   fields:
+    id:
+      id: true
     field1:
       type: string
-      length: 255
       logicalAuthorization:
         get:
           no_bypass: true
@@ -35,13 +31,8 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
           value: false
     field2:
       type: string
-      length: 255
     field3:
       type: string
-      length: 255
-  manyToOne:
+  referenceOne:
     author:
       targetDocument: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser
-      joinColumn:
-        name: author_id
-        referencedColumnName: id

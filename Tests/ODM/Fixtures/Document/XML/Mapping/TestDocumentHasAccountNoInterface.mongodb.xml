@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentHasAccountNoInterface" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentHasAccountNoInterfaceRepository" collection="testdocuments_hasaccount_xml">
+    <logical-authorization>
+      <create>
+        <flag>has_account</flag>
+      </create>
+      <read>
+        <flag>has_account</flag>
+      </read>
+      <update>
+        <flag>has_account</flag>
+      </update>
+      <delete>
+        <flag>has_account</flag>
+      </delete>
+    </logical-authorization>
+
+    <field name="id" id="true" />
+
+    <field name="field1" type="string">
+      <logical-authorization>
+        <get>
+          <flag>has_account</flag>
+        </get>
+        <set>
+          <flag>has_account</flag>
+        </set>
+      </logical-authorization>
+    </field>
+
+    <field name="field2" type="string" />
+
+    <field name="field3" type="string" />
+
+    <reference-one field="author" target-document="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser" />
+  </document>
+</doctrine-mongo-mapping>
+
+

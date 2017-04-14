@@ -1,6 +1,7 @@
 Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentRoleAuthor:
   type: document
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentRoleAuthorRepository
+  collection: testdocuments_roleauthor_yml
 
   logicalAuthorization:
     create:
@@ -18,16 +19,11 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
         role: ROLE_ADMIN
         flag: is_author
 
-  id:
-    id:
-      type: integer
-      generator:
-        strategy: AUTO
-
   fields:
+    id:
+      id: true
     field1:
       type: string
-      length: 255
       logicalAuthorization:
         get:
           role: ROLE_ADMIN
@@ -37,13 +33,8 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
           flag: is_author
     field2:
       type: string
-      length: 255
     field3:
       type: string
-      length: 255
-  manyToOne:
+  referenceOne:
     author:
       targetDocument: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser
-      joinColumn:
-        name: author_id
-        referencedColumnName: id
