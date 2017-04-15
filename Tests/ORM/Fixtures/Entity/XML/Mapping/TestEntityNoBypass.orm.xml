@@ -5,7 +5,7 @@
     http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
   <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityNoBypass" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityNoBypassRepository" table="testentities_nobypass_xml">
-    <logical-authorization>
+    <logical_authorization_permissions>
       <create>
         <no_bypass>true</no_bypass>
         <value>FALSE</value>
@@ -22,14 +22,14 @@
         <no_bypass>true</no_bypass>
         <value>FALSE</value>
       </delete>
-    </logical-authorization>
+    </logical_authorization_permissions>
 
     <id name="id" type="integer" column="id">
       <generator strategy="AUTO"/>
     </id>
 
     <field name="field1" column="field1" type="string" length="255">
-      <logical-authorization>
+      <logical_authorization_permissions>
         <get>
           <no_bypass>true</no_bypass>
           <value>FALSE</value>
@@ -38,7 +38,7 @@
           <no_bypass>true</no_bypass>
           <value>FALSE</value>
         </set>
-      </logical-authorization>
+      </logical_authorization_permissions>
     </field>
 
     <field name="field2" column="field2" type="string" length="255" />

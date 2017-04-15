@@ -79,18 +79,18 @@ class AddDoctrinePermissions {
     foreach($classes as $class) {
       $xmlRoot = $driver->getElement($class);
       // Parse XML structure in $element
-      if(isset($xmlRoot->{'logical-authorization'})) {
+      if(isset($xmlRoot->logical_authorization_permissions)) {
         if(!isset($permissions['models'])) $permissions['models'] = [];
-        $permissions['models'][$class] = json_decode(json_encode($xmlRoot->{'logical-authorization'}), TRUE);
+        $permissions['models'][$class] = json_decode(json_encode($xmlRoot->logical_authorization_permissions), TRUE);
       }
       foreach(['id', 'field'] as $field_key) {
         if(isset($xmlRoot->{$field_key})) {
           foreach($xmlRoot->{$field_key} as $field) {
             $field_name = (string) $field['name'];
-            if(isset($field->{'logical-authorization'})) {
+            if(isset($field->logical_authorization_permissions)) {
               if(!isset($permissions['models'])) $permissions['models'] = [];
               $permissions['models'] += [$class => ['fields' => []]];
-              $permissions['models'][$class]['fields'][$field_name] = json_decode(json_encode($field->{'logical-authorization'}), TRUE);
+              $permissions['models'][$class]['fields'][$field_name] = json_decode(json_encode($field->logical_authorization_permissions), TRUE);
             }
           }
         }
@@ -105,17 +105,17 @@ class AddDoctrinePermissions {
     $permissions = [];
     foreach($classes as $class) {
       $mapping = $driver->getElement($class);
-      if(isset($mapping['logicalAuthorization'])) {
+      if(isset($mapping['logical_authorization_permissions'])) {
         if(!isset($permissions['models'])) $permissions['models'] = [];
-        $permissions['models'][$class] = $mapping['logicalAuthorization'];
+        $permissions['models'][$class] = $mapping['logical_authorization_permissions'];
       }
       foreach(['id', 'field'] as $field_key) {
         if(isset($mapping[$field_key])) {
           foreach($mapping[$field_key] as $field_name => $field_mapping) {
-            if(isset($field_mapping['logicalAuthorization'])) {
+            if(isset($field_mapping['logical_authorization_permissions'])) {
               if(!isset($permissions['models'])) $permissions['models'] = [];
               $permissions['models'] += [$class => ['fields' => []]];
-              $permissions['models'][$class]['fields'][$field_name] = $field_mapping['logicalAuthorization'];
+              $permissions['models'][$class]['fields'][$field_name] = $field_mapping['logical_authorization_permissions'];
             }
           }
         }

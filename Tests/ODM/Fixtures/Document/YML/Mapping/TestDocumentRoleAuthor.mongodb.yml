@@ -3,7 +3,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentRoleAuthorRepository
   collection: testdocuments_roleauthor_yml
 
-  logicalAuthorization:
+  logical_authorization_permissions:
     create:
       role: ROLE_ADMIN
     read:
@@ -24,7 +24,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
       id: true
     field1:
       type: string
-      logicalAuthorization:
+      logical_authorization_permissions:
         get:
           role: ROLE_ADMIN
           flag: is_author

@@ -3,7 +3,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentHasAccountNoInterfaceRepository
   collection: testdocuments_hasaccount_yml
 
-  logicalAuthorization:
+  logical_authorization_permissions:
     create:
       flag: has_account
     read:
@@ -18,7 +18,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
       id: true
     field1:
       type: string
-      logicalAuthorization:
+      logical_authorization_permissions:
         get:
           flag: has_account
         set:

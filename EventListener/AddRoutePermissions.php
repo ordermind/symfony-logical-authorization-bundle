@@ -17,8 +17,8 @@ class AddRoutePermissions {
     $permissions = ['routes' => []];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       $options = $route->getOptions();
-      if(!empty($options['logical_authorization'])) {
-        $permissions['routes'][$name] = $options['logical_authorization'];
+      if(!empty($options['logical_authorization_permissions'])) {
+        $permissions['routes'][$name] = $options['logical_authorization_permissions'];
       }
     }
     $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));

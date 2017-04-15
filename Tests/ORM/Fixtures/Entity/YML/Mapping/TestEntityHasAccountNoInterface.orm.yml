@@ -3,7 +3,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityHas
   repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\YML\TestEntityHasAccountNoInterfaceRepository
   table: testentities_hasaccount_yml
 
-  logicalAuthorization:
+  logical_authorization_permissions:
     create:
       flag: has_account
     read:
@@ -23,7 +23,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityHas
     field1:
       type: string
       length: 255
-      logicalAuthorization:
+      logical_authorization_permissions:
         get:
           flag: has_account
         set:

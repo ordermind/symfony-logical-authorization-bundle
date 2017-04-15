@@ -5,7 +5,7 @@
                 http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
   <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentHasAccountNoInterface" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentHasAccountNoInterfaceRepository" collection="testdocuments_hasaccount_xml">
-    <logical-authorization>
+    <logical_authorization_permissions>
       <create>
         <flag>has_account</flag>
       </create>
@@ -18,19 +18,19 @@
       <delete>
         <flag>has_account</flag>
       </delete>
-    </logical-authorization>
+    </logical_authorization_permissions>
 
     <field name="id" id="true" />
 
     <field name="field1" type="string">
-      <logical-authorization>
+      <logical_authorization_permissions>
         <get>
           <flag>has_account</flag>
         </get>
         <set>
           <flag>has_account</flag>
         </set>
-      </logical-authorization>
+      </logical_authorization_permissions>
     </field>
 
     <field name="field2" type="string" />
