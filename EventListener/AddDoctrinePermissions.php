@@ -42,6 +42,7 @@ class AddDoctrinePermissions {
         }
       }
     }
+//     print_r($event->getTree());
   }
 
   protected function addAnnotationPermissions(AddPermissionsEvent $event, MappingDriver $driver, ObjectManager $om) {
@@ -109,7 +110,7 @@ class AddDoctrinePermissions {
         if(!isset($permissions['models'])) $permissions['models'] = [];
         $permissions['models'][$class] = $mapping['logical_authorization_permissions'];
       }
-      foreach(['id', 'field'] as $field_key) {
+      foreach(['id', 'fields'] as $field_key) {
         if(isset($mapping[$field_key])) {
           foreach($mapping[$field_key] as $field_name => $field_mapping) {
             if(isset($field_mapping['logical_authorization_permissions'])) {

@@ -1,77 +1,21 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\Annotation;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML;
 
-use Doctrine\ORM\Mapping as ORM;
-use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
-/**
- * TestEntityHasAccountNoInterface
- *
- * @ORM\Table(name="testentities_hasaccount_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\Annotation\TestEntityHasAccountNoInterfaceRepository")
- * @LogicalAuthorization({
- *   "create": {
- *     "flag": "has_account"
- *   },
- *   "read": {
- *     "flag": "has_account"
- *   },
- *   "update": {
- *     "flag": "has_account"
- *   },
- *   "delete": {
- *     "flag": "has_account"
- *   }
- * })
- */
-class TestEntityHasAccountNoInterface
+class TestEntityOverriddenPermissions implements ModelInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field1", type="string", length=255)
-     * @LogicalAuthorization({
-     *   "get": {
-     *     "flag": "has_account"
-     *   },
-     *   "set": {
-     *     "flag": "has_account"
-     *   }
-     * })
-     */
     private $field1 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field2", type="string", length=255)
-     */
     private $field2 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field3", type="string", length=255)
-     */
     private $field3 = '';
 
-    /**
-     * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User\TestUser")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     */
     protected $author;
 
     /**
@@ -89,7 +33,7 @@ class TestEntityHasAccountNoInterface
      *
      * @param string $field1
      *
-     * @return TestEntityHasAccountNoInterface
+     * @return TestEntityOverriddenPermissions
      */
     public function setField1($field1)
     {
@@ -113,7 +57,7 @@ class TestEntityHasAccountNoInterface
      *
      * @param string $field2
      *
-     * @return TestEntityHasAccountNoInterface
+     * @return TestEntityOverriddenPermissions
      */
     public function setField2($field2)
     {
@@ -137,7 +81,7 @@ class TestEntityHasAccountNoInterface
      *
      * @param string $field3
      *
-     * @return TestEntityHasAccountNoInterface
+     * @return TestEntityOverriddenPermissions
      */
     public function setField3($field3)
     {

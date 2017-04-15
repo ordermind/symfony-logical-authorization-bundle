@@ -39,18 +39,15 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     }
 
     $permissions = $this->getRoutePermissions($routeName);
-    if($permissions) {
-      $context = ['route' => $routeName, 'user' => $user];
-      return $this->la->checkAccess($permissions, $context);
-    }
-    return true;
+    $context = ['route' => $routeName, 'user' => $user];
+    return $this->la->checkAccess($permissions, $context);
   }
 
   protected function getRoutePermissions($routeName) {
     //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
     $tree = $this->treeManager->getTree();
     //Check individual route permissions
-    if(!empty($tree['routes'][$routeName])) {
+    if(!empty($tree['routes']) && array_key_exists($routeName, $tree['routes'])) {
       return $tree['routes'][$routeName];
     }
     //Check pattern permissions

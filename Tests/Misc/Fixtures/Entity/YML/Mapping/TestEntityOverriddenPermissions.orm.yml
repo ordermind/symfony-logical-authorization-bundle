@@ -1,17 +1,13 @@
-Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityHasAccountNoInterface:
+Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
   type: entity
-  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\YML\TestEntityHasAccountNoInterfaceRepository
-  table: testentities_hasaccount_yml
+  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\YML\TestEntityOverriddenPermissionsRepository
+  table: testentities_overridden_permissions_yml
 
   logical_authorization_permissions:
-    create:
-      flag: has_account
-    read:
-      flag: has_account
-    update:
-      flag: has_account
-    delete:
-      flag: has_account
+    create: false
+    read: false
+    update: false
+    delete: false
 
   id:
     id:
@@ -24,10 +20,8 @@ Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityHa
       type: string
       length: 255
       logical_authorization_permissions:
-        get:
-          flag: has_account
-        set:
-          flag: has_account
+        get: false
+        set: false
     field2:
       type: string
       length: 255
@@ -40,4 +34,3 @@ Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityHa
       joinColumn:
         name: author_id
         referencedColumnName: id
-

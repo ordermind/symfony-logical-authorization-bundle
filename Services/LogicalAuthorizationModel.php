@@ -40,7 +40,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     }
 
     $permissions = $this->getModelPermissions($model);
-    if(!empty($permissions[$action])) {
+    if(array_key_exists($action, $permissions)) {
       $context = ['model' => $model, 'user' => $user];
       return $this->la->checkAccess($permissions[$action], $context);
     }
@@ -73,7 +73,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     }
 
     $permissions = $this->getModelPermissions($model);
-    if(!empty($permissions['fields'][$fieldName][$action])) {
+    if(!empty($permissions['fields'][$fieldName]) && array_key_exists($action, $permissions['fields'][$fieldName])) {
       $context = ['model' => $model, 'user' => $user];
       return $this->la->checkAccess($permissions['fields'][$fieldName][$action], $context);
     }
@@ -90,7 +90,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
       $psr_class = get_class($model);
     }
 
-    if(!empty($tree['models'][$psr_class])) {
+    if(!empty($tree['models']) && array_key_exists($psr_class, $tree['models'])) {
       return $tree['models'][$psr_class];
     }
     return [];

@@ -1,11 +1,11 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
-class TestEntityRoleAuthor implements ModelInterface
+class TestEntityOverriddenPermissions implements ModelInterface
 {
 
     private $id;
@@ -33,7 +33,7 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestEntityRoleAuthor
+     * @return TestEntityOverriddenPermissions
      */
     public function setField1($field1)
     {
@@ -57,7 +57,7 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestEntityRoleAuthor
+     * @return TestEntityOverriddenPermissions
      */
     public function setField2($field2)
     {
@@ -81,7 +81,7 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestEntityRoleAuthor
+     * @return TestEntityOverriddenPermissions
      */
     public function setField3($field3)
     {

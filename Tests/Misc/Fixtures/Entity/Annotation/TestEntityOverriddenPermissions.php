@@ -8,35 +8,18 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
 /**
- * TestEntityRoleAuthor
+ * TestEntityOverriddenPermissions
  *
- * @ORM\Table(name="testentities_roleauthor_annotation")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\Annotation\TestEntityRoleAuthorRepository")
+ * @ORM\Table(name="testentities_overridden_permissions_annotation")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\Annotation\TestEntityOverriddenPermissionsRepository")
  * @LogicalAuthorization({
- *   "create": {
- *     "role": "ROLE_ADMIN"
- *   },
- *   "read": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   },
- *   "update": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   },
- *   "delete": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   }
+ *   "create": FALSE,
+ *   "read": FALSE,
+ *   "update": FALSE,
+ *   "delete": FALSE
  * })
  */
-class TestEntityRoleAuthor implements ModelInterface
+class TestEntityOverriddenPermissions implements ModelInterface
 {
     /**
      * @var int
@@ -52,14 +35,8 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @ORM\Column(name="field1", type="string", length=255)
      * @LogicalAuthorization({
-     *   "get": {
-     *     "role": "ROLE_ADMIN",
-     *     "flag": "is_author"
-     *   },
-     *   "set": {
-     *     "role": "ROLE_ADMIN",
-     *     "flag": "is_author"
-     *   }
+     *   "get": FALSE,
+     *   "set": FALSE
      * })
      */
     private $field1 = '';
@@ -100,7 +77,7 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestEntityRoleAuthor
+     * @return TestEntityOverriddenPermissions
      */
     public function setField1($field1)
     {
@@ -124,7 +101,7 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestEntityRoleAuthor
+     * @return TestEntityOverriddenPermissions
      */
     public function setField2($field2)
     {
@@ -148,7 +125,7 @@ class TestEntityRoleAuthor implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestEntityRoleAuthor
+     * @return TestEntityOverriddenPermissions
      */
     public function setField3($field3)
     {

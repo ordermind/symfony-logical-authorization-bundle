@@ -70,4 +70,18 @@ doctrine:
 
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:
-    check_lazy_loaded_models: true
+  check_lazy_loaded_models: true
+  permissions:
+    routes:
+      route_override_permissions:
+        role: ROLE_ADMIN
+    models:
+      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true

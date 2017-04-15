@@ -4,28 +4,19 @@
   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
     http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML\TestEntityRoleAuthor" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\XML\TestEntityRoleAuthorRepository" table="testentities_roleauthor_xml">
+  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML\TestEntityOverriddenPermissions" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\XML\TestEntityOverriddenPermissionsRepository" table="testentities_overridden_permissions_xml">
     <logical_authorization_permissions>
       <create>
-        <role>ROLE_ADMIN</role>
+        <value>FALSE</value>
       </create>
       <read>
-        <OR>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
-        </OR>
+        <value>FALSE</value>
       </read>
       <update>
-        <OR>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
-        </OR>
+        <value>FALSE</value>
       </update>
       <delete>
-        <OR>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
-        </OR>
+        <value>FALSE</value>
       </delete>
     </logical_authorization_permissions>
 
@@ -36,12 +27,10 @@
     <field name="field1" column="field1" type="string" length="255">
       <logical_authorization_permissions>
         <get>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
+          <value>FALSE</value>
         </get>
         <set>
-          <role>ROLE_ADMIN</role>
-          <flag>is_author</flag>
+          <value>FALSE</value>
         </set>
       </logical_authorization_permissions>
     </field>

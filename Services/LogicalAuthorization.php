@@ -23,28 +23,17 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
   }
 
   public function checkBypassAccess($context) {
-    if(!is_array($context)) {
-      $this->handleError('Error checking access bypass: the context parameter must be an array.', ['context' => $context]);
-      return false;
+    try {
+      return $this->checkAccess(['flag' => 'bypass_access'], $context, false);
     }
-
-    return $this->checkAccess(['flag' => 'bypass_access'], $context, false);
+    catch (\Exception $e) {
+      $class = get_class($e);
+      $message = $e->getMessage();
+      $this->handleError("An exception was caught while checking access bypass: \"$message\" at " . $e->getFile() . " line " . $e->getLine(), array('exception' => $class, 'context' => $context));
+    }
   }
 
   public function checkAccess($permissions, $context, $allow_bypass = true) {
-    if(!is_array($permissions)) {
-      $this->handleError('Error checking access: the permissions parameter must be an array.', ['permissions' => $permissions]);
-      return false;
-    }
-    if(!is_array($context)) {
-      $this->handleError('Error checking access: the context parameter must be an array.', ['context' => $context]);
-      return false;
-    }
-    if(!is_bool($allow_bypass)) {
-      $this->handleError('Error checking access: the allow_bypass parameter must be a boolean.', ['allow_bypass' => $allow_bypass]);
-      return false;
-    }
-
     try {
       return $this->lpManager->checkAccess($permissions, $context, $allow_bypass);
     }
