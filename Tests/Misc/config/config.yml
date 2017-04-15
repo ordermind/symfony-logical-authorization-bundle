@@ -42,31 +42,30 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
         mappings:
+            TestUser:
+                type: annotation
+                dir: "%kernel.root_dir%/Fixtures/Entity/User"
+                is_bundle: false
+                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User
+                alias: TestUser
             TestEntities:
                 type: annotation
                 dir: "%kernel.root_dir%/Fixtures/Entity/Annotation"
                 is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation
+                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\Annotation
                 alias: TestEntities
-            TestEntitiesPHP:
-                type: php
-                dir: "%kernel.root_dir%/Fixtures/Entity/PHP"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\PHP
-                alias: TestEntitiesPHP
             TestEntitiesXML:
                 type: xml
-                dir: "%kernel.root_dir%/Fixtures/Entity/XML"
+                dir: "%kernel.root_dir%/Fixtures/Entity/XML/Mapping"
                 is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML
+                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML
                 alias: TestEntitiesXML
             TestEntitiesYML:
                 type: yml
-                dir: "%kernel.root_dir%/Fixtures/Entity/YML"
+                dir: "%kernel.root_dir%/Fixtures/Entity/YML/Mapping"
                 is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML
+                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML
                 alias: TestEntitiesYML
 
 # LogicalAuthorization Configuration

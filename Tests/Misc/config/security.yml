@@ -2,16 +2,15 @@
 # http://symfony.com/doc/current/book/security.html
 security:
     encoders:
-        Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestUser:
-            algorithm: bcrypt
-            cost: 15
+        Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User\TestUser: plaintext
 
     providers:
         user_provider:
             entity:
-                class: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestUser
+                class: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User\TestUser
                 property: username
 
     firewalls:
         default:
+            anonymous: ~
             http_basic: ~
