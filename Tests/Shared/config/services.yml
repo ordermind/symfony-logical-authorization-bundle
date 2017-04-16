@@ -1,0 +1,7 @@
+services:
+  cache.adapter.null:
+    class: Symfony\Component\Cache\Adapter\NullAdapter
+    abstract: true
+    arguments: [~, ~, ~]
+    tags:
+      - {name: cache.pool, clearer: cache.default_clearer}

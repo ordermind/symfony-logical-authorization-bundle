@@ -13,7 +13,7 @@ class PermissionsCacheWarmer implements CacheWarmerInterface {
   }
 
   public function warmUp($cacheDir) {
-    $this->treeManager->getTree();
+    $this->treeManager->getTree(TRUE);
   }
 
   public function isOptional() {

@@ -30,7 +30,7 @@ services:
 
   ordermind_logical_authorization.service.permission_tree_manager:
     class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManager
-    arguments: [%kernel.root_dir%, '@ordermind_logical_authorization.service.logical_permissions_manager', '@event_dispatcher']
+    arguments: [%kernel.root_dir%, '@ordermind_logical_authorization.service.logical_permissions_manager', '@event_dispatcher', '@cache.app']
 
   ordermind_logical_authorization.service.logical_authorization_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
