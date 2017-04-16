@@ -20,7 +20,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function routeRoleAction(Request $request) {
-    return new Response(true);
+    return new Response('');
   }
 
   /**
@@ -33,7 +33,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function routeNoBypassAction(Request $request) {
-    return new Response(true);
+    return new Response('');
   }
 
   /**
@@ -45,7 +45,42 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function routeHasAccountAction(Request $request) {
-    return new Response(true);
+    return new Response('');
+  }
+
+  /**
+   * @Route("/pattern-allowed", name="pattern_allowed")
+   */
+  public function patternAllowedAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
+   * @Route("/pattern-forbidden", name="pattern_forbidden", options={
+   * "logical_authorization_permissions": {
+   *   "no_bypass": true,
+   *   FALSE
+   * }})
+   */
+  public function patternForbiddenAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
+   * @Route("/route-allowed", name="route_allowed", options={
+   * "logical_authorization_permissions": {
+   *   TRUE
+   * }})
+   */
+  public function routeAllowedAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
+   * @Route("/route-forbidden", name="route_forbidden")
+   */
+  public function routeForbiddenAction(Request $request) {
+    return new Response('');
   }
 
   /**
@@ -67,6 +102,19 @@ class DefaultController extends Controller {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
     $laRoute = $this->get('ordermind_logical_authorization.service.logical_authorization_route');
     $result = $laRoute->getAllAvailableRoutes($user);
-    return new Response(count($result));
+    if(empty($result['routes'])) return new Response(0);
+    return new Response(count($result['routes']));
+  }
+
+  /**
+    * @Route("/count-available-route-patterns", name="count_available_route_patterns")
+    * @Method({"GET"})
+    */
+  public function countAvailableRoutePatternsAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $laRoute = $this->get('ordermind_logical_authorization.service.logical_authorization_route');
+    $result = $laRoute->getAllAvailableRoutes($user);
+    if(empty($result['route_patterns'])) return new Response(0);
+    return new Response(count($result['route_patterns']));
   }
 }

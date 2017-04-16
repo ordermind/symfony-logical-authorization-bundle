@@ -78,6 +78,11 @@ ordermind_logical_authorization:
     routes:
       route_override_permissions:
         role: ROLE_ADMIN
+    route_patterns:
+      ^/test/route-:
+        no_bypass: true
+        0: false
+      ^/test/pattern-: true
     models:
       Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\Annotation\TestEntityOverriddenPermissions:
         create: true

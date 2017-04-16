@@ -49,7 +49,6 @@ class AddDoctrinePermissions {
     $annotationReader = $driver->getReader();
     $permissions = [];
     foreach($classes as $class) {
-      $metadata = $om->getClassMetadata($class);
       $reflectionClass = new \ReflectionClass($class);
       $classAnnotations = $annotationReader->getClassAnnotations($reflectionClass);
       foreach ($classAnnotations as $annotation) {

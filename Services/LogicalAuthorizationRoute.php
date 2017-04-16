@@ -26,47 +26,59 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     $routes = [];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       if($this->checkRouteAccess($name, $user)) {
-        $routes[$name] = $route;
+        if(!isset($routes['routes'])) $routes['routes'] = [];
+        $routes['routes'][$name] = $route;
       }
     }
+
+    $tree = $this->treeManager->getTree();
+    if(!empty($tree['route_patterns'])) {
+      foreach($tree['route_patterns'] as $pattern => $permissions) {
+        if($this->la->checkAccess($permissions, ['route' => $pattern, 'user' => $user])) {
+          if(!isset($routes['route_patterns'])) $routes['route_patterns'] = [];
+          $routes['route_patterns'][$pattern] = true;
+        }
+      }
+    }
+
     return $routes;
   }
 
-  public function checkRouteAccess($routeName, $user = null) {
+  public function checkRouteAccess($route_name, $user = null) {
     if(is_null($user)) {
       $user = $this->userHelper->getCurrentUser();
       if(is_null($user)) return true;
     }
     $user = $this->la->getRidOfManager($user);
 
-    if(!is_string($routeName)) {
-      $this->la->handleError('Error checking route access: the routeName parameter must be a string.', ['route' => $routeName, 'user' => $user]);
+    if(!is_string($route_name)) {
+      $this->la->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
-      $this->la->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $routeName, 'user' => $user]);
+      $this->la->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $route_name, 'user' => $user]);
       return false;
     }
 
-    $permissions = $this->getRoutePermissions($routeName);
-    $context = ['route' => $routeName, 'user' => $user];
+    $permissions = $this->getRoutePermissions($route_name);
+    $context = ['route' => $route_name, 'user' => $user];
     return $this->la->checkAccess($permissions, $context);
   }
 
-  protected function getRoutePermissions($routeName) {
+  protected function getRoutePermissions($route_name) {
     //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
     $tree = $this->treeManager->getTree();
     //Check individual route permissions
-    if(!empty($tree['routes']) && array_key_exists($routeName, $tree['routes'])) {
-      return $tree['routes'][$routeName];
+    if(!empty($tree['routes']) && array_key_exists($route_name, $tree['routes'])) {
+      return $tree['routes'][$route_name];
     }
     //Check pattern permissions
     if(!empty($tree['route_patterns'])) {
-      $route = $this->router->getRouteCollection()->get($routeName);
+      $route = $this->router->getRouteCollection()->get($route_name);
       if($route) {
-        $routePath = $route->getPath();
+        $route_path = $route->getPath();
         foreach($tree['route_patterns'] as $pattern => $permissions) {
-          if(preg_match("#$pattern#", $routePath)) {
+          if(preg_match("@$pattern@", $route_path)) {
             return $permissions;
           }
         }

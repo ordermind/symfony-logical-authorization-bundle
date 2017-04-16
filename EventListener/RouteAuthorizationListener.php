@@ -2,8 +2,8 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\Response;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
 
 class RouteAuthorizationListener {
@@ -19,7 +19,7 @@ class RouteAuthorizationListener {
     $routeName = $request->get('_route');
     if($routeName) {
       if(!$this->laRoute->checkRouteAccess($routeName)) {
-        throw new AccessDeniedException();
+        $event->setResponse(new Response('Access Denied.', 403));
       }
     }
   }
