@@ -31,34 +31,14 @@ class PermissionTreeManager implements PermissionTreeManagerInterface {
   }
 
   public function generateTree() {
-    $this->tree = $this->readFromFiles();
-  }
-
-  protected function readFromFiles() {
-    $permissions = $this->findPermissions();
-    foreach($permissions as &$scope) {
-      $scope = $this->mergePermissions($scope);
-    }
-    unset($scope);
-    return $this->mergePermissions($permissions);
+    $this->tree = $this->findPermissions();
   }
 
   protected function findPermissions() {
-    // External hooks
-    $permissionsHooks = [];
     $event = new AddPermissionsEvent($this);
     $this->dispatcher->dispatch('logical_authorization.add_permissions', $event);
-    $permissionsHooks[] = $event->getTree();
 
-    // app/config overrides
-    $permissionsAppConfig = [];
-    $fs = new Filesystem();
-    $path = $this->appDir . '/config/' . static::FILENAME;
-    if($fs->exists($path)) {
-      $permissionsAppConfig[$path] = Yaml::parse(file_get_contents($path));
-    }
-
-    return [$permissionsHooks, $permissionsAppConfig];
+    return $event->getTree();
   }
 
   public function mergePermissions($arrays = []) {

@@ -76,6 +76,24 @@ ordermind_logical_authorization:
       route_override_permissions:
         role: ROLE_ADMIN
     models:
+      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\Annotation\TestEntityOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true
+      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML\TestEntityOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true
       Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
         create: true
         read: true

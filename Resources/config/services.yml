@@ -22,7 +22,7 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
     arguments: ['@router']
     tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 254}
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
 
   ordermind_logical_authorization.service.user_helper:
     class: Ordermind\LogicalAuthorizationBundle\Services\UserHelper
@@ -81,7 +81,7 @@ services:
       - "@=container.hasParameter('doctrine.orm.metadata.xml.class') ? parameter('doctrine.orm.metadata.xml.class') : ''"
       - "@=container.hasParameter('doctrine.orm.metadata.yml.class') ? parameter('doctrine.orm.metadata.yml.class') : ''"
     tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 255}
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
 
   ordermind_logical_authorization.event_listener.add_doctrine_odm_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrinePermissions
@@ -91,7 +91,13 @@ services:
       - "@=container.hasParameter('doctrine_mongodb.odm.metadata.xml.class') ? parameter('doctrine_mongodb.odm.metadata.xml.class') : ''"
       - "@=container.hasParameter('doctrine_mongodb.odm.metadata.yml.class') ? parameter('doctrine_mongodb.odm.metadata.yml.class') : ''"
     tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: 255}
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
+
+  ordermind_logical_authorization.event_listener.add_app_config_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
+    arguments: ['%ordermind_logical_authorization.config%']
+    tags:
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: -250}
 
   ordermind_logical_authorization.service.repository_manager_factory:
       class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManagerFactory
