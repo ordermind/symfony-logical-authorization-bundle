@@ -22,6 +22,16 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     $this->userHelper = $userHelper;
   }
 
+  public function getAllAvailableRoutes($user = null) {
+    $routes = [];
+    foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
+      if($this->checkRouteAccess($name, $user)) {
+        $routes[$name] = $route;
+      }
+    }
+    return $routes;
+  }
+
   public function checkRouteAccess($routeName, $user = null) {
     if(is_null($user)) {
       $user = $this->userHelper->getCurrentUser();
@@ -34,7 +44,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
-      $this->la->handleError('Error checking model access: the user parameter must be either a string or an object.', ['route' => $routeName, 'user' => $user]);
+      $this->la->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $routeName, 'user' => $user]);
       return false;
     }
 

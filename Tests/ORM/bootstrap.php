@@ -13,7 +13,7 @@ if (!file_exists($file))
 $autoload = require $file;
 
 AnnotationRegistry::registerFile(__DIR__.'/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
-AnnotationRegistry::registerFile(__DIR__.'/../../Doctrine/Annotation/LogicalAuthorization.php');
+AnnotationRegistry::registerFile(__DIR__.'/../../Annotation/Doctrine/LogicalAuthorizationPermissions.php');
 AnnotationRegistry::registerLoader(array($autoload, 'loadClass'));
 
 /*--------------CREATE DATABASE--------------*/

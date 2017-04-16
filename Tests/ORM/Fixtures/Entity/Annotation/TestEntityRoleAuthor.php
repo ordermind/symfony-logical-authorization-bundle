@@ -3,7 +3,7 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
+use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizationPermissions;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
@@ -12,7 +12,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
  *
  * @ORM\Table(name="testentities_roleauthor_annotation")
  * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityRoleAuthorRepository")
- * @LogicalAuthorization({
+ * @LogicalAuthorizationPermissions({
  *   "create": {
  *     "role": "ROLE_ADMIN"
  *   },
@@ -51,7 +51,7 @@ class TestEntityRoleAuthor implements ModelInterface
      * @var string
      *
      * @ORM\Column(name="field1", type="string", length=255)
-     * @LogicalAuthorization({
+     * @LogicalAuthorizationPermissions({
      *   "get": {
      *     "role": "ROLE_ADMIN",
      *     "flag": "is_author"

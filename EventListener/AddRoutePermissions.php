@@ -2,8 +2,10 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
-use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Config\Loader\FileLoader;
+
+use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
 class AddRoutePermissions {
   protected $router;
@@ -13,7 +15,6 @@ class AddRoutePermissions {
   }
 
   public function onAddPermissions(AddPermissionsEvent $event) {
-    // Specific route permissions
     $permissions = ['routes' => []];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       $options = $route->getOptions();

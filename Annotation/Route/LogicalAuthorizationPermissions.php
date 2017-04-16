@@ -1,11 +1,11 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation;
+namespace Ordermind\LogicalAuthorizationBundle\Annotation\Route;
 
 /**
  * @Annotation
  */
-class LogicalAuthorization {
+class LogicalAuthorizationPermissions {
   protected $permissions;
 
   public function __construct(array $data) {

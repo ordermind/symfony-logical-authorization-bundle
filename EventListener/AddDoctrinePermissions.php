@@ -7,7 +7,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
-use Ordermind\LogicalAuthorizationBundle\Doctrine\Annotation\LogicalAuthorization;
+use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizationPermissions;
 
 class AddDoctrinePermissions {
   protected $registryManager;
@@ -42,7 +42,6 @@ class AddDoctrinePermissions {
         }
       }
     }
-//     print_r($event->getTree());
   }
 
   protected function addAnnotationPermissions(AddPermissionsEvent $event, MappingDriver $driver, ObjectManager $om) {
@@ -54,7 +53,7 @@ class AddDoctrinePermissions {
       $reflectionClass = new \ReflectionClass($class);
       $classAnnotations = $annotationReader->getClassAnnotations($reflectionClass);
       foreach ($classAnnotations as $annotation) {
-        if ($annotation instanceof LogicalAuthorization) {
+        if ($annotation instanceof LogicalAuthorizationPermissions) {
           if(!isset($permissions['models'])) $permissions['models'] = [];
           $permissions['models'][$class] = $annotation->getPermissions();
         }
@@ -63,7 +62,7 @@ class AddDoctrinePermissions {
         $field_name = $property->getName();
         $propertyAnnotations = $annotationReader->getPropertyAnnotations($property);
         foreach ($propertyAnnotations as $annotation) {
-          if ($annotation instanceof LogicalAuthorization) {
+          if ($annotation instanceof LogicalAuthorizationPermissions) {
             if(!isset($permissions['models'])) $permissions['models'] = [];
             $permissions['models'] += [$class => ['fields' => []]];
             $permissions['models'][$class]['fields'][$field_name] = $annotation->getPermissions();
