@@ -35,31 +35,9 @@ class PermissionTreeManager implements PermissionTreeManagerInterface {
   }
 
   protected function findPermissions() {
-    $event = new AddPermissionsEvent($this);
+    $event = new AddPermissionsEvent($this->permissionKeys);
     $this->dispatcher->dispatch('logical_authorization.add_permissions', $event);
 
     return $event->getTree();
-  }
-
-  public function mergePermissions($arrays = []) {
-    if(count($arrays)) {
-      $arr1 = array_shift($arrays);
-      while(count($arrays)) {
-        $arr2 = array_shift($arrays);
-        foreach($arr2 as $key => $value) {
-          if(in_array($key, $this->permissionKeys)) {
-            $arr1 = $arr2;
-            break;
-          }
-          if(isset($arr1[$key]) && is_array($value)) {
-            $arr1[$key] = $this->mergePermissions([$arr1[$key], $arr2[$key]]);
-            continue;
-          }
-          $arr1[$key] = $value;
-        }
-      }
-      return $arr1;
-    }
-    return [];
   }
 }
