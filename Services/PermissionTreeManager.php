@@ -24,14 +24,11 @@ class PermissionTreeManager implements PermissionTreeManagerInterface {
   }
 
   public function getTree() {
-    if(is_null($this->tree)) {
-      $this->generateTree();
-    }
-    return $this->tree;
-  }
+    if(!is_null($this->tree)) return $this->tree;
 
-  public function generateTree() {
     $this->tree = $this->findPermissions();
+
+    return $this->tree;
   }
 
   protected function findPermissions() {
