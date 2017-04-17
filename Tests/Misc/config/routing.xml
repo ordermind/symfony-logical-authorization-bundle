@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing
+        http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="xml_route" path="/route-xml">
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Controller\XmlController::routeXmlAction</default>
+        <option key="logical_authorization_permissions">{"role": "ROLE_ADMIN"}</option>
+    </route>
+</routes>
