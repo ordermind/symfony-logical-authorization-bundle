@@ -18,28 +18,6 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     $this->userHelper = $userHelper;
   }
 
-  public function getAvailableActions($model, $user = null, $model_actions = array('create', 'read', 'update', 'delete'), $field_actions = array('get', 'set')) {
-    $available_actions = [];
-    $model = $this->la->getRidOfManager($model);
-    foreach($model_actions as $action) {
-      if($this->checkModelAccess($model, $action, $user)) {
-        $available_actions[$action] = true;
-      }
-    }
-    $reflectionClass = new \ReflectionClass($model);
-    foreach($reflectionClass->getProperties() as $property) {
-      $field_name = $property->getName();
-      foreach($field_actions as $action) {
-        if($this->checkFieldAccess($model, $field_name, $action, $user)) {
-          if(!isset($available_actions['fields'])) $available_actions['fields'] = [];
-          if(!isset($available_actions['fields'][$field_name])) $available_actions['fields'][$field_name] = [];
-          $available_actions['fields'][$field_name][$action] = true;
-        }
-      }
-    }
-    return $available_actions;
-  }
-
   public function checkModelAccess($model, $action, $user = null) {
     $model = $this->la->getRidOfManager($model);
     if(is_null($user)) {

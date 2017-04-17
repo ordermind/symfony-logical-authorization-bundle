@@ -190,4 +190,17 @@ class DefaultController extends Controller {
     return new Response(count($result));
   }
 
+  /**
+    * @Route("/get-available-actions", name="get_available_actions")
+    * @Method({"GET"})
+    */
+  public function getAvailableActionsAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $operations = $this->get('test_model_operations');
+    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $modelManager = $operations->createTestModel($user, true);
+    $result = $modelManager->getAvailableActions($user);
+    return new JsonResponse($result);
+  }
+
 }

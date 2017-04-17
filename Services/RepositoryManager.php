@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Ordermind\DoctrineManagerBundle\Services\Factory\ModelManagerFactoryInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\UserHelperInterface;
 
 class RepositoryManager extends \Ordermind\DoctrineManagerBundle\Services\Manager\RepositoryManager {
@@ -23,7 +24,7 @@ class RepositoryManager extends \Ordermind\DoctrineManagerBundle\Services\Manage
         $modelManager = call_user_func_array(array('parent', __FUNCTION__), $params);
         if($modelManager && $this->getClassName() instanceof ModelInterface) {
             $author = $this->userHelper->getCurrentUser();
-            if($author) {
+            if($author instanceof UserInterface) {
                 $modelManager->setAuthor($author);
             }
         }

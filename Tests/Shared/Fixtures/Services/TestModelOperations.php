@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 
 use Ordermind\DoctrineManagerBundle\Services\Manager\RepositoryManagerInterface;
 use Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelOperations {
   private $repositoryManager;
@@ -63,7 +64,7 @@ class TestModelOperations {
     if($modelManager) {
       if($bypassAccess) {
         $model = $modelManager->getModel();
-        if($user) {
+        if($user instanceof UserInterface) {
           $model->setAuthor($user);
         }
         $om = $modelManager->getObjectManager();
@@ -71,7 +72,7 @@ class TestModelOperations {
         $om->flush();
       }
       else {
-        if($user) {
+        if($user instanceof UserInterface) {
           $modelManager->setAuthor($user);
         }
         $modelManager->save();

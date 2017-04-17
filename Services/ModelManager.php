@@ -20,6 +20,28 @@ class ModelManager extends ModelManagerBase
   }
 
   public function getAvailableActions($user = null, $model_actions = array('create', 'read', 'update', 'delete'), $field_actions = array('get', 'set')) {
-    return $this->laModel->getAvailableActions($this->getModel(), $user, $model_actions, $field_actions);
+    $available_actions = [];
+
+    $model = $this->getModel();
+    foreach($model_actions as $action) {
+      if($this->laModel->checkModelAccess($model, $action, $user)) {
+        $available_actions[$action] = true;
+      }
+    }
+    $reflectionClass = new \ReflectionClass($model);
+    foreach($reflectionClass->getProperties() as $property) {
+      $field_name = $property->getName();
+      foreach($field_actions as $action) {
+        if($action === 'get' && empty($available_actions['read'])) {
+
+        }
+        if($this->checkFieldAccess($model, $field_name, $action, $user)) {
+          if(!isset($available_actions['fields'])) $available_actions['fields'] = [];
+          if(!isset($available_actions['fields'][$field_name])) $available_actions['fields'][$field_name] = [];
+          $available_actions['fields'][$field_name][$action] = true;
+        }
+      }
+    }
+    return $available_actions;
   }
 }
