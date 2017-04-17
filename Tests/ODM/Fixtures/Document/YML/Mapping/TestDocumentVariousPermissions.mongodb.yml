@@ -1,0 +1,36 @@
+Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentVariousPermissions:
+  type: document
+  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentVariousPermissionsRepository
+  collection: testdocuments_various_permissions_yml
+
+  logical_authorization_permissions:
+    create: false
+    read:
+      flag: has_account
+    update:
+      role: ROLE_ADMIN
+    delete:
+      no_bypass: true
+      0: false
+
+  fields:
+    id:
+      id: true
+    field1:
+      type: string
+      logical_authorization_permissions:
+        get:
+          flag: has_account
+        set:
+          role: ROLE_ADMIN
+    field2:
+      type: string
+      logical_authorization_permissions:
+        get: false
+        set:
+          flag: is_author
+    field3:
+      type: string
+  referenceOne:
+    author:
+      targetDocument: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser

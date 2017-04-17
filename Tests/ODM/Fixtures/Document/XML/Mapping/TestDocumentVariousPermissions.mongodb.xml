@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentVariousPermissions" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentVariousPermissionsRepository" collection="testdocuments_various_permissions_xml">
+    <logical_authorization_permissions>
+      <create>
+        <value>FALSE</value>
+      </create>
+      <read>
+        <flag>has_account</flag>
+      </read>
+      <update>
+        <role>ROLE_ADMIN</role>
+      </update>
+      <delete>
+        <no_bypass>true</no_bypass>
+        <value>FALSE</value>
+      </delete>
+    </logical_authorization_permissions>
+
+    <field name="id" id="true" />
+
+    <field name="field1" type="string">
+      <logical_authorization_permissions>
+        <get>
+          <flag>has_account</flag>
+        </get>
+        <set>
+          <role>ROLE_ADMIN</role>
+        </set>
+      </logical_authorization_permissions>
+    </field>
+
+    <field name="field2" type="string">
+      <logical_authorization_permissions>
+        <get>
+          <value>FALSE</value>
+        </get>
+        <set>
+        <flag>is_author</flag>
+        </set>
+      </logical_authorization_permissions>
+    </field>
+
+    <field name="field3" type="string" />
+
+    <reference-one field="author" target-document="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser" />
+  </document>
+</doctrine-mapping>
+

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\Annotation;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\YML;
 
 /**
  * TestEntityOverriddenPermissionsRepository

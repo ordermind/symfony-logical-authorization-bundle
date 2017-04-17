@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+  <document name="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentOverriddenPermissions" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\XML\TestDocumentOverriddenPermissionsRepository" collection="testdocuments_overridden_permissions_xml">
+    <logical_authorization_permissions>
+      <create>
+        <value>FALSE</value>
+      </create>
+      <read>
+        <value>FALSE</value>
+      </read>
+      <update>
+        <value>FALSE</value>
+      </update>
+      <delete>
+        <value>FALSE</value>
+      </delete>
+    </logical_authorization_permissions>
+
+    <field name="id" id="true" />
+
+    <field name="field1" type="string">
+      <logical_authorization_permissions>
+        <get>
+          <value>FALSE</value>
+        </get>
+        <set>
+          <value>FALSE</value>
+        </set>
+      </logical_authorization_permissions>
+    </field>
+
+    <field name="field2" type="string" />
+
+    <field name="field3" type="string" />
+
+    <reference-one field="author" target-document="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser" />
+  </document>
+</doctrine-mapping>
+

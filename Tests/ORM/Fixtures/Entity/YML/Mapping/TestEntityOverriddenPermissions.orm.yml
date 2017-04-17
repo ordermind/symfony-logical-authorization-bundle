@@ -1,6 +1,6 @@
-Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
+Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
   type: entity
-  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\YML\TestEntityOverriddenPermissionsRepository
+  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\YML\TestEntityOverriddenPermissionsRepository
   table: testentities_overridden_permissions_yml
 
   logical_authorization_permissions:
@@ -30,7 +30,7 @@ Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityOv
       length: 255
   manyToOne:
     author:
-      targetEntity: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User\TestUser
+      targetEntity: Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser
       joinColumn:
         name: author_id
         referencedColumnName: id

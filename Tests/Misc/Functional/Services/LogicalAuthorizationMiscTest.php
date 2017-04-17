@@ -15,9 +15,6 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
     'superadmin_user' => 'superadminpass',
   ];
   protected $load_services = array();
-  protected $testEntityOverriddenPermissionsRepositoryManagerAnnotation;
-  protected $testEntityOverriddenPermissionsRepositoryManagerXML;
-  protected $testEntityOverriddenPermissionsRepositoryManagerYML;
   protected $testUserRepositoryManager;
   protected $testModelOperations;
   protected $client;
@@ -33,18 +30,13 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
 
     $this->load_services['testUserRepositoryManager'] = 'repository_manager.test_user';
     $this->load_services['testModelOperations'] = 'test_model_operations';
-    $this->load_services['testEntityOverriddenPermissionsRepositoryManagerAnnotation'] = 'repository_manager.test_entity_overridden_permissions_annotation';
-    $this->load_services['testEntityOverriddenPermissionsRepositoryManagerXML'] = 'repository_manager.test_entity_overridden_permissions_xml';
-    $this->load_services['testEntityOverriddenPermissionsRepositoryManagerYML'] = 'repository_manager.test_entity_overridden_permissions_yml';
     $container = $kernel->getContainer();
     foreach($this->load_services as $property_name => $service_name) {
       $this->$property_name = $container->get($service_name);
     }
 
     $this->deleteAll(array(
-      $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation,
-      $this->testEntityOverriddenPermissionsRepositoryManagerXML,
-      $this->testEntityOverriddenPermissionsRepositoryManagerYML,
+
     ));
 
     $this->addUsers();
@@ -56,18 +48,6 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
    * It is important to reset all non-static properties to minimize memory leaks.
    */
   protected function tearDown() {
-    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManagerAnnotation)) {
-      $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation->getObjectManager()->getConnection()->close();
-      $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation = null;
-    }
-    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManagerXML)) {
-      $this->testEntityOverriddenPermissionsRepositoryManagerXML->getObjectManager()->getConnection()->close();
-      $this->testEntityOverriddenPermissionsRepositoryManagerXML = null;
-    }
-    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManagerYML)) {
-      $this->testEntityOverriddenPermissionsRepositoryManagerYML->getObjectManager()->getConnection()->close();
-      $this->testEntityOverriddenPermissionsRepositoryManagerYML = null;
-    }
     if(!is_null($this->testUserRepositoryManager)) {
       $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
       $this->testUserRepositoryManager = null;
@@ -120,35 +100,7 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
     $this->client->request($method, $slug, $params, array(), $headers);
   }
 
-  public function testEntityPermissionsOverrideAnnotation() {
-    $this->testModelOperations->setRepositoryManager($this->testEntityOverriddenPermissionsRepositoryManagerAnnotation);
-    $this->testModelOperations->createTestModel();
-    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityOverriddenPermissionsRepositoryManagerAnnotation']), static::$admin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
-
-  public function testEntityPermissionsOverrideXML() {
-    $this->testModelOperations->setRepositoryManager($this->testEntityOverriddenPermissionsRepositoryManagerXML);
-    $this->testModelOperations->createTestModel();
-    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityOverriddenPermissionsRepositoryManagerXML']), static::$admin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
-
-  public function testEntityPermissionsOverrideYML() {
-    $this->testModelOperations->setRepositoryManager($this->testEntityOverriddenPermissionsRepositoryManagerYML);
-    $this->testModelOperations->createTestModel();
-    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityOverriddenPermissionsRepositoryManagerYML']), static::$admin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-    $entities_count = $response->getContent();
-    $this->assertEquals(1, $entities_count);
-  }
+  /*--------Route tests----------*/
 
   public function testRouteRoleAllow() {
     $this->sendRequestAs('GET', '/test/route-role', [], static::$admin_user);
@@ -208,14 +160,6 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
     $this->sendRequestAs('GET', '/test/pattern-forbidden', [], static::$superadmin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(403, $response->getStatusCode());
-  }
-
-  public function testAvailableActions() {
-
-  }
-
-  public function testAvailableActionsFromModelManager() {
-
   }
 
 //   public function testAvailableRoutesAnonymous() {

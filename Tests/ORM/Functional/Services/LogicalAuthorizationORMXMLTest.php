@@ -12,6 +12,8 @@ class LogicalAuthorizationORMXMLTest extends LogicalAuthorizationORMBase
       'testEntityRoleAuthorRepositoryManager' => 'repository_manager.test_entity_roleauthor_xml',
       'testEntityHasAccountNoInterfaceRepositoryManager' => 'repository_manager.test_entity_hasaccount_xml',
       'testEntityNoBypassRepositoryManager' => 'repository_manager.test_entity_nobypass_xml',
+      'testEntityOverriddenPermissionsRepositoryManager' => 'repository_manager.test_entity_overridden_permissions_xml',
+      'testEntityVariousPermissionsRepositoryManager' => 'repository_manager.test_entity_various_permissions_xml',
     );
 
     parent::setUp();

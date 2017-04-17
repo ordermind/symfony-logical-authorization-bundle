@@ -46,30 +46,12 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         mappings:
-            TestUser:
-                type: annotation
-                dir: "%kernel.root_dir%/Fixtures/Entity/User"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User
-                alias: TestUser
             TestEntities:
                 type: annotation
-                dir: "%kernel.root_dir%/Fixtures/Entity/Annotation"
+                dir: "%kernel.root_dir%/Fixtures/Entity"
                 is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\Annotation
+                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity
                 alias: TestEntities
-            TestEntitiesXML:
-                type: xml
-                dir: "%kernel.root_dir%/Fixtures/Entity/XML/Mapping"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML
-                alias: TestEntitiesXML
-            TestEntitiesYML:
-                type: yml
-                dir: "%kernel.root_dir%/Fixtures/Entity/YML/Mapping"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML
-                alias: TestEntitiesYML
 
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:
@@ -83,31 +65,3 @@ ordermind_logical_authorization:
         no_bypass: true
         0: false
       ^/test/pattern-: true
-    models:
-      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\Annotation\TestEntityOverriddenPermissions:
-        create: true
-        read: true
-        update: true
-        delete: true
-        fields:
-          field1:
-            get: true
-            set: true
-      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML\TestEntityOverriddenPermissions:
-        create: true
-        read: true
-        update: true
-        delete: true
-        fields:
-          field1:
-            get: true
-            set: true
-      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
-        create: true
-        read: true
-        update: true
-        delete: true
-        fields:
-          field1:
-            get: true
-            set: true

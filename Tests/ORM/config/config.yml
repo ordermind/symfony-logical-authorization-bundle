@@ -73,4 +73,33 @@ doctrine:
 
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:
-    check_lazy_loaded_models: true
+  check_lazy_loaded_models: true
+  permissions:
+    models:
+      Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation\TestEntityOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true
+      Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true
+      Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true

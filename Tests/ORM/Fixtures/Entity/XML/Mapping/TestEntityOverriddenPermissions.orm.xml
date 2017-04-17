@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
     http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\XML\TestEntityOverriddenPermissions" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\XML\TestEntityOverriddenPermissionsRepository" table="testentities_overridden_permissions_xml">
+  <entity name="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\XML\TestEntityOverriddenPermissions" repository-class="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\XML\TestEntityOverriddenPermissionsRepository" table="testentities_overridden_permissions_xml">
     <logical_authorization_permissions>
       <create>
         <value>FALSE</value>
@@ -39,7 +39,7 @@
 
     <field name="field3" column="field3" type="string" length="255" />
 
-    <many-to-one field="author" target-entity="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User\TestUser">
+    <many-to-one field="author" target-entity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser">
       <join-column name="author_id" referenced-column-name="id" />
     </many-to-one>
   </entity>

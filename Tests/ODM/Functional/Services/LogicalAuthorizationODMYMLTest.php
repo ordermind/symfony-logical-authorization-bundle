@@ -12,6 +12,8 @@ class LogicalAuthorizationODMYMLTest extends LogicalAuthorizationODMBase
       'testDocumentRoleAuthorRepositoryManager' => 'repository_manager.test_document_roleauthor_yml',
       'testDocumentHasAccountNoInterfaceRepositoryManager' => 'repository_manager.test_document_hasaccount_yml',
       'testDocumentNoBypassRepositoryManager' => 'repository_manager.test_document_nobypass_yml',
+      'testDocumentOverriddenPermissionsRepositoryManager' => 'repository_manager.test_document_overridden_permissions_yml',
+      'testDocumentVariousPermissionsRepositoryManager' => 'repository_manager.test_document_various_permissions_yml',
     );
 
     parent::setUp();

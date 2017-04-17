@@ -18,6 +18,8 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
   protected $testDocumentRoleAuthorRepositoryManager;
   protected $testDocumentHasAccountNoInterfaceRepositoryManager;
   protected $testDocumentNoBypassRepositoryManager;
+  protected $testDocumentOverriddenPermissionsRepositoryManager;
+  protected $testDocumentVariousPermissionsRepositoryManager;
   protected $testUserRepositoryManager;
   protected $testModelOperations;
   protected $client;
@@ -42,6 +44,8 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
       $this->testDocumentRoleAuthorRepositoryManager,
       $this->testDocumentHasAccountNoInterfaceRepositoryManager,
       $this->testDocumentNoBypassRepositoryManager,
+      $this->testDocumentOverriddenPermissionsRepositoryManager,
+      $this->testDocumentVariousPermissionsRepositoryManager,
     ));
 
     $this->addUsers();
@@ -64,6 +68,14 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     if(!is_null($this->testDocumentNoBypassRepositoryManager)) {
       $this->testDocumentNoBypassRepositoryManager->getObjectManager()->getConnection()->close();
       $this->testDocumentNoBypassRepositoryManager = null;
+    }
+    if(!is_null($this->testDocumentOverriddenPermissionsRepositoryManager)) {
+      $this->testDocumentOverriddenPermissionsRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testDocumentOverriddenPermissionsRepositoryManager = null;
+    }
+    if(!is_null($this->testDocumentVariousPermissionsRepositoryManager)) {
+      $this->testDocumentVariousPermissionsRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testDocumentVariousPermissionsRepositoryManager = null;
     }
     if(!is_null($this->testUserRepositoryManager)) {
       $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
@@ -869,5 +881,23 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     $this->assertEquals(200, $response->getStatusCode());
     $documents_count = $response->getContent();
     $this->assertEquals(1, $documents_count);
+  }
+
+  public function testPermissionsOverride() {
+    $this->testModelOperations->setRepositoryManager($this->testDocumentOverriddenPermissionsRepositoryManager);
+    $this->testModelOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testDocumentOverriddenPermissionsRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testAvailableActions() {
+
+  }
+
+  public function testAvailableActionsFromModelManager() {
+
   }
 }

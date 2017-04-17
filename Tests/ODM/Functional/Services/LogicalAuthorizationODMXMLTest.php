@@ -12,6 +12,8 @@ class LogicalAuthorizationODMXMLTest extends LogicalAuthorizationODMBase
       'testDocumentRoleAuthorRepositoryManager' => 'repository_manager.test_document_roleauthor_xml',
       'testDocumentHasAccountNoInterfaceRepositoryManager' => 'repository_manager.test_document_hasaccount_xml',
       'testDocumentNoBypassRepositoryManager' => 'repository_manager.test_document_nobypass_xml',
+      'testDocumentOverriddenPermissionsRepositoryManager' => 'repository_manager.test_document_overridden_permissions_xml',
+      'testDocumentVariousPermissionsRepositoryManager' => 'repository_manager.test_document_various_permissions_xml',
     );
 
     parent::setUp();

@@ -1,21 +1,69 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\YML;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\Annotation;
 
+use Doctrine\ORM\Mapping as ORM;
+use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizationPermissions;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
-class TestEntityOverriddenPermissions implements ModelInterface
+/**
+ * TestEntityVariousPermissions
+ *
+ * @ORM\Table(name="testentities_various_permissions_annotation")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Repository\Annotation\TestEntityVariousPermissionsRepository")
+ * @LogicalAuthorizationPermissions({
+ *   "create": FALSE,
+ *   "read": {"flag": "has_account"},
+ *   "update": {"role": "ROLE_ADMIN"},
+ *   "delete": {"no_bypass": true, FALSE}
+ * })
+ */
+class TestEntityVariousPermissions implements ModelInterface
 {
-
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     private $id;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="field1", type="string", length=255)
+     * @LogicalAuthorizationPermissions({
+     *   "get": {"flag": "has_account"},
+     *   "set": {"role": "ROLE_ADMIN"}
+     * })
+     */
     private $field1 = '';
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="field2", type="string", length=255)
+     * @LogicalAuthorizationPermissions({
+     *   "get": FALSE,
+     *   "set": {"flag": "is_author"}
+     * })
+     */
     private $field2 = '';
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="field3", type="string", length=255)
+     */
     private $field3 = '';
 
+    /**
+     * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
     protected $author;
 
     /**
@@ -33,7 +81,7 @@ class TestEntityOverriddenPermissions implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestEntityOverriddenPermissions
+     * @return TestEntityVariousPermissions
      */
     public function setField1($field1)
     {
@@ -57,7 +105,7 @@ class TestEntityOverriddenPermissions implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestEntityOverriddenPermissions
+     * @return TestEntityVariousPermissions
      */
     public function setField2($field2)
     {
@@ -81,7 +129,7 @@ class TestEntityOverriddenPermissions implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestEntityOverriddenPermissions
+     * @return TestEntityVariousPermissions
      */
     public function setField3($field3)
     {
@@ -124,4 +172,5 @@ class TestEntityOverriddenPermissions implements ModelInterface
     }
 
 }
+
 

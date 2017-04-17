@@ -67,4 +67,33 @@ doctrine_mongodb:
 
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:
-    check_lazy_loaded_models: true
+  check_lazy_loaded_models: true
+  permissions:
+    models:
+      Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true
+      Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true
+      Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentOverriddenPermissions:
+        create: true
+        read: true
+        update: true
+        delete: true
+        fields:
+          field1:
+            get: true
+            set: true

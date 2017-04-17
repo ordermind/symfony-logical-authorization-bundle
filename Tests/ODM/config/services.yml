@@ -27,6 +27,18 @@ services:
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentNoBypass
 
+  repository_manager.test_document_overridden_permissions_annotation:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentOverriddenPermissions
+
+  repository_manager.test_document_various_permissions_annotation:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentVariousPermissions
+
   # XML repositories
   repository_manager.test_document_roleauthor_xml:
     class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
@@ -46,6 +58,18 @@ services:
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentNoBypass
 
+  repository_manager.test_document_overridden_permissions_xml:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentOverriddenPermissions
+
+  repository_manager.test_document_various_permissions_xml:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentVariousPermissions
+
   # YML repositories
   repository_manager.test_document_roleauthor_yml:
     class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
@@ -64,3 +88,15 @@ services:
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentNoBypass
+
+  repository_manager.test_document_overridden_permissions_yml:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentOverriddenPermissions
+
+  repository_manager.test_document_various_permissions_yml:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
+    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+    arguments:
+      - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentVariousPermissions

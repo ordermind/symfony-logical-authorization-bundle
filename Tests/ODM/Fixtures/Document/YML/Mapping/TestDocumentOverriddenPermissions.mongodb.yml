@@ -1,0 +1,26 @@
+Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentOverriddenPermissions:
+  type: document
+  repositoryClass: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Repository\YML\TestDocumentOverriddenPermissionsRepository
+  collection: testdocuments_overridden_permissions_yml
+
+  logical_authorization_permissions:
+    create: false
+    read: false
+    update: false
+    delete: false
+
+  fields:
+    id:
+      id: true
+    field1:
+      type: string
+      logical_authorization_permissions:
+        get: false
+        set: false
+    field2:
+      type: string
+    field3:
+      type: string
+  referenceOne:
+    author:
+      targetDocument: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser

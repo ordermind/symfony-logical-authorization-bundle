@@ -18,6 +18,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
   protected $testEntityRoleAuthorRepositoryManager;
   protected $testEntityHasAccountNoInterfaceRepositoryManager;
   protected $testEntityNoBypassRepositoryManager;
+  protected $testEntityOverriddenPermissionsRepositoryManager;
+  protected $testEntityVariousPermissionsRepositoryManager;
   protected $testUserRepositoryManager;
   protected $testModelOperations;
   protected $client;
@@ -42,6 +44,8 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
       $this->testEntityRoleAuthorRepositoryManager,
       $this->testEntityHasAccountNoInterfaceRepositoryManager,
       $this->testEntityNoBypassRepositoryManager,
+      $this->testEntityOverriddenPermissionsRepositoryManager,
+      $this->testEntityVariousPermissionsRepositoryManager,
     ));
 
     $this->addUsers();
@@ -53,14 +57,30 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
    * It is important to reset all non-static properties to minimize memory leaks.
    */
   protected function tearDown() {
-    $this->testEntityRoleAuthorRepositoryManager->getObjectManager()->getConnection()->close();
-    $this->testEntityRoleAuthorRepositoryManager = null;
-    $this->testEntityHasAccountNoInterfaceRepositoryManager->getObjectManager()->getConnection()->close();
-    $this->testEntityHasAccountNoInterfaceRepositoryManager = null;
-    $this->testEntityNoBypassRepositoryManager->getObjectManager()->getConnection()->close();
-    $this->testEntityNoBypassRepositoryManager = null;
-    $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
-    $this->testUserRepositoryManager = null;
+    if(!is_null($this->testEntityRoleAuthorRepositoryManager)) {
+      $this->testEntityRoleAuthorRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testEntityRoleAuthorRepositoryManager = null;
+    }
+    if(!is_null($this->testEntityHasAccountNoInterfaceRepositoryManager)) {
+      $this->testEntityHasAccountNoInterfaceRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testEntityHasAccountNoInterfaceRepositoryManager = null;
+    }
+    if(!is_null($this->testEntityNoBypassRepositoryManager)) {
+      $this->testEntityNoBypassRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testEntityNoBypassRepositoryManager = null;
+    }
+    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManager)) {
+      $this->testEntityOverriddenPermissionsRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testEntityOverriddenPermissionsRepositoryManager = null;
+    }
+    if(!is_null($this->testEntityVariousPermissionsRepositoryManager)) {
+      $this->testEntityVariousPermissionsRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testEntityVariousPermissionsRepositoryManager = null;
+    }
+    if(!is_null($this->testUserRepositoryManager)) {
+      $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testUserRepositoryManager = null;
+    }
     $this->testModelOperations = null;
     $this->client = null;
 
@@ -861,5 +881,23 @@ abstract class LogicalAuthorizationORMBase extends WebTestCase {
     $this->assertEquals(200, $response->getStatusCode());
     $entities_count = $response->getContent();
     $this->assertEquals(1, $entities_count);
+  }
+
+  public function testPermissionsOverride() {
+    $this->testModelOperations->setRepositoryManager($this->testEntityOverriddenPermissionsRepositoryManager);
+    $this->testModelOperations->createTestModel();
+    $this->sendRequestAs('GET', '/test/count-unknown-result', array('repository_manager_service' => $this->load_services['testEntityOverriddenPermissionsRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $entities_count = $response->getContent();
+    $this->assertEquals(1, $entities_count);
+  }
+
+  public function testAvailableActions() {
+
+  }
+
+  public function testAvailableActionsFromModelManager() {
+
   }
 }
