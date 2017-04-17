@@ -39,25 +39,25 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationMiscBase {
     $this->assertEquals(403, $response->getStatusCode());
   }
 
-  public function testYmlRoleAllow() {
+  public function testYmlRouteAllow() {
     $this->sendRequestAs('GET', '/test/route-yml', [], static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
   }
 
-  public function testYmlRoleDisallow() {
+  public function testYmlRouteDisallow() {
     $this->sendRequestAs('GET', '/test/route-yml', [], static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(403, $response->getStatusCode());
   }
 
-  public function testXmlRoleAllow() {
+  public function testXmlRouteAllow() {
     $this->sendRequestAs('GET', '/test/route-xml', [], static::$admin_user);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
   }
 
-  public function testXmlRoleDisallow() {
+  public function testXmlRouteDisallow() {
     $this->sendRequestAs('GET', '/test/route-xml', [], static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(403, $response->getStatusCode());
