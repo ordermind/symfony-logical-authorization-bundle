@@ -90,7 +90,7 @@ class DefaultController extends Controller {
   public function countAvailableRoutesAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
     $laRoute = $this->get('ordermind_logical_authorization.service.logical_authorization_route');
-    $result = $laRoute->getAllAvailableRoutes($user);
+    $result = $laRoute->getAvailableRoutes($user);
     if(empty($result['routes'])) return new Response(0);
     return new Response(count($result['routes']));
   }
@@ -102,7 +102,7 @@ class DefaultController extends Controller {
   public function countAvailableRoutePatternsAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
     $laRoute = $this->get('ordermind_logical_authorization.service.logical_authorization_route');
-    $result = $laRoute->getAllAvailableRoutes($user);
+    $result = $laRoute->getAvailableRoutes($user);
     if(empty($result['route_patterns'])) return new Response(0);
     return new Response(count($result['route_patterns']));
   }

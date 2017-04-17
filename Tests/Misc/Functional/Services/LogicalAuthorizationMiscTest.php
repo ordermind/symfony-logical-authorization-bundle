@@ -162,67 +162,67 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
     $this->assertEquals(403, $response->getStatusCode());
   }
 
-//   public function testAvailableRoutesAnonymous() {
-//     $this->sendRequestAs('GET', '/test/count-available-routes', []);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(3, $routes_count);
-//   }
-//
-//   public function testAvailableRoutesAuthenticated() {
-//     $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(4, $routes_count);
-//   }
-//
-//   public function testAvailableRoutesAdmin() {
-//     $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(5, $routes_count);
-//   }
-//
-//   public function testAvailableRoutesSuperadmin() {
-//     $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(6, $routes_count);
-//   }
-//
-//   public function testAvailableRoutePatternsAnonymous() {
-//     $this->sendRequestAs('GET', '/test/count-available-route-patterns', []);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(0, $routes_count);
-//   }
-//
-//   public function testAvailableRoutePatternsAuthenticated() {
-//     $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$authenticated_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(0, $routes_count);
-//   }
-//
-//   public function testAvailableRoutePatternsAdmin() {
-//     $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$admin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(0, $routes_count);
-//   }
-//
-//   public function testAvailableRoutePatternsSuperadmin() {
-//     $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$superadmin_user);
-//     $response = $this->client->getResponse();
-//     $this->assertEquals(200, $response->getStatusCode());
-//     $routes_count = $response->getContent();
-//     $this->assertEquals(0, $routes_count);
-//   }
+  public function testAvailableRoutesAnonymous() {
+    $this->sendRequestAs('GET', '/test/count-available-routes', []);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(4, $routes_count);
+  }
+
+  public function testAvailableRoutesAuthenticated() {
+    $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(5, $routes_count);
+  }
+
+  public function testAvailableRoutesAdmin() {
+    $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(6, $routes_count);
+  }
+
+  public function testAvailableRoutesSuperadmin() {
+    $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(6, $routes_count);
+  }
+
+  public function testAvailableRoutePatternsAnonymous() {
+    $this->sendRequestAs('GET', '/test/count-available-route-patterns', []);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(1, $routes_count);
+  }
+
+  public function testAvailableRoutePatternsAuthenticated() {
+    $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(1, $routes_count);
+  }
+
+  public function testAvailableRoutePatternsAdmin() {
+    $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(1, $routes_count);
+  }
+
+  public function testAvailableRoutePatternsSuperadmin() {
+    $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $routes_count = $response->getContent();
+    $this->assertEquals(1, $routes_count);
+  }
 }
