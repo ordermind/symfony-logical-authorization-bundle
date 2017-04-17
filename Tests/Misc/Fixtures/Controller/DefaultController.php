@@ -84,17 +84,6 @@ class DefaultController extends Controller {
   }
 
   /**
-    * @Route("/count-unknown-result", name="count_unknown_result")
-    * @Method({"GET"})
-    */
-  public function countUnknownResultAction(Request $request) {
-    $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $result = $operations->getUnknownResult();
-    return new Response(count($result));
-  }
-
-  /**
     * @Route("/count-available-routes", name="count_available_routes")
     * @Method({"GET"})
     */

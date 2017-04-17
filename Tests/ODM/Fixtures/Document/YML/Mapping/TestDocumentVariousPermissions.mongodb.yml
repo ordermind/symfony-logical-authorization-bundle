@@ -16,6 +16,10 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
   fields:
     id:
       id: true
+      logical_authorization_permissions:
+        set:
+          no_bypass: true
+          0: false
     field1:
       type: string
       logical_authorization_permissions:
@@ -34,3 +38,5 @@ Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumen
   referenceOne:
     author:
       targetDocument: Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser
+      logical_authorization_permissions:
+        set: false

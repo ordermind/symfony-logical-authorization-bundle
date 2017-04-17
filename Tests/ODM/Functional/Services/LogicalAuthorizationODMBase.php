@@ -893,11 +893,102 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     $this->assertEquals(1, $entities_count);
   }
 
-  public function testAvailableActions() {
-
+  public function testAvailableActionsAnonymous() {
+    $this->sendRequestAs('GET', '/test/get-available-actions', array('repository_manager_service' => $this->load_services['testDocumentVariousPermissionsRepositoryManager']));
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $actions = json_decode($response->getContent(), true);
+    $expected_actions = [];
+    $this->assertSame($expected_actions, $actions);
   }
 
-  public function testAvailableActionsFromModelManager() {
+  public function testAvailableActionsAuthenticated() {
+    $this->sendRequestAs('GET', '/test/get-available-actions', array('repository_manager_service' => $this->load_services['testDocumentVariousPermissionsRepositoryManager']), static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $actions = json_decode($response->getContent(), true);
+    $expected_actions = [
+      'read' => true,
+      'fields' => [
+        'id' => [
+          'get' => true,
+        ],
+        'field1' => [
+          'get' => true,
+        ],
+        'field3' => [
+          'get' => true,
+        ],
+        'author' => [
+          'get' => true,
+        ],
+      ],
+    ];
+    $this->assertSame($expected_actions, $actions);
+  }
 
+  public function testAvailableActionsAdmin() {
+    $this->sendRequestAs('GET', '/test/get-available-actions', array('repository_manager_service' => $this->load_services['testDocumentVariousPermissionsRepositoryManager']), static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $actions = json_decode($response->getContent(), true);
+    $expected_actions = [
+      'read' => true,
+      'update' => true,
+      'fields' => [
+        'id' => [
+          'get' => true,
+        ],
+        'field1' => [
+          'get' => true,
+          'set' => true,
+        ],
+        'field2' => [
+          'set' => true,
+        ],
+        'field3' => [
+          'get' => true,
+          'set' => true,
+        ],
+        'author' => [
+          'get' => true,
+        ],
+      ],
+    ];
+    $this->assertSame($expected_actions, $actions);
+  }
+
+  public function testAvailableActionsSuperadmin() {
+    $this->sendRequestAs('GET', '/test/get-available-actions', array('repository_manager_service' => $this->load_services['testDocumentVariousPermissionsRepositoryManager']), static::$superadmin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+    $actions = json_decode($response->getContent(), true);
+    $expected_actions = [
+      'create' => true,
+      'read' => true,
+      'update' => true,
+      'fields' => [
+        'id' => [
+          'get' => true,
+        ],
+        'field1' => [
+          'get' => true,
+          'set' => true,
+        ],
+        'field2' => [
+          'get' => true,
+          'set' => true,
+        ],
+        'field3' => [
+          'get' => true,
+          'set' => true,
+        ],
+        'author' => [
+          'get' => true,
+          'set' => true,
+        ],
+      ],
+    ];
+    $this->assertSame($expected_actions, $actions);
   }
 }

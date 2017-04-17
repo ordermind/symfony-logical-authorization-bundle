@@ -21,7 +21,14 @@
       </delete>
     </logical_authorization_permissions>
 
-    <field name="id" id="true" />
+    <field name="id" id="true">
+      <logical_authorization_permissions>
+        <set>
+          <no_bypass>true</no_bypass>
+          <value>FALSE</value>
+        </set>
+      </logical_authorization_permissions>
+    </field>
 
     <field name="field1" type="string">
       <logical_authorization_permissions>
@@ -47,7 +54,13 @@
 
     <field name="field3" type="string" />
 
-    <reference-one field="author" target-document="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser" />
+    <reference-one field="author" target-document="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser">
+      <logical_authorization_permissions>
+        <set>
+          <value>FALSE</value>
+        </set>
+      </logical_authorization_permissions>
+    </reference-one>
   </document>
 </doctrine-mapping>
 

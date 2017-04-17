@@ -27,6 +27,9 @@ class TestEntityVariousPermissions implements ModelInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @LogicalAuthorizationPermissions({
+     *   "set": {"no_bypass": true, FALSE}
+     * })
      */
     private $id;
 
@@ -63,6 +66,9 @@ class TestEntityVariousPermissions implements ModelInterface
      * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     * @LogicalAuthorizationPermissions({
+     *   "set": FALSE
+     * })
      */
     protected $author;
 

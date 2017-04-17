@@ -32,10 +32,14 @@ class ModelManager extends ModelManagerBase
     foreach($reflectionClass->getProperties() as $property) {
       $field_name = $property->getName();
       foreach($field_actions as $action) {
-        if($action === 'get' && empty($available_actions['read'])) {
-
+        if($action === 'get') {
+          if(empty($available_actions['read'])) continue;
         }
-        if($this->checkFieldAccess($model, $field_name, $action, $user)) {
+        else if($action === 'set') {
+          if($this->isNew() && empty($available_actions['create'])) continue;
+          if(!$this->isNew() && empty($available_actions['update'])) continue;
+        }
+        if($this->laModel->checkFieldAccess($model, $field_name, $action, $user)) {
           if(!isset($available_actions['fields'])) $available_actions['fields'] = [];
           if(!isset($available_actions['fields'][$field_name])) $available_actions['fields'][$field_name] = [];
           $available_actions['fields'][$field_name][$action] = true;

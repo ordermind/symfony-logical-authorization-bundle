@@ -23,6 +23,12 @@
 
     <id name="id" type="integer" column="id">
       <generator strategy="AUTO"/>
+      <logical_authorization_permissions>
+        <set>
+          <no_bypass>true</no_bypass>
+          <value>FALSE</value>
+        </set>
+      </logical_authorization_permissions>
     </id>
 
     <field name="field1" column="field1" type="string" length="255">
@@ -51,6 +57,11 @@
 
     <many-to-one field="author" target-entity="Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\User\TestUser">
       <join-column name="author_id" referenced-column-name="id" />
+      <logical_authorization_permissions>
+        <set>
+          <value>FALSE</value>
+        </set>
+      </logical_authorization_permissions>
     </many-to-one>
   </entity>
 </doctrine-mapping>

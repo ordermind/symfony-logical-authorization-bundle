@@ -18,6 +18,10 @@ Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityVar
       type: integer
       generator:
         strategy: AUTO
+      logical_authorization_permissions:
+        set:
+          no_bypass: true
+          0: false
 
   fields:
     field1:
@@ -44,3 +48,5 @@ Ordermind\LogicalAuthorizationBundle\Tests\ORM\Fixtures\Entity\YML\TestEntityVar
       joinColumn:
         name: author_id
         referencedColumnName: id
+      logical_authorization_permissions:
+        set: false

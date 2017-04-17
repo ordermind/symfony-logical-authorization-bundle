@@ -25,6 +25,9 @@ class TestDocumentVariousPermissions implements ModelInterface
      *
      * @ODM\Field(name="id", type="integer")
      * @ODM\Id
+     * @LogicalAuthorizationPermissions({
+     *   "set": {"no_bypass": true, FALSE}
+     * })
      */
     private $id;
 
@@ -60,6 +63,9 @@ class TestDocumentVariousPermissions implements ModelInterface
     /**
      * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      * @ODM\ReferenceOne(targetDocument="Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser")
+     * @LogicalAuthorizationPermissions({
+     *   "set": FALSE
+     * })
      */
     protected $author;
 
