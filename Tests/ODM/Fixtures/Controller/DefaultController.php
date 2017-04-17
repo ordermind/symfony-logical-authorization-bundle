@@ -199,7 +199,7 @@ class DefaultController extends Controller {
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
-    $result = $modelManager->getAvailableActions($user);
+    $result = $modelManager->getAvailableActions();
     return new JsonResponse($result);
   }
 
