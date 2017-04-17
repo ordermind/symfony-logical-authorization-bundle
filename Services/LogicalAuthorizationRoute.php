@@ -22,7 +22,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     $this->userHelper = $userHelper;
   }
 
-  public function getAllAvailableRoutes($user = null) {
+  public function getAvailableRoutes($user = null) {
     $routes = [];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       if($this->checkRouteAccess($name, $user)) {

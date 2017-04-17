@@ -56,14 +56,22 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
    * It is important to reset all non-static properties to minimize memory leaks.
    */
   protected function tearDown() {
-    $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation->getObjectManager()->getConnection()->close();
-    $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation = null;
-    $this->testEntityOverriddenPermissionsRepositoryManagerXML->getObjectManager()->getConnection()->close();
-    $this->testEntityOverriddenPermissionsRepositoryManagerXML = null;
-    $this->testEntityOverriddenPermissionsRepositoryManagerYML->getObjectManager()->getConnection()->close();
-    $this->testEntityOverriddenPermissionsRepositoryManagerYML = null;
-    $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
-    $this->testUserRepositoryManager = null;
+    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManagerAnnotation)) {
+      $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation->getObjectManager()->getConnection()->close();
+      $this->testEntityOverriddenPermissionsRepositoryManagerAnnotation = null;
+    }
+    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManagerXML)) {
+      $this->testEntityOverriddenPermissionsRepositoryManagerXML->getObjectManager()->getConnection()->close();
+      $this->testEntityOverriddenPermissionsRepositoryManagerXML = null;
+    }
+    if(!is_null($this->testEntityOverriddenPermissionsRepositoryManagerYML)) {
+      $this->testEntityOverriddenPermissionsRepositoryManagerYML->getObjectManager()->getConnection()->close();
+      $this->testEntityOverriddenPermissionsRepositoryManagerYML = null;
+    }
+    if(!is_null($this->testUserRepositoryManager)) {
+      $this->testUserRepositoryManager->getObjectManager()->getConnection()->close();
+      $this->testUserRepositoryManager = null;
+    }
     $this->testModelOperations = null;
     $this->client = null;
 
@@ -203,6 +211,10 @@ class LogicalAuthorizationMiscTest extends WebTestCase {
   }
 
   public function testAvailableActions() {
+
+  }
+
+  public function testAvailableActionsFromModelManager() {
 
   }
 

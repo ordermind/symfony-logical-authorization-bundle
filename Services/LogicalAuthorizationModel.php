@@ -18,7 +18,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     $this->userHelper = $userHelper;
   }
 
-  public function getAllAvailableActions($model, $user = null, $model_actions = array('create', 'read', 'update', 'delete'), $field_actions = array('get', 'set')) {
+  public function getAvailableActions($model, $user = null, $model_actions = array('create', 'read', 'update', 'delete'), $field_actions = array('get', 'set')) {
     $available_actions = [];
     $model = $this->la->getRidOfManager($model);
     foreach($model_actions as $action) {
