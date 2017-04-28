@@ -17,6 +17,7 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
   protected $testUserRepositoryManager;
   protected $testModelOperations;
   protected $client;
+  protected $la;
 
   /**
    * This method is run before each public test method
@@ -25,18 +26,14 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
     require_once __DIR__.'/../../AppKernel.php';
     $kernel = new \AppKernel('test', true);
     $kernel->boot();
-    $this->client = static::createClient();
-
-    $this->load_services['testUserRepositoryManager'] = 'repository_manager.test_user';
-    $this->load_services['testModelOperations'] = 'test_model_operations';
     $container = $kernel->getContainer();
-    foreach($this->load_services as $property_name => $service_name) {
-      $this->$property_name = $container->get($service_name);
-    }
 
-    $this->deleteAll(array(
-
-    ));
+    $this->client = static::createClient();
+    $this->testUserRepositoryManager = $container->get('repository_manager.test_user');
+    $this->testModelOperations = $container->get('test_model_operations');
+    $this->la = $container->get('ordermind_logical_authorization.service.logical_authorization');
+    $this->laModel = $container->get('ordermind_logical_authorization.service.logical_authorization_model');
+    $this->laRoute = $container->get('ordermind_logical_authorization.service.logical_authorization_route');
 
     $this->addUsers();
   }

@@ -31,6 +31,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
       $message = $e->getMessage();
       $this->handleError("An exception was caught while checking access bypass: \"$message\" at " . $e->getFile() . " line " . $e->getLine(), array('exception' => $class, 'context' => $context));
     }
+    return false;
   }
 
   public function checkAccess($permissions, $context, $allow_bypass = true) {
@@ -53,6 +54,10 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
   }
 
   public function handleError($message, $context) {
+    if(!is_array($context)) {
+      throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
+    }
+
     if(!is_null($this->logger)) {
       $this->logger->error($message, $context);
     }
