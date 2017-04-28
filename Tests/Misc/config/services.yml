@@ -6,4 +6,4 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
     factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
     arguments:
-      - Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User\TestUser
+      - Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser

@@ -1,9 +1,8 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\User;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizationPermissions;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
 
 class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
