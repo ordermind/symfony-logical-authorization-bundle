@@ -65,3 +65,13 @@ ordermind_logical_authorization:
         no_bypass: true
         0: false
       ^/test/pattern-: true
+    models:
+      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestEntity:
+        create: true
+        read: false
+        update: true
+        delete: false
+        fields:
+          field1:
+            get: true
+            set: false

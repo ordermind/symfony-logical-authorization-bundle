@@ -416,4 +416,163 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
   }
 
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckModelAccessWrongModelType() {
+    $user = new TestUser();
+    $this->laModel->checkModelAccess(null, 'read', $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckModelAccessModelClassDoesntExist() {
+    $user = new TestUser();
+    $this->laModel->checkModelAccess('TestEntity', 'read', $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckModelAccessWrongActionType() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->laModel->checkModelAccess($model, null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckModelAccessEmptyAction() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->laModel->checkModelAccess($model, '', $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckModelAccessWrongUserType() {
+    $model = new TestEntity();
+    $this->laModel->checkModelAccess($model, 'read', []);
+  }
+
+  public function testCheckModelAccessMissingUser() {
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkModelAccess($model, 'read'));
+  }
+
+  public function testCheckModelAccessMissingPermissions() {
+    $user = new TestUser();
+    $model = new ErroneousEntity();
+    $this->assertTrue($this->laModel->checkModelAccess($model, 'read', $user));
+  }
+
+  public function testCheckModelAccessNo() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertFalse($this->laModel->checkModelAccess($model, 'read', $user));
+  }
+
+  public function testCheckModelAccessYes() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkModelAccess($model, 'create', $user));
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessWrongModelType() {
+    $user = new TestUser();
+    $this->laModel->checkFieldAccess(null, null, null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessModelClassDoesntExist() {
+    $user = new TestUser();
+    $this->laModel->checkFieldAccess('TestEntity', null, null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessWrongFieldType() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->laModel->checkFieldAccess($model, null, null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessEmptyField() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->laModel->checkFieldAccess($model, '', null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessWrongActionType() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->laModel->checkFieldAccess($model, 'field1', null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessEmptyAction() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->laModel->checkFieldAccess($model, 'field1', '', $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckFieldAccessWrongUserType() {
+    $model = new TestEntity();
+    $this->laModel->checkFieldAccess($model, 'field1', 'get', []);
+  }
+
+  public function testCheckFieldAccessMissingUser() {
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'set'));
+  }
+
+  public function testCheckFieldAccessMissingModelPermissions() {
+    $user = new TestUser();
+    $model = new ErroneousEntity();
+    $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', $user));
+  }
+
+  public function testCheckFieldAccessMissingFieldPermissions() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkFieldAccess($model, 'test', 'set', $user));
+  }
+
+  public function testCheckFieldAccessWrongAction() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'read', $user));
+  }
+
+  public function testCheckFieldAccessNo() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'set', $user));
+  }
+
+  public function testCheckFieldAccessYes() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', $user));
+  }
 }

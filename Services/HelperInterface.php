@@ -11,7 +11,6 @@ interface HelperInterface {
    */
   public function getCurrentUser();
 
-
   /**
    * @internal Extracts a model from a model manager if applicable. The purpose is to reduce memory footprint in case of an exception.
    *

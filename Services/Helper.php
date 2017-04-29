@@ -23,7 +23,7 @@ class Helper implements HelperInterface {
     $this->logger = $logger;
   }
 
-   /**
+  /**
    * {@inheritdoc}
    */
   public function getCurrentUser() {
@@ -34,7 +34,7 @@ class Helper implements HelperInterface {
     return null;
   }
 
-   /**
+  /**
    * {@inheritdoc}
    */
   public function getRidOfManager($modelManager) {
@@ -55,8 +55,9 @@ class Helper implements HelperInterface {
       $this->logger->error($message, $context);
     }
     else {
+      $message .= "\nContext:\n";
       foreach($context as $key => $value) {
-        $message .= ", $key: " . print_r($value, true);
+        $message .= "$key => " . print_r($value, true) . "\n";
       }
       throw new LogicalAuthorizationException($message);
     }
