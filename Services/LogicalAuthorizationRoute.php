@@ -7,6 +7,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\UserHelperInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\ErrorHandlerInterface;
 
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
 
@@ -14,12 +15,14 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
   protected $treeManager;
   protected $router;
   protected $userHelper;
+  protected $errorHandler;
 
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, RouterInterface $router, UserHelperInterface $userHelper) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, RouterInterface $router, UserHelperInterface $userHelper, ErrorHandlerInterface $errorHandler) {
     $this->la = $la;
     $this->treeManager = $treeManager;
     $this->router = $router;
     $this->userHelper = $userHelper;
+    $this->errorHandler = $errorHandler;
   }
 
   public function getAvailableRoutes($user = null) {
@@ -56,11 +59,11 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     $user = $this->la->getRidOfManager($user);
 
     if(!is_string($route_name)) {
-      $this->la->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
+      $this->errorHandler->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
-      $this->la->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $route_name, 'user' => $user]);
+      $this->errorHandler->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $route_name, 'user' => $user]);
       return false;
     }
 
