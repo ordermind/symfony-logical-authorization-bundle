@@ -2,6 +2,7 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
 
+use Symfony\Component\Routing\Route;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Services\Helper;
@@ -574,5 +575,60 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $user = new TestUser();
     $model = new TestEntity();
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', $user));
+  }
+
+  public function testGetAvailableRoutes() {
+    $available_routes = $this->laRoute->getAvailableRoutes('anon.');
+    $this->assertTrue(isset($available_routes['routes']) && is_array($available_routes['routes']) && !empty($available_routes['routes']));
+    foreach($available_routes['routes'] as $route) {
+      $this->assertTrue($route instanceof Route);
+    }
+    $this->assertTrue(isset($available_routes['route_patterns']) && is_array($available_routes['route_patterns']) && !empty($available_routes['route_patterns']));
+    foreach($available_routes['route_patterns'] as $pattern => $value) {
+      $this->assertTrue(is_string($pattern));
+    }
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckRouteAccessWrongRouteType() {
+    $user = new TestUser();
+    $this->laRoute->checkRouteAccess(null, $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckRouteAccessEmptyRoute() {
+    $user = new TestUser();
+    $this->laRoute->checkRouteAccess('', $user);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckRouteAccessWrongUserType() {
+    $this->laRoute->checkRouteAccess('route_allowed', []);
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    */
+  public function testCheckRouteAccessRouteDoesntExist() {
+    $user = new TestUser();
+    $this->laRoute->checkRouteAccess('hej', $user);
+  }
+
+  public function testCheckRouteAccessMissingUser() {
+    $this->assertTrue($this->laRoute->checkRouteAccess('route_no_bypass'));
+  }
+
+  public function testCheckRouteAccessNo() {
+    $this->assertFalse($this->laRoute->checkRouteAccess('route_no_bypass', 'anon.'));
+  }
+
+  public function testCheckRouteAccessYes() {
+    $this->assertTrue($this->laRoute->checkRouteAccess('route_allowed', 'anon.'));
   }
 }
