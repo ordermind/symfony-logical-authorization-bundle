@@ -15,6 +15,7 @@ class Helper implements HelperInterface {
   /**
    * @internal
    *
+   * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
    * @param Psr\Log\LoggerInterface $logger (optional) A service for logging errors
    */
   public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger = null) {
@@ -22,6 +23,9 @@ class Helper implements HelperInterface {
     $this->logger = $logger;
   }
 
+   /**
+   * {@inheritdoc}
+   */
   public function getCurrentUser() {
     $token = $this->tokenStorage->getToken();
     if(!is_null($token)) {

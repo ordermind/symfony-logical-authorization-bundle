@@ -104,4 +104,15 @@ class DefaultController extends Controller {
     if(empty($result['route_patterns'])) return new Response(0);
     return new Response(count($result['route_patterns']));
   }
+
+  /**
+    * @Route("/get-current-user-id", name="get_current_user_id")
+    * @Method({"GET"})
+    */
+  public function getCurrentUserIdAction(Request $request) {
+    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
+    if(is_null($user)) return new Response($user);
+    if(is_string($user)) return new Response($user);
+    return new Response($user->getId());
+  }
 }

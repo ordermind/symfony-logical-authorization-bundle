@@ -357,6 +357,31 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
 
   /*------------ Services -------------*/
 
+  public function testHelperCurrentUser() {
+    $this->sendRequestAs('GET', '/test/get-current-user-id', [], static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(static::$authenticated_user->getId(), $response->getContent());
+  }
+
+  public function testHelperCurrentUserAnonymous() {
+    $this->sendRequestAs('GET', '/test/get-current-user-id');
+    $response = $this->client->getResponse();
+    $this->assertSame('anon.', $response->getContent());
+  }
+
+  public function testHelperGetRidOfManagerWrongType() {
+    $user = new TestUser();
+    $this->assertSame($user, $this->helper->getRidOfManager($user));
+    $this->assertSame('hej', $this->helper->getRidOfManager('hej'));
+    $this->assertNull($this->helper->getRidOfManager(null));
+  }
+
+  public function testHelperGetRidOfManager() {
+    $user = new TestUser();
+    $modelManager = $this->testUserRepositoryManager->wrapModel($user);
+    $this->assertSame($user, $this->helper->getRidOfManager($modelManager));
+  }
+
   /**
     * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
     * @expectedExceptionMessageRegExp /service tag to register a permission type/
