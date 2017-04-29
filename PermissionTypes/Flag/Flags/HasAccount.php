@@ -14,7 +14,7 @@ class HasAccount implements FlagInterface {
   /**
    * Checks if a user has an account in the current context.
    *
-   * @param array context The context for evaluating the flag. The context must contain a 'user' key so that the user can be evaluated. You can get the current user by calling getCurrentUser() from the service 'ordermind_logical_authorization.service.user_helper'.
+   * @param array $context The context for evaluating the flag. The context must contain a 'user' key so that the user can be evaluated. You can get the current user by calling getCurrentUser() from the service 'ordermind_logical_authorization.service.user_helper'.
    *
    * @return bool TRUE if the user is not a string and FALSE if the user is a string and thereby anonymous
    */

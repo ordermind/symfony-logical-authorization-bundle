@@ -16,24 +16,25 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
   protected $lpManager;
   protected $logger;
 
+  /**
+   * @internal
+   *
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManagerInterface $lpManager The logical permissions manager to use
+   * @param Psr\Log\LoggerInterface $logger (optional) A service for logging errors
+   */
   public function __construct(LogicalPermissionsManagerInterface $lpManager, LoggerInterface $logger = null) {
     $this->lpManager = $lpManager;
-    $this->lpManager->setBypassCallback([$this, 'checkBypassAccess']);
+    if(!$this->lpManager->getBypassCallback()) {
+      $this->lpManager->setBypassCallback(function($context) {
+        return $this->lpManager->checkAccess(['flag' => 'bypass_access'], $context, false);
+      });
+    }
     $this->logger = $logger;
   }
 
-  public function checkBypassAccess($context) {
-    try {
-      return $this->checkAccess(['flag' => 'bypass_access'], $context, false);
-    }
-    catch (\Exception $e) {
-      $class = get_class($e);
-      $message = $e->getMessage();
-      $this->handleError("An exception was caught while checking access bypass: \"$message\" at " . $e->getFile() . " line " . $e->getLine(), array('exception' => $class, 'context' => $context));
-    }
-    return false;
-  }
-
+  /**
+   * {@inheritdoc}
+   */
   public function checkAccess($permissions, $context, $allow_bypass = true) {
     try {
       return $this->lpManager->checkAccess($permissions, $context, $allow_bypass);
@@ -42,7 +43,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
       $class = get_class($e);
       $message = $e->getMessage();
       $arrmessage = explode('Please use', $message);
-      $newMessage = $arrmessage[0] . 'Please use the \'ordermind_logical_authorization.tag.permission_type\' service tag to add a permission type.';
+      $newMessage = $arrmessage[0] . 'Please use the \'ordermind_logical_authorization.tag.permission_type\' service tag to register a permission type.';
       $this->handleError("An exception was caught while checking access: \"$newMessage\" at " . $e->getFile() . " line " . $e->getLine(), array('exception' => $class, 'permissions' => $permissions, 'context' => $context));
     }
     catch (\Exception $e) {
@@ -53,6 +54,9 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
     return false;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function handleError($message, $context) {
     if(!is_array($context)) {
       throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
@@ -69,7 +73,9 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
     }
   }
 
-  // Den här metoden är till för att säkerställa att en exception inte tar upp 800MB för att den ska lista hela managern.
+  /**
+   * {@inheritdoc}
+   */
   public function getRidOfManager($modelManager) {
     if(!is_object($modelManager)) return $modelManager;
     if(!($modelManager instanceof ModelManagerInterface)) return $modelManager;

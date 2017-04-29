@@ -7,7 +7,7 @@ interface PermissionTypeInterface {
   /**
    * Gets the name of the permission type
    *
-   * @return string name The permission type's name
+   * @return string $name The permission type's name
    */
   public function getName();
 

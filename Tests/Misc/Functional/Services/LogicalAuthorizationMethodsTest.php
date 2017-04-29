@@ -2,6 +2,8 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
 
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess as BypassAccessFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount as HasAccountFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor as IsAuthorFlag;
@@ -12,6 +14,7 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\ErroneousEnt
 use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestEntity;
 use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
+use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes\TestType;
 
 class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
 
@@ -351,15 +354,40 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertTrue($role->checkPermission('ROLE_ADMIN', ['user' => $user]));
   }
 
-  /*------------ LogicalAuthorization -------------*/
+  /*------------ Services -------------*/
 
   /**
     * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-    * @expectedExceptionMessageRegExp /^An exception was caught while checking access bypass: /
+    * @expectedExceptionMessageRegExp /service tag to register a permission type/
     */
-  public function testCheckBypassAccess() {
-    $this->la->checkBypassAccess(null);
+  public function testCheckAccessPermissionTypeNotRegistered() {
+    $this->la->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
   }
 
+  /**
+    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    * @expectedExceptionMessageRegExp /^An exception was caught while checking access: /
+    */
+  public function testCheckAccessOtherExceptions() {
+    $this->la->checkAccess(['test' => 'hej'], []);
+  }
+
+  public function testCheckAccessNo() {
+    $lpManager = new LogicalPermissionsManager();
+    $type = new TestType();
+    $lpManager->addType($type);
+    $lpManager->setBypassCallback(function($context) { return false; });
+    $la = new LogicalAuthorization($lpManager);
+    $this->assertFalse($la->checkAccess(['test' => 'no'], []));
+  }
+
+  public function testCheckAccessYes() {
+    $lpManager = new LogicalPermissionsManager();
+    $type = new TestType();
+    $lpManager->addType($type);
+    $lpManager->setBypassCallback(function($context) { return false; });
+    $la = new LogicalAuthorization($lpManager);
+    $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
+  }
 
 }
