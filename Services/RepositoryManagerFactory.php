@@ -4,17 +4,17 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 class RepositoryManagerFactory extends \Ordermind\DoctrineManagerBundle\Services\Factory\RepositoryManagerFactory
 {
-    protected $userHelper;
+    protected $helper;
 
-    public function setUserHelper($userHelper)
+    public function setHelper(HelperInterface $helper)
     {
-        $this->userHelper = $userHelper;
+        $this->helper = $helper;
     }
 
     public function getRepositoryManager($class)
     {
         $om = $this->managerRegistry->getManagerForClass($class);
 
-        return new RepositoryManager($om, $this->modelManagerFactory, $this->dispatcher, $this->userHelper, $class);
+        return new RepositoryManager($om, $this->modelManagerFactory, $this->dispatcher, $this->helper, $class);
     }
 }

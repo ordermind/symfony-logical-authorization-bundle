@@ -4,41 +4,38 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\UserHelperInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\ErrorHandlerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
   protected $la;
   protected $treeManager;
-  protected $userHelper;
-  protected $errorHandler;
+  protected $helper;
 
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, UserHelperInterface $userHelper, ErrorHandlerInterface $errorHandler) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, HelperInterface $helper) {
     $this->la = $la;
     $this->treeManager = $treeManager;
-    $this->userHelper = $userHelper;
-    $this->errorHandler = $errorHandler;
+    $this->helper = $helper;
   }
 
   public function checkModelAccess($model, $action, $user = null) {
-    $model = $this->la->getRidOfManager($model);
+    $model = $this->helper->getRidOfManager($model);
     if(is_null($user)) {
-      $user = $this->userHelper->getCurrentUser();
+      $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->la->getRidOfManager($user);
+    $user = $this->helper->getRidOfManager($user);
 
     if(!is_string($model) && !is_object($model)) {
-      $this->errorHandler->handleError('Error checking model access: the model parameter must be either a class string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking model access: the model parameter must be either a class string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
       return false;
     }
     if(!is_string($action)) {
-      $this->errorHandler->handleError('Error checking model access: the action parameter must be a string.', ['model' => $model, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking model access: the action parameter must be a string.', ['model' => $model, 'action' => $action, 'user' => $user]);
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
-      $this->errorHandler->handleError('Error checking model access: the user parameter must be either a string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking model access: the user parameter must be either a string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
       return false;
     }
 
@@ -51,27 +48,27 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   }
 
   public function checkFieldAccess($model, $field_name, $action, $user = null) {
-    $model = $this->la->getRidOfManager($model);
+    $model = $this->helper->getRidOfManager($model);
     if(is_null($user)) {
-      $user = $this->userHelper->getCurrentUser();
+      $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->la->getRidOfManager($user);
+    $user = $this->helper->getRidOfManager($user);
 
     if(!is_string($model) && !is_object($model)) {
-      $this->errorHandler->handleError('Error checking field access: the model parameter must be either a class string or an object.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking field access: the model parameter must be either a class string or an object.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
       return false;
     }
     if(!is_string($field_name)) {
-      $this->errorHandler->handleError('Error checking field access: the field_name parameter must be a string.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking field access: the field_name parameter must be a string.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
       return false;
     }
     if(!is_string($action)) {
-      $this->errorHandler->handleError('Error checking field access: the action parameter must be a string.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking field access: the action parameter must be a string.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
-      $this->errorHandler->handleError('Error checking field access: the user parameter must be either a string or an object.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
+      $this->helper->handleError('Error checking field access: the user parameter must be either a string or an object.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
       return false;
     }
 

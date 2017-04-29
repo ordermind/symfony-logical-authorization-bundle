@@ -63,7 +63,7 @@ class DefaultController extends Controller {
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel();
-    return new JsonResponse(is_object($modelManager) && $modelManager instanceof \Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface);
+    return new JsonResponse(is_object($modelManager) && $modelManager instanceof \Ordermind\LogicalAuthorizationBundle\Services\ModelManagerInterface);
   }
 
   /**
@@ -84,7 +84,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function callMethodGetterAuthorAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
@@ -111,7 +111,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function callMethodSetterAuthorAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
@@ -152,7 +152,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function saveModelUpdateAuthorAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
@@ -181,7 +181,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function deleteModelAuthorAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);
@@ -195,7 +195,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function getAvailableActionsAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.user_helper')->getCurrentUser();
+    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
     $modelManager = $operations->createTestModel($user, true);

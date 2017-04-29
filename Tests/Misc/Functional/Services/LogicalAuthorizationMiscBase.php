@@ -18,6 +18,7 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
   protected $testModelOperations;
   protected $client;
   protected $la;
+  protected $helper;
 
   /**
    * This method is run before each public test method
@@ -34,6 +35,7 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
     $this->la = $container->get('ordermind_logical_authorization.service.logical_authorization');
     $this->laModel = $container->get('ordermind_logical_authorization.service.logical_authorization_model');
     $this->laRoute = $container->get('ordermind_logical_authorization.service.logical_authorization_route');
+    $this->helper = $container->get('ordermind_logical_authorization.service.helper');
 
     $this->addUsers();
   }

@@ -4,8 +4,8 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services;
 
 use Doctrine\Common\Collections\Criteria;
 
-use Ordermind\DoctrineManagerBundle\Services\Manager\RepositoryManagerInterface;
-use Ordermind\DoctrineManagerBundle\Services\Manager\ModelManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\RepositoryManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\ModelManagerInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelOperations {

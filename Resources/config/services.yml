@@ -24,9 +24,9 @@ services:
   ordermind_logical_authorization.service.logical_permissions_manager:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager
 
-  ordermind_logical_authorization.service.user_helper:
-    class: Ordermind\LogicalAuthorizationBundle\Services\UserHelper
-    arguments: ['@security.token_storage']
+  ordermind_logical_authorization.service.helper:
+    class: Ordermind\LogicalAuthorizationBundle\Services\Helper
+    arguments: ['@security.token_storage', '@?logger']
 
   ordermind_logical_authorization.service.permission_tree_manager:
     class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManager
@@ -34,19 +34,15 @@ services:
 
   ordermind_logical_authorization.service.logical_authorization_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@router', '@ordermind_logical_authorization.service.user_helper', '@ordermind_logical_authorization.service.error_handler']
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@router', '@ordermind_logical_authorization.service.helper']
 
   ordermind_logical_authorization.service.logical_authorization_model:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@ordermind_logical_authorization.service.user_helper', '@ordermind_logical_authorization.service.error_handler']
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@ordermind_logical_authorization.service.helper']
 
   ordermind_logical_authorization.service.logical_authorization:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
-    arguments: ['@ordermind_logical_authorization.service.logical_permissions_manager', '@ordermind_logical_authorization.service.error_handler']
-
-  ordermind_logical_authorization.service.error_handler:
-    class: Ordermind\LogicalAuthorizationBundle\Services\ErrorHandler
-    arguments: ['@?logger']
+    arguments: ['@ordermind_logical_authorization.service.logical_permissions_manager', '@ordermind_logical_authorization.service.helper']
 
   # Permission type handlers
 
@@ -113,7 +109,7 @@ services:
           - [setManagerRegistry, ['@ordermind_doctrine_manager.service.manager_registry']]
           - [setModelManagerFactory, ['@ordermind_logical_authorization.service.model_manager_factory']]
           - [setDispatcher, ['@event_dispatcher']]
-          - [setUserHelper, ['@ordermind_logical_authorization.service.user_helper']]
+          - [setHelper, ['@ordermind_logical_authorization.service.helper']]
 
   ordermind_logical_authorization.event_subscriber.repository_manager:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\RepositoryManagerSubscriber

@@ -10,7 +10,7 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInter
 /**
  * {@inheritdoc}
  */
-class ModelManager extends ModelManagerBase
+class ModelManager extends ModelManagerBase implements ModelManagerInterface
 {
   protected $laModel;
 

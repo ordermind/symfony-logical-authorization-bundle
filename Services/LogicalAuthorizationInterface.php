@@ -14,13 +14,4 @@ interface LogicalAuthorizationInterface {
    * @return bool TRUE if access should be granted or FALSE if access should be denied.
    */
   public function checkAccess($permissions, $context, $allow_bypass = true);
-
-  /**
-   * @internal Extracts a model from a model manager if applicable. The purpose is to reduce memory footprint in case of an exception.
-   *
-   * @param mixed $modelManager The model manager to extract the model from. If the parameter is not a model manager it will simply be returned as is.
-   *
-   * @return mixed If a model manager is provided, the model for the manager is returned. Otherwise the input parameter will be returned.
-   */
-  public function getRidOfManager($modelManager);
 }

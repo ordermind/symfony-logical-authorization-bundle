@@ -4,7 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
-use Ordermind\LogicalAuthorizationBundle\Services\ErrorHandler;
+use Ordermind\LogicalAuthorizationBundle\Services\Helper;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess as BypassAccessFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount as HasAccountFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor as IsAuthorFlag;
@@ -378,8 +378,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $type = new TestType();
     $lpManager->addType($type);
     $lpManager->setBypassCallback(function($context) { return false; });
-    $errorHandler = new ErrorHandler();
-    $la = new LogicalAuthorization($lpManager, $errorHandler);
+    $la = new LogicalAuthorization($lpManager, $this->helper);
     $this->assertFalse($la->checkAccess(['test' => 'no'], []));
   }
 
@@ -388,8 +387,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $type = new TestType();
     $lpManager->addType($type);
     $lpManager->setBypassCallback(function($context) { return false; });
-    $errorHandler = new ErrorHandler();
-    $la = new LogicalAuthorization($lpManager, $errorHandler);
+    $la = new LogicalAuthorization($lpManager, $this->helper);
     $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
   }
 

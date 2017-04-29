@@ -6,30 +6,27 @@ use Symfony\Component\Routing\RouterInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\UserHelperInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\ErrorHandlerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
 
   protected $la;
   protected $treeManager;
   protected $router;
-  protected $userHelper;
-  protected $errorHandler;
+  protected $helper;
 
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, RouterInterface $router, UserHelperInterface $userHelper, ErrorHandlerInterface $errorHandler) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, RouterInterface $router, HelperInterface $helper) {
     $this->la = $la;
     $this->treeManager = $treeManager;
     $this->router = $router;
-    $this->userHelper = $userHelper;
-    $this->errorHandler = $errorHandler;
+    $this->helper = $helper;
   }
 
   public function getAvailableRoutes($user = null) {
     if(is_null($user)) {
-      $user = $this->userHelper->getCurrentUser();
+      $user = $this->helper->getCurrentUser();
     }
-    $user = $this->la->getRidOfManager($user);
+    $user = $this->helper->getRidOfManager($user);
     $routes = [];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       if($this->checkRouteAccess($name, $user)) {
@@ -53,17 +50,17 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
 
   public function checkRouteAccess($route_name, $user = null) {
     if(is_null($user)) {
-      $user = $this->userHelper->getCurrentUser();
+      $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->la->getRidOfManager($user);
+    $user = $this->helper->getRidOfManager($user);
 
     if(!is_string($route_name)) {
-      $this->errorHandler->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
+      $this->helper->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
-      $this->errorHandler->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $route_name, 'user' => $user]);
+      $this->helper->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $route_name, 'user' => $user]);
       return false;
     }
 
