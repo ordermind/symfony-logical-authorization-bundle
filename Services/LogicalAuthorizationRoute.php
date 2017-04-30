@@ -5,19 +5,19 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 use Symfony\Component\Routing\RouterInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
 
   protected $la;
-  protected $treeManager;
+  protected $treeBuilder;
   protected $router;
   protected $helper;
 
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, RouterInterface $router, HelperInterface $helper) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, RouterInterface $router, HelperInterface $helper) {
     $this->la = $la;
-    $this->treeManager = $treeManager;
+    $this->treeBuilder = $treeBuilder;
     $this->router = $router;
     $this->helper = $helper;
   }
@@ -36,7 +36,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       $routes['routes'][$route_name] = $route;
     }
 
-    $tree = $this->treeManager->getTree();
+    $tree = $this->treeBuilder->getTree();
     if(!empty($tree['route_patterns'])) {
       foreach($tree['route_patterns'] as $pattern => $permissions) {
         if(!$this->la->checkAccess($permissions, ['user' => $user])) continue;
@@ -83,7 +83,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
 
   protected function getRoutePermissions($route_name) {
     //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
-    $tree = $this->treeManager->getTree();
+    $tree = $this->treeBuilder->getTree();
 
     //Check individual route permissions
     if(!empty($tree['routes']) && array_key_exists($route_name, $tree['routes'])) {

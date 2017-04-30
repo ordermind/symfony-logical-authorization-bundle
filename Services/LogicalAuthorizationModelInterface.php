@@ -15,7 +15,7 @@ interface LogicalAuthorizationModelInterface {
   public function checkModelAccess($model, $action, $user = null);
 
   /**
-   * Checks access for an action on a specific field in a model for a given user. Model access is also checked when you use this method so if a corresponding action is forbidden for the model, the action won't be allowed for the field. If something goes wrong an error will be logged and the method will return FALSE.
+   * Checks access for an action on a specific field in a model for a given user. If something goes wrong an error will be logged and the method will return FALSE.
    * @param object $model The model might need to implement certain interfaces depending on the permission types you use.
    * @param string $field_name The name of the field.
    * @param string $action Examples of field actions are "get" and "set".

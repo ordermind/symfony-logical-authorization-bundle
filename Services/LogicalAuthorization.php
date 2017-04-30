@@ -3,25 +3,25 @@
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 class LogicalAuthorization implements LogicalAuthorizationInterface {
 
-  protected $lpManager;
+  protected $lpProxy;
   protected $helper;
 
   /**
    * @internal
    *
-   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManagerInterface $lpManager The logical permissions manager to use
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy The logical permissions proxy to use
    * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorization helper service
    */
-  public function __construct(LogicalPermissionsManagerInterface $lpManager, HelperInterface $helper) {
-    $this->lpManager = $lpManager;
-    if(!$this->lpManager->getBypassCallback()) {
-      $this->lpManager->setBypassCallback(function($context) {
-        return $this->lpManager->checkAccess(['flag' => 'bypass_access'], $context, false);
+  public function __construct(LogicalPermissionsProxyInterface $lpProxy, HelperInterface $helper) {
+    $this->lpProxy = $lpProxy;
+    if(!$this->lpProxy->getBypassCallback()) {
+      $this->lpProxy->setBypassCallback(function($context) {
+        return $this->lpProxy->checkAccess(['flag' => 'bypass_access'], $context, false);
       });
     }
     $this->helper = $helper;
@@ -32,7 +32,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
    */
   public function checkAccess($permissions, $context, $allow_bypass = true) {
     try {
-      return $this->lpManager->checkAccess($permissions, $context, $allow_bypass);
+      return $this->lpProxy->checkAccess($permissions, $context, $allow_bypass);
     }
     catch (PermissionTypeNotRegisteredException $e) {
       $class = get_class($e);

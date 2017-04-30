@@ -4,9 +4,9 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalPermissions\LogicalPermissions;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 
-class LogicalPermissionsManager implements LogicalPermissionsManagerInterface {
+class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface {
   protected $lp;
 
   public function __construct() {
@@ -20,9 +20,9 @@ class LogicalPermissionsManager implements LogicalPermissionsManagerInterface {
     catch(PermissionTypeAlreadyExistsException $e) {
       $class = get_class($e);
       $message = $e->getMessage();
-      $arrmessage = explode('If you want', $message);
-      $newMessage = $arrmessage[0] . 'If you want to change the class that handles a permission type, you may do so by altering the service definition for that permission type.';
-      throw new $class($newMessage);
+      $exploded = explode('If you want', $message);
+      $new_message = $exploded[0] . 'If you want to change the class that handles a permission type, you may do so by overriding the service definition for that permission type.';
+      throw new $class($new_message);
     }
   }
 

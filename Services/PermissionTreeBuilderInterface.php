@@ -2,6 +2,6 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-interface PermissionTreeManagerInterface {
+interface PermissionTreeBuilderInterface {
   public function getTree();
 }

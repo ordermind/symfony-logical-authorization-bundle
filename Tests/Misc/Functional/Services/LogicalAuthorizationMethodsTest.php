@@ -3,7 +3,7 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
 
 use Symfony\Component\Routing\Route;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Services\Helper;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess as BypassAccessFlag;
@@ -400,20 +400,20 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
   }
 
   public function testCheckAccessNo() {
-    $lpManager = new LogicalPermissionsManager();
+    $lpProxy = new LogicalPermissionsProxy();
     $type = new TestType();
-    $lpManager->addType($type);
-    $lpManager->setBypassCallback(function($context) { return false; });
-    $la = new LogicalAuthorization($lpManager, $this->helper);
+    $lpProxy->addType($type);
+    $lpProxy->setBypassCallback(function($context) { return false; });
+    $la = new LogicalAuthorization($lpProxy, $this->helper);
     $this->assertFalse($la->checkAccess(['test' => 'no'], []));
   }
 
   public function testCheckAccessYes() {
-    $lpManager = new LogicalPermissionsManager();
+    $lpProxy = new LogicalPermissionsProxy();
     $type = new TestType();
-    $lpManager->addType($type);
-    $lpManager->setBypassCallback(function($context) { return false; });
-    $la = new LogicalAuthorization($lpManager, $this->helper);
+    $lpProxy->addType($type);
+    $lpProxy->setBypassCallback(function($context) { return false; });
+    $la = new LogicalAuthorization($lpProxy, $this->helper);
     $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
   }
 

@@ -4,7 +4,7 @@ services:
 
   ordermind_logical_authorization.cache_warmer.permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\PermissionsCacheWarmer
-    arguments: ['@ordermind_logical_authorization.service.permission_tree_manager']
+    arguments: ['@ordermind_logical_authorization.service.permission_tree_builder']
     tags:
       - {name: kernel.cache_warmer}
     public: false
@@ -21,28 +21,28 @@ services:
     tags:
       - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
 
-  ordermind_logical_authorization.service.logical_permissions_manager:
-    class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManager
+  ordermind_logical_authorization.service.logical_permissions_proxy:
+    class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
 
   ordermind_logical_authorization.service.helper:
     class: Ordermind\LogicalAuthorizationBundle\Services\Helper
     arguments: ['@security.token_storage', '@?logger']
 
-  ordermind_logical_authorization.service.permission_tree_manager:
-    class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManager
-    arguments: [%kernel.root_dir%, '@ordermind_logical_authorization.service.logical_permissions_manager', '@event_dispatcher', '@cache.app']
+  ordermind_logical_authorization.service.permission_tree_builder:
+    class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
+    arguments: [%kernel.root_dir%, '@ordermind_logical_authorization.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
 
   ordermind_logical_authorization.service.logical_authorization_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@router', '@ordermind_logical_authorization.service.helper']
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_builder', '@router', '@ordermind_logical_authorization.service.helper']
 
   ordermind_logical_authorization.service.logical_authorization_model:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_manager', '@ordermind_logical_authorization.service.helper']
+    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_builder', '@ordermind_logical_authorization.service.helper']
 
   ordermind_logical_authorization.service.logical_authorization:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
-    arguments: ['@ordermind_logical_authorization.service.logical_permissions_manager', '@ordermind_logical_authorization.service.helper']
+    arguments: ['@ordermind_logical_authorization.service.logical_permissions_proxy', '@ordermind_logical_authorization.service.helper']
 
   # Permission type handlers
 

@@ -3,17 +3,17 @@
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 
 class PermissionsCacheWarmer implements CacheWarmerInterface {
-  protected $treeManager;
+  protected $treeBuilder;
 
-  public function __construct(PermissionTreeManagerInterface $treeManager) {
-    $this->treeManager = $treeManager;
+  public function __construct(PermissionTreeBuilderInterface $treeBuilder) {
+    $this->treeBuilder = $treeBuilder;
   }
 
   public function warmUp($cacheDir) {
-    $this->treeManager->getTree(TRUE);
+    $this->treeBuilder->getTree(TRUE);
   }
 
   public function isOptional() {

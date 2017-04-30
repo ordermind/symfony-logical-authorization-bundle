@@ -3,25 +3,25 @@
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
   protected $la;
-  protected $treeManager;
+  protected $treeBuilder;
   protected $helper;
 
   /**
    * @internal
    *
    * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface $la LogicalAuthorization service
-   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface $treeManager Permission tree manager service
+   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder Permission tree manager service
    * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorization helper service
    */
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeManagerInterface $treeManager, HelperInterface $helper) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, HelperInterface $helper) {
     $this->la = $la;
-    $this->treeManager = $treeManager;
+    $this->treeBuilder = $treeBuilder;
     $this->helper = $helper;
   }
 
@@ -116,7 +116,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   }
 
   protected function getModelPermissions($model) {
-    $tree = $this->treeManager->getTree();
+    $tree = $this->treeBuilder->getTree();
     $psr_class = '';
     if(is_string($model)) {
       $psr_class = $model;

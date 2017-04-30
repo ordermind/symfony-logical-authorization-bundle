@@ -8,21 +8,21 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsManagerInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
-class PermissionTreeManager implements PermissionTreeManagerInterface {
+class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
   protected $appDir;
   protected $permissionKeys;
   protected $dispatcher;
   protected $tree;
   protected $cache;
 
-  public function __construct($appDir, LogicalPermissionsManagerInterface $lpManager, EventDispatcherInterface $dispatcher, CacheItemPoolInterface $cache) {
+  public function __construct($appDir, LogicalPermissionsProxyInterface $lpProxy, EventDispatcherInterface $dispatcher, CacheItemPoolInterface $cache) {
     $this->appDir = $appDir;
     $this->dispatcher = $dispatcher;
-    $this->permissionKeys = $lpManager->getValidPermissionKeys();
+    $this->permissionKeys = $lpProxy->getValidPermissionKeys();
     $this->cache = $cache;
   }
 
