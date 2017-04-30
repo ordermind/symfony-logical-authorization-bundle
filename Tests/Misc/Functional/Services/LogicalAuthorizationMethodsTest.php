@@ -133,13 +133,10 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $flag->checkFlag(['user' => $user]);
   }
 
-  /**
-    * @expectedException InvalidArgumentException
-    */
   public function testFlagIsAuthorModelClassString() {
     $user = new TestUser();
     $flag = new IsAuthorFlag();
-    $flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser']);
+    $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser']));
   }
 
   /**
@@ -417,6 +414,27 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
   }
 
+  public function testGetAvailableActionsModelString() {
+
+  }
+
+  public function testGetAvailableActionsModelObject() {
+    $model = new TestEntity();
+    $available_actions = $this->laModel->getAvailableActions($model, ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    foreach($available_actions as $key => $value) {
+      if($key !== 'fields') {
+        $this->assertSame($key, $value);
+        continue;
+      }
+      foreach($value as $field_name => $field_actions) {
+        $this->assertTrue(property_exists($model, $field_name));
+        foreach($field_actions as $field_action_key => $field_action_value) {
+          $this->assertSame($field_action_key, $field_action_value);
+        }
+      }
+    }
+  }
+
   /**
     * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
     */
@@ -580,12 +598,12 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
   public function testGetAvailableRoutes() {
     $available_routes = $this->laRoute->getAvailableRoutes('anon.');
     $this->assertTrue(isset($available_routes['routes']) && is_array($available_routes['routes']) && !empty($available_routes['routes']));
-    foreach($available_routes['routes'] as $route) {
-      $this->assertTrue($route instanceof Route);
+    foreach($available_routes['routes'] as $key => $value) {
+      $this->assertSame($key, $value);
     }
     $this->assertTrue(isset($available_routes['route_patterns']) && is_array($available_routes['route_patterns']) && !empty($available_routes['route_patterns']));
-    foreach($available_routes['route_patterns'] as $pattern => $value) {
-      $this->assertTrue(is_string($pattern));
+    foreach($available_routes['route_patterns'] as $key => $value) {
+      $this->assertSame($key, $value);
     }
   }
 
@@ -655,5 +673,23 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
   public function testLogicalPermissionsProxyCheckAccessTypeDoesntExist() {
     $laProxy = new LogicalPermissionsProxy();
     $laProxy->checkAccess(['test' => 'hej'], []);
+  }
+
+  public function testModelDecoratorGetAvailableActions() {
+    $modelDecorator = $this->testEntityRepositoryDecorator->create();
+    $model = $modelDecorator->getModel();
+    $available_actions = $modelDecorator->getAvailableActions('anon.');
+    foreach($available_actions as $key => $value) {
+      if($key !== 'fields') {
+        $this->assertSame($key, $value);
+        continue;
+      }
+      foreach($value as $field_name => $field_actions) {
+        $this->assertTrue(property_exists($model, $field_name));
+        foreach($field_actions as $field_action_key => $field_action_value) {
+          $this->assertSame($field_action_key, $field_action_value);
+        }
+      }
+    }
   }
 }

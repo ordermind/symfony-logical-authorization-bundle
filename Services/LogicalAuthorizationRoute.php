@@ -33,7 +33,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       if(!$this->checkRouteAccess($route_name, $user)) continue;
 
       if(!isset($routes['routes'])) $routes['routes'] = [];
-      $routes['routes'][$route_name] = $route;
+      $routes['routes'][$route->getPath()] = $route->getPath();
     }
 
     $tree = $this->treeBuilder->getTree();
@@ -42,7 +42,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
         if(!$this->la->checkAccess($permissions, ['user' => $user])) continue;
 
         if(!isset($routes['route_patterns'])) $routes['route_patterns'] = [];
-        $routes['route_patterns'][$pattern] = true;
+        $routes['route_patterns'][$pattern] = $pattern;
       }
     }
 

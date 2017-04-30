@@ -898,7 +898,20 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $actions = json_decode($response->getContent(), true);
-    $expected_actions = [];
+    $expected_actions = [
+      'fields'=> [
+        'id' => [
+          'get' => 'get',
+        ],
+        'field3' => [
+          'get' => 'get',
+          'set' => 'set',
+        ],
+        'author' => [
+          'get' => 'get',
+        ],
+      ],
+    ];
     $this->assertSame($expected_actions, $actions);
   }
 
@@ -908,19 +921,23 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     $this->assertEquals(200, $response->getStatusCode());
     $actions = json_decode($response->getContent(), true);
     $expected_actions = [
-      'read' => true,
+      'read' => 'read',
       'fields' => [
         'id' => [
-          'get' => true,
+          'get' => 'get',
         ],
         'field1' => [
-          'get' => true,
+          'get' => 'get',
+        ],
+        'field2' => [
+          'set' => 'set',
         ],
         'field3' => [
-          'get' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
         'author' => [
-          'get' => true,
+          'get' => 'get',
         ],
       ],
     ];
@@ -933,25 +950,25 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     $this->assertEquals(200, $response->getStatusCode());
     $actions = json_decode($response->getContent(), true);
     $expected_actions = [
-      'read' => true,
-      'update' => true,
+      'read' => 'read',
+      'update' => 'update',
       'fields' => [
         'id' => [
-          'get' => true,
+          'get' => 'get',
         ],
         'field1' => [
-          'get' => true,
-          'set' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
         'field2' => [
-          'set' => true,
+          'set' => 'set',
         ],
         'field3' => [
-          'get' => true,
-          'set' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
         'author' => [
-          'get' => true,
+          'get' => 'get',
         ],
       ],
     ];
@@ -964,28 +981,28 @@ abstract class LogicalAuthorizationODMBase extends WebTestCase {
     $this->assertEquals(200, $response->getStatusCode());
     $actions = json_decode($response->getContent(), true);
     $expected_actions = [
-      'create' => true,
-      'read' => true,
-      'update' => true,
+      'create' => 'create',
+      'read' => 'read',
+      'update' => 'update',
       'fields' => [
         'id' => [
-          'get' => true,
+          'get' => 'get',
         ],
         'field1' => [
-          'get' => true,
-          'set' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
         'field2' => [
-          'get' => true,
-          'set' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
         'field3' => [
-          'get' => true,
-          'set' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
         'author' => [
-          'get' => true,
-          'set' => true,
+          'get' => 'get',
+          'set' => 'set',
         ],
       ],
     ];

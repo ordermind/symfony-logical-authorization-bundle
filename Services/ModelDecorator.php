@@ -14,38 +14,23 @@ class ModelDecorator extends ModelDecoratorBase implements ModelDecoratorInterfa
 {
   protected $laModel;
 
+  /**
+   * @internal
+   *
+   * @param Doctrine\Common\Persistence\ObjectManager                  $om         The object manager to use in this decorator
+   * @param Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher The event dispatcher to use in this decorator
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface $laModel LogicalAuthorizationModel service
+   * @param object                                                     $model      The model to wrap in this decorator
+   */
   public function __construct(ObjectManager $om, EventDispatcherInterface $dispatcher, LogicalAuthorizationModelInterface $laModel, $model) {
     parent::__construct($om, $dispatcher, $model);
     $this->laModel = $laModel;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getAvailableActions($user = null, $model_actions = array('create', 'read', 'update', 'delete'), $field_actions = array('get', 'set')) {
-    $available_actions = [];
-
-    $model = $this->getModel();
-    foreach($model_actions as $action) {
-      if($this->laModel->checkModelAccess($model, $action, $user)) {
-        $available_actions[$action] = true;
-      }
-    }
-    $reflectionClass = new \ReflectionClass($model);
-    foreach($reflectionClass->getProperties() as $property) {
-      $field_name = $property->getName();
-      foreach($field_actions as $action) {
-        if($action === 'get') {
-          if(empty($available_actions['read'])) continue;
-        }
-        else if($action === 'set') {
-          if($this->isNew() && empty($available_actions['create'])) continue;
-          if(!$this->isNew() && empty($available_actions['update'])) continue;
-        }
-        if($this->laModel->checkFieldAccess($model, $field_name, $action, $user)) {
-          if(!isset($available_actions['fields'])) $available_actions['fields'] = [];
-          if(!isset($available_actions['fields'][$field_name])) $available_actions['fields'][$field_name] = [];
-          $available_actions['fields'][$field_name][$action] = true;
-        }
-      }
-    }
-    return $available_actions;
+    return $this->laModel->getAvailableActions($this->getModel(), $model_actions, $field_actions, $user);
   }
 }

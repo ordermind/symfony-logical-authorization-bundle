@@ -25,6 +25,39 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     $this->helper = $helper;
   }
 
+  public function getAvailableActions($model, $model_actions, $field_actions, $user = null) {
+    $model = $this->helper->getRidOfDecorator($model);
+
+    if(!is_array($model_actions)) {
+      $this->helper->handleError('Error getting available actions for model: the model_actions parameter must be an array.', ['model' => $model, 'user' => $user, 'model_actions' => $model_actions, 'field_actions' => $field_actions]);
+      return [];
+    }
+    if(!is_array($field_actions)) {
+      $this->helper->handleError('Error getting available actions for model: the field_actions parameter must be an array.', ['model' => $model, 'user' => $user, 'model_actions' => $model_actions, 'field_actions' => $field_actions]);
+      return [];
+    }
+
+    $available_actions = [];
+    foreach($model_actions as $action) {
+      if($this->checkModelAccess($model, $action, $user)) {
+        $available_actions[$action] = $action;
+      }
+    }
+    $reflectionClass = new \ReflectionClass($model);
+    foreach($reflectionClass->getProperties() as $property) {
+      $field_name = $property->getName();
+      foreach($field_actions as $action) {
+        if($this->checkFieldAccess($model, $field_name, $action, $user)) {
+          if(!isset($available_actions['fields'])) $available_actions['fields'] = [];
+          if(!isset($available_actions['fields'][$field_name])) $available_actions['fields'][$field_name] = [];
+          $available_actions['fields'][$field_name][$action] = $action;
+        }
+      }
+    }
+
+    return $available_actions;
+  }
+
   /**
    * {@inheritdoc}
    */
