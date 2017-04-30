@@ -6,13 +6,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Doctrine\Common\Inflector\Inflector;
 
-use Ordermind\DoctrineManagerBundle\Event\ModelManagerEvents\BeforeMethodCallEvent;
-use Ordermind\DoctrineManagerBundle\Event\ModelManagerEvents\BeforeSaveEvent;
-use Ordermind\DoctrineManagerBundle\Event\ModelManagerEvents\BeforeDeleteEvent;
+use Ordermind\DoctrineDecoratorBundle\Event\ModelDecoratorEvents\BeforeMethodCallEvent;
+use Ordermind\DoctrineDecoratorBundle\Event\ModelDecoratorEvents\BeforeSaveEvent;
+use Ordermind\DoctrineDecoratorBundle\Event\ModelDecoratorEvents\BeforeDeleteEvent;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface;
 
-class ModelManagerSubscriber implements EventSubscriberInterface {
+class ModelDecoratorSubscriber implements EventSubscriberInterface {
   protected $laModel;
 
   public function __construct(LogicalAuthorizationModelInterface $laModel) {
@@ -21,13 +21,13 @@ class ModelManagerSubscriber implements EventSubscriberInterface {
 
   public static function getSubscribedEvents() {
     return array(
-      'ordermind_doctrine_manager.event.model_manager.before_method_call' => array(
+      'ordermind_doctrine_decorator.event.model_decorator.before_method_call' => array(
         array('onBeforeMethodCall'),
       ),
-      'ordermind_doctrine_manager.event.model_manager.before_save' => array(
+      'ordermind_doctrine_decorator.event.model_decorator.before_save' => array(
         array('onBeforeSave'),
       ),
-      'ordermind_doctrine_manager.event.model_manager.before_delete' => array(
+      'ordermind_doctrine_decorator.event.model_decorator.before_delete' => array(
         array('onBeforeDelete'),
       ),
     );

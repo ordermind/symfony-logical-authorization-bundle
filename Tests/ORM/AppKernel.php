@@ -17,7 +17,7 @@ class AppKernel extends Kernel
             $bundles[] = new Doctrine\Bundle\DoctrineBundle\DoctrineBundle();
             $bundles[] = new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle();
             $bundles[] = new Ordermind\LogicalAuthorizationBundle\OrdermindLogicalAuthorizationBundle();
-            $bundles[] = new Ordermind\DoctrineManagerBundle\OrdermindDoctrineManagerBundle();
+            $bundles[] = new Ordermind\DoctrineDecoratorBundle\OrdermindDoctrineDecoratorBundle();
         }
         return $bundles;
     }

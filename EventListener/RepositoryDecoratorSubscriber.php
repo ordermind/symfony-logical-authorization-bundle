@@ -6,16 +6,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Doctrine\Common\Collections\Collection;
 
-use Ordermind\DoctrineManagerBundle\Event\RepositoryManagerEvents\AbstractResultEventInterface;
-use Ordermind\DoctrineManagerBundle\Event\RepositoryManagerEvents\UnknownResultEventInterface;
-use Ordermind\DoctrineManagerBundle\Event\RepositoryManagerEvents\SingleModelResultEventInterface;
-use Ordermind\DoctrineManagerBundle\Event\RepositoryManagerEvents\MultipleModelResultEventInterface;
-use Ordermind\DoctrineManagerBundle\Event\RepositoryManagerEvents\LazyModelCollectionResultEventInterface;
-use Ordermind\DoctrineManagerBundle\Event\RepositoryManagerEvents\BeforeCreateEventInterface;
+use Ordermind\DoctrineDecoratorBundle\Event\RepositoryDecoratorEvents\AbstractResultEventInterface;
+use Ordermind\DoctrineDecoratorBundle\Event\RepositoryDecoratorEvents\UnknownResultEventInterface;
+use Ordermind\DoctrineDecoratorBundle\Event\RepositoryDecoratorEvents\SingleModelResultEventInterface;
+use Ordermind\DoctrineDecoratorBundle\Event\RepositoryDecoratorEvents\MultipleModelResultEventInterface;
+use Ordermind\DoctrineDecoratorBundle\Event\RepositoryDecoratorEvents\LazyModelCollectionResultEventInterface;
+use Ordermind\DoctrineDecoratorBundle\Event\RepositoryDecoratorEvents\BeforeCreateEventInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface;
 
-class RepositoryManagerSubscriber implements EventSubscriberInterface {
+class RepositoryDecoratorSubscriber implements EventSubscriberInterface {
   protected $laModel;
   protected $config;
 
@@ -26,19 +26,19 @@ class RepositoryManagerSubscriber implements EventSubscriberInterface {
 
   public static function getSubscribedEvents() {
     return array(
-      'ordermind_doctrine_manager.event.repository_manager.unknown_result' => array(
+      'ordermind_doctrine_decorator.event.repository_decorator.unknown_result' => array(
         array('onUnknownResult'),
       ),
-      'ordermind_doctrine_manager.event.repository_manager.single_model_result' => array(
+      'ordermind_doctrine_decorator.event.repository_decorator.single_model_result' => array(
         array('onSingleModelResult'),
       ),
-      'ordermind_doctrine_manager.event.repository_manager.multiple_model_result' => array(
+      'ordermind_doctrine_decorator.event.repository_decorator.multiple_model_result' => array(
         array('onMultipleModelResult'),
       ),
-      'ordermind_doctrine_manager.event.repository_manager.before_create' => array(
+      'ordermind_doctrine_decorator.event.repository_decorator.before_create' => array(
         array('onBeforeCreate'),
       ),
-      'ordermind_doctrine_manager.event.repository_manager.lazy_model_collection_result' => array(
+      'ordermind_doctrine_decorator.event.repository_decorator.lazy_model_collection_result' => array(
         array('onLazyModelCollectionResult'),
       ),
     );

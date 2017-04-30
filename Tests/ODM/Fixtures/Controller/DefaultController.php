@@ -17,7 +17,7 @@ class DefaultController extends Controller {
     */
   public function countUnknownResultAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
     $result = $operations->getUnknownResult();
     return new Response(count($result));
   }
@@ -28,7 +28,7 @@ class DefaultController extends Controller {
     */
   public function findSingleModelResultAction(Request $request, $id) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
     $result = $operations->getSingleModelResult($id);
     return new JsonResponse((bool) $result);
   }
@@ -39,7 +39,7 @@ class DefaultController extends Controller {
     */
   public function countMultipleModelResultAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
     $result = $operations->getMultipleModelResult();
     return new Response(count($result));
   }
@@ -50,7 +50,7 @@ class DefaultController extends Controller {
     */
   public function countDocumentsLazyLoadAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
     $collection = $operations->getLazyLoadedModelResult();
     return new Response(count($collection));
   }
@@ -61,9 +61,9 @@ class DefaultController extends Controller {
     */
   public function createDocumentAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel();
-    return new JsonResponse(is_object($modelManager) && $modelManager instanceof \Ordermind\LogicalAuthorizationBundle\Services\ModelManagerInterface);
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel();
+    return new JsonResponse(is_object($modelDecorator) && $modelDecorator instanceof \Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorInterface);
   }
 
   /**
@@ -72,11 +72,11 @@ class DefaultController extends Controller {
     */
   public function callMethodGetterAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel(null, true);
-    $operations->callMethodSetter($modelManager, true);
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel(null, true);
+    $operations->callMethodSetter($modelDecorator, true);
 
-    return new Response($operations->callMethodGetter($modelManager));
+    return new Response($operations->callMethodGetter($modelDecorator));
   }
 
   /**
@@ -86,11 +86,11 @@ class DefaultController extends Controller {
   public function callMethodGetterAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel($user, true);
-    $operations->callMethodSetter($modelManager, true);
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel($user, true);
+    $operations->callMethodSetter($modelDecorator, true);
 
-    return new Response($operations->callMethodGetter($modelManager));
+    return new Response($operations->callMethodGetter($modelDecorator));
   }
 
   /**
@@ -99,11 +99,11 @@ class DefaultController extends Controller {
     */
   public function callMethodSetterAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel(null, true);
-    $operations->callMethodSetter($modelManager);
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel(null, true);
+    $operations->callMethodSetter($modelDecorator);
 
-    return new Response($operations->callMethodGetter($modelManager, true));
+    return new Response($operations->callMethodGetter($modelDecorator, true));
   }
 
   /**
@@ -113,11 +113,11 @@ class DefaultController extends Controller {
   public function callMethodSetterAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel($user, true);
-    $operations->callMethodSetter($modelManager);
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel($user, true);
+    $operations->callMethodSetter($modelDecorator);
 
-    return new Response($operations->callMethodGetter($modelManager, true));
+    return new Response($operations->callMethodGetter($modelDecorator, true));
   }
 
   /**
@@ -126,7 +126,7 @@ class DefaultController extends Controller {
     */
   public function saveModelCreateAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
     $operations->createTestModel();
     $result = $operations->getMultipleModelResult(true);
     return new Response(count($result));
@@ -138,13 +138,13 @@ class DefaultController extends Controller {
     */
   public function saveModelUpdateAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel(null, true);
-    $operations->callMethodSetter($modelManager, true);
-    $modelManager->save();
-    $modelManager->getObjectManager()->detach($modelManager->getModel());
-    $persistedModelManager = $operations->getSingleModelResult($modelManager->getModel()->getId(), true);
-    return new Response($operations->callMethodGetter($persistedModelManager, true));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel(null, true);
+    $operations->callMethodSetter($modelDecorator, true);
+    $modelDecorator->save();
+    $modelDecorator->getObjectManager()->detach($modelDecorator->getModel());
+    $persistedModelDecorator = $operations->getSingleModelResult($modelDecorator->getModel()->getId(), true);
+    return new Response($operations->callMethodGetter($persistedModelDecorator, true));
   }
 
   /**
@@ -154,13 +154,13 @@ class DefaultController extends Controller {
   public function saveModelUpdateAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel($user, true);
-    $operations->callMethodSetter($modelManager, true);
-    $modelManager->save();
-    $modelManager->getObjectManager()->detach($modelManager->getModel());
-    $persistedModelManager = $operations->getSingleModelResult($modelManager->getModel()->getId(), true);
-    return new Response($operations->callMethodGetter($persistedModelManager, true));
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel($user, true);
+    $operations->callMethodSetter($modelDecorator, true);
+    $modelDecorator->save();
+    $modelDecorator->getObjectManager()->detach($modelDecorator->getModel());
+    $persistedModelDecorator = $operations->getSingleModelResult($modelDecorator->getModel()->getId(), true);
+    return new Response($operations->callMethodGetter($persistedModelDecorator, true));
   }
 
   /**
@@ -169,9 +169,9 @@ class DefaultController extends Controller {
     */
   public function deleteModelAction(Request $request) {
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel(null, true);
-    $modelManager->delete();
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel(null, true);
+    $modelDecorator->delete();
     $result = $operations->getMultipleModelResult(true);
     return new Response(count($result));
   }
@@ -183,9 +183,9 @@ class DefaultController extends Controller {
   public function deleteModelAuthorAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel($user, true);
-    $modelManager->delete();
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel($user, true);
+    $modelDecorator->delete();
     $result = $operations->getMultipleModelResult(true);
     return new Response(count($result));
   }
@@ -197,9 +197,9 @@ class DefaultController extends Controller {
   public function getAvailableActionsAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     $operations = $this->get('test_model_operations');
-    $operations->setRepositoryManager($this->get($request->get('repository_manager_service')));
-    $modelManager = $operations->createTestModel($user, true);
-    $result = $modelManager->getAvailableActions();
+    $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
+    $modelDecorator = $operations->createTestModel($user, true);
+    $result = $modelDecorator->getAvailableActions();
     return new JsonResponse($result);
   }
 

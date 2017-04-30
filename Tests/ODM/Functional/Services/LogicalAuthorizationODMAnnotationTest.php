@@ -9,11 +9,11 @@ class LogicalAuthorizationODMAnnotationTest extends LogicalAuthorizationODMBase
    */
   protected function setUp() {
     $this->load_services = array(
-      'testDocumentRoleAuthorRepositoryManager' => 'repository_manager.test_document_roleauthor_annotation',
-      'testDocumentHasAccountNoInterfaceRepositoryManager' => 'repository_manager.test_document_hasaccount_annotation',
-      'testDocumentNoBypassRepositoryManager' => 'repository_manager.test_document_nobypass_annotation',
-      'testDocumentOverriddenPermissionsRepositoryManager' => 'repository_manager.test_document_overridden_permissions_annotation',
-      'testDocumentVariousPermissionsRepositoryManager' => 'repository_manager.test_document_various_permissions_annotation',
+      'testDocumentRoleAuthorRepositoryDecorator' => 'repository_decorator.test_document_roleauthor_annotation',
+      'testDocumentHasAccountNoInterfaceRepositoryDecorator' => 'repository_decorator.test_document_hasaccount_annotation',
+      'testDocumentNoBypassRepositoryDecorator' => 'repository_decorator.test_document_nobypass_annotation',
+      'testDocumentOverriddenPermissionsRepositoryDecorator' => 'repository_decorator.test_document_overridden_permissions_annotation',
+      'testDocumentVariousPermissionsRepositoryDecorator' => 'repository_decorator.test_document_various_permissions_annotation',
     );
 
     parent::setUp();

@@ -4,13 +4,13 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Ordermind\DoctrineManagerBundle\Services\Manager\ModelManager as ModelManagerBase;
+use Ordermind\DoctrineDecoratorBundle\Services\Decorator\ModelDecorator as ModelDecoratorBase;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface;
 
 /**
  * {@inheritdoc}
  */
-class ModelManager extends ModelManagerBase implements ModelManagerInterface
+class ModelDecorator extends ModelDecoratorBase implements ModelDecoratorInterface
 {
   protected $laModel;
 

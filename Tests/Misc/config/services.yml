@@ -2,8 +2,8 @@ services:
   test_model_operations:
     class: Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services\TestModelOperations
 
-  repository_manager.test_user:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManager
-    factory: ['@ordermind_logical_authorization.service.repository_manager_factory', getRepositoryManager]
+  repository_decorator.test_user:
+    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser

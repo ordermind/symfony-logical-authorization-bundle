@@ -12,13 +12,13 @@ interface HelperInterface {
   public function getCurrentUser();
 
   /**
-   * @internal Extracts a model from a model manager if applicable. The purpose is to reduce memory footprint in case of an exception.
+   * @internal Extracts a model from a model decorator if applicable. The purpose is to reduce memory footprint in case of an exception.
    *
-   * @param mixed $modelManager The model manager to extract the model from. If the parameter is not a model manager it will simply be returned as is.
+   * @param mixed $modelDecorator The model decorator to extract the model from. If the parameter is not a model decorator it will simply be returned as is.
    *
-   * @return mixed If a model manager is provided, the model for the manager is returned. Otherwise the input parameter will be returned.
+   * @return mixed If a model decorator is provided, the model for the decorator is returned. Otherwise the input parameter will be returned.
    */
-  public function getRidOfManager($modelManager);
+  public function getRidOfDecorator($modelDecorator);
 
   /**
    * @internal Logs an error if a logging service is available. Otherwise it outputs the error as a Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException.

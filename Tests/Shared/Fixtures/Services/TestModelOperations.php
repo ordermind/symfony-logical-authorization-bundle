@@ -4,98 +4,98 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services;
 
 use Doctrine\Common\Collections\Criteria;
 
-use Ordermind\LogicalAuthorizationBundle\Services\RepositoryManagerInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\ModelManagerInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecoratorInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelOperations {
-  private $repositoryManager;
+  private $repositoryDecorator;
 
-  public function setRepositoryManager(RepositoryManagerInterface $repositoryManager) {
-    $this->repositoryManager = $repositoryManager;
+  public function setRepositoryDecorator(RepositoryDecoratorInterface $repositoryDecorator) {
+    $this->repositoryDecorator = $repositoryDecorator;
   }
 
   public function getUnknownResult($bypassAccess = false) {
     if($bypassAccess) {
-      $models = $this->repositoryManager->getRepository()->customMethod();
-      return $this->repositoryManager->wrapModels($models);
+      $models = $this->repositoryDecorator->getRepository()->customMethod();
+      return $this->repositoryDecorator->wrapModels($models);
     }
-    return $this->repositoryManager->customMethod();
+    return $this->repositoryDecorator->customMethod();
   }
 
   public function getSingleModelResult($id, $bypassAccess = false) {
     if($bypassAccess) {
-      $model = $this->repositoryManager->getRepository()->find($id);
-      return $this->repositoryManager->wrapModel($model);
+      $model = $this->repositoryDecorator->getRepository()->find($id);
+      return $this->repositoryDecorator->wrapModel($model);
     }
-    return $this->repositoryManager->find($id);
+    return $this->repositoryDecorator->find($id);
   }
 
   public function getMultipleModelResult($bypassAccess = false) {
     if($bypassAccess) {
-      $models = $this->repositoryManager->getRepository()->findAll();
-      return $this->repositoryManager->wrapModels($models);
+      $models = $this->repositoryDecorator->getRepository()->findAll();
+      return $this->repositoryDecorator->wrapModels($models);
     }
-    return $this->repositoryManager->findAll();
+    return $this->repositoryDecorator->findAll();
   }
 
   public function getLazyLoadedModelResult($bypassAccess = false) {
     if($bypassAccess) {
-      return $this->repositoryManager->getRepository()->matching(Criteria::create());
+      return $this->repositoryDecorator->getRepository()->matching(Criteria::create());
     }
-    return $this->repositoryManager->matching(Criteria::create());
+    return $this->repositoryDecorator->matching(Criteria::create());
   }
 
   public function createTestModel($user = null, $bypassAccess = false) {
-    if($user && $user instanceof ModelManagerInterface) {
-      $this->repositoryManager->setObjectManager($user->getObjectManager());
+    if($user && $user instanceof ModelDecoratorInterface) {
+      $this->repositoryDecorator->setObjectManager($user->getObjectManager());
       $user = $user->getModel();
     }
 
     if($bypassAccess) {
-      $class = $this->repositoryManager->getClassName();
+      $class = $this->repositoryDecorator->getClassName();
       $model = new $class();
-      $modelManager = $this->repositoryManager->wrapModel($model);
+      $modelDecorator = $this->repositoryDecorator->wrapModel($model);
     }
     else {
-      $modelManager = $this->repositoryManager->create();
+      $modelDecorator = $this->repositoryDecorator->create();
     }
 
-    if($modelManager) {
+    if($modelDecorator) {
       if($bypassAccess) {
-        $model = $modelManager->getModel();
+        $model = $modelDecorator->getModel();
         if($user instanceof UserInterface) {
           $model->setAuthor($user);
         }
-        $om = $modelManager->getObjectManager();
+        $om = $modelDecorator->getObjectManager();
         $om->persist($model);
         $om->flush();
       }
       else {
         if($user instanceof UserInterface) {
-          $modelManager->setAuthor($user);
+          $modelDecorator->setAuthor($user);
         }
-        $modelManager->save();
+        $modelDecorator->save();
       }
     }
 
-    return $modelManager;
+    return $modelDecorator;
   }
 
-  public function callMethodGetter(ModelManagerInterface $modelManager, $bypassAccess = false) {
+  public function callMethodGetter(ModelDecoratorInterface $modelDecorator, $bypassAccess = false) {
     if($bypassAccess) {
-      return $modelManager->getModel()->getField1();
+      return $modelDecorator->getModel()->getField1();
     }
-    return $modelManager->getField1();
+    return $modelDecorator->getField1();
   }
 
-  public function callMethodSetter(ModelManagerInterface $modelManager, $bypassAccess = false) {
+  public function callMethodSetter(ModelDecoratorInterface $modelDecorator, $bypassAccess = false) {
     if($bypassAccess) {
-      $modelManager->getModel()->setField1('test');
+      $modelDecorator->getModel()->setField1('test');
     }
     else {
-      $modelManager->setField1('test');
+      $modelDecorator->setField1('test');
     }
-    return $modelManager;
+    return $modelDecorator;
   }
 }

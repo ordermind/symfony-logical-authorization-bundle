@@ -9,11 +9,11 @@ class LogicalAuthorizationODMYMLTest extends LogicalAuthorizationODMBase
    */
   protected function setUp() {
     $this->load_services = array(
-      'testDocumentRoleAuthorRepositoryManager' => 'repository_manager.test_document_roleauthor_yml',
-      'testDocumentHasAccountNoInterfaceRepositoryManager' => 'repository_manager.test_document_hasaccount_yml',
-      'testDocumentNoBypassRepositoryManager' => 'repository_manager.test_document_nobypass_yml',
-      'testDocumentOverriddenPermissionsRepositoryManager' => 'repository_manager.test_document_overridden_permissions_yml',
-      'testDocumentVariousPermissionsRepositoryManager' => 'repository_manager.test_document_various_permissions_yml',
+      'testDocumentRoleAuthorRepositoryDecorator' => 'repository_decorator.test_document_roleauthor_yml',
+      'testDocumentHasAccountNoInterfaceRepositoryDecorator' => 'repository_decorator.test_document_hasaccount_yml',
+      'testDocumentNoBypassRepositoryDecorator' => 'repository_decorator.test_document_nobypass_yml',
+      'testDocumentOverriddenPermissionsRepositoryDecorator' => 'repository_decorator.test_document_overridden_permissions_yml',
+      'testDocumentVariousPermissionsRepositoryDecorator' => 'repository_decorator.test_document_various_permissions_yml',
     );
 
     parent::setUp();

@@ -4,14 +4,14 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Ordermind\DoctrineManagerBundle\Services\Factory\ModelManagerFactory as ModelManagerFactoryBase;
-use Ordermind\LogicalAuthorizationBundle\Services\ModelManager;
+use Ordermind\DoctrineDecoratorBundle\Services\Factory\ModelDecoratorFactory as ModelDecoratorFactoryBase;
+use Ordermind\LogicalAuthorizationBundle\Services\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel;
 
 /**
  * {@inheritdoc}
  */
-class ModelManagerFactory extends ModelManagerFactoryBase
+class ModelDecoratorFactory extends ModelDecoratorFactoryBase
 {
   protected $laModel;
 
@@ -22,8 +22,8 @@ class ModelManagerFactory extends ModelManagerFactoryBase
   /**
    * {@inheritdoc}
    */
-    public function getModelManager(ObjectManager $om, EventDispatcherInterface $dispatcher, $model)
+    public function getModelDecorator(ObjectManager $om, EventDispatcherInterface $dispatcher, $model)
     {
-        return new ModelManager($om, $dispatcher, $this->laModel, $model);
+        return new ModelDecorator($om, $dispatcher, $this->laModel, $model);
     }
 }

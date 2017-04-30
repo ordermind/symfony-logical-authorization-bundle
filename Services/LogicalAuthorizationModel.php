@@ -16,7 +16,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * @internal
    *
    * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface $la LogicalAuthorization service
-   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder Permission tree manager service
+   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder Permission tree builder service
    * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorization helper service
    */
   public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, HelperInterface $helper) {
@@ -29,12 +29,12 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * {@inheritdoc}
    */
   public function checkModelAccess($model, $action, $user = null) {
-    $model = $this->helper->getRidOfManager($model);
+    $model = $this->helper->getRidOfDecorator($model);
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->helper->getRidOfManager($user);
+    $user = $this->helper->getRidOfDecorator($user);
 
     if(!is_string($model) && !is_object($model)) {
       $this->helper->handleError('Error checking model access: the model parameter must be either a class string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
@@ -70,12 +70,12 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * {@inheritdoc}
    */
   public function checkFieldAccess($model, $field_name, $action, $user = null) {
-    $model = $this->helper->getRidOfManager($model);
+    $model = $this->helper->getRidOfDecorator($model);
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->helper->getRidOfManager($user);
+    $user = $this->helper->getRidOfDecorator($user);
 
     if(!is_string($model) && !is_object($model)) {
       $this->helper->handleError('Error checking field access: the model parameter must be either a class string or an object.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);

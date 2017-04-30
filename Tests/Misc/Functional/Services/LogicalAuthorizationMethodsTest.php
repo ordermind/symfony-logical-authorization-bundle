@@ -370,17 +370,17 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertSame('anon.', $response->getContent());
   }
 
-  public function testHelperGetRidOfManagerWrongType() {
+  public function testHelperGetRidOfDecoratorWrongType() {
     $user = new TestUser();
-    $this->assertSame($user, $this->helper->getRidOfManager($user));
-    $this->assertSame('hej', $this->helper->getRidOfManager('hej'));
-    $this->assertNull($this->helper->getRidOfManager(null));
+    $this->assertSame($user, $this->helper->getRidOfDecorator($user));
+    $this->assertSame('hej', $this->helper->getRidOfDecorator('hej'));
+    $this->assertNull($this->helper->getRidOfDecorator(null));
   }
 
-  public function testHelperGetRidOfManager() {
+  public function testHelperGetRidOfDecorator() {
     $user = new TestUser();
-    $modelManager = $this->testUserRepositoryManager->wrapModel($user);
-    $this->assertSame($user, $this->helper->getRidOfManager($modelManager));
+    $modelDecorator = $this->testUserRepositoryDecorator->wrapModel($user);
+    $this->assertSame($user, $this->helper->getRidOfDecorator($modelDecorator));
   }
 
   /**

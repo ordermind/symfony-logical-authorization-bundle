@@ -99,26 +99,26 @@ services:
     tags:
       - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: -250}
 
-  ordermind_logical_authorization.service.model_manager_factory:
-      class: Ordermind\LogicalAuthorizationBundle\Services\ModelManagerFactory
+  ordermind_logical_authorization.service.model_decorator_factory:
+      class: Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorFactory
       arguments: ['@ordermind_logical_authorization.service.logical_authorization_model']
 
-  ordermind_logical_authorization.service.repository_manager_factory:
-      class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryManagerFactory
+  ordermind_logical_authorization.service.repository_decorator_factory:
+      class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecoratorFactory
       calls:
-          - [setManagerRegistry, ['@ordermind_doctrine_manager.service.manager_registry']]
-          - [setModelManagerFactory, ['@ordermind_logical_authorization.service.model_manager_factory']]
+          - [setManagerRegistry, ['@ordermind_doctrine_decorator.service.manager_registry']]
+          - [setModelDecoratorFactory, ['@ordermind_logical_authorization.service.model_decorator_factory']]
           - [setDispatcher, ['@event_dispatcher']]
           - [setHelper, ['@ordermind_logical_authorization.service.helper']]
 
-  ordermind_logical_authorization.event_subscriber.repository_manager:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\RepositoryManagerSubscriber
+  ordermind_logical_authorization.event_subscriber.repository_decorator:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\RepositoryDecoratorSubscriber
     arguments: ['@ordermind_logical_authorization.service.logical_authorization_model', '%ordermind_logical_authorization.config%']
     tags:
       - {name: kernel.event_subscriber}
 
-  ordermind_logical_authorization.event_subscriber.model_manager:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\ModelManagerSubscriber
+  ordermind_logical_authorization.event_subscriber.model_decorator:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\ModelDecoratorSubscriber
     arguments: ['@ordermind_logical_authorization.service.logical_authorization_model']
     tags:
       - {name: kernel.event_subscriber}
