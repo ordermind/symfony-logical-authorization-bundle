@@ -15,7 +15,7 @@ class IsAuthor implements FlagInterface {
   }
 
   /**
-   * Checks if the author of a model is the same as the user in the current context.
+   * Checks if the author of a model is the same as the user in a given context.
    *
    * @param array $context The context for evaluating the flag. The context must contain a 'user' key and a 'model' key. The user needs to implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface and the model needs to implement Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface. You can get the current user by calling getCurrentUser() from the service 'ordermind_logical_authorization.service.helper'.
    *

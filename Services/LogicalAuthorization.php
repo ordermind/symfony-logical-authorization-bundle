@@ -2,7 +2,6 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
@@ -33,13 +32,6 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
   public function checkAccess($permissions, $context, $allow_bypass = true) {
     try {
       return $this->lpProxy->checkAccess($permissions, $context, $allow_bypass);
-    }
-    catch (PermissionTypeNotRegisteredException $e) {
-      $class = get_class($e);
-      $message = $e->getMessage();
-      $arrmessage = explode('Please use', $message);
-      $newMessage = $arrmessage[0] . 'Please use the \'ordermind_logical_authorization.tag.permission_type\' service tag to register a permission type.';
-      $this->helper->handleError("An exception was caught while checking access: \"$newMessage\" at " . $e->getFile() . " line " . $e->getLine(), array('exception' => $class, 'permissions' => $permissions, 'context' => $context));
     }
     catch (\Exception $e) {
       $class = get_class($e);

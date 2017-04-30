@@ -631,4 +631,29 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
   public function testCheckRouteAccessYes() {
     $this->assertTrue($this->laRoute->checkRouteAccess('route_allowed', 'anon.'));
   }
+
+  /**
+    * @expectedException Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException
+    */
+  public function testLogicalPermissionsProxyAddTypeAlreadyExists() {
+    $laProxy = new LogicalPermissionsProxy();
+    $type = new TestType();
+    $laProxy->addType($type);
+    $laProxy->addType($type);
+  }
+
+  public function testLogicalPermissionsProxyAddType() {
+    $laProxy = new LogicalPermissionsProxy();
+    $type = new TestType();
+    $laProxy->addType($type);
+    $this->assertTrue($laProxy->typeExists('test'));
+  }
+
+  /**
+    * @expectedException Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException
+    */
+  public function testLogicalPermissionsProxyCheckAccessTypeDoesntExist() {
+    $laProxy = new LogicalPermissionsProxy();
+    $laProxy->checkAccess(['test' => 'hej'], []);
+  }
 }

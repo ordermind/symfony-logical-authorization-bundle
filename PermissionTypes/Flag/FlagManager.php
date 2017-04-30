@@ -67,12 +67,12 @@ class FlagManager implements FlagManagerInterface {
   }
 
   /**
-   * Checks if access should be granted due to a flag being switched on in the current context
+   * Checks if a flag is switched on in a given context
    *
    * @param string $name The name of the flag to evaluate
    * @param array $context The context for evaluating the flag. For more specific information, check the documentation for the flag you want to evaluate.
    *
-   * @return bool TRUE if access should be granted or FALSE if access should not be granted
+   * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
    */
   public function checkPermission($name, $context) {
     if(!is_string($name)) {
