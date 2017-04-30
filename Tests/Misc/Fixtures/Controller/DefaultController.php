@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestEntity;
+
 class DefaultController extends Controller {
 
   /**
@@ -114,5 +116,13 @@ class DefaultController extends Controller {
     if(is_null($user)) return new Response($user);
     if(is_string($user)) return new Response($user);
     return new Response($user->getId());
+  }
+
+  /**
+   * @Route("/load-test-entity/{id}", name="load_test_entity")
+   * @Method({"GET"})
+   */
+  public function loadTestEntity(Request $request, TestEntity $testEntity) {
+    return new Response(get_class($testEntity));
   }
 }

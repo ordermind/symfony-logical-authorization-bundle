@@ -14,6 +14,7 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
     'superadmin_user' => 'superadminpass',
   ];
   protected $load_services = array();
+  protected $testEntityRepositoryDecorator;
   protected $testUserRepositoryDecorator;
   protected $testModelOperations;
   protected $client;
@@ -30,12 +31,17 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
     $container = $kernel->getContainer();
 
     $this->client = static::createClient();
+    $this->testEntityRepositoryDecorator = $container->get('repository_decorator.test_entity');
     $this->testUserRepositoryDecorator = $container->get('repository_decorator.test_user');
     $this->testModelOperations = $container->get('test_model_operations');
     $this->la = $container->get('ordermind_logical_authorization.service.logical_authorization');
     $this->laModel = $container->get('ordermind_logical_authorization.service.logical_authorization_model');
     $this->laRoute = $container->get('ordermind_logical_authorization.service.logical_authorization_route');
     $this->helper = $container->get('ordermind_logical_authorization.service.helper');
+
+    $this->deleteAll(array(
+      $this->testEntityRepositoryDecorator,
+    ));
 
     $this->addUsers();
   }
@@ -46,6 +52,10 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
    * It is important to reset all non-static properties to minimize memory leaks.
    */
   protected function tearDown() {
+    if(!is_null($this->testEntityRepositoryDecorator)) {
+      $this->testEntityRepositoryDecorator->getObjectManager()->getConnection()->close();
+      $this->testEntityRepositoryDecorator = null;
+    }
     if(!is_null($this->testUserRepositoryDecorator)) {
       $this->testUserRepositoryDecorator->getObjectManager()->getConnection()->close();
       $this->testUserRepositoryDecorator = null;
