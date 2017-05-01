@@ -119,7 +119,10 @@ class DefaultController extends Controller {
   }
 
   /**
-   * @Route("/load-test-entity/{id}", name="load_test_entity")
+   * @Route("/load-test-entity/{id}", name="load_test_entity", options={
+   * "logical_authorization_permissions": {
+   *   "role": "ROLE_ADMIN"
+   * }})
    * @Method({"GET"})
    */
   public function loadTestEntity(Request $request, TestEntity $testEntity) {

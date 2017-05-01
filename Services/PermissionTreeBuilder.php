@@ -13,34 +13,56 @@ use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
 class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
-  protected $appDir;
   protected $permissionKeys;
   protected $dispatcher;
-  protected $tree;
   protected $cache;
+  protected $tree;
 
-  public function __construct($appDir, LogicalPermissionsProxyInterface $lpProxy, EventDispatcherInterface $dispatcher, CacheItemPoolInterface $cache) {
-    $this->appDir = $appDir;
+  /**
+   * @internal
+   *
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy LogicalPermissionsProxy service
+   * @param Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatched Event dispatcher service
+   * @param Psr\Cache\CacheItemPoolInterface $cache Caching service
+   */
+  public function __construct(LogicalPermissionsProxyInterface $lpProxy, EventDispatcherInterface $dispatcher, CacheItemPoolInterface $cache) {
     $this->dispatcher = $dispatcher;
     $this->permissionKeys = $lpProxy->getValidPermissionKeys();
     $this->cache = $cache;
   }
 
-  public function getTree($reset = false) {
+  /**
+   * {@inheritdoc}
+   */
+  public function getTree($reset = false, $debug = false) {
     if(!$reset && !is_null($this->tree)) {
-      return $this->tree;
+      $tree = $this->tree;
+      if($debug) {
+        $tree['fetch'] = 'static_cache';
+      }
+
+      return $tree;
     }
 
     if(!$reset && !is_null($tree = $this->loadTreeFromCache())) {
       $this->tree = $tree;
-      return $this->tree;
+      if($debug) {
+        $tree['fetch'] = 'cache';
+      }
+
+      return $tree;
     }
 
     $tree = $this->loadTreeFromEvent();
+    ksort($tree);
     $this->saveTreeToCache($tree);
     $this->tree = $tree;
 
-    return $this->tree;
+    if($debug) {
+      $tree['fetch'] = 'no_cache';
+    }
+
+    return $tree;
   }
 
   protected function loadTreeFromCache() {

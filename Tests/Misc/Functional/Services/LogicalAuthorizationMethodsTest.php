@@ -414,13 +414,9 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
   }
 
-  public function testGetAvailableActionsModelString() {
-
-  }
-
-  public function testGetAvailableActionsModelObject() {
+  public function testGetAvailableActionsModelClass() {
     $model = new TestEntity();
-    $available_actions = $this->laModel->getAvailableActions($model, ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    $available_actions = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
     foreach($available_actions as $key => $value) {
       if($key !== 'fields') {
         $this->assertSame($key, $value);
@@ -433,6 +429,13 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
         }
       }
     }
+  }
+
+  public function testGetAvailableActionsModelObject() {
+    $model = new TestEntity();
+    $available_actions_model = $this->laModel->getAvailableActions($model, ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    $available_actions_class = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    $this->assertSame($available_actions_model, $available_actions_class);
   }
 
   /**
@@ -488,13 +491,25 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertTrue($this->laModel->checkModelAccess($model, 'read', $user));
   }
 
-  public function testCheckModelAccessNo() {
+  public function testCheckModelAccessClassNo() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'read', $user));
+  }
+
+  public function testCheckModelAccessClassYes() {
+    $user = new TestUser();
+    $model = new TestEntity();
+    $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', $user));
+  }
+
+  public function testCheckModelAccessObjectNo() {
     $user = new TestUser();
     $model = new TestEntity();
     $this->assertFalse($this->laModel->checkModelAccess($model, 'read', $user));
   }
 
-  public function testCheckModelAccessYes() {
+  public function testCheckModelAccessObjectYes() {
     $user = new TestUser();
     $model = new TestEntity();
     $this->assertTrue($this->laModel->checkModelAccess($model, 'create', $user));
@@ -678,18 +693,22 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
   public function testModelDecoratorGetAvailableActions() {
     $modelDecorator = $this->testEntityRepositoryDecorator->create();
     $model = $modelDecorator->getModel();
-    $available_actions = $modelDecorator->getAvailableActions('anon.');
-    foreach($available_actions as $key => $value) {
-      if($key !== 'fields') {
-        $this->assertSame($key, $value);
-        continue;
-      }
-      foreach($value as $field_name => $field_actions) {
-        $this->assertTrue(property_exists($model, $field_name));
-        foreach($field_actions as $field_action_key => $field_action_value) {
-          $this->assertSame($field_action_key, $field_action_value);
-        }
-      }
-    }
+    $available_actions_decorator = $modelDecorator->getAvailableActions('anon.');
+    $available_actions_class = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    $this->assertSame($available_actions_decorator, $available_actions_class);
+  }
+
+  public function testGetTree() {
+    $tree = $this->treeBuilder->getTree();
+    $this->assertTrue(!isset($tree['fetch']));
+    $tree = $this->treeBuilder->getTree(false, true);
+    $this->assertSame('static_cache', $tree['fetch']);
+    $tree = $this->treeBuilder->getTree(true, true);
+    $this->assertSame('no_cache', $tree['fetch']);
+  }
+
+  public function testGetTreeFromCache() {
+    $tree = $this->treeBuilder->getTree(false, true);
+    $this->assertSame('cache', $tree['fetch']);
   }
 }

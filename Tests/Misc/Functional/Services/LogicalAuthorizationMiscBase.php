@@ -38,6 +38,7 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
     $this->laModel = $container->get('ordermind_logical_authorization.service.logical_authorization_model');
     $this->laRoute = $container->get('ordermind_logical_authorization.service.logical_authorization_route');
     $this->helper = $container->get('ordermind_logical_authorization.service.helper');
+    $this->treeBuilder = $container->get('ordermind_logical_authorization.service.permission_tree_builder');
 
     $this->deleteAll(array(
       $this->testEntityRepositoryDecorator,
