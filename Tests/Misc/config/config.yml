@@ -55,7 +55,6 @@ doctrine:
 
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:
-  check_lazy_loaded_models: true
   permissions:
     routes:
       route_override_permissions:

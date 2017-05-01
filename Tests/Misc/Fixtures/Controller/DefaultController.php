@@ -125,7 +125,27 @@ class DefaultController extends Controller {
    * }})
    * @Method({"GET"})
    */
-  public function loadTestEntity(Request $request, TestEntity $testEntity) {
+  public function loadTestEntityAction(Request $request, TestEntity $testEntity) {
     return new Response(get_class($testEntity));
+  }
+
+  /**
+    * @Route("/count-forbidden-entities-lazy", name="test_count_forbidden_entities_lazy")
+    * @Method({"GET"})
+    */
+  public function countForbiddenEntitiesLazyLoadAction(Request $request) {
+    $operations = $this->get('test_model_operations');
+    $operations->setRepositoryDecorator($this->get('repository_decorator.forbidden_entity'));
+    $collection = $operations->getLazyLoadedModelResult();
+    return new Response(count($collection));
+  }
+
+  /**
+   * @Route("/repository-decorator-create", name="test_repository_decorator_create")
+   * @Method({"GET"})
+   */
+  public function repositoryDecoratorCreateAction(Request $request) {
+    $modelDecorator = $this->get('repository_decorator.test_entity')->create()->save();
+    return new Response('');
   }
 }

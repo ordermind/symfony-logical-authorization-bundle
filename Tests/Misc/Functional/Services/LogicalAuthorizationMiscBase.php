@@ -15,6 +15,8 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
   ];
   protected $load_services = array();
   protected $testEntityRepositoryDecorator;
+  protected $testEntityWithParamsRepositoryDecorator;
+  protected $forbiddenEntityRepositoryDecorator;
   protected $testUserRepositoryDecorator;
   protected $testModelOperations;
   protected $client;
@@ -32,6 +34,8 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
 
     $this->client = static::createClient();
     $this->testEntityRepositoryDecorator = $container->get('repository_decorator.test_entity');
+    $this->testEntityWithParamsRepositoryDecorator = $container->get('repository_decorator.test_entity_with_params');
+    $this->forbiddenEntityRepositoryDecorator = $container->get('repository_decorator.forbidden_entity');
     $this->testUserRepositoryDecorator = $container->get('repository_decorator.test_user');
     $this->testModelOperations = $container->get('test_model_operations');
     $this->la = $container->get('ordermind_logical_authorization.service.logical_authorization');
@@ -42,6 +46,8 @@ abstract class LogicalAuthorizationMiscBase extends WebTestCase {
 
     $this->deleteAll(array(
       $this->testEntityRepositoryDecorator,
+      $this->testEntityWithParamsRepositoryDecorator,
+      $this->forbiddenEntityRepositoryDecorator,
     ));
 
     $this->addUsers();
