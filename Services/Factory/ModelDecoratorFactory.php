@@ -15,6 +15,11 @@ class ModelDecoratorFactory extends ModelDecoratorFactoryBase implements ModelDe
 {
   protected $laModel;
 
+  /**
+   * @internal
+   *
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel $laModel LogicalAuthorizationModel service
+   */
   public function __construct(LogicalAuthorizationModel $laModel) {
     $this->laModel = $laModel;
   }
