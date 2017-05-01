@@ -47,14 +47,14 @@ class AddDoctrinePermissions {
   protected function addAnnotationPermissions(AddPermissionsEvent $event, MappingDriver $driver, ObjectManager $om) {
     $classes = $driver->getAllClassNames();
     $annotationReader = $driver->getReader();
-    $permissions = [];
+    $permissionTree = [];
     foreach($classes as $class) {
       $reflectionClass = new \ReflectionClass($class);
       $classAnnotations = $annotationReader->getClassAnnotations($reflectionClass);
       foreach ($classAnnotations as $annotation) {
         if ($annotation instanceof LogicalAuthorizationPermissions) {
-          if(!isset($permissions['models'])) $permissions['models'] = [];
-          $permissions['models'][$class] = $annotation->getPermissions();
+          if(!isset($permissionTree['models'])) $permissionTree['models'] = [];
+          $permissionTree['models'][$class] = $annotation->getPermissions();
         }
       }
       foreach($reflectionClass->getProperties() as $property) {
@@ -62,25 +62,25 @@ class AddDoctrinePermissions {
         $propertyAnnotations = $annotationReader->getPropertyAnnotations($property);
         foreach ($propertyAnnotations as $annotation) {
           if ($annotation instanceof LogicalAuthorizationPermissions) {
-            if(!isset($permissions['models'])) $permissions['models'] = [];
-            $permissions['models'] += [$class => ['fields' => []]];
-            $permissions['models'][$class]['fields'][$field_name] = $annotation->getPermissions();
+            if(!isset($permissionTree['models'])) $permissionTree['models'] = [];
+            $permissionTree['models'] += [$class => ['fields' => []]];
+            $permissionTree['models'][$class]['fields'][$field_name] = $annotation->getPermissions();
           }
         }
       }
     }
-    $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));
+    $event->insertTree($permissionTree);
   }
 
   protected function addXMLPermissions(AddPermissionsEvent $event, MappingDriver $driver) {
     $classes = $driver->getAllClassNames();
-    $permissions = [];
+    $permissionTree = [];
     foreach($classes as $class) {
       $xmlRoot = $driver->getElement($class);
       // Parse XML structure in $element
       if(isset($xmlRoot->logical_authorization_permissions)) {
-        if(!isset($permissions['models'])) $permissions['models'] = [];
-        $permissions['models'][$class] = json_decode(json_encode($xmlRoot->logical_authorization_permissions), TRUE);
+        if(!isset($permissionTree['models'])) $permissionTree['models'] = [];
+        $permissionTree['models'][$class] = json_decode(json_encode($xmlRoot->logical_authorization_permissions), TRUE);
       }
       $reflectionClass = new \ReflectionClass($class);
       foreach($reflectionClass->getProperties() as $property) {
@@ -88,39 +88,39 @@ class AddDoctrinePermissions {
         if($result = $xmlRoot->xpath("*[@name='$field_name' or @field='$field_name']")) {
           $field = $result[0];
           if(isset($field->logical_authorization_permissions)) {
-            if(!isset($permissions['models'])) $permissions['models'] = [];
-            $permissions['models'] += [$class => ['fields' => []]];
-            $permissions['models'][$class]['fields'][$field_name] = json_decode(json_encode($field->logical_authorization_permissions), TRUE);
+            if(!isset($permissionTree['models'])) $permissionTree['models'] = [];
+            $permissionTree['models'] += [$class => ['fields' => []]];
+            $permissionTree['models'][$class]['fields'][$field_name] = json_decode(json_encode($field->logical_authorization_permissions), TRUE);
           }
         }
       }
     }
-    $permissions = $this->massagePermissionsRecursive($permissions);
-    $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));
+    $permissionTree = $this->massagePermissionsRecursive($permissionTree);
+    $event->insertTree($permissionTree);
   }
 
   protected function addYMLPermissions(AddPermissionsEvent $event, MappingDriver $driver) {
     $classes = $driver->getAllClassNames();
-    $permissions = [];
+    $permissionTree = [];
     foreach($classes as $class) {
       $mapping = $driver->getElement($class);
       if(isset($mapping['logical_authorization_permissions'])) {
-        if(!isset($permissions['models'])) $permissions['models'] = [];
-        $permissions['models'][$class] = $mapping['logical_authorization_permissions'];
+        if(!isset($permissionTree['models'])) $permissionTree['models'] = [];
+        $permissionTree['models'][$class] = $mapping['logical_authorization_permissions'];
       }
       foreach($mapping as $key => $data) {
         if(!is_array($data)) continue;
         foreach($data as $field_name => $field_mapping) {
           if(isset($field_mapping['logical_authorization_permissions'])) {
-            if(!isset($permissions['models'])) $permissions['models'] = [];
-            $permissions['models'] += [$class => ['fields' => []]];
-            $permissions['models'][$class]['fields'][$field_name] = $field_mapping['logical_authorization_permissions'];
+            if(!isset($permissionTree['models'])) $permissionTree['models'] = [];
+            $permissionTree['models'] += [$class => ['fields' => []]];
+            $permissionTree['models'][$class]['fields'][$field_name] = $field_mapping['logical_authorization_permissions'];
           }
         }
       }
     }
-    $permissions = $this->massagePermissionsRecursive($permissions);
-    $event->setTree($event->mergePermissions([$event->getTree(), $permissions]));
+    $permissionTree = $this->massagePermissionsRecursive($permissionTree);
+    $event->insertTree($permissionTree);
   }
 
   protected function massagePermissionsRecursive($permissions) {

@@ -17,6 +17,7 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestEntity;
 use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes\TestType;
+use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
 class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
 
@@ -726,5 +727,112 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertSame('test2', $modelDecorator->getField2());
     $this->assertSame('test3', $modelDecorator->getField3());
     $this->assertNull($modelDecorator->getAuthor());
+  }
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testEventInsertTreeWrongTreeType() {
+    $laProxy = new LogicalPermissionsProxy();
+    $event = new AddPermissionsEvent($laProxy->getValidPermissionKeys());
+    $event->insertTree('key');
+  }
+
+  public function testEventInsertTreeGetTree() {
+    $laProxy = new LogicalPermissionsProxy();
+    $role = new Role();
+    $laProxy->addType($role);
+    $flagManager = new FlagManager();
+    $laProxy->addType($flagManager);
+    $event = new AddPermissionsEvent($laProxy->getValidPermissionKeys());
+    $tree1 = [
+      'models' => [
+        'testmodel' => [
+          'create' => [
+            'role' => 'role1',
+          ],
+          'read' => [
+            'flag' => [
+              'flag1',
+              'flag2',
+            ],
+          ],
+          'update' => [
+            'flag' => 'flag1',
+          ],
+          'fields' => [
+            'field1' => [
+              'get' => [
+                'role' => 'role1',
+              ],
+              'set' => [
+                'flag' => 'flag1',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+    $tree2 = [
+      'models' => [
+        'testmodel' => [
+          'create' => [
+            'role' => [
+              'newrole1',
+              'newrole2',
+            ],
+          ],
+          'read' => [
+            'flag' => 'newflag1',
+          ],
+          'fields' => [
+            'field1' => [
+              'get' => [
+                'OR' => [
+                  'role' => 'newrole1',
+                  'flag' => 'newflag1',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $result = [
+      'models' => [
+        'testmodel' => [
+          'create' => [
+            'role' => [
+              'newrole1',
+              'newrole2',
+            ],
+          ],
+          'read' => [
+            'flag' => 'newflag1',
+          ],
+          'update' => [
+            'flag' => 'flag1',
+          ],
+          'fields' => [
+            'field1' => [
+              'get' => [
+                'OR' => [
+                  'role' => 'newrole1',
+                  'flag' => 'newflag1',
+                ],
+              ],
+              'set' => [
+                'flag' => 'flag1',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    $event->insertTree($tree1);
+    $event->insertTree($tree2);
+    $this->assertSame($result, $event->getTree());
   }
 }

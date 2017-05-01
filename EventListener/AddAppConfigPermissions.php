@@ -13,7 +13,7 @@ class AddAppConfigPermissions {
 
   public function onAddPermissions(AddPermissionsEvent $event) {
     if(!empty($this->config['permissions'])) {
-      $event->setTree($event->mergePermissions([$event->getTree(), $this->config['permissions']]));
+      $event->insertTree($this->config['permissions']);
     }
   }
 }
