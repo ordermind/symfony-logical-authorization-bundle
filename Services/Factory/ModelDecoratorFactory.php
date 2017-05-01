@@ -1,17 +1,17 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Services\Factory;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Ordermind\DoctrineDecoratorBundle\Services\Factory\ModelDecoratorFactory as ModelDecoratorFactoryBase;
-use Ordermind\LogicalAuthorizationBundle\Services\ModelDecorator;
+use Ordermind\LogicalAuthorizationBundle\Services\Decorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel;
 
 /**
  * {@inheritdoc}
  */
-class ModelDecoratorFactory extends ModelDecoratorFactoryBase
+class ModelDecoratorFactory extends ModelDecoratorFactoryBase implements ModelDecoratorFactoryInterface
 {
   protected $laModel;
 

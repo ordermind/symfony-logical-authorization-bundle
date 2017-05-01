@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Ordermind\LogicalAuthorizationBundle\Services\Decorator\ModelDecoratorInterface;
 
 class DefaultController extends Controller {
 
@@ -63,7 +64,7 @@ class DefaultController extends Controller {
     $operations = $this->get('test_model_operations');
     $operations->setRepositoryDecorator($this->get($request->get('repository_decorator_service')));
     $modelDecorator = $operations->createTestModel();
-    return new JsonResponse(is_object($modelDecorator) && $modelDecorator instanceof \Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorInterface);
+    return new JsonResponse(is_object($modelDecorator) && $modelDecorator instanceof ModelDecoratorInterface);
   }
 
   /**

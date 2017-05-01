@@ -4,7 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\Decorator\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 
 class Helper implements HelperInterface {

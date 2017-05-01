@@ -4,8 +4,8 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services;
 
 use Doctrine\Common\Collections\Criteria;
 
-use Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecoratorInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecoratorInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\Decorator\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelOperations {

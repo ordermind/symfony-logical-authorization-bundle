@@ -100,11 +100,11 @@ services:
       - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: -250}
 
   ordermind_logical_authorization.service.model_decorator_factory:
-      class: Ordermind\LogicalAuthorizationBundle\Services\ModelDecoratorFactory
+      class: Ordermind\LogicalAuthorizationBundle\Services\Factory\ModelDecoratorFactory
       arguments: ['@ordermind_logical_authorization.service.logical_authorization_model']
 
   ordermind_logical_authorization.service.repository_decorator_factory:
-      class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecoratorFactory
+      class: Ordermind\LogicalAuthorizationBundle\Services\Factory\RepositoryDecoratorFactory
       calls:
           - [setManagerRegistry, ['@ordermind_doctrine_decorator.service.manager_registry']]
           - [setModelDecoratorFactory, ['@ordermind_logical_authorization.service.model_decorator_factory']]

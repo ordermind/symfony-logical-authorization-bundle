@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Services\Decorator;
 
 use Ordermind\DoctrineDecoratorBundle\Services\Decorator\ModelDecoratorInterface as ModelDecoratorInterfaceBase;
 

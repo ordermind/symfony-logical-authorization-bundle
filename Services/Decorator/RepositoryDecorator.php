@@ -1,13 +1,13 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Services\Decorator;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Ordermind\DoctrineDecoratorBundle\Services\Factory\ModelDecoratorFactoryInterface;
 use Ordermind\DoctrineDecoratorBundle\Services\Decorator\RepositoryDecorator as RepositoryDecoratorBase;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\Factory\ModelDecoratorFactoryInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 class RepositoryDecorator extends RepositoryDecoratorBase implements RepositoryDecoratorInterface {
@@ -17,7 +17,7 @@ class RepositoryDecorator extends RepositoryDecoratorBase implements RepositoryD
      * @internal
      *
      * @param Doctrine\Common\Persistence\ObjectManager                                     $om                  The object manager to use in this decorator
-     * @param Ordermind\DoctrineDecoratorBundle\Services\Factory\ModelDecoratorFactoryInterface $modelDecoratorFactory The factory to use for creating new model decorators
+     * @param Ordermind\LogicalAuthorizationBundle\Services\Factory\ModelDecoratorFactoryInterface $modelDecoratorFactory The factory to use for creating new model decorators
      * @param Symfony\Component\EventDispatcher\EventDispatcherInterface                    $dispatcher          The event dispatcher to use in this decorator
      * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorizaton helper service
      * @param string                                                                        $class               The model class to use in this decorator

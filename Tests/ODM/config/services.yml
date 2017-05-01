@@ -3,100 +3,100 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services\TestModelOperations
 
   repository_decorator.test_user:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\User\TestUser
 
   # Annotation repositories
   repository_decorator.test_document_roleauthor_annotation:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentRoleAuthor
 
   repository_decorator.test_document_hasaccount_annotation:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentHasAccountNoInterface
 
   repository_decorator.test_document_nobypass_annotation:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentNoBypass
 
   repository_decorator.test_document_overridden_permissions_annotation:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentOverriddenPermissions
 
   repository_decorator.test_document_various_permissions_annotation:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\Annotation\TestDocumentVariousPermissions
 
   # XML repositories
   repository_decorator.test_document_roleauthor_xml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentRoleAuthor
 
   repository_decorator.test_document_hasaccount_xml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentHasAccountNoInterface
 
   repository_decorator.test_document_nobypass_xml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentNoBypass
 
   repository_decorator.test_document_overridden_permissions_xml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentOverriddenPermissions
 
   repository_decorator.test_document_various_permissions_xml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\XML\TestDocumentVariousPermissions
 
   # YML repositories
   repository_decorator.test_document_roleauthor_yml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentRoleAuthor
 
   repository_decorator.test_document_hasaccount_yml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentHasAccountNoInterface
 
   repository_decorator.test_document_nobypass_yml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentNoBypass
 
   repository_decorator.test_document_overridden_permissions_yml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentOverriddenPermissions
 
   repository_decorator.test_document_various_permissions_yml:
-    class: Ordermind\LogicalAuthorizationBundle\Services\RepositoryDecorator
+    class: Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecorator
     factory: ['@ordermind_logical_authorization.service.repository_decorator_factory', getRepositoryDecorator]
     arguments:
       - Ordermind\LogicalAuthorizationBundle\Tests\ODM\Fixtures\Document\YML\TestDocumentVariousPermissions
