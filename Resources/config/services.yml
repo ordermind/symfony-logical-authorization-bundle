@@ -21,6 +21,12 @@ services:
     tags:
       - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
 
+  ordermind_logical_authorization.event_listener.add_app_config_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
+    arguments: ['%ordermind_logical_authorization.config%']
+    tags:
+      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: -250}
+
   ordermind_logical_authorization.service.logical_permissions_proxy:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
 
@@ -70,56 +76,3 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role
     tags:
       - {name: ordermind_logical_authorization.tag.permission_type}
-
-  # Doctrine-related services
-
-  ordermind_logical_authorization.event_listener.add_doctrine_orm_permissions:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrinePermissions
-    arguments:
-      - '@?doctrine'
-      - "@=container.hasParameter('doctrine.orm.metadata.annotation.class') ? parameter('doctrine.orm.metadata.annotation.class') : ''"
-      - "@=container.hasParameter('doctrine.orm.metadata.xml.class') ? parameter('doctrine.orm.metadata.xml.class') : ''"
-      - "@=container.hasParameter('doctrine.orm.metadata.yml.class') ? parameter('doctrine.orm.metadata.yml.class') : ''"
-    tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
-
-  ordermind_logical_authorization.event_listener.add_doctrine_odm_permissions:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddDoctrinePermissions
-    arguments:
-      - '@?doctrine_mongodb'
-      - "@=container.hasParameter('doctrine_mongodb.odm.metadata.annotation.class') ? parameter('doctrine_mongodb.odm.metadata.annotation.class') : ''"
-      - "@=container.hasParameter('doctrine_mongodb.odm.metadata.xml.class') ? parameter('doctrine_mongodb.odm.metadata.xml.class') : ''"
-      - "@=container.hasParameter('doctrine_mongodb.odm.metadata.yml.class') ? parameter('doctrine_mongodb.odm.metadata.yml.class') : ''"
-    tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
-
-  ordermind_logical_authorization.event_listener.add_app_config_permissions:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
-    arguments: ['%ordermind_logical_authorization.config%']
-    tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: -250}
-
-  ordermind_logical_authorization.service.model_decorator_factory:
-      class: Ordermind\LogicalAuthorizationBundle\Services\Factory\ModelDecoratorFactory
-      arguments: ['@ordermind_logical_authorization.service.logical_authorization_model']
-
-  ordermind_logical_authorization.service.repository_decorator_factory:
-      class: Ordermind\LogicalAuthorizationBundle\Services\Factory\RepositoryDecoratorFactory
-      calls:
-          - [setManagerRegistry, ['@ordermind_doctrine_decorator.service.manager_registry']]
-          - [setModelDecoratorFactory, ['@ordermind_logical_authorization.service.model_decorator_factory']]
-          - [setDispatcher, ['@event_dispatcher']]
-          - [setHelper, ['@ordermind_logical_authorization.service.helper']]
-
-  ordermind_logical_authorization.event_subscriber.repository_decorator:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\RepositoryDecoratorSubscriber
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization_model', '%ordermind_logical_authorization.config%']
-    tags:
-      - {name: kernel.event_subscriber}
-
-  ordermind_logical_authorization.event_subscriber.model_decorator:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\ModelDecoratorSubscriber
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization_model']
-    tags:
-      - {name: kernel.event_subscriber}
-
