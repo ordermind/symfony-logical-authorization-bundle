@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,7 +11,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
  * TestEntity
  *
  * @ORM\Table(name="testentities")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\TestEntityRepository")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Repository\TestEntityRepository")
  */
 class TestEntity implements ModelInterface
 {
@@ -47,7 +47,7 @@ class TestEntity implements ModelInterface
 
     /**
      * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser")
+     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
      */
     protected $author;

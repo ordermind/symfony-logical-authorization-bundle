@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,7 +12,7 @@ use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizatio
  * ForbiddenEntity
  *
  * @ORM\Table(name="forbidden_entities")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository\ForbiddenEntityRepository")
+ * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Repository\ForbiddenEntityRepository")
  * @LogicalAuthorizationPermissions({
  *   "create": {
  *     FALSE,
@@ -67,7 +67,7 @@ class ForbiddenEntity implements ModelInterface
 
     /**
      * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser")
+     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
      */
     protected $author;

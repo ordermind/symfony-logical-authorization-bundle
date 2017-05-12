@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 class LogicalAuthorizationRoutesTest extends LogicalAuthorizationMiscBase {
   public function testRouteRoleAllow() {

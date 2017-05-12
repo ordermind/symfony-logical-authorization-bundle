@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Symfony\Component\Routing\Route;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
@@ -10,13 +10,13 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount as HasAccountFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor as IsAuthorFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager;
-use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\ErroneousUser;
-use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser;
-use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\ErroneousEntity;
-use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestEntity;
-use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes\TestFlag;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\ErroneousUser;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\ErroneousEntity;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestEntity;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
-use Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes\TestType;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
 class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
@@ -137,7 +137,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
   public function testFlagIsAuthorModelClassString() {
     $user = new TestUser();
     $flag = new IsAuthorFlag();
-    $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser']));
+    $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser']));
   }
 
   /**

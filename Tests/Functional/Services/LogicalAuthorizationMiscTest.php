@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Services\Decorator\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\Decorator\RepositoryDecoratorInterface;

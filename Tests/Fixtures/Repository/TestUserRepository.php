@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Repository;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Repository;
 
 /**
  * TestUserRepository

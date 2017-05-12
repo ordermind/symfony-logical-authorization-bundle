@@ -10,7 +10,7 @@ xml_routes:
 
 yml_route:
     path:     /test/route-yml
-    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Controller\YmlController::routeYmlAction }
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlAction }
     options:
         logical_authorization_permissions:
             role: ROLE_ADMIN

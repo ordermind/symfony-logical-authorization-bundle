@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\PermissionTypes;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes;
 
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
 

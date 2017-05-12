@@ -2,12 +2,12 @@
 # http://symfony.com/doc/current/book/security.html
 security:
     encoders:
-        Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser: plaintext
+        Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser: plaintext
 
     providers:
         user_provider:
             entity:
-                class: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestUser
+                class: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser
                 property: username
 
     firewalls:

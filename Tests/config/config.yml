@@ -49,7 +49,7 @@ doctrine:
                 type: annotation
                 dir: "%kernel.root_dir%/Fixtures/Entity"
                 is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity
+                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity
                 alias: TestEntities
 
 # LogicalAuthorization Configuration
@@ -64,7 +64,7 @@ ordermind_logical_authorization:
         0: false
       ^/test/pattern-: true
     models:
-      Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Entity\TestEntity:
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestEntity:
         create: true
         read: false
         update: true

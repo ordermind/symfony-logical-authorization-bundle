@@ -5,7 +5,7 @@
         http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="xml_route" path="/route-xml">
-        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Misc\Fixtures\Controller\XmlController::routeXmlAction</default>
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController::routeXmlAction</default>
         <option key="logical_authorization_permissions">{"role": "ROLE_ADMIN"}</option>
     </route>
 </routes>
