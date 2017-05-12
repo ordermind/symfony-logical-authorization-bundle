@@ -1,4 +1,0 @@
-test_routes:
-    resource: "@OrdermindLogicalAuthorizationBundle/Tests/ODM/Fixtures/Controller/"
-    type:     annotation
-    prefix:   /test
