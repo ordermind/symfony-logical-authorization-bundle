@@ -3,5 +3,5 @@
 /composer*
 !/composer.json
 /*.sh
-/Tests/*/cache
-/Tests/*/logs
+/Tests/cache
+/Tests/logs

@@ -1,4 +1,11 @@
 services:
+  cache.adapter.null:
+    class: Symfony\Component\Cache\Adapter\NullAdapter
+    abstract: true
+    arguments: [~, ~, ~]
+    tags:
+      - {name: cache.pool, clearer: cache.default_clearer}
+
   test_model_operations:
     class: Ordermind\LogicalAuthorizationBundle\Tests\Shared\Fixtures\Services\TestModelOperations
 

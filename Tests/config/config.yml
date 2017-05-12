@@ -1,5 +1,4 @@
 imports:
-    - { resource: ../../Shared/config/services.yml }
     - { resource: security.yml }
     - { resource: services.yml }
 
