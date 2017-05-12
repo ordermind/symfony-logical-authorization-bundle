@@ -678,14 +678,6 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $laProxy->checkAccess(['test' => 'hej'], []);
   }
 
-  public function testModelDecoratorGetAvailableActions() {
-    $modelDecorator = $this->testEntityRepositoryDecorator->create();
-    $model = $modelDecorator->getModel();
-    $available_actions_decorator = $modelDecorator->getAvailableActions('anon.');
-    $available_actions_class = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
-    $this->assertSame($available_actions_decorator, $available_actions_class);
-  }
-
   public function testGetTree() {
     $tree = $this->treeBuilder->getTree();
     $this->assertTrue(!isset($tree['fetch']));

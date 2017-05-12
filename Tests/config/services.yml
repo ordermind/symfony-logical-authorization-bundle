@@ -1,7 +1,10 @@
 services:
-  cache.adapter.null:
-    class: Symfony\Component\Cache\Adapter\NullAdapter
-    abstract: true
-    arguments: [~, ~, ~]
-    tags:
-      - {name: cache.pool, clearer: cache.default_clearer}
+    cache.adapter.null:
+        class: Symfony\Component\Cache\Adapter\NullAdapter
+        abstract: true
+        arguments: [~, ~, ~]
+        tags:
+            - {name: cache.pool, clearer: cache.default_clearer}
+
+    custom_user_provider:
+        class: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Security\User\CustomUserProvider

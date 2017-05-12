@@ -2,124 +2,24 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Doctrine\LogicalAuthorizationPermissions;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
 
-/**
- * TestUser
- *
- * @ORM\Table(name="testusers")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Repository\TestUserRepository")
- * @LogicalAuthorizationPermissions({
- *   "create": {
- *     "role": "ROLE_ADMIN"
- *   },
- *   "read": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   },
- *   "update": {
- *     "OR": {
- *       "role": "ROLE_ADMIN",
- *       "flag": "is_author"
- *     }
- *   },
- *   "delete": {
- *     "no_bypass": {
- *       "flag": "is_author"
- *     },
- *     "AND": {
- *       "role": "ROLE_ADMIN",
- *       "flag": {
- *         "NOT": "is_author"
- *       }
- *     }
- *   }
- * })
- */
 class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
 {
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="id", type="guid")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="UUID")
-   */
+
   private $id;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="username", type="string", length=25)
-   * @LogicalAuthorizationPermissions({
-   *   "get": {
-   *     "OR": {
-   *       "role": "ROLE_ADMIN",
-   *       "flag": "is_author"
-   *     }
-   *   },
-   *   "set": {
-   *     "role": "ROLE_ADMIN"
-   *   }
-   * })
-   */
   private $username;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="password", type="string", length=64)
-   */
   private $password;
 
-  /**
-   * @var string
-   * @LogicalAuthorizationPermissions({
-   *   "set": {
-   *     "no_bypass": true,
-   *     "flag": "is_author"
-   *   }
-   * })
-   */
   private $oldPassword;
 
-  /**
-   * @var array
-   *
-   * @ORM\Column(name="roles", type="json_array")
-   * @LogicalAuthorizationPermissions({
-   *   "get": {
-   *     "role": "ROLE_ADMIN"
-   *   },
-   *   "set": {
-   *     "AND": {
-   *       "role": "ROLE_ADMIN",
-   *       "flag": {
-   *         "NOT": "is_author"
-   *       }
-   *     }
-   *   }
-   * })
-   */
   private $roles;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="email", type="string", length=60)
-   */
   private $email;
 
-  /**
-   * @var bool
-   *
-   * @ORM\Column(name="bypassAccess", type="boolean")
-   */
   private $bypassAccess;
 
   public function __construct($username = '', $password = '', $roles = [], $email = '', $bypassAccess = false) {

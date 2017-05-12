@@ -39,20 +39,6 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(403, $response->getStatusCode());
   }
 
-  public function testRouteLoadEntityAllow() {
-    $testEntityDecorator = $this->testEntityRepositoryDecorator->create()->save();
-    $this->sendRequestAs('GET', '/test/load-test-entity/' . $testEntityDecorator->getId(), [], static::$admin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(200, $response->getStatusCode());
-  }
-
-  public function testRouteLoadEntityDisallow() {
-    $testEntityDecorator = $this->testEntityRepositoryDecorator->create()->save();
-    $this->sendRequestAs('GET', '/test/load-test-entity/' . $testEntityDecorator->getId(), [], static::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
-  }
-
   public function testYmlRouteAllow() {
     $this->sendRequestAs('GET', '/test/route-yml', [], static::$admin_user);
     $response = $this->client->getResponse();

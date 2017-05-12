@@ -1,9 +1,12 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
+    encoders:
+        Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser: plaintext
+
     providers:
-        in_memory:
-            memory: ~
+        custom:
+            id: custom_user_provider
 
     firewalls:
         default:
