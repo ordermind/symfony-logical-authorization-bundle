@@ -713,22 +713,6 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->assertSame('cache', $tree['fetch']);
   }
 
-  public function testRepositoryDecoratorCreate() {
-    $this->sendRequestAs('GET', '/test/repository-decorator-create', [], static::$admin_user);
-    $this->testModelOperations->setRepositoryDecorator($this->testEntityRepositoryDecorator);
-    $result = $this->testModelOperations->getMultipleModelResult();
-    $model = $result[0];
-    $this->assertSame($model->getAuthor()->getId(), static::$admin_user->getId());
-  }
-
-  public function testRepositoryDecoratorCreateWithParams() {
-    $modelDecorator = $this->testEntityWithParamsRepositoryDecorator->create('test1', 'test2', 'test3');
-    $this->assertSame('test1', $modelDecorator->getField1());
-    $this->assertSame('test2', $modelDecorator->getField2());
-    $this->assertSame('test3', $modelDecorator->getField3());
-    $this->assertNull($modelDecorator->getAuthor());
-  }
-
   /**
     * @expectedException InvalidArgumentException
     */

@@ -30,28 +30,6 @@ framework:
     #cache:
         #app: cache.adapter.null
 
-# Doctrine Configuration
-doctrine:
-    dbal:
-        driver:   pdo_mysql
-        host:     127.0.0.1
-        port:     3306
-        dbname:   logauth
-        user:     root
-        password: ""
-        charset:  UTF8
-
-    orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        mappings:
-            TestEntities:
-                type: annotation
-                dir: "%kernel.root_dir%/Fixtures/Entity"
-                is_bundle: false
-                prefix: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity
-                alias: TestEntities
-
 # LogicalAuthorization Configuration
 ordermind_logical_authorization:
   permissions:
