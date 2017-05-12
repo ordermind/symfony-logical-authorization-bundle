@@ -1,10 +1,10 @@
 test_routes:
-    resource: "@OrdermindLogicalAuthorizationBundle/Tests/Misc/Fixtures/Controller/DefaultController.php"
+    resource: "@OrdermindLogicalAuthorizationBundle/Tests/Fixtures/Controller/DefaultController.php"
     type:     annotation
     prefix:   /test
 
 xml_routes:
-    resource: "@OrdermindLogicalAuthorizationBundle/Tests/Misc/config/routing.xml"
+    resource: "@OrdermindLogicalAuthorizationBundle/Tests/config/routing.xml"
     type: xml
     prefix: /test
 

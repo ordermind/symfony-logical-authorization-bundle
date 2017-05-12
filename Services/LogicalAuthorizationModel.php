@@ -26,8 +26,6 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   }
 
   public function getAvailableActions($model, $model_actions, $field_actions, $user = null) {
-    $model = $this->helper->getRidOfDecorator($model);
-
     if(!is_array($model_actions)) {
       $this->helper->handleError('Error getting available actions for model: the model_actions parameter must be an array.', ['model' => $model, 'user' => $user, 'model_actions' => $model_actions, 'field_actions' => $field_actions]);
       return [];
@@ -62,12 +60,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * {@inheritdoc}
    */
   public function checkModelAccess($model, $action, $user = null) {
-    $model = $this->helper->getRidOfDecorator($model);
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->helper->getRidOfDecorator($user);
 
     if(!is_string($model) && !is_object($model)) {
       $this->helper->handleError('Error checking model access: the model parameter must be either a class string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
@@ -103,12 +99,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * {@inheritdoc}
    */
   public function checkFieldAccess($model, $field_name, $action, $user = null) {
-    $model = $this->helper->getRidOfDecorator($model);
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->helper->getRidOfDecorator($user);
 
     if(!is_string($model) && !is_object($model)) {
       $this->helper->handleError('Error checking field access: the model parameter must be either a class string or an object.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);

@@ -11,6 +11,7 @@ if (!file_exists($file))
 }
 
 $autoload = require $file;
+AnnotationRegistry::registerLoader(array($autoload, 'loadClass'));
 
 /*--------------CREATE DATABASE--------------*/
 

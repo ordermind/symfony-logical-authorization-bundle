@@ -2,7 +2,7 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
-class LogicalAuthorizationRoutesTest extends LogicalAuthorizationMiscBase {
+class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
   public function testRouteRoleAllow() {
     $this->sendRequestAs('GET', '/test/route-role', [], static::$admin_user);
     $response = $this->client->getResponse();

@@ -19,7 +19,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
-class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
+class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
 
   /*------------ Permission types ---------------*/
 
@@ -366,19 +366,6 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationMiscBase {
     $this->sendRequestAs('GET', '/test/get-current-user-id');
     $response = $this->client->getResponse();
     $this->assertSame('anon.', $response->getContent());
-  }
-
-  public function testHelperGetRidOfDecoratorWrongType() {
-    $user = new TestUser();
-    $this->assertSame($user, $this->helper->getRidOfDecorator($user));
-    $this->assertSame('hej', $this->helper->getRidOfDecorator('hej'));
-    $this->assertNull($this->helper->getRidOfDecorator(null));
-  }
-
-  public function testHelperGetRidOfDecorator() {
-    $user = new TestUser();
-    $modelDecorator = $this->testUserRepositoryDecorator->wrapModel($user);
-    $this->assertSame($user, $this->helper->getRidOfDecorator($modelDecorator));
   }
 
   /**

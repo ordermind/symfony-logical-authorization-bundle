@@ -26,7 +26,6 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
     }
-    $user = $this->helper->getRidOfDecorator($user);
 
     $routes = [];
     foreach($this->router->getRouteCollection()->getIterator() as $route_name => $route) {
@@ -54,7 +53,6 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
     }
-    $user = $this->helper->getRidOfDecorator($user);
 
     if(!is_string($route_name)) {
       $this->helper->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);

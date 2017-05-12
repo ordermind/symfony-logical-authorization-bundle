@@ -4,7 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\Decorator\ModelDecoratorInterface;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 
 class Helper implements HelperInterface {
@@ -32,15 +32,6 @@ class Helper implements HelperInterface {
       return $token->getUser();
     }
     return null;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRidOfDecorator($modelDecorator) {
-    if(!is_object($modelDecorator)) return $modelDecorator;
-    if(!($modelDecorator instanceof ModelDecoratorInterface)) return $modelDecorator;
-    return $modelDecorator->getModel();
   }
 
   /**
