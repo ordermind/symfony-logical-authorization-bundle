@@ -1,11 +1,13 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
+
+use Doctrine\ORM\Mapping as ORM;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
-class ErroneousEntity implements ModelInterface
+class TestModel implements ModelInterface
 {
 
     private $id;
@@ -33,7 +35,7 @@ class ErroneousEntity implements ModelInterface
      *
      * @param string $field1
      *
-     * @return ErroneousEntity
+     * @return TestModel
      */
     public function setField1($field1)
     {
@@ -57,7 +59,7 @@ class ErroneousEntity implements ModelInterface
      *
      * @param string $field2
      *
-     * @return ErroneousEntity
+     * @return TestModel
      */
     public function setField2($field2)
     {
@@ -81,7 +83,7 @@ class ErroneousEntity implements ModelInterface
      *
      * @param string $field3
      *
-     * @return ErroneousEntity
+     * @return TestModel
      */
     public function setField3($field3)
     {
@@ -120,7 +122,7 @@ class ErroneousEntity implements ModelInterface
      * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      */
     public function getAuthor() {
-        return 'hej';
+        return $this->author;
     }
 
 }

@@ -42,7 +42,7 @@ ordermind_logical_authorization:
         0: false
       ^/test/pattern-: true
     models:
-      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestEntity:
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModel:
         create: true
         read: false
         update: true

@@ -4,7 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 
 abstract class LogicalAuthorizationBase extends WebTestCase {
   protected static $superadmin_user;

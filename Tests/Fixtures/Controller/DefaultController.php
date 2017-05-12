@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestEntity;
-
 class DefaultController extends Controller {
 
   /**
@@ -108,25 +106,14 @@ class DefaultController extends Controller {
   }
 
   /**
-    * @Route("/get-current-user-id", name="get_current_user_id")
+    * @Route("/get-current-username", name="get_current_username")
     * @Method({"GET"})
     */
-  public function getCurrentUserIdAction(Request $request) {
+  public function getCurrentUsernameAction(Request $request) {
     $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
     if(is_null($user)) return new Response($user);
     if(is_string($user)) return new Response($user);
-    return new Response($user->getId());
-  }
-
-  /**
-   * @Route("/load-test-entity/{id}", name="load_test_entity", options={
-   * "logical_authorization_permissions": {
-   *   "role": "ROLE_ADMIN"
-   * }})
-   * @Method({"GET"})
-   */
-  public function loadTestEntityAction(Request $request, TestEntity $testEntity) {
-    return new Response(get_class($testEntity));
+    return new Response($user->getUsername());
   }
 
   /**
@@ -138,14 +125,5 @@ class DefaultController extends Controller {
     $operations->setRepositoryDecorator($this->get('repository_decorator.forbidden_entity'));
     $collection = $operations->getLazyLoadedModelResult();
     return new Response(count($collection));
-  }
-
-  /**
-   * @Route("/repository-decorator-create", name="test_repository_decorator_create")
-   * @Method({"GET"})
-   */
-  public function repositoryDecoratorCreateAction(Request $request) {
-    $modelDecorator = $this->get('repository_decorator.test_entity')->create()->save();
-    return new Response('');
   }
 }

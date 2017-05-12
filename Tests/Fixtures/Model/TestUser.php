@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;

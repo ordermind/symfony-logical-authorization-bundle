@@ -1,55 +1,21 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
-/**
- * TestEntity
- *
- * @ORM\Table(name="testentities")
- * @ORM\Entity(repositoryClass="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Repository\TestEntityRepository")
- */
-class TestEntity implements ModelInterface
+class ErroneousModel implements ModelInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field1", type="string", length=255)
-     */
     private $field1 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field2", type="string", length=255)
-     */
     private $field2 = '';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="field3", type="string", length=255)
-     */
     private $field3 = '';
 
-    /**
-     * @var \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
-     * @ORM\ManyToOne(targetEntity="Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Entity\TestUser")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     */
     protected $author;
 
     /**
@@ -67,7 +33,7 @@ class TestEntity implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestEntity
+     * @return ErroneousModel
      */
     public function setField1($field1)
     {
@@ -91,7 +57,7 @@ class TestEntity implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestEntity
+     * @return ErroneousModel
      */
     public function setField2($field2)
     {
@@ -115,7 +81,7 @@ class TestEntity implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestEntity
+     * @return ErroneousModel
      */
     public function setField3($field3)
     {
@@ -154,7 +120,7 @@ class TestEntity implements ModelInterface
      * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      */
     public function getAuthor() {
-        return $this->author;
+        return 'hej';
     }
 
 }
