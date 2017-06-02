@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
-class TestModel implements ModelInterface
+class TestModelBoolean implements ModelInterface
 {
 
     private $id;
@@ -35,7 +35,7 @@ class TestModel implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestModel
+     * @return TestModelBoolean
      */
     public function setField1($field1)
     {
@@ -59,7 +59,7 @@ class TestModel implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestModel
+     * @return TestModelBoolean
      */
     public function setField2($field2)
     {
@@ -83,7 +83,7 @@ class TestModel implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestModel
+     * @return TestModelBoolean
      */
     public function setField3($field3)
     {

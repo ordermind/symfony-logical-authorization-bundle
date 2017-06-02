@@ -42,7 +42,7 @@ ordermind_logical_authorization:
         0: false
       ^/test/pattern-: true
     models:
-      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModel:
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:
         create: true
         read: false
         update: true
@@ -51,3 +51,67 @@ ordermind_logical_authorization:
           field1:
             get: true
             set: false
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelHasAccountNoInterface:
+        create:
+          flag: has_account
+        read:
+          flag: has_account
+        update:
+          flag: has_account
+        delete:
+          flag: has_account
+        fields:
+          field1:
+            get:
+              flag: has_account
+            set:
+              flag: has_account
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelNoBypass:
+        create:
+          no_bypass: true
+          0: false
+        read:
+          no_bypass: true
+          0: false
+        update:
+          no_bypass: true
+          0: false
+        delete:
+          no_bypass: true
+          0: false
+        fields:
+          field1:
+            get:
+              no_bypass: true
+              0: false
+
+            set:
+              no_bypass: true
+              0: false
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelRoleAuthor:
+        create:
+          role: ROLE_ADMIN
+        read:
+          OR:
+            role: ROLE_ADMIN
+            flag: is_author
+        update:
+          OR:
+            role: ROLE_ADMIN
+            flag: is_author
+        delete:
+          OR:
+            role: ROLE_ADMIN
+            flag: is_author
+        fields:
+          field1:
+            get:
+              role: ROLE_ADMIN
+              flag: is_author
+            set:
+              role: ROLE_ADMIN
+              flag: is_author
+
+
+
+

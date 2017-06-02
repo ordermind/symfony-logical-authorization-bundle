@@ -36,6 +36,10 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     $this->setBypassAccess($bypassAccess);
   }
 
+  public function setId($id)
+  {
+    $this->id = $id;
+  }
 
   /**
    * Get id

@@ -13,7 +13,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousModel;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModel;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType;
@@ -56,18 +56,18 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $flag->checkFlag(['user' => $user]);
   }
 
-  public function testFlagBypassAccessAnonymousUserNo() {
+  public function testFlagBypassAccessAnonymousUserDisallow() {
     $flag = new BypassAccessFlag();
     $this->assertFalse($flag->checkFlag(['user' => 'anon.']));
   }
 
-  public function testFlagBypassAccessNo() {
+  public function testFlagBypassAccessDisallow() {
     $user = new TestUser();
     $flag = new BypassAccessFlag();
     $this->assertFalse($flag->checkFlag(['user' => $user]));
   }
 
-  public function testFlagBypassAccessYes() {
+  public function testFlagBypassAccessAllow() {
     $user = new TestUser();
     $user->setBypassAccess(true);
     $flag = new BypassAccessFlag();
@@ -90,12 +90,12 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $flag->checkFlag([]);
   }
 
-  public function testFlagHasAccountNo() {
+  public function testFlagHasAccountDisallow() {
     $flag = new HasAccountFlag();
     $this->assertFalse($flag->checkFlag(['user' => 'anon.']));
   }
 
-  public function testFlagHasAccountYes() {
+  public function testFlagHasAccountAllow() {
     $user = new TestUser();
     $flag = new HasAccountFlag();
     $this->assertTrue($flag->checkFlag(['user' => $user]));
@@ -159,22 +159,22 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $flag->checkFlag(['user' => $user, 'model' => $model]);
   }
 
-  public function testFlagIsAuthorModelAnonymousUserNo() {
-    $model = new TestModel();
+  public function testFlagIsAuthorModelAnonymousUserDisallow() {
+    $model = new TestModelBoolean();
     $flag = new IsAuthorFlag();
     $this->assertFalse($flag->checkFlag(['user' => 'anon.', 'model' => $model]));
   }
 
-  public function testFlagIsAuthorModelAnonymousAuthorNo() {
+  public function testFlagIsAuthorModelAnonymousAuthorDisallow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $flag = new IsAuthorFlag();
     $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => $model]));
   }
 
-  public function testFlagIsAuthorModelYes() {
+  public function testFlagIsAuthorModelAllow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $model->setAuthor($user);
     $flag = new IsAuthorFlag();
     $this->assertTrue($flag->checkFlag(['user' => $user, 'model' => $model]));
@@ -335,18 +335,18 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $role->checkPermission('ROLE_USER', ['user' => []]);
   }
 
-  public function testRoleAnonymousUserNo() {
+  public function testRoleAnonymousUserDisallow() {
     $role = new Role();
     $this->assertFalse($role->checkPermission('ROLE_USER', ['user' => 'anon.']));
   }
 
-  public function testRoleNo() {
+  public function testRoleDisallow() {
     $user = new TestUser();
     $role = new Role();
     $this->assertFalse($role->checkPermission('ROLE_ADMIN', ['user' => $user]));
   }
 
-  public function testRoleYes() {
+  public function testRoleAllow() {
     $user = new TestUser();
     $role = new Role();
     $this->assertTrue($role->checkPermission('ROLE_USER', ['user' => $user]));
@@ -384,7 +384,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->la->checkAccess(['test' => 'hej'], []);
   }
 
-  public function testCheckAccessNo() {
+  public function testCheckAccessDisallow() {
     $lpProxy = new LogicalPermissionsProxy();
     $type = new TestType();
     $lpProxy->addType($type);
@@ -393,7 +393,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertFalse($la->checkAccess(['test' => 'no'], []));
   }
 
-  public function testCheckAccessYes() {
+  public function testCheckAccessAllow() {
     $lpProxy = new LogicalPermissionsProxy();
     $type = new TestType();
     $lpProxy->addType($type);
@@ -403,7 +403,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
   }
 
   public function testGetAvailableActionsModelClass() {
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $available_actions = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
     foreach($available_actions as $key => $value) {
       if($key !== 'fields') {
@@ -420,7 +420,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
   }
 
   public function testGetAvailableActionsModelObject() {
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $available_actions_model = $this->laModel->getAvailableActions($model, ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
     $available_actions_class = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
     $this->assertSame($available_actions_model, $available_actions_class);
@@ -439,7 +439,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckModelAccessModelClassDoesntExist() {
     $user = new TestUser();
-    $this->laModel->checkModelAccess('TestModel', 'read', $user);
+    $this->laModel->checkModelAccess('TestModelBoolean', 'read', $user);
   }
 
   /**
@@ -447,7 +447,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckModelAccessWrongActionType() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkModelAccess($model, null, $user);
   }
 
@@ -456,7 +456,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckModelAccessEmptyAction() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkModelAccess($model, '', $user);
   }
 
@@ -464,12 +464,12 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
     */
   public function testCheckModelAccessWrongUserType() {
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkModelAccess($model, 'read', []);
   }
 
   public function testCheckModelAccessMissingUser() {
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkModelAccess($model, 'read'));
   }
 
@@ -479,27 +479,27 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertTrue($this->laModel->checkModelAccess($model, 'read', $user));
   }
 
-  public function testCheckModelAccessClassNo() {
+  public function testCheckModelAccessClassDisallow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'read', $user));
   }
 
-  public function testCheckModelAccessClassYes() {
+  public function testCheckModelAccessClassAllow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', $user));
   }
 
-  public function testCheckModelAccessObjectNo() {
+  public function testCheckModelAccessObjectDisallow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertFalse($this->laModel->checkModelAccess($model, 'read', $user));
   }
 
-  public function testCheckModelAccessObjectYes() {
+  public function testCheckModelAccessObjectAllow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkModelAccess($model, 'create', $user));
   }
 
@@ -516,7 +516,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessModelClassDoesntExist() {
     $user = new TestUser();
-    $this->laModel->checkFieldAccess('TestModel', null, null, $user);
+    $this->laModel->checkFieldAccess('TestModelBoolean', null, null, $user);
   }
 
   /**
@@ -524,7 +524,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessWrongFieldType() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkFieldAccess($model, null, null, $user);
   }
 
@@ -533,7 +533,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessEmptyField() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkFieldAccess($model, '', null, $user);
   }
 
@@ -542,7 +542,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessWrongActionType() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkFieldAccess($model, 'field1', null, $user);
   }
 
@@ -551,7 +551,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessEmptyAction() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkFieldAccess($model, 'field1', '', $user);
   }
 
@@ -559,12 +559,12 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
     */
   public function testCheckFieldAccessWrongUserType() {
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->laModel->checkFieldAccess($model, 'field1', 'get', []);
   }
 
   public function testCheckFieldAccessMissingUser() {
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'set'));
   }
 
@@ -576,25 +576,25 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
 
   public function testCheckFieldAccessMissingFieldPermissions() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'test', 'set', $user));
   }
 
   public function testCheckFieldAccessWrongAction() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'read', $user));
   }
 
-  public function testCheckFieldAccessNo() {
+  public function testCheckFieldAccessDisallow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'set', $user));
   }
 
-  public function testCheckFieldAccessYes() {
+  public function testCheckFieldAccessAllow() {
     $user = new TestUser();
-    $model = new TestModel();
+    $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', $user));
   }
 
@@ -645,11 +645,11 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertTrue($this->laRoute->checkRouteAccess('route_no_bypass'));
   }
 
-  public function testCheckRouteAccessNo() {
+  public function testCheckRouteAccessDisallow() {
     $this->assertFalse($this->laRoute->checkRouteAccess('route_no_bypass', 'anon.'));
   }
 
-  public function testCheckRouteAccessYes() {
+  public function testCheckRouteAccessAllow() {
     $this->assertTrue($this->laRoute->checkRouteAccess('route_allowed', 'anon.'));
   }
 
