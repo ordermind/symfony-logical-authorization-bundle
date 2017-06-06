@@ -1,9 +1,11 @@
 language: php
 php:
   - '5.5.9'
+  - '5.6'
+  - '7.0'
+  - 'nightly'
+  - 'hhvm'
 install: composer install
-before_script:
-  - mysql -e 'create database logauth;'
 script: phpunit -c ./phpunit.xml.dist
 notifications:
   email: false
