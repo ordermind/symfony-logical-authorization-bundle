@@ -9,10 +9,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testRouteRoleDisallow() {
     $this->sendRequestAs('GET', '/test/route-role', [], static::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testRouteBypassActionAllow() {
@@ -21,10 +22,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testRouteBypassActionDisallow() {
     $this->sendRequestAs('GET', '/test/route-no-bypass', [], static::$superadmin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testRouteHasAccountAllow() {
@@ -33,10 +35,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testRouteHasAccountDisallow() {
     $this->sendRequestAs('GET', '/test/route-has-account', []);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testYmlRouteAllow() {
@@ -45,10 +48,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testYmlRouteDisallow() {
     $this->sendRequestAs('GET', '/test/route-yml', [], static::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testXmlRouteAllow() {
@@ -57,10 +61,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testXmlRouteDisallow() {
     $this->sendRequestAs('GET', '/test/route-xml', [], static::$authenticated_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testRoutePatternAllow() {
@@ -69,10 +74,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testRoutePatternDeny() {
     $this->sendRequestAs('GET', '/test/route-forbidden', [], static::$superadmin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testRoutePatternOverriddenAllow() {
@@ -81,10 +87,11 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
   public function testRoutePatternOverriddenDeny() {
     $this->sendRequestAs('GET', '/test/pattern-forbidden', [], static::$superadmin_user);
-    $response = $this->client->getResponse();
-    $this->assertEquals(403, $response->getStatusCode());
   }
 
   public function testAvailableRoutesAnonymous() {
