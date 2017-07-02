@@ -32,7 +32,7 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
         $format = $input->getOption('format');
 
         if($format === 'yml') {
-          $output->write(Yaml::dump($tree));
+          $output->write(Yaml::dump($tree, 2, 4, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
         }
         elseif($format === 'json') {
           $output->write(json_encode($tree));
