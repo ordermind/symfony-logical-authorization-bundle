@@ -4,6 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -13,6 +14,13 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
     {
         $this->setName('ordermind-logical-authorization:dump-permission-tree');
         $this->setDescription('Outputs the whole permission tree.');
+        $this->addOption(
+            'format',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Select the output format. Available formats: yml, json',
+            'yml'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
