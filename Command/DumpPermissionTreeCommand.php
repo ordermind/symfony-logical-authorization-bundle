@@ -35,7 +35,7 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
           $output->write(Yaml::dump($tree));
         }
         elseif($format === 'json') {
-          $output->write(json_encode($tree, JSON_PRETTY_PRINT));
+          $output->write(json_encode($tree));
         }
         else {
           $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');
