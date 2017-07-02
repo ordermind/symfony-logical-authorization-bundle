@@ -20,6 +20,6 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
         $container = $this->getContainer();
 
         $tree = $container->get('ordermind_logical_authorization.service.permission_tree_builder')->getTree();
-        $output->write(json_encode($tree, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        $output->write(json_encode($tree, JSON_PRETTY_PRINT));
     }
 }
