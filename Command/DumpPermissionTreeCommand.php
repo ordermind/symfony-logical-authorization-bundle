@@ -8,6 +8,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Symfony\Component\Yaml\Yaml;
+
 class DumpPermissionTreeCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -26,8 +28,17 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-
         $tree = $container->get('ordermind_logical_authorization.service.permission_tree_builder')->getTree();
-        $output->write(json_encode($tree, JSON_PRETTY_PRINT));
+        $format = $input->getOption('format');
+
+        if($format === 'yml') {
+          $output->write(Yaml::dump($tree));
+        }
+        elseif($format === 'json') {
+          $output->write(json_encode($tree, JSON_PRETTY_PRINT));
+        }
+        else {
+          $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');
+        }
     }
 }
