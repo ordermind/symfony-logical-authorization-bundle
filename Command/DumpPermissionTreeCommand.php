@@ -14,8 +14,8 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('ordermind-logical-authorization:dump-permission-tree');
-        $this->setDescription('Outputs the whole permission tree.');
+        $this->setName('logauth:dump-permission-tree');
+        $this->setDescription('Logical Authorization: Outputs the whole permission tree.');
         $this->addOption(
             'format',
             null,
