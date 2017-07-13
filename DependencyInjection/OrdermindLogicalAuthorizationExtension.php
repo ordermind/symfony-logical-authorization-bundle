@@ -19,15 +19,6 @@ class OrdermindLogicalAuthorizationExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $processed_config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter('ordermind_logical_authorization.config', $processed_config);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-
-        if ($container->getParameter('kernel.debug')) {
-            $loader->load('services.debug.yml');
-        }
     }
 }

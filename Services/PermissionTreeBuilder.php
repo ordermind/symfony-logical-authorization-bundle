@@ -66,7 +66,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
   }
 
   protected function loadTreeFromCache() {
-    $cachedTree = $this->cache->getItem('ordermind.logical_authorization.permissions');
+    $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
     if($cachedTree->isHit()) {
       return $cachedTree->get();
     }
@@ -75,14 +75,14 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
   }
 
   protected function saveTreeToCache(array $tree) {
-    $cachedTree = $this->cache->getItem('ordermind.logical_authorization.permissions');
+    $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
     $cachedTree->set($tree);
     $this->cache->save($cachedTree);
   }
 
   protected function loadTreeFromEvent() {
     $event = new AddPermissionsEvent($this->permissionKeys);
-    $this->dispatcher->dispatch('logical_authorization.add_permissions', $event);
+    $this->dispatcher->dispatch('logauth.add_permissions', $event);
 
     return $event->getTree();
   }

@@ -81,7 +81,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface {
       $class = get_class($e);
       $message = $e->getMessage();
       $exploded = explode('Please use', $message);
-      $new_message = $exploded[0] . 'Please use the \'ordermind_logical_authorization.tag.permission_type\' service tag to register a permission type.';
+      $new_message = $exploded[0] . 'Please use the \'logauth.tag.permission_type\' service tag to register a permission type.';
       throw new $class($new_message);
     }
   }

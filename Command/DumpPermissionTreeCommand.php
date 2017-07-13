@@ -28,7 +28,7 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-        $tree = $container->get('ordermind_logical_authorization.service.permission_tree_builder')->getTree();
+        $tree = $container->get('logauth.service.permission_tree_builder')->getTree();
         $format = $input->getOption('format');
 
         if($format === 'yml') {

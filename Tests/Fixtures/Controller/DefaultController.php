@@ -13,7 +13,7 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-role", name="route_role", options={
-    * "logical_authorization_permissions": {
+    * "logauth_permissions": {
     *   "role": "ROLE_ADMIN"
     * }})
     *
@@ -25,7 +25,7 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-no-bypass", name="route_no_bypass", options={
-    * "logical_authorization_permissions": {
+    * "logauth_permissions": {
     *   "no_bypass": true,
     *   FALSE
     * }})
@@ -38,7 +38,7 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-has-account", name="route_has_account", options={
-    * "logical_authorization_permissions": {
+    * "logauth_permissions": {
     *   "flag": "has_account"
     * }})
     *
@@ -57,7 +57,7 @@ class DefaultController extends Controller {
 
   /**
    * @Route("/pattern-forbidden", name="pattern_forbidden", options={
-   * "logical_authorization_permissions": {
+   * "logauth_permissions": {
    *   "no_bypass": true,
    *   FALSE
    * }})
@@ -68,7 +68,7 @@ class DefaultController extends Controller {
 
   /**
    * @Route("/route-allowed", name="route_allowed", options={
-   * "logical_authorization_permissions": {
+   * "logauth_permissions": {
    *   TRUE
    * }})
    */
@@ -88,7 +88,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countAvailableRoutesAction(Request $request) {
-    $laRoute = $this->get('ordermind_logical_authorization.service.logical_authorization_route');
+    $laRoute = $this->get('logauth.service.logauth_route');
     $result = $laRoute->getAvailableRoutes();
     if(empty($result['routes'])) return new Response(0);
     return new Response(count($result['routes']));
@@ -99,7 +99,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countAvailableRoutePatternsAction(Request $request) {
-    $laRoute = $this->get('ordermind_logical_authorization.service.logical_authorization_route');
+    $laRoute = $this->get('logauth.service.logauth_route');
     $result = $laRoute->getAvailableRoutes();
     if(empty($result['route_patterns'])) return new Response(0);
     return new Response(count($result['route_patterns']));
@@ -110,7 +110,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function getCurrentUsernameAction(Request $request) {
-    $user = $this->get('ordermind_logical_authorization.service.helper')->getCurrentUser();
+    $user = $this->get('logauth.service.helper')->getCurrentUser();
     if(is_null($user)) return new Response($user);
     if(is_string($user)) return new Response($user);
     return new Response($user->getUsername());

@@ -6,6 +6,6 @@
 
     <route id="xml_route" path="/route-xml">
         <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController::routeXmlAction</default>
-        <option key="logical_authorization_permissions">{"role": "ROLE_ADMIN"}</option>
+        <option key="logauth_permissions">{"role": "ROLE_ADMIN"}</option>
     </route>
 </routes>

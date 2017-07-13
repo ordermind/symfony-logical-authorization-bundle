@@ -31,7 +31,7 @@ framework:
         #app: cache.adapter.null
 
 # LogicalAuthorization Configuration
-ordermind_logical_authorization:
+logauth:
   permissions:
     routes:
       route_override_permissions:

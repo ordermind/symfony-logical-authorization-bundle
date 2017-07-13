@@ -5,6 +5,7 @@ namespace Ordermind\LogicalAuthorizationBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+use Ordermind\LogicalAuthorizationBundle\DependencyInjection\LogauthExtension;
 use Ordermind\LogicalAuthorizationBundle\DependencyInjection\Compiler\FlagRegistrationPass;
 use Ordermind\LogicalAuthorizationBundle\DependencyInjection\Compiler\PermissionTypeRegistrationPass;
 
@@ -14,5 +15,6 @@ class OrdermindLogicalAuthorizationBundle extends Bundle
     {
         $container->addCompilerPass(new PermissionTypeRegistrationPass());
         $container->addCompilerPass(new FlagRegistrationPass());
+        $container->registerExtension(new LogauthExtension());
     }
 }

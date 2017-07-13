@@ -2,77 +2,77 @@ services:
 
   # Core services
 
-  ordermind_logical_authorization.cache_warmer.permissions:
+  logauth.cache_warmer.permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\PermissionsCacheWarmer
-    arguments: ['@ordermind_logical_authorization.service.permission_tree_builder']
+    arguments: ['@logauth.service.permission_tree_builder']
     tags:
       - {name: kernel.cache_warmer}
     public: false
 
-  ordermind_logical_authorization.event_listener.route_authorization:
+  logauth.event_listener.route_authorization:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\RouteAuthorizationListener
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization_route']
+    arguments: ['@logauth.service.logauth_route']
     tags:
       - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
 
-  ordermind_logical_authorization.event_listener.add_route_permissions:
+  logauth.event_listener.add_route_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
     arguments: ['@router']
     tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions}
+      - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions}
 
-  ordermind_logical_authorization.event_listener.add_app_config_permissions:
+  logauth.event_listener.add_app_config_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
-    arguments: ['%ordermind_logical_authorization.config%']
+    arguments: ['%logauth.config%']
     tags:
-      - {name: kernel.event_listener, event: logical_authorization.add_permissions, method: onAddPermissions, priority: -250}
+      - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions, priority: -250}
 
-  ordermind_logical_authorization.service.logical_permissions_proxy:
+  logauth.service.logical_permissions_proxy:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
 
-  ordermind_logical_authorization.service.helper:
+  logauth.service.helper:
     class: Ordermind\LogicalAuthorizationBundle\Services\Helper
     arguments: ['@security.token_storage', '@?logger']
 
-  ordermind_logical_authorization.service.permission_tree_builder:
+  logauth.service.permission_tree_builder:
     class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
-    arguments: ['@ordermind_logical_authorization.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
+    arguments: ['@logauth.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
 
-  ordermind_logical_authorization.service.logical_authorization_route:
+  logauth.service.logauth_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_builder', '@router', '@ordermind_logical_authorization.service.helper']
+    arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper']
 
-  ordermind_logical_authorization.service.logical_authorization_model:
+  logauth.service.logauth_model:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
-    arguments: ['@ordermind_logical_authorization.service.logical_authorization', '@ordermind_logical_authorization.service.permission_tree_builder', '@ordermind_logical_authorization.service.helper']
+    arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper']
 
-  ordermind_logical_authorization.service.logical_authorization:
+  logauth.service.logauth:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
-    arguments: ['@ordermind_logical_authorization.service.logical_permissions_proxy', '@ordermind_logical_authorization.service.helper']
+    arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper']
 
   # Permission type handlers
 
-  ordermind_logical_authorization.permission_type.flag:
+  logauth.permission_type.flag:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager
     tags:
-      - {name: ordermind_logical_authorization.tag.permission_type}
+      - {name: logauth.tag.permission_type}
 
-  ordermind_logical_authorization.permission_type.flag.bypass_access:
+  logauth.permission_type.flag.bypass_access:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess
     tags:
-      - {name: ordermind_logical_authorization.tag.permission_type.flag}
+      - {name: logauth.tag.permission_type.flag}
 
-  ordermind_logical_authorization.permission_type.flag.has_account:
+  logauth.permission_type.flag.has_account:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount
     tags:
-      - {name: ordermind_logical_authorization.tag.permission_type.flag}
+      - {name: logauth.tag.permission_type.flag}
 
-  ordermind_logical_authorization.permission_type.flag.is_author:
+  logauth.permission_type.flag.is_author:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor
     tags:
-      - {name: ordermind_logical_authorization.tag.permission_type.flag}
+      - {name: logauth.tag.permission_type.flag}
 
-  ordermind_logical_authorization.permission_type.role:
+  logauth.permission_type.role:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role
     tags:
-      - {name: ordermind_logical_authorization.tag.permission_type}
+      - {name: logauth.tag.permission_type}

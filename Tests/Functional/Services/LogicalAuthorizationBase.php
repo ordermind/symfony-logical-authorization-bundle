@@ -30,11 +30,11 @@ abstract class LogicalAuthorizationBase extends WebTestCase {
     $container = $kernel->getContainer();
 
     $this->client = static::createClient();
-    $this->la = $container->get('ordermind_logical_authorization.service.logical_authorization');
-    $this->laModel = $container->get('ordermind_logical_authorization.service.logical_authorization_model');
-    $this->laRoute = $container->get('ordermind_logical_authorization.service.logical_authorization_route');
-    $this->helper = $container->get('ordermind_logical_authorization.service.helper');
-    $this->treeBuilder = $container->get('ordermind_logical_authorization.service.permission_tree_builder');
+    $this->la = $container->get('logauth.service.logauth');
+    $this->laModel = $container->get('logauth.service.logauth_model');
+    $this->laRoute = $container->get('logauth.service.logauth_route');
+    $this->helper = $container->get('logauth.service.helper');
+    $this->treeBuilder = $container->get('logauth.service.permission_tree_builder');
 
     $this->addUsers();
   }
