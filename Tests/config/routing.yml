@@ -12,5 +12,5 @@ yml_route:
     path:     /test/route-yml
     defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlAction }
     options:
-        logauth_permissions:
+        logauth:
             role: ROLE_ADMIN

@@ -13,7 +13,7 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-role", name="route_role", options={
-    * "logauth_permissions": {
+    * "logauth": {
     *   "role": "ROLE_ADMIN"
     * }})
     *
@@ -25,7 +25,7 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-no-bypass", name="route_no_bypass", options={
-    * "logauth_permissions": {
+    * "logauth": {
     *   "no_bypass": true,
     *   FALSE
     * }})
@@ -38,7 +38,7 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-has-account", name="route_has_account", options={
-    * "logauth_permissions": {
+    * "logauth": {
     *   "flag": "has_account"
     * }})
     *
@@ -57,7 +57,7 @@ class DefaultController extends Controller {
 
   /**
    * @Route("/pattern-forbidden", name="pattern_forbidden", options={
-   * "logauth_permissions": {
+   * "logauth": {
    *   "no_bypass": true,
    *   FALSE
    * }})
@@ -68,7 +68,7 @@ class DefaultController extends Controller {
 
   /**
    * @Route("/route-allowed", name="route_allowed", options={
-   * "logauth_permissions": {
+   * "logauth": {
    *   TRUE
    * }})
    */

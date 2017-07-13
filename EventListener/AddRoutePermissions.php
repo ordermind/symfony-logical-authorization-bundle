@@ -18,15 +18,15 @@ class AddRoutePermissions {
     $permissionTree = ['routes' => []];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       $options = $route->getOptions();
-      if(!empty($options['logauth_permissions'])) {
-        if(is_string($options['logauth_permissions'])) { //Support for json in routing.xml
-          $options['logauth_permissions'] = json_decode($options['logauth_permissions'], true);
+      if(!empty($options['logauth'])) {
+        if(is_string($options['logauth'])) { //Support for json in routing.xml
+          $options['logauth'] = json_decode($options['logauth'], true);
         }
-        if(is_null($options['logauth_permissions'])) {
-          $options['logauth_permissions'] = FALSE;
+        if(is_null($options['logauth'])) {
+          $options['logauth'] = FALSE;
         }
 
-        $permissionTree['routes'][$name] = $options['logauth_permissions'];
+        $permissionTree['routes'][$name] = $options['logauth'];
       }
     }
     $event->insertTree($permissionTree);
