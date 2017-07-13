@@ -11,6 +11,7 @@ framework:
     secret:          TestSecret
     test: ~
     router:
+        type: logauth_yml
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
