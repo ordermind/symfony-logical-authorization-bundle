@@ -3,5 +3,5 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\DataCollector\TreeCollector
     arguments: ['@ordermind_logical_authorization.service.permission_tree_builder']
     tags:
-      - {name: data_collector, template: data_collector/tree_collector.html.twig, id: logauth.tree_collector}
+      - {name: data_collector, template: @OrdermindLogicalAuthorizationBundle/data_collector/tree_collector.html.twig, id: logauth.tree_collector}
     public: false
