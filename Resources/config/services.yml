@@ -50,6 +50,12 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
     arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper']
 
+  logauth.routing.yml:
+    class: Ordermind\LogicalAuthorizationBundle\Routing\YamlLoader
+    arguments: ['@file_locator']
+    tags:
+      - {name: routing.loader}
+
   # Permission type handlers
 
   logauth.permission_type.flag:
