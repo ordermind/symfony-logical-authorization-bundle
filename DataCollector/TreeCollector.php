@@ -5,10 +5,11 @@ namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 
-class TreeCollector extends DataCollector {
+class TreeCollector extends DataCollector implements LateDataCollectorInterface {
   protected $treeBuilder;
 
   public function __construct(PermissionTreeBuilderInterface $treeBuilder) {
@@ -20,6 +21,17 @@ class TreeCollector extends DataCollector {
   }
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
-    $this->data = $this->treeBuilder->getTree();
+    $this->data = array(
+      'tree' => $this->treeBuilder->getTree(),
+    );
+  }
+
+  public function lateCollect()
+  {
+    $this->data = $this->cloneVar($this->data);
+  }
+
+  public function getPermissionTree() {
+    return $this->data['tree'];
   }
 }
