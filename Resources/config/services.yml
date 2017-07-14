@@ -71,6 +71,13 @@ services:
       - {name: routing.loader}
     public: false
 
+  logauth.routing.annotation_dir_loader:
+    class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationDirectoryLoader
+    arguments: ['@file_locator', '@logauth.routing.annotation_class_loader']
+    tags:
+      - {name: routing.loader}
+    public: false
+
   logauth.routing.annotation_class_loader:
     class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationClassLoader
     arguments: ['@annotation_reader']

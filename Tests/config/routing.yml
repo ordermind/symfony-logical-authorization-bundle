@@ -3,6 +3,11 @@ test_routes:
     type:     logauth_annotation
     prefix:   /test
 
+test_routes_dir:
+    resource: "@OrdermindLogicalAuthorizationBundle/Tests/Fixtures/ControllerDir/"
+    type:     logauth_annotation
+    prefix:   /test
+
 xml_routes:
     resource: "@OrdermindLogicalAuthorizationBundle/Tests/config/routing.xml"
     type: logauth_xml
