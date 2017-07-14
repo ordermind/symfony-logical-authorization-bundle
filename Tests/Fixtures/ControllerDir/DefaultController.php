@@ -25,6 +25,17 @@ class DefaultController extends Controller {
   }
 
   /**
+   * @Route("/multiple-route-1", name="multiple_route_1")
+   * @Route("/multiple-route-2")
+   * @Permissions({
+   *  "role": "ROLE_ADMIN"
+   * })
+   */
+  public function multipleRouteAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
    * @Route("/pattern-allowed", name="pattern_allowed")
    */
   public function patternAllowedAction(Request $request) {

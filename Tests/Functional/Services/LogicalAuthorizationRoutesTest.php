@@ -42,6 +42,28 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->sendRequestAs('GET', '/test/route-has-account', []);
   }
 
+  public function testMultipleRoute1Allow() {
+    $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$admin_user);
+  }
+
+  public function testMultipleRoute2Allow() {
+    $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$admin_user);
+  }
+
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
+  public function testMultipleRoute1Disallow() {
+    $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$authenticated_user);
+  }
+
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
+  public function testMultipleRoute2Disallow() {
+    $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$authenticated_user);
+  }
+
   public function testYmlRouteAllow() {
     $this->sendRequestAs('GET', '/test/route-yml', [], static::$admin_user);
     $response = $this->client->getResponse();
