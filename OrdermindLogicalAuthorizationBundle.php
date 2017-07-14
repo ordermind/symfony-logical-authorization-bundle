@@ -15,6 +15,10 @@ class OrdermindLogicalAuthorizationBundle extends Bundle
     {
         $container->addCompilerPass(new PermissionTypeRegistrationPass());
         $container->addCompilerPass(new FlagRegistrationPass());
-        $container->registerExtension(new LogAuthExtension());
+    }
+
+    public function getContainerExtension()
+    {
+        return new LogAuthExtension();
     }
 }
