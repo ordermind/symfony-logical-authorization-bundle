@@ -1,6 +1,6 @@
 test_routes:
     resource: "@OrdermindLogicalAuthorizationBundle/Tests/Fixtures/Controller/DefaultController.php"
-    type:     annotation
+    type:     logauth_annotation
     prefix:   /test
 
 xml_routes:

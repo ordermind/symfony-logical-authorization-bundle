@@ -28,8 +28,8 @@ framework:
     fragments:       ~
     http_method_override: true
     assets: ~
-    cache:
-        app: cache.adapter.null
+    #cache:
+        #app: cache.adapter.null
 
 # LogicalAuthorization Configuration
 logauth:

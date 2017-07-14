@@ -20,10 +20,10 @@ class AddRoutePermissions {
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
       if(!($route instanceof RouteInterface)) continue;
 
-      $logauth = $route->getLogAuth();
-      if(empty($logauth)) continue;
+      $permissions = $route->getPermissions();
+      if(empty($permissions)) continue;
 
-      $permissionTree['routes'][$name] = $logauth;
+      $permissionTree['routes'][$name] = $permissions;
     }
     $event->insertTree($permissionTree);
   }

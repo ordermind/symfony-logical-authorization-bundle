@@ -3,6 +3,6 @@
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
 interface RouteInterface {
-  public function setLogAuth($logauth);
-  public function getLogAuth();
+  public function setPermissions($permissions);
+  public function getPermissions();
 }

@@ -14,11 +14,11 @@ class YamlLoader extends YamlFileLoader {
   }
 
   public function load($file, $type = null) {
-    return parent::load($file, 'yml');
+    return parent::load($file, 'yaml');
   }
 
   public function supports($resource, $type = null) {
-    return 'logauth_yml' === $type || 'logauth_yaml' === $type;
+    return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), true) && ('logauth_yml' === $type || 'logauth_yaml' === $type);
   }
 
   protected function parseRoute(RouteCollection $collection, $name, array $config, $path) {

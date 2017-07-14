@@ -50,9 +50,9 @@ class Route extends RouteBase implements RouteInterface {
     */
   private $condition = '';
 
-  private $logauth;
+  private $permissions;
 
-  public function __construct($path, array $defaults = array(), array $requirements = array(), array $options = array(), $host = '', $schemes = array(), $methods = array(), $condition = '', $logauth = null) {
+  public function __construct($path, array $defaults = array(), array $requirements = array(), array $options = array(), $host = '', $schemes = array(), $methods = array(), $condition = '', $permissions = null) {
     $this->setPath($path);
     $this->setDefaults($defaults);
     $this->setRequirements($requirements);
@@ -61,7 +61,7 @@ class Route extends RouteBase implements RouteInterface {
     $this->setSchemes($schemes);
     $this->setMethods($methods);
     $this->setCondition($condition);
-    $this->setLogAuth($logauth);
+    $this->setPermissions($permissions);
   }
 
   public function serialize() {
@@ -75,7 +75,7 @@ class Route extends RouteBase implements RouteInterface {
       'methods' => $this->methods,
       'condition' => $this->condition,
       'compiled' => $this->compiled,
-      'logauth' => $this->logauth,
+      'permissions' => $this->permissions,
     ));
   }
 
@@ -95,16 +95,16 @@ class Route extends RouteBase implements RouteInterface {
     if (isset($data['compiled'])) {
       $this->compiled = $data['compiled'];
     }
-    if (isset($data['logauth'])) {
-      $this->logauth = $data['logauth'];
+    if (isset($data['permissions'])) {
+      $this->permissions = $data['permissions'];
     }
   }
 
-  public function setLogAuth($logauth) {
-    $this->logauth = $logauth;
+  public function setPermissions($permissions) {
+    $this->permissions = $permissions;
   }
 
-  public function getLogAuth() {
-    return $this->logauth;
+  public function getPermissions() {
+    return $this->permissions;
   }
 }

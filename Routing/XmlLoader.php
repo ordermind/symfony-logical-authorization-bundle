@@ -78,7 +78,7 @@ class XmlLoader extends FileLoader {
      */
     public function supports($resource, $type = null)
     {
-        return 'logauth_xml' === $type;
+        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && 'logauth_xml' === $type;
     }
 
     /**

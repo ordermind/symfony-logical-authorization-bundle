@@ -50,17 +50,30 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
     arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper']
 
-  logauth.routing.yml:
+  logauth.routing.yml_file_loader:
     class: Ordermind\LogicalAuthorizationBundle\Routing\YamlLoader
     arguments: ['@file_locator']
     tags:
       - {name: routing.loader}
+    public: false
 
-  logauth.routing.xml:
+  logauth.routing.xml_file_loader:
     class: Ordermind\LogicalAuthorizationBundle\Routing\XmlLoader
     arguments: ['@file_locator']
     tags:
       - {name: routing.loader}
+    public: false
+
+  logauth.routing.annotation_file_loader:
+    class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationFileLoader
+    arguments: ['@file_locator', '@logauth.routing.annotation_class_loader']
+    tags:
+      - {name: routing.loader}
+    public: false
+
+  logauth.routing.annotation_class_loader:
+    class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationClassLoader
+    arguments: ['@annotation_reader']
 
   # Permission type handlers
 
