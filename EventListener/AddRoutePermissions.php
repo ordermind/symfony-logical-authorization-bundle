@@ -6,6 +6,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Config\Loader\FileLoader;
 
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
+use Ordermind\LogicalAuthorizationBundle\Routing\RouteInterface;
 
 class AddRoutePermissions {
   protected $router;
@@ -17,17 +18,12 @@ class AddRoutePermissions {
   public function onAddPermissions(AddPermissionsEvent $event) {
     $permissionTree = ['routes' => []];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {
-      $options = $route->getOptions();
-      if(!empty($options['logauth'])) {
-        if(is_string($options['logauth'])) { //Support for json in routing.xml
-          $options['logauth'] = json_decode($options['logauth'], true);
-        }
-        if(is_null($options['logauth'])) {
-          $options['logauth'] = FALSE;
-        }
+      if(!($route instanceof RouteInterface)) continue;
 
-        $permissionTree['routes'][$name] = $options['logauth'];
-      }
+      $logauth = $route->getLogAuth();
+      if(empty($logauth)) continue;
+
+      $permissionTree['routes'][$name] = $logauth;
     }
     $event->insertTree($permissionTree);
   }

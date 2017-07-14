@@ -56,6 +56,12 @@ services:
     tags:
       - {name: routing.loader}
 
+  logauth.routing.xml:
+    class: Ordermind\LogicalAuthorizationBundle\Routing\XmlLoader
+    arguments: ['@file_locator']
+    tags:
+      - {name: routing.loader}
+
   # Permission type handlers
 
   logauth.permission_type.flag:
