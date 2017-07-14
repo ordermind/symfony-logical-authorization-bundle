@@ -30,7 +30,7 @@
       <xsd:element name="requirement" type="element" />
       <xsd:element name="option" type="element" />
       <xsd:element name="condition" type="xsd:string" />
-      <xsd:element name="logauth" type="xsd:anyType" />
+      <xsd:element name="permissions" type="xsd:anyType" />
     </xsd:choice>
   </xsd:group>
 

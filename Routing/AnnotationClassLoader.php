@@ -6,14 +6,14 @@ use Symfony\Component\Routing\Route as RouteBase;
 use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
 
 use Ordermind\LogicalAuthorizationBundle\Routing\Route;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\LogAuth;
+use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
 class AnnotationClassLoader extends AnnotatedRouteControllerLoader {
     protected function configureRoute(RouteBase $route, \ReflectionClass $class, \ReflectionMethod $method, $annot)
     {
         parent::configureRoute($route, $class, $method, $annot);
         foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
-            if ($configuration instanceof LogAuth) {
+            if ($configuration instanceof Permissions) {
                 $route->setPermissions($configuration->getPermissions());
             }
         }

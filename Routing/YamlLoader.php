@@ -9,7 +9,7 @@ use Ordermind\LogicalAuthorizationBundle\Routing\Route;
 
 class YamlLoader extends YamlFileLoader {
   protected function validate($config, $name, $path) {
-    unset($config['logauth']);
+    unset($config['permissions']);
     parent::validate($config, $name, $path);
   }
 
@@ -29,9 +29,9 @@ class YamlLoader extends YamlFileLoader {
     $schemes = isset($config['schemes']) ? $config['schemes'] : array();
     $methods = isset($config['methods']) ? $config['methods'] : array();
     $condition = isset($config['condition']) ? $config['condition'] : null;
-    $logauth = isset($config['logauth']) ? $config['logauth'] : null;
+    $permissions = isset($config['permissions']) ? $config['permissions'] : null;
 
-    $route = new Route($config['path'], $defaults, $requirements, $options, $host, $schemes, $methods, $condition, $logauth);
+    $route = new Route($config['path'], $defaults, $requirements, $options, $host, $schemes, $methods, $condition, $permissions);
 
     $collection->add($name, $route);
   }

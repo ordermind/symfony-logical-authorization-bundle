@@ -21,7 +21,7 @@ class AddRoutePermissions {
       if(!($route instanceof RouteInterface)) continue;
 
       $permissions = $route->getPermissions();
-      if(empty($permissions)) continue;
+      if(is_null($permissions)) continue;
 
       $permissionTree['routes'][$name] = $permissions;
     }

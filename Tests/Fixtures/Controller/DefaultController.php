@@ -9,17 +9,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\LogAuth;
+use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
 class DefaultController extends Controller {
 
   /**
     * @Route("/route-role", name="route_role")
-    * @LogAuth({
+    * @Method({"GET"})
+    * @Permissions({
     *   "role": "ROLE_ADMIN"
     * })
-    *
-    * @Method({"GET"})
     */
   public function routeRoleAction(Request $request) {
     return new Response('');
@@ -27,12 +26,11 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-no-bypass", name="route_no_bypass")
-    * @LogAuth({
+    * @Method({"GET"})
+    * @Permissions({
     *   "no_bypass": true,
     *   FALSE
     * })
-    *
-    * @Method({"GET"})
     */
   public function routeNoBypassAction(Request $request) {
     return new Response('');
@@ -40,11 +38,10 @@ class DefaultController extends Controller {
 
   /**
     * @Route("/route-has-account", name="route_has_account")
-    * @LogAuth({
+    * @Method({"GET"})
+    * @Permissions({
     *   "flag": "has_account"
     * })
-    *
-    * @Method({"GET"})
     */
   public function routeHasAccountAction(Request $request) {
     return new Response('');
@@ -59,7 +56,7 @@ class DefaultController extends Controller {
 
   /**
    * @Route("/pattern-forbidden", name="pattern_forbidden")
-   * @LogAuth({
+   * @Permissions({
    *   "no_bypass": true,
    *   FALSE
    * })
@@ -70,7 +67,7 @@ class DefaultController extends Controller {
 
   /**
    * @Route("/route-allowed", name="route_allowed")
-   * @LogAuth({
+   * @Permissions({
    *   TRUE
    * })
    */

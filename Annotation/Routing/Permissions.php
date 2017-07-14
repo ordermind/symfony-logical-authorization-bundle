@@ -5,7 +5,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Annotation\Routing;
 /**
  * @Annotation
  */
-class LogAuth {
+class Permissions {
   protected $permissions;
 
   public function __construct(array $data) {

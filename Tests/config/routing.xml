@@ -6,8 +6,8 @@
 
     <route id="xml_route" path="/route-xml">
         <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController::routeXmlAction</default>
-        <logauth>
+        <permissions>
             <role>ROLE_ADMIN</role>
-        </logauth>
+        </permissions>
     </route>
 </routes>

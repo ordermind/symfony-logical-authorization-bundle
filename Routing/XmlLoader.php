@@ -99,9 +99,9 @@ class XmlLoader extends FileLoader {
         $schemes = preg_split('/[\s,\|]++/', $node->getAttribute('schemes'), -1, PREG_SPLIT_NO_EMPTY);
         $methods = preg_split('/[\s,\|]++/', $node->getAttribute('methods'), -1, PREG_SPLIT_NO_EMPTY);
 
-        list($defaults, $requirements, $options, $condition, $logauth) = $this->parseConfigs($node, $path);
+        list($defaults, $requirements, $options, $condition, $permissions) = $this->parseConfigs($node, $path);
 
-        $route = new Route($node->getAttribute('path'), $defaults, $requirements, $options, $node->getAttribute('host'), $schemes, $methods, $condition, $logauth);
+        $route = new Route($node->getAttribute('path'), $defaults, $requirements, $options, $node->getAttribute('host'), $schemes, $methods, $condition, $permissions);
         $collection->add($id, $route);
     }
 
@@ -185,7 +185,7 @@ class XmlLoader extends FileLoader {
         $requirements = array();
         $options = array();
         $condition = null;
-        $logauth = null;
+        $permissions = null;
 
         foreach ($node->getElementsByTagNameNS(self::NAMESPACE_URI, '*') as $n) {
             if ($node !== $n->parentNode) {
@@ -210,16 +210,16 @@ class XmlLoader extends FileLoader {
                 case 'condition':
                     $condition = trim($n->textContent);
                     break;
-                case 'logauth':
+                case 'permissions':
                     $simplexml = simplexml_import_dom($n);
-                    $logauth = json_decode(json_encode($simplexml), true);
+                    $permissions = json_decode(json_encode($simplexml), true);
                     break;
                 default:
                     throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "default", "requirement" or "option".', $n->localName, $path));
             }
         }
 
-        return array($defaults, $requirements, $options, $condition, $logauth);
+        return array($defaults, $requirements, $options, $condition, $permissions);
     }
 
     /**
