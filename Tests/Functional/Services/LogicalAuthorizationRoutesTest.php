@@ -55,6 +55,19 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->sendRequestAs('GET', '/test/route-yml', [], static::$authenticated_user);
   }
 
+  public function testYmlRouteBoolAllow() {
+    $this->sendRequestAs('GET', '/test/route-yml-allowed', []);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
+  public function testYmlRouteBoolDisallow() {
+    $this->sendRequestAs('GET', '/test/route-yml-denied', [], static::$admin_user);
+  }
+
   public function testXmlRouteAllow() {
     $this->sendRequestAs('GET', '/test/route-xml', [], static::$admin_user);
     $response = $this->client->getResponse();
@@ -68,7 +81,20 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->sendRequestAs('GET', '/test/route-xml', [], static::$authenticated_user);
   }
 
-  public function testRoutePatternAllow() {
+  public function testXmlRouteBoolAllow() {
+    $this->sendRequestAs('GET', '/test/route-xml-allowed', []);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
+  public function testXmlRouteBoolDisallow() {
+    $this->sendRequestAs('GET', '/test/route-xml-denied', [], static::$admin_user);
+  }
+
+  public function testRouteBoolAllow() {
     $this->sendRequestAs('GET', '/test/pattern-allowed', []);
     $response = $this->client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
@@ -77,7 +103,14 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
   /**
     * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
     */
-  public function testRoutePatternDeny() {
+  public function testRouteBoolDeny() {
+    $this->sendRequestAs('GET', '/test/route-denied', [], static::$admin_user);
+  }
+
+  /**
+    * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+    */
+  public function testRoutePatternDenyAll() {
     $this->sendRequestAs('GET', '/test/route-forbidden', [], static::$superadmin_user);
   }
 

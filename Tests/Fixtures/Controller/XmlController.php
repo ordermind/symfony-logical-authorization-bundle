@@ -11,4 +11,10 @@ class XmlController extends Controller {
   public function routeXmlAction(Request $request) {
     return new Response('');
   }
+  public function routeXmlAllowedAction(Request $request) {
+    return new Response('');
+  }
+  public function routeXmlDeniedAction(Request $request) {
+    return new Response('');
+  }
 }

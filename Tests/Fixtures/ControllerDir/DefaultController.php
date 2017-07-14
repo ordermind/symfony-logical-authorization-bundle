@@ -53,6 +53,16 @@ class DefaultController extends Controller {
   }
 
   /**
+   * @Route("/route-denied", name="route_denied")
+   * @Permissions({
+   *   FALSE
+   * })
+   */
+  public function routeDeniedAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
    * @Route("/route-forbidden", name="route_forbidden")
    */
   public function routeForbiddenAction(Request $request) {

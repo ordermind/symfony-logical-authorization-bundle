@@ -18,3 +18,15 @@ yml_route:
     defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlAction }
     permissions:
         role: ROLE_ADMIN
+
+yml_route_allowed:
+    path: /test/route-yml-allowed
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlAllowedAction }
+    permissions:
+        true
+
+yml_route_denied:
+    path: /test/route-yml-denied
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlDeniedAction }
+    permissions:
+        false

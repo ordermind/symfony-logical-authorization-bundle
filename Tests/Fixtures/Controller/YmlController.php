@@ -11,4 +11,10 @@ class YmlController extends Controller {
   public function routeYmlAction(Request $request) {
     return new Response('');
   }
+  public function routeYmlAllowedAction(Request $request) {
+    return new Response('');
+  }
+  public function routeYmlDeniedAction(Request $request) {
+    return new Response('');
+  }
 }
