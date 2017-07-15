@@ -14,4 +14,4 @@ security:
             http_basic: ~
 
     access_control:
-        - { path: ^/, roles: logauth }
+        - { path: ^/, role: logauth }
