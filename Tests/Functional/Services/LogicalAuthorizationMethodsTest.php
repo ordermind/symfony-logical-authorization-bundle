@@ -899,7 +899,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
 //     $this->assertArrayNotHasKey('context', $first_item);
 //   }
 
-  public function testDebugCollectorPermissionFormat() {
+  public function testDebugCollectorPermissionFormatComplex() {
     $request = new Request();
     $response = new Response();
     $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
@@ -907,6 +907,11 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model = new TestModelBoolean();
     $model->setAuthor($user);
     $permissions = [
+      'no_bypass' => [
+        'NOT' => [
+          'flag' => 'has_account',
+        ],
+      ],
       'AND' => [
         'role' => [
           'OR' => [
@@ -936,5 +941,24 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $log = $debugCollector->getLog();
 
     $first_item = array_shift($log);
+
+    unset($permissions['no_bypass']);
+    unset($permissions['NO_BYPASS']);
+
+    $first_result = [
+      'log_type' => 'check',
+      'type' => 'field',
+      'user' => $user,
+      'permissions' => $permissions,
+      'action' => 'get',
+      'item_name' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
+      'item' => $model,
+      'permission_no_bypass_checks' => [['permissions' => 'has_account', 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => false]],
+      'bypassed_access' => false,
+      'permission_checks' => [['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']], 'resolve' => false],['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]], 'resolve' => true],['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]], 'resolve' => true],['permissions' => true, 'resolve' => true],['permissions' => 'TRUE', 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['NOT' => 'has_account'], 'resolve' => false],['permissions' => 'is_author', 'resolve' => true],['permissions' => ['NOT' => 'is_author'], 'resolve' => false],['permissions' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]], 'resolve' => false],['permissions' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]], 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]]], 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true]],
+    ];
+    foreach($first_result as $key => $value) {
+      $this->assertSame($value, $first_item[$key]);
+    }
   }
 }

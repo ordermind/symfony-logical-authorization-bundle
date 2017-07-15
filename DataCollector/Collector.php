@@ -27,6 +27,11 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
     foreach($this->permission_log as &$log_item) {
+      if(is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
+        $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
+        unset($log_item['permissions']['no_bypass']);
+      }
+
       if($log_item['type'] === 'model' || $log_item['type'] === 'field') {
         $log_item['action'] = $log_item['item']['action'];
       }
@@ -39,10 +44,9 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
         $type_keys = array_keys($this->lpProxy->getTypes());
         $log_item['permission_no_bypass_checks'] = $this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
         $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
-        unset($log_item['permissions']['no_bypass']);
         unset($log_item['permissions']['NO_BYPASS']);
         $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
-        $log_item['permissions'] = json_encode($log_item['permissions']);
+//         $log_item['permissions'] = json_encode($log_item['permissions']);
         unset($log_item['context']);
       }
     }
@@ -114,14 +118,14 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
           if(!is_numeric($key)) {
             if($this_type && $this_type !== $key) {
               $checks[] = [
-                'permissions' => json_encode([$key => $subpermissions]),
-                'access' => $this->lpProxy->checkAccess([$this_type => [$key => $subpermissions]], $context, false),
+                'permissions' => [$key => $subpermissions],
+                'resolve' => $this->lpProxy->checkAccess([$this_type => [$key => $subpermissions]], $context, false),
               ];
             }
             if(!$this_type) {
               $checks[] = [
-                'permissions' => json_encode([$key => $subpermissions]),
-                'access' => $this->lpProxy->checkAccess([$key => $subpermissions], $context, false),
+                'permissions' => [$key => $subpermissions],
+                'resolve' => $this->lpProxy->checkAccess([$key => $subpermissions], $context, false),
               ];
             }
           }
@@ -130,14 +134,14 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       else {
         if($type) {
           $checks[] = [
-            'permissions' => json_encode($permissions),
-            'access' => $this->lpProxy->checkAccess([$type => $permissions], $context, false),
+            'permissions' => $permissions,
+            'resolve' => $this->lpProxy->checkAccess([$type => $permissions], $context, false),
           ];
         }
         else {
           $checks[] = [
-            'permissions' => json_encode($permissions),
-            'access' => $this->lpProxy->checkAccess($permissions, $context, false),
+            'permissions' => $permissions,
+            'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
           ];
         }
       }
@@ -146,21 +150,31 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     };
 
     $checks = $getPermissionChecksRecursive($permissions, $context, $type_keys);
-    $checks[] = [
-      'permissions' => json_encode($permissions),
-      'access' => $this->lpProxy->checkAccess($permissions, $context, false),
-    ];
+    if(count($permissions) > 1) {
+      $checks[] = [
+        'permissions' => $permissions,
+        'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
+      ];
+    }
 
     return $checks;
   }
 
   protected function getPermissionNoBypassChecks($permissions, $context, $type_keys) {
-    echo "\n Don't forget to implement Collector::getPermissionNoBypassChecks()\n";
+    if(is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
+      return $this->getPermissionChecks($permissions['NO_BYPASS'], $context, $type_keys);
+    }
+
     return [];
   }
 
   protected function getBypassedAccess($permissions, $context) {
-    echo "\n Don't forget to implement Collector::getBypassedAccess()\n";
+    $new_permissions = [false];
+    if(is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
+      $new_permissions['NO_BYPASS'] = $permissions['NO_BYPASS'];
+      return $this->lpProxy->checkAccess($new_permissions, $context);
+    }
+
     return false;
   }
 }
