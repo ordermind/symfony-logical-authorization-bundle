@@ -17,7 +17,7 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   }
 
   public function getName() {
-    return 'logauth.tree_collector';
+    return 'logauth.collector';
   }
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
