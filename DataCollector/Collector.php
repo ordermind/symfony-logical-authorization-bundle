@@ -27,11 +27,6 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
     foreach($this->permission_log as &$log_item) {
-      if(is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
-        $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
-        unset($log_item['permissions']['no_bypass']);
-      }
-
       if($log_item['type'] === 'model' || $log_item['type'] === 'field') {
         $log_item['action'] = $log_item['item']['action'];
       }
@@ -41,12 +36,21 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       $log_item += $formatted_item;
 
       if($log_item['log_type'] === 'check') {
+        if(is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
+          $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
+          unset($log_item['permissions']['no_bypass']);
+        }
         $type_keys = array_keys($this->lpProxy->getTypes());
         $log_item['permission_no_bypass_checks'] = $this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
+        if(count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
+          $log_item['permission_no_bypass_check_error'] = $log_item['permission_no_bypass_checks'][0]['error'];
+        }
         $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
         unset($log_item['permissions']['NO_BYPASS']);
         $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
-//         $log_item['permissions'] = json_encode($log_item['permissions']);
+        if(count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
+          $log_item['permission_check_error'] = $log_item['permission_checks'][0]['error'];
+        }
         unset($log_item['context']);
       }
     }
@@ -105,6 +109,18 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   }
 
   protected function getPermissionChecks($permissions, $context, $type_keys) {
+    // Extra permission check of the whole tree to catch errors
+    try {
+      $this->lpProxy->checkAccess($permissions, $context, false);
+    }
+    catch(\Exception $e) {
+      return [[
+        'permissions' => $permissions,
+        'resolve' => false,
+        'error' => $e->getMessage(),
+      ]];
+    }
+
     $getPermissionChecksRecursive = function($permissions, $context, $type_keys, $type = null) use(&$getPermissionChecksRecursive) {
       $checks = [];
 
@@ -172,8 +188,12 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     $new_permissions = [false];
     if(is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
       $new_permissions['NO_BYPASS'] = $permissions['NO_BYPASS'];
+    }
+
+    try {
       return $this->lpProxy->checkAccess($new_permissions, $context);
     }
+    catch (\Exception $e) {}
 
     return false;
   }
