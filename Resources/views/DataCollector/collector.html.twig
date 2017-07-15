@@ -3,7 +3,7 @@
 {% block toolbar %}
     {% set icon %}
         {{ include('@OrdermindLogicalAuthorization/Icon/icon.svg') }}
-        <span class="sf-toolbar-value">4</span>
+        <span class="sf-toolbar-value">{{ collector.log | length }}</span>
     {% endset %}
 
     {% set text %}
@@ -33,11 +33,30 @@
     <h2>Logical Authorization</h2>
     <div class="sf-tabs">
         <div class="tab">
-            <h3 class="tab-title">Access Checks<span class="badge">4</span></h3>
+            <h3 class="tab-title">Access Checks<span class="badge">{{ collector.log | length }}</span></h3>
             <p class="text-muted">Information about the access checks that were made during this request.</p>
 
             <div class="tab-content">
-                <p>Content hej</p>
+                {% if collector.log | length > 0 %}
+                <table>
+                <tr>
+                  <th>Type</th>
+                  <th>Item</th>
+                  <th>User</th>
+                  <th>Permissions</th>
+                  <th>Access Bypass</th>
+                </tr>
+                {% for log_item in collector.log %}
+                  <tr>
+                    <td>{{ log_item.type }}</td>
+                    <td>{{ log_item.item_name }}</td>
+                    <td>{{ log_item.user }}</td>
+                    <td>{{ log_item.permissions | default('') }}</td>
+                    <td>{{ log_item.bypassed_access | default(false) }}</td>
+                  </tr>
+                {% endfor %}
+                </table>
+                {% endif %}
             </div>
         </div>
         <div class="tab">
