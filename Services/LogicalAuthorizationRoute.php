@@ -57,10 +57,6 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       if(is_null($user)) return true;
     }
 
-    if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheckAttempt('route', $route_name, $user);
-    }
-
     if(!is_string($route_name)) {
       $this->helper->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
       return false;

@@ -26,38 +26,10 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   }
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
-    foreach($this->permission_log as &$log_item) {
-      if($log_item['type'] === 'model' || $log_item['type'] === 'field') {
-        $log_item['action'] = $log_item['item']['action'];
-      }
-
-      $formatted_item = $this->formatItem($log_item['type'], $log_item['item']);
-      unset($log_item['item']);
-      $log_item += $formatted_item;
-
-      if($log_item['log_type'] === 'check') {
-        if(is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
-          $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
-          unset($log_item['permissions']['no_bypass']);
-        }
-        $type_keys = array_keys($this->lpProxy->getTypes());
-        $log_item['permission_no_bypass_checks'] = $this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
-        if(count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
-          $log_item['permission_no_bypass_check_error'] = $log_item['permission_no_bypass_checks'][0]['error'];
-        }
-        $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
-        unset($log_item['permissions']['NO_BYPASS']);
-        $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
-        if(count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
-          $log_item['permission_check_error'] = $log_item['permission_checks'][0]['error'];
-        }
-        unset($log_item['context']);
-      }
-    }
-    unset($log_item);
+    $log = $this->formatLog($this->permission_log);
     $this->data = [
       'tree' => $this->treeBuilder->getTree(),
-      'log' => $this->permission_log,
+      'log' => $log,
     ];
   }
 
@@ -74,16 +46,44 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     return $this->data['log'];
   }
 
-  public function addPermissionCheckAttempt($type, $item, $user) {
-    $this->addPermissionLogItem(['log_type' => 'attempt', 'type' => $type, 'item' => $item, 'user' => $user]);
-  }
-
   public function addPermissionCheck($type, $item, $user, $permissions, $context) {
-    $this->addPermissionLogItem(['log_type' => 'check', 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context]);
+    $this->addPermissionLogItem(['type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context]);
   }
 
   protected function addPermissionLogItem($log_item) {
     $this->permission_log[] = $log_item;
+  }
+
+  protected function formatLog($log) {
+    foreach($log as &$log_item) {
+      if($log_item['type'] === 'model' || $log_item['type'] === 'field') {
+        $log_item['action'] = $log_item['item']['action'];
+      }
+
+      $formatted_item = $this->formatItem($log_item['type'], $log_item['item']);
+      unset($log_item['item']);
+      $log_item += $formatted_item;
+
+      if(is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
+        $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
+        unset($log_item['permissions']['no_bypass']);
+      }
+      $type_keys = array_keys($this->lpProxy->getTypes());
+      $log_item['permission_no_bypass_checks'] = $this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
+      if(count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
+        $log_item['permission_no_bypass_check_error'] = $log_item['permission_no_bypass_checks'][0]['error'];
+      }
+      $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
+      unset($log_item['permissions']['NO_BYPASS']);
+      $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
+      if(count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
+        $log_item['permission_check_error'] = $log_item['permission_checks'][0]['error'];
+      }
+      unset($log_item['context']);
+    }
+    unset($log_item);
+
+    return $log;
   }
 
   protected function formatItem($type, $item) {

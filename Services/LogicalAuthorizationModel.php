@@ -68,10 +68,6 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
       if(is_null($user)) return true;
     }
 
-    if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheckAttempt('model', array('model' => $model, 'action' => $action), $user);
-    }
-
     if(!is_string($model) && !is_object($model)) {
       $this->helper->handleError('Error checking model access: the model parameter must be either a class string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
       return false;
@@ -114,10 +110,6 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
-    }
-
-    if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user);
     }
 
     if(!is_string($model) && !is_object($model)) {
