@@ -11,9 +11,11 @@ use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
 
 class Collector extends DataCollector implements CollectorInterface, LateDataCollectorInterface {
   protected $treeBuilder;
+  protected $permission_log;
 
   public function __construct(PermissionTreeBuilderInterface $treeBuilder) {
     $this->treeBuilder = $treeBuilder;
+    $this->permission_log = [];
   }
 
   public function getName() {
@@ -21,9 +23,16 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   }
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
-    $this->data = array(
+    foreach($this->permission_log as &$log_item) {
+      $formatted_item = $this->formatItem($log_item['type'], $log_item['item']);
+      unset($log_item['item']);
+      $log_item += $formatted_item;
+    }
+    unset($log_item);
+    $this->data = [
       'tree' => $this->treeBuilder->getTree(),
-    );
+      'log' => $this->permission_log,
+    ];
   }
 
   public function lateCollect()
@@ -35,11 +44,44 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     return $this->data['tree'];
   }
 
-  public function addPermissionCheckAttempt($type, $item, $user) {
+  public function getLog() {
+    return $this->data['log'];
+  }
 
+  public function addPermissionCheckAttempt($type, $item, $user) {
+    $this->addPermissionLogItem(['log_type' => 'attempt', 'type' => $type, 'item' => $item, 'user' => $user]);
   }
 
   public function addPermissionCheck($type, $item, $user, $permissions) {
+    $this->addPermissionLogItem(['log_type' => 'check', 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions]);
+  }
 
+  protected function formatItem($type, $item) {
+    $formatted_item = [];
+
+    if($type === 'route') {
+      return [
+        'item_name' => $item,
+      ];
+    }
+
+    $model = $item;
+    if($type === 'field') {
+      $model = $item['model'];
+    }
+    $formatted_item['item_name'] = $model;
+    if(is_object($model)) {
+      $formatted_item['item'] = $model;
+      $formatted_item['item_name'] = get_class($model);
+    }
+    if($type === 'field') {
+      $formatted_item['item_name'] .= ":{$item['field']}";
+    }
+
+    return $formatted_item;
+  }
+
+  protected function addPermissionLogItem($log_item) {
+    $this->permission_log[] = $log_item;
   }
 }
