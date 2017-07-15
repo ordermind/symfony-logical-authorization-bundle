@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 
-class TreeCollector extends DataCollector implements LateDataCollectorInterface {
+class Collector extends DataCollector implements LateDataCollectorInterface {
   protected $treeBuilder;
 
   public function __construct(PermissionTreeBuilderInterface $treeBuilder) {
@@ -33,5 +33,9 @@ class TreeCollector extends DataCollector implements LateDataCollectorInterface 
 
   public function getPermissionTree() {
     return $this->data['tree'];
+  }
+
+  public function addPermissionCheck($type, $name, $user, $permissions) {
+
   }
 }
