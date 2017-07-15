@@ -37,7 +37,8 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
 
       if($log_item['log_type'] === 'check') {
         $type_keys = array_keys($this->lpProxy->getTypes());
-        $log_item['permission_bypass_checks'] = $this->getPermissionBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
+        $log_item['permission_no_bypass_checks'] = $this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
+        $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
         unset($log_item['permissions']['no_bypass']);
         unset($log_item['permissions']['NO_BYPASS']);
         $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
@@ -152,8 +153,14 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
 
     return $checks;
   }
-  protected function getPermissionBypassChecks($permissions, $context, $type_keys) {
-    echo "\n Don't forget to implement Collector::getPermissionBypassChecks()\n";
+
+  protected function getPermissionNoBypassChecks($permissions, $context, $type_keys) {
+    echo "\n Don't forget to implement Collector::getPermissionNoBypassChecks()\n";
     return [];
+  }
+
+  protected function getBypassedAccess($permissions, $context) {
+    echo "\n Don't forget to implement Collector::getBypassedAccess()\n";
+    return false;
   }
 }
