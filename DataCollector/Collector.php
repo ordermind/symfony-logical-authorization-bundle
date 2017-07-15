@@ -24,9 +24,18 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
 
   public function collect(Request $request, Response $response, \Exception $exception = null) {
     foreach($this->permission_log as &$log_item) {
+      if($log_item['type'] === 'model' || $log_item['type'] === 'field') {
+        $log_item['action'] = $log_item['item']['action'];
+      }
+
       $formatted_item = $this->formatItem($log_item['type'], $log_item['item']);
       unset($log_item['item']);
       $log_item += $formatted_item;
+
+      if($log_item['log_type'] === 'check') {
+        $log_item['permissions'] = $this->formatPermissions($log_item['permissions'], $log_item['context']);
+        unset($log_item['context']);
+      }
     }
     unset($log_item);
     $this->data = [
@@ -52,8 +61,12 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     $this->addPermissionLogItem(['log_type' => 'attempt', 'type' => $type, 'item' => $item, 'user' => $user]);
   }
 
-  public function addPermissionCheck($type, $item, $user, $permissions) {
-    $this->addPermissionLogItem(['log_type' => 'check', 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions]);
+  public function addPermissionCheck($type, $item, $user, $permissions, $context) {
+    $this->addPermissionLogItem(['log_type' => 'check', 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context]);
+  }
+
+  protected function addPermissionLogItem($log_item) {
+    $this->permission_log[] = $log_item;
   }
 
   protected function formatItem($type, $item) {
@@ -65,10 +78,7 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       ];
     }
 
-    $model = $item;
-    if($type === 'field') {
-      $model = $item['model'];
-    }
+    $model = $item['model'];
     $formatted_item['item_name'] = $model;
     if(is_object($model)) {
       $formatted_item['item'] = $model;
@@ -81,7 +91,7 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     return $formatted_item;
   }
 
-  protected function addPermissionLogItem($log_item) {
-    $this->permission_log[] = $log_item;
+  protected function formatPermissions($permissions, $context) {
+    return $permissions;
   }
 }

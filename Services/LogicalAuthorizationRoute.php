@@ -81,12 +81,11 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     }
 
     $permissions = $this->getRoutePermissions($route_name);
+    $context = ['route' => $route_name, 'user' => $user];
 
     if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheck('route', $route_name, $user, $permissions);
+      $this->debugCollector->addPermissionCheck('route', $route_name, $user, $permissions, $context);
     }
-
-    $context = ['route' => $route_name, 'user' => $user];
 
     return $this->la->checkAccess($permissions, $context);
   }

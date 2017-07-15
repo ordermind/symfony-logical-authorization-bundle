@@ -69,7 +69,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     }
 
     if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheckAttempt('model', $model, $user);
+      $this->debugCollector->addPermissionCheckAttempt('model', array('model' => $model, 'action' => $action), $user);
     }
 
     if(!is_string($model) && !is_object($model)) {
@@ -95,11 +95,12 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
     $permissions = $this->getModelPermissions($model);
     if(array_key_exists($action, $permissions)) {
+      $context = ['model' => $model, 'user' => $user];
+
       if(!is_null($this->debugCollector)) {
-        $this->debugCollector->addPermissionCheck('model', $model, $user, $permissions);
+        $this->debugCollector->addPermissionCheck('model', array('model' => $model, 'action' => $action), $user, $permissions[$action], $context);
       }
 
-      $context = ['model' => $model, 'user' => $user];
       return $this->la->checkAccess($permissions[$action], $context);
     }
 
@@ -116,7 +117,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     }
 
     if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => $field_name), $user);
+      $this->debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user);
     }
 
     if(!is_string($model) && !is_object($model)) {
@@ -150,11 +151,12 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
     $permissions = $this->getModelPermissions($model);
     if(!empty($permissions['fields'][$field_name]) && array_key_exists($action, $permissions['fields'][$field_name])) {
+      $context = ['model' => $model, 'user' => $user];
+
       if(!is_null($this->debugCollector)) {
-        $this->debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => $field_name), $user, $permissions);
+        $this->debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user, $permissions['fields'][$field_name][$action], $context);
       }
 
-      $context = ['model' => $model, 'user' => $user];
       return $this->la->checkAccess($permissions['fields'][$field_name][$action], $context);
     }
 

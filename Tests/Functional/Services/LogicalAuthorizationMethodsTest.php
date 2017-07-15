@@ -808,7 +808,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $debugCollector = new Collector($this->treeBuilder);
     $debugCollector->addPermissionCheckAttempt('route', 'route_role', $user);
-    $debugCollector->addPermissionCheck('route', 'route_role', $user, []);
+    $debugCollector->addPermissionCheck('route', 'route_role', $user, [], []);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
@@ -817,16 +817,20 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertSame('route', $first_item['type']);
     $this->assertSame('route_role', $first_item['item_name']);
     $this->assertArrayNotHasKey('item', $first_item);
+    $this->assertArrayNotHasKey('action', $first_item);
     $this->assertSame($user, $first_item['user']);
     $this->assertArrayNotHasKey('permissions', $first_item);
+    $this->assertArrayNotHasKey('context', $first_item);
 
     $second_item = array_shift($log);
     $this->assertSame('check', $second_item['log_type']);
     $this->assertSame('route', $second_item['type']);
     $this->assertSame('route_role', $second_item['item_name']);
     $this->assertArrayNotHasKey('item', $second_item);
+    $this->assertArrayNotHasKey('action', $first_item);
     $this->assertSame($user, $second_item['user']);
     $this->assertSame([], $second_item['permissions']);
+    $this->assertArrayNotHasKey('context', $first_item);
   }
 
   public function testDebugCollectorModelLogFormat() {
@@ -836,8 +840,8 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model = new TestModelBoolean();
     $model->setAuthor($user);
     $debugCollector = new Collector($this->treeBuilder);
-    $debugCollector->addPermissionCheckAttempt('model', $model, $user);
-    $debugCollector->addPermissionCheck('model', $model, $user, []);
+    $debugCollector->addPermissionCheckAttempt('model', array('model' => $model, 'action' => 'read'), $user);
+    $debugCollector->addPermissionCheck('model', array('model' => $model, 'action' => 'read'), $user, [], []);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
@@ -846,16 +850,20 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertSame('model', $first_item['type']);
     $this->assertSame(get_class($model), $first_item['item_name']);
     $this->assertSame($model, $first_item['item']);
+    $this->assertSame('read', $first_item['action']);
     $this->assertSame($user, $first_item['user']);
     $this->assertArrayNotHasKey('permissions', $first_item);
+    $this->assertArrayNotHasKey('context', $first_item);
 
     $second_item = array_shift($log);
     $this->assertSame('check', $second_item['log_type']);
     $this->assertSame('model', $second_item['type']);
     $this->assertSame(get_class($model), $second_item['item_name']);
     $this->assertSame($model, $second_item['item']);
+    $this->assertSame('read', $first_item['action']);
     $this->assertSame($user, $second_item['user']);
     $this->assertSame([], $second_item['permissions']);
+    $this->assertArrayNotHasKey('context', $first_item);
   }
 
   public function testDebugCollectorFieldLogFormat() {
@@ -865,8 +873,8 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model = new TestModelBoolean();
     $model->setAuthor($user);
     $debugCollector = new Collector($this->treeBuilder);
-    $debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => 'field1'), $user);
-    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1'), $user, []);
+    $debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user);
+    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], []);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
@@ -875,15 +883,19 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertSame('field', $first_item['type']);
     $this->assertSame(get_class($model) . ':field1', $first_item['item_name']);
     $this->assertSame($model, $first_item['item']);
+    $this->assertSame('get', $first_item['action']);
     $this->assertSame($user, $first_item['user']);
     $this->assertArrayNotHasKey('permissions', $first_item);
+    $this->assertArrayNotHasKey('context', $first_item);
 
     $second_item = array_shift($log);
     $this->assertSame('check', $second_item['log_type']);
     $this->assertSame('field', $second_item['type']);
     $this->assertSame(get_class($model) . ':field1', $second_item['item_name']);
     $this->assertSame($model, $second_item['item']);
+    $this->assertSame('get', $first_item['action']);
     $this->assertSame($user, $second_item['user']);
     $this->assertSame([], $second_item['permissions']);
+    $this->assertArrayNotHasKey('context', $first_item);
   }
 }
