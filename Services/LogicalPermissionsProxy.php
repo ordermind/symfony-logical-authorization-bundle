@@ -52,6 +52,13 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface {
   /**
    * {@inheritdoc}
    */
+  public function getTypes() {
+    return $this->lp->getTypes();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setBypassCallback($callback) {
     $this->lp->setBypassCallback($callback);
   }

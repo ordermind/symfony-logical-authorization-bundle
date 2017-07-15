@@ -31,6 +31,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase {
 
     $this->client = static::createClient();
     $this->la = $container->get('logauth.service.logauth');
+    $this->lpProxy = $container->get('logauth.service.logical_permissions_proxy');
     $this->laModel = $container->get('logauth.service.logauth_model');
     $this->laRoute = $container->get('logauth.service.logauth_route');
     $this->helper = $container->get('logauth.service.helper');

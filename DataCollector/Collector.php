@@ -8,13 +8,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 
 class Collector extends DataCollector implements CollectorInterface, LateDataCollectorInterface {
   protected $treeBuilder;
+  protected $lpProxy;
   protected $permission_log;
 
-  public function __construct(PermissionTreeBuilderInterface $treeBuilder) {
+  public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy) {
     $this->treeBuilder = $treeBuilder;
+    $this->lpProxy = $lpProxy;
     $this->permission_log = [];
   }
 
@@ -33,7 +36,12 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       $log_item += $formatted_item;
 
       if($log_item['log_type'] === 'check') {
-        $log_item['permissions'] = $this->formatPermissions($log_item['permissions'], $log_item['context']);
+        $type_keys = array_keys($this->lpProxy->getTypes());
+        $log_item['permission_bypass_checks'] = $this->getPermissionBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
+        unset($log_item['permissions']['no_bypass']);
+        unset($log_item['permissions']['NO_BYPASS']);
+        $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
+        $log_item['permissions'] = json_encode($log_item['permissions']);
         unset($log_item['context']);
       }
     }
@@ -91,7 +99,61 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     return $formatted_item;
   }
 
-  protected function formatPermissions($permissions, $context) {
-    return $permissions;
+  protected function getPermissionChecks($permissions, $context, $type_keys) {
+    $getPermissionChecksRecursive = function($permissions, $context, $type_keys, $type = null) use(&$getPermissionChecksRecursive) {
+      $checks = [];
+
+      if(is_array($permissions)) {
+        foreach($permissions as $key => $subpermissions) {
+          $this_type = $type;
+          if(!$this_type && in_array($key, $type_keys, true)) {
+            $this_type = $key;
+          }
+          $checks = array_merge($checks, $getPermissionChecksRecursive($subpermissions, $context, $type_keys, $this_type));
+          if(!is_numeric($key)) {
+            if($this_type && $this_type !== $key) {
+              $checks[] = [
+                'permissions' => json_encode([$key => $subpermissions]),
+                'access' => $this->lpProxy->checkAccess([$this_type => [$key => $subpermissions]], $context, false),
+              ];
+            }
+            if(!$this_type) {
+              $checks[] = [
+                'permissions' => json_encode([$key => $subpermissions]),
+                'access' => $this->lpProxy->checkAccess([$key => $subpermissions], $context, false),
+              ];
+            }
+          }
+        }
+      }
+      else {
+        if($type) {
+          $checks[] = [
+            'permissions' => json_encode($permissions),
+            'access' => $this->lpProxy->checkAccess([$type => $permissions], $context, false),
+          ];
+        }
+        else {
+          $checks[] = [
+            'permissions' => json_encode($permissions),
+            'access' => $this->lpProxy->checkAccess($permissions, $context, false),
+          ];
+        }
+      }
+
+      return $checks;
+    };
+
+    $checks = $getPermissionChecksRecursive($permissions, $context, $type_keys);
+    $checks[] = [
+      'permissions' => json_encode($permissions),
+      'access' => $this->lpProxy->checkAccess($permissions, $context, false),
+    ];
+
+    return $checks;
+  }
+  protected function getPermissionBypassChecks($permissions, $context, $type_keys) {
+    echo "\n Don't forget to implement Collector::getPermissionBypassChecks()\n";
+    return [];
   }
 }

@@ -802,100 +802,139 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertSame($result, $event->getTree());
   }
 
-  public function testDebugCollectorRouteLogFormat() {
+//   public function testDebugCollectorRouteLogFormat() {
+//     $request = new Request();
+//     $response = new Response();
+//     $user = new TestUser();
+//     $debugCollector = new Collector($this->treeBuilder, $this->la);
+//     $debugCollector->addPermissionCheckAttempt('route', 'route_role', $user);
+//     $debugCollector->addPermissionCheck('route', 'route_role', $user, [], []);
+//     $debugCollector->collect($request, $response);
+//     $log = $debugCollector->getLog();
+//
+//     $first_item = array_shift($log);
+//     $this->assertSame('attempt', $first_item['log_type']);
+//     $this->assertSame('route', $first_item['type']);
+//     $this->assertSame('route_role', $first_item['item_name']);
+//     $this->assertArrayNotHasKey('item', $first_item);
+//     $this->assertArrayNotHasKey('action', $first_item);
+//     $this->assertSame($user, $first_item['user']);
+//     $this->assertArrayNotHasKey('permissions', $first_item);
+//     $this->assertArrayNotHasKey('context', $first_item);
+//
+//     $second_item = array_shift($log);
+//     $this->assertSame('check', $second_item['log_type']);
+//     $this->assertSame('route', $second_item['type']);
+//     $this->assertSame('route_role', $second_item['item_name']);
+//     $this->assertArrayNotHasKey('item', $second_item);
+//     $this->assertArrayNotHasKey('action', $first_item);
+//     $this->assertSame($user, $second_item['user']);
+//     $this->assertSame([], $second_item['permissions']);
+//     $this->assertArrayNotHasKey('context', $first_item);
+//   }
+//
+//   public function testDebugCollectorModelLogFormat() {
+//     $request = new Request();
+//     $response = new Response();
+//     $user = new TestUser();
+//     $model = new TestModelBoolean();
+//     $model->setAuthor($user);
+//     $debugCollector = new Collector($this->treeBuilder, $this->la);
+//     $debugCollector->addPermissionCheckAttempt('model', array('model' => $model, 'action' => 'read'), $user);
+//     $debugCollector->addPermissionCheck('model', array('model' => $model, 'action' => 'read'), $user, [], []);
+//     $debugCollector->collect($request, $response);
+//     $log = $debugCollector->getLog();
+//
+//     $first_item = array_shift($log);
+//     $this->assertSame('attempt', $first_item['log_type']);
+//     $this->assertSame('model', $first_item['type']);
+//     $this->assertSame(get_class($model), $first_item['item_name']);
+//     $this->assertSame($model, $first_item['item']);
+//     $this->assertSame('read', $first_item['action']);
+//     $this->assertSame($user, $first_item['user']);
+//     $this->assertArrayNotHasKey('permissions', $first_item);
+//     $this->assertArrayNotHasKey('context', $first_item);
+//
+//     $second_item = array_shift($log);
+//     $this->assertSame('check', $second_item['log_type']);
+//     $this->assertSame('model', $second_item['type']);
+//     $this->assertSame(get_class($model), $second_item['item_name']);
+//     $this->assertSame($model, $second_item['item']);
+//     $this->assertSame('read', $first_item['action']);
+//     $this->assertSame($user, $second_item['user']);
+//     $this->assertSame([], $second_item['permissions']);
+//     $this->assertArrayNotHasKey('context', $first_item);
+//   }
+//
+//   public function testDebugCollectorFieldLogFormat() {
+//     $request = new Request();
+//     $response = new Response();
+//     $user = new TestUser();
+//     $model = new TestModelBoolean();
+//     $model->setAuthor($user);
+//     $debugCollector = new Collector($this->treeBuilder, $this->la);
+//     $debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user);
+//     $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], []);
+//     $debugCollector->collect($request, $response);
+//     $log = $debugCollector->getLog();
+//
+//     $first_item = array_shift($log);
+//     $this->assertSame('attempt', $first_item['log_type']);
+//     $this->assertSame('field', $first_item['type']);
+//     $this->assertSame(get_class($model) . ':field1', $first_item['item_name']);
+//     $this->assertSame($model, $first_item['item']);
+//     $this->assertSame('get', $first_item['action']);
+//     $this->assertSame($user, $first_item['user']);
+//     $this->assertArrayNotHasKey('permissions', $first_item);
+//     $this->assertArrayNotHasKey('context', $first_item);
+//
+//     $second_item = array_shift($log);
+//     $this->assertSame('check', $second_item['log_type']);
+//     $this->assertSame('field', $second_item['type']);
+//     $this->assertSame(get_class($model) . ':field1', $second_item['item_name']);
+//     $this->assertSame($model, $second_item['item']);
+//     $this->assertSame('get', $first_item['action']);
+//     $this->assertSame($user, $second_item['user']);
+//     $this->assertSame([], $second_item['permissions']);
+//     $this->assertArrayNotHasKey('context', $first_item);
+//   }
+
+  public function testDebugCollectorPermissionFormat() {
     $request = new Request();
     $response = new Response();
-    $user = new TestUser();
-    $debugCollector = new Collector($this->treeBuilder);
-    $debugCollector->addPermissionCheckAttempt('route', 'route_role', $user);
-    $debugCollector->addPermissionCheck('route', 'route_role', $user, [], []);
-    $debugCollector->collect($request, $response);
-    $log = $debugCollector->getLog();
-
-    $first_item = array_shift($log);
-    $this->assertSame('attempt', $first_item['log_type']);
-    $this->assertSame('route', $first_item['type']);
-    $this->assertSame('route_role', $first_item['item_name']);
-    $this->assertArrayNotHasKey('item', $first_item);
-    $this->assertArrayNotHasKey('action', $first_item);
-    $this->assertSame($user, $first_item['user']);
-    $this->assertArrayNotHasKey('permissions', $first_item);
-    $this->assertArrayNotHasKey('context', $first_item);
-
-    $second_item = array_shift($log);
-    $this->assertSame('check', $second_item['log_type']);
-    $this->assertSame('route', $second_item['type']);
-    $this->assertSame('route_role', $second_item['item_name']);
-    $this->assertArrayNotHasKey('item', $second_item);
-    $this->assertArrayNotHasKey('action', $first_item);
-    $this->assertSame($user, $second_item['user']);
-    $this->assertSame([], $second_item['permissions']);
-    $this->assertArrayNotHasKey('context', $first_item);
-  }
-
-  public function testDebugCollectorModelLogFormat() {
-    $request = new Request();
-    $response = new Response();
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
-    $debugCollector = new Collector($this->treeBuilder);
-    $debugCollector->addPermissionCheckAttempt('model', array('model' => $model, 'action' => 'read'), $user);
-    $debugCollector->addPermissionCheck('model', array('model' => $model, 'action' => 'read'), $user, [], []);
+    $permissions = [
+      'AND' => [
+        'role' => [
+          'OR' => [
+            'NOT' => [
+              'AND' => [
+                'ROLE_ADMIN',
+                'ROLE_ADMIN',
+              ],
+            ],
+          ],
+        ],
+        TRUE,
+        'TRUE',
+        'flag' => [
+          'NOT' => [
+            'OR' => [
+              ['NOT' => 'has_account'],
+              ['NOT' => 'is_author'],
+            ],
+          ],
+        ],
+      ],
+      'flag' => 'has_account',
+    ];
+    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
     $first_item = array_shift($log);
-    $this->assertSame('attempt', $first_item['log_type']);
-    $this->assertSame('model', $first_item['type']);
-    $this->assertSame(get_class($model), $first_item['item_name']);
-    $this->assertSame($model, $first_item['item']);
-    $this->assertSame('read', $first_item['action']);
-    $this->assertSame($user, $first_item['user']);
-    $this->assertArrayNotHasKey('permissions', $first_item);
-    $this->assertArrayNotHasKey('context', $first_item);
-
-    $second_item = array_shift($log);
-    $this->assertSame('check', $second_item['log_type']);
-    $this->assertSame('model', $second_item['type']);
-    $this->assertSame(get_class($model), $second_item['item_name']);
-    $this->assertSame($model, $second_item['item']);
-    $this->assertSame('read', $first_item['action']);
-    $this->assertSame($user, $second_item['user']);
-    $this->assertSame([], $second_item['permissions']);
-    $this->assertArrayNotHasKey('context', $first_item);
-  }
-
-  public function testDebugCollectorFieldLogFormat() {
-    $request = new Request();
-    $response = new Response();
-    $user = new TestUser();
-    $model = new TestModelBoolean();
-    $model->setAuthor($user);
-    $debugCollector = new Collector($this->treeBuilder);
-    $debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user);
-    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], []);
-    $debugCollector->collect($request, $response);
-    $log = $debugCollector->getLog();
-
-    $first_item = array_shift($log);
-    $this->assertSame('attempt', $first_item['log_type']);
-    $this->assertSame('field', $first_item['type']);
-    $this->assertSame(get_class($model) . ':field1', $first_item['item_name']);
-    $this->assertSame($model, $first_item['item']);
-    $this->assertSame('get', $first_item['action']);
-    $this->assertSame($user, $first_item['user']);
-    $this->assertArrayNotHasKey('permissions', $first_item);
-    $this->assertArrayNotHasKey('context', $first_item);
-
-    $second_item = array_shift($log);
-    $this->assertSame('check', $second_item['log_type']);
-    $this->assertSame('field', $second_item['type']);
-    $this->assertSame(get_class($model) . ':field1', $second_item['item_name']);
-    $this->assertSame($model, $second_item['item']);
-    $this->assertSame('get', $first_item['action']);
-    $this->assertSame($user, $second_item['user']);
-    $this->assertSame([], $second_item['permissions']);
-    $this->assertArrayNotHasKey('context', $first_item);
   }
 }

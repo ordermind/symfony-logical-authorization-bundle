@@ -1,6 +1,6 @@
 services:
   logauth.debug.collector:
     class: Ordermind\LogicalAuthorizationBundle\DataCollector\Collector
-    arguments: ['@logauth.service.permission_tree_builder']
+    arguments: ['@logauth.service.permission_tree_builder', '@logauth.service.logical_permissions_proxy']
     tags:
       - {name: data_collector, template: '@OrdermindLogicalAuthorization/DataCollector/collector.html.twig', id: logauth.collector}
