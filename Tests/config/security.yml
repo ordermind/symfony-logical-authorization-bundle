@@ -12,3 +12,6 @@ security:
         default:
             anonymous: ~
             http_basic: ~
+
+    access_control:
+        - { path: ^/, roles: logauth }

@@ -806,7 +806,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $request = new Request();
     $response = new Response();
     $user = new TestUser();
-    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
     $debugCollector->addPermissionCheck('route', 'route_role', $user, [], ['user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
@@ -827,7 +827,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
-    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
     $debugCollector->addPermissionCheck('model', array('model' => $model, 'action' => 'read'), $user, [], ['user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
@@ -848,7 +848,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
-    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
     $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], ['user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
@@ -866,7 +866,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
   public function testDebugCollectorPermissionFormat() {
     $request = new Request();
     $response = new Response();
-    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
@@ -883,6 +883,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'permission_no_bypass_checks' => [],
       'bypassed_access' => true,
       'permission_checks' => [['permissions' => true, 'resolve' => true]],
+      'access' => true,
     ];
 
     $permissions = [
@@ -927,7 +928,8 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'item' => $model,
       'permission_no_bypass_checks' => [['permissions' => 'has_account', 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => false]],
       'bypassed_access' => false,
-      'permission_checks' => [['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']], 'resolve' => false],['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]], 'resolve' => true],['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]], 'resolve' => true],['permissions' => true, 'resolve' => true],['permissions' => 'TRUE', 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['NOT' => 'has_account'], 'resolve' => false],['permissions' => 'is_author', 'resolve' => true],['permissions' => ['NOT' => 'is_author'], 'resolve' => false],['permissions' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]], 'resolve' => false],['permissions' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]], 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]]], 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true]],
+      'permission_checks' => array_reverse([['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']], 'resolve' => false],['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]], 'resolve' => true],['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]], 'resolve' => true],['permissions' => true, 'resolve' => true],['permissions' => 'TRUE', 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['NOT' => 'has_account'], 'resolve' => false],['permissions' => 'is_author', 'resolve' => true],['permissions' => ['NOT' => 'is_author'], 'resolve' => false],['permissions' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]], 'resolve' => false],['permissions' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]], 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]]], 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true]]),
+      'access' => true,
     ];
 
     $debugCollector->collect($request, $response);
@@ -948,7 +950,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
   public function testDebugCollectorExceptionHandling() {
     $request = new Request();
     $response = new Response();
-    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy);
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);

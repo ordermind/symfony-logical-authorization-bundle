@@ -30,3 +30,5 @@ yml_route_denied:
     defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlDeniedAction }
     permissions:
         false
+
+

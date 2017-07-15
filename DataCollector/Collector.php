@@ -13,11 +13,13 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterfa
 class Collector extends DataCollector implements CollectorInterface, LateDataCollectorInterface {
   protected $treeBuilder;
   protected $lpProxy;
+  protected $twig;
   protected $permission_log;
 
-  public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy) {
+  public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy, \Twig_Environment $twig) {
     $this->treeBuilder = $treeBuilder;
     $this->lpProxy = $lpProxy;
+    $this->twig = $twig;
     $this->permission_log = [];
   }
 
@@ -35,7 +37,12 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
 
   public function lateCollect()
   {
-    $this->data = $this->cloneVar($this->data);
+    $this->data['tree'] = $this->cloneVar($this->data['tree']);
+    foreach($this->data['log'] as &$log_item) {
+      $log_item['formatted_permission_checks'] = $twig->twig->render('@OrdermindLogicalAuthorization/DataCollector/permission_check.html.twig', ['permission_checks' => $log_item['permission_checks']]);
+      $log_item['formatted_permission_checks'] = $this->cloneVar([$log_item['formatted_permission_checks']]);
+    }
+    unset($log_item);
   }
 
   public function getPermissionTree() {
@@ -75,10 +82,14 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       }
       $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
       unset($log_item['permissions']['NO_BYPASS']);
-      $log_item['permission_checks'] = $this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys);
+      $log_item['permission_checks'] = array_reverse($this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys));
       if(count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
         $log_item['permission_check_error'] = $log_item['permission_checks'][0]['error'];
       }
+
+      $first_permission_check = reset($log_item['permission_checks']);
+      $log_item['access'] = $first_permission_check['resolve'];
+
       unset($log_item['context']);
     }
     unset($log_item);

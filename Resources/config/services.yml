@@ -9,11 +9,11 @@ services:
       - {name: kernel.cache_warmer}
     public: false
 
-  logauth.event_listener.route_authorization:
-    class: Ordermind\LogicalAuthorizationBundle\EventListener\RouteAuthorizationListener
+  logauth.security.request_voter:
+    class: Ordermind\LogicalAuthorizationBundle\Security\RequestVoter
     arguments: ['@logauth.service.logauth_route']
     tags:
-      - {name: kernel.event_listener, event: kernel.request, method: onKernelRequest}
+      - {name: security.voter}
 
   logauth.event_listener.add_route_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
