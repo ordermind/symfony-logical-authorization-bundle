@@ -4,4 +4,3 @@ services:
     arguments: ['@logauth.service.permission_tree_builder']
     tags:
       - {name: data_collector, template: '@OrdermindLogicalAuthorization/DataCollector/collector.html.twig', id: logauth.collector}
-    public: false

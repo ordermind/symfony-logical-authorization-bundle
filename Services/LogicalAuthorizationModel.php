@@ -5,12 +5,14 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
+use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
 
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
   protected $la;
   protected $treeBuilder;
   protected $helper;
+  protected $debugCollector;
 
   /**
    * @internal
@@ -19,10 +21,11 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder Permission tree builder service
    * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorization helper service
    */
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, HelperInterface $helper) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, HelperInterface $helper, CollectorInterface $debugCollector = null) {
     $this->la = $la;
     $this->treeBuilder = $treeBuilder;
     $this->helper = $helper;
+    $this->debugCollector = $debugCollector;
   }
 
   public function getAvailableActions($model, $model_actions, $field_actions, $user = null) {
@@ -65,6 +68,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
       if(is_null($user)) return true;
     }
 
+    if(!is_null($this->debugCollector)) {
+      $this->debugCollector->addPermissionCheckAttempt('model', $model, $user);
+    }
+
     if(!is_string($model) && !is_object($model)) {
       $this->helper->handleError('Error checking model access: the model parameter must be either a class string or an object.', ['model' => $model, 'action' => $action, 'user' => $user]);
       return false;
@@ -88,6 +95,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
     $permissions = $this->getModelPermissions($model);
     if(array_key_exists($action, $permissions)) {
+      if(!is_null($this->debugCollector)) {
+        $this->debugCollector->addPermissionCheck('model', $model, $user, $permissions);
+      }
+
       $context = ['model' => $model, 'user' => $user];
       return $this->la->checkAccess($permissions[$action], $context);
     }
@@ -102,6 +113,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) return true;
+    }
+
+    if(!is_null($this->debugCollector)) {
+      $this->debugCollector->addPermissionCheckAttempt('field', array('model' => $model, 'field' => $field_name), $user);
     }
 
     if(!is_string($model) && !is_object($model)) {
@@ -135,6 +150,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
     $permissions = $this->getModelPermissions($model);
     if(!empty($permissions['fields'][$field_name]) && array_key_exists($action, $permissions['fields'][$field_name])) {
+      if(!is_null($this->debugCollector)) {
+        $this->debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => $field_name), $user, $permissions);
+      }
+
       $context = ['model' => $model, 'user' => $user];
       return $this->la->checkAccess($permissions['fields'][$field_name][$action], $context);
     }

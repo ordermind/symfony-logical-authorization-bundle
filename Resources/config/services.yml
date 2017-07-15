@@ -40,11 +40,11 @@ services:
 
   logauth.service.logauth_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
-    arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper']
+    arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper', '@?logauth.debug.collector']
 
   logauth.service.logauth_model:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
-    arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper']
+    arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper', '@?logauth.debug.collector']
 
   logauth.service.logauth:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization

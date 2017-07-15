@@ -7,6 +7,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
+use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
 
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
 
@@ -14,12 +15,14 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
   protected $treeBuilder;
   protected $router;
   protected $helper;
+  protected $debugCollector;
 
-  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, RouterInterface $router, HelperInterface $helper) {
+  public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, RouterInterface $router, HelperInterface $helper, CollectorInterface $debugCollector = null) {
     $this->la = $la;
     $this->treeBuilder = $treeBuilder;
     $this->router = $router;
     $this->helper = $helper;
+    $this->debugCollector = $debugCollector;
   }
 
   public function getAvailableRoutes($user = null) {
@@ -54,6 +57,10 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       if(is_null($user)) return true;
     }
 
+    if(!is_null($this->debugCollector)) {
+      $this->debugCollector->addPermissionCheckAttempt('route', $route_name, $user);
+    }
+
     if(!is_string($route_name)) {
       $this->helper->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
       return false;
@@ -74,6 +81,11 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     }
 
     $permissions = $this->getRoutePermissions($route_name);
+
+    if(!is_null($this->debugCollector)) {
+      $this->debugCollector->addPermissionCheck('route', $route_name, $user, $permissions);
+    }
+
     $context = ['route' => $route_name, 'user' => $user];
 
     return $this->la->checkAccess($permissions, $context);
