@@ -36,12 +36,6 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   public function lateCollect()
   {
     $this->data['tree'] = $this->cloneVar($this->data['tree']);
-    foreach($this->data['log'] as &$log_item) {
-      if($log_item['permission_checks']) {
-        array_shift($log_item['permission_checks']);
-      }
-    }
-    unset($log_item);
   }
 
   public function getPermissionTree() {
@@ -70,10 +64,13 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       unset($log_item['item']);
       $log_item += $formatted_item;
 
+      if(!empty($log_item['message'])) continue;
+
       if(is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
         $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
         unset($log_item['permissions']['no_bypass']);
       }
+
       $type_keys = array_keys($this->lpProxy->getTypes());
       $log_item['permission_no_bypass_checks'] = array_reverse($this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys));
       if(count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
