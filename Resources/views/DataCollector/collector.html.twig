@@ -54,17 +54,24 @@
                         <td>{{ profiler_dump(item) }}</td>
                         <td>{{ profiler_dump(log_item.user) }}</td>
                     </tr>
-                    <tr><td>&nbsp;</td></tr>
-                    <tr>
-                        <th>Permissions</th>
-                        <th>Access Bypass</th>
-                    </tr>
-                    <tr>
-                        <td>
-                          {{ profiler_dump(log_item.permission_checks) }}
-                        </td>
-                        <td>{{ log_item.bypassed_access }}</td>
-                    </tr>
+                    <tr><td colspan="3">&nbsp;</td></tr>
+                    {% if log_item.permissions | default([]) %}
+                      <tr>
+                          <th>Permissions</th>
+                          <th>Access Bypass</th>
+                      </tr>
+                      <tr>
+                          <td>
+                              {{ log_item.permissions | json_encode }}
+                              {{ profiler_dump(log_item.formatted_permission_checks) }}
+                          </td>
+                          <td>{{ log_item.bypassed_access }}</td>
+                      </tr>
+                    {% else %}
+                      <tr>
+                        <td colspan="3">No permissions have been defined for this route.</td>
+                      </tr>
+                    {% endif %}
                 </table>
                 {% endfor %}
 
