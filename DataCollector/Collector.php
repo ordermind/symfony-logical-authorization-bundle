@@ -36,6 +36,15 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   public function lateCollect()
   {
     $this->data['tree'] = $this->cloneVar($this->data['tree']);
+    foreach($this->data['log'] as &$log_item) {
+      if(!empty($log_item['item'])) {
+        $log_item['item'] = $this->cloneVar($log_item['item']);
+      }
+      if(!empty($log_item['user']) && $log_item['user'] !== 'anon.') {
+        $log_item['user'] = $this->cloneVar($log_item['user']);
+      }
+    }
+    unset($log_item);
   }
 
   public function getPermissionTree() {
@@ -72,15 +81,20 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       }
 
       $type_keys = array_keys($this->lpProxy->getTypes());
+
       $log_item['permission_no_bypass_checks'] = array_reverse($this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys));
       if(count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
-        $log_item['permission_no_bypass_check_error'] = $log_item['permission_no_bypass_checks'][0]['error'];
+        $log_item['message'] = $log_item['permission_no_bypass_checks'][0]['error'];
       }
+
       $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
-      unset($log_item['permissions']['NO_BYPASS']);
-      $log_item['permission_checks'] = array_reverse($this->getPermissionChecks($log_item['permissions'], $log_item['context'], $type_keys));
+
+      $pure_permissions = $log_item['permissions'];
+      unset($pure_permissions['NO_BYPASS']);
+
+      $log_item['permission_checks'] = array_reverse($this->getPermissionChecks($pure_permissions, $log_item['context'], $type_keys));
       if(count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
-        $log_item['permission_check_error'] = $log_item['permission_checks'][0]['error'];
+        $log_item['message'] = $log_item['permission_checks'][0]['error'];
       }
 
       unset($log_item['context']);

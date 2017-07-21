@@ -109,21 +109,31 @@
                           <td><span style="font-weight: bold; color: {% if log_item.access %}green{% else %}red{% endif %};">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
                           <td>{{ log_item.type }}</td>
                           <td>{{ profiler_dump(item) }}</td>
-                          <td>{{ profiler_dump(log_item.user) }}</td>
+                          <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
                       </tr>
-                      <tr><td colspan="4">&nbsp;</td></tr>
-                      {% if log_item.permissions %}
+                      {% if log_item.message %}
                         <tr>
-                            <th>Permissions</th>
+                          <td colspan="4">
+                            {{ log_item.message }}
+                          </td>
+                        </tr>
+                      {% elseif log_item.permissions %}
+                        <tr>
+                          <td colspan="4">
+                            <label>Permissions: </label><span class="permissions">{{ log_item.permissions | json_encode }}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Permissions debug</th>
+                            <th>No Bypass debug</th>
                             <th>Access Bypass</th>
                         </tr>
                         <tr>
-                            <td>
-                                <div class="permission-check" title="{% if log_item.access %}Access was granted{% else %}Access was denied{% endif %}">
-                                  <span class="resolve {% if log_item.access %}success{% else %}fail{% endif %}"></span>
-                                  <span class="permissions">{{ log_item.permissions | json_encode }}</span>
-                                </div>
-                                {% if log_item.permission_checks %}
+                            <td colspan="2">
+                              {% if log_item.permission_checks %}
+                                {% if log_item.permission_checks | length < 3 %}
+                                  {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_checks }) }}
+                                {% else %}
                                   <div class="sf-dump">
                                     <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
                                     <samp class="sf-dump-compact" data-depth="1">
@@ -131,17 +141,27 @@
                                     </samp>
                                   </div>
                                 {% endif %}
+                              {% endif %}
                             </td>
-                            <td>{{ log_item.bypassed_access }}</td>
+                            <td>
+                              {% if log_item.permission_no_bypass_checks %}
+                                {% if log_item.permission_no_bypass_checks | length < 3 %}
+                                  {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_no_bypass_checks }) }}
+                                {% else %}
+                                  <div class="sf-dump">
+                                    <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
+                                    <samp class="sf-dump-compact" data-depth="1">
+                                      {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_no_bypass_checks }) }}
+                                    </samp>
+                                  </div>
+                                {% endif %}
+                              {% endif %}
+                            </td>
+                            <td>{% if log_item.bypassed_access %}Access was bypassed{% else %}Access was not bypassed{% endif %}</td>
                         </tr>
                       {% else %}
                         <tr>
-                          <td colspan="4">
-                            <div class="permission-check" title="Access was granted">
-                              <span class="resolve success"></span>
-                              <span class="permissions">No permissions have been defined for this item. Access was therefore automatically granted.</span>
-                            </div>
-                          </td>
+                          <td colspan="4">No permissions have been defined for this item. Access was therefore automatically granted.</td>
                         </tr>
                       {% endif %}
                   </table>
