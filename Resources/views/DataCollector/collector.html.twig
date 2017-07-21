@@ -106,7 +106,7 @@
                           <th>User</th>
                       </tr>
                       <tr>
-                          <td><span style="font-weight: bold; color: {% if log_item.access %}green{% else %}red{% endif %};">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
+                          <td class="font-normal"><span class="label same-width {% if log_item.access %}status-success{% else %}status-error{% endif %}">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
                           <td>{{ log_item.type }}</td>
                           <td>{{ profiler_dump(item) }}</td>
                           <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
