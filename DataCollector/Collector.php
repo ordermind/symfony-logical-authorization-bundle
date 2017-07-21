@@ -39,7 +39,7 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   {
     $this->data['tree'] = $this->cloneVar($this->data['tree']);
     foreach($this->data['log'] as &$log_item) {
-      $log_item['formatted_permission_checks'] = $twig->twig->render('@OrdermindLogicalAuthorization/DataCollector/permission_check.html.twig', ['permission_checks' => $log_item['permission_checks']]);
+      $log_item['formatted_permission_checks'] = $this->twig->render('@OrdermindLogicalAuthorization/DataCollector/permission_check.html.twig', ['permission_checks' => $log_item['permission_checks']]);
       $log_item['formatted_permission_checks'] = $this->cloneVar([$log_item['formatted_permission_checks']]);
     }
     unset($log_item);
