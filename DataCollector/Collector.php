@@ -13,13 +13,11 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterfa
 class Collector extends DataCollector implements CollectorInterface, LateDataCollectorInterface {
   protected $treeBuilder;
   protected $lpProxy;
-  protected $twig;
   protected $permission_log;
 
-  public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy, \Twig_Environment $twig) {
+  public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy) {
     $this->treeBuilder = $treeBuilder;
     $this->lpProxy = $lpProxy;
-    $this->twig = $twig;
     $this->permission_log = [];
   }
 
@@ -39,8 +37,9 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   {
     $this->data['tree'] = $this->cloneVar($this->data['tree']);
     foreach($this->data['log'] as &$log_item) {
-      $log_item['formatted_permission_checks'] = $this->twig->render('@OrdermindLogicalAuthorization/DataCollector/permission_check.html.twig', ['permission_checks' => $log_item['permission_checks']]);
-      $log_item['formatted_permission_checks'] = $this->cloneVar([$log_item['formatted_permission_checks']]);
+      if($log_item['permission_checks']) {
+        array_shift($log_item['permission_checks']);
+      }
     }
     unset($log_item);
   }

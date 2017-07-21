@@ -1,6 +1,0 @@
-{% for i, check in permission_checks %}
-    <div>
-        <span class="{% if check.resolve %}success{% else %}fail{% endif %}"></span>
-        <span class="permissions">{{ check.permissions | json_encode }}</span>
-    </div>
-{% endfor %}

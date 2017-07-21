@@ -30,6 +30,61 @@
 {% endblock %}
 
 {% block panel %}
+    <style>
+      .sf-dump .sf-dump-compact {
+        display: none;
+      }
+      .permission-check .resolve {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        float: left;
+        margin: 5px 5px 4px 0;
+        border-radius: 5px;
+      }
+      .permission-check .resolve.success {
+        background-color: green;
+      }
+      .permission-check .resolve.fail {
+        background-color: red;
+      }
+    </style>
+    <script>
+        function logauth_toggle(a, recursive) {
+            var s = a.nextSibling;
+            while(s && s.nodeType != 1) {
+                s = s.nextSibling;
+            }
+            var oldClass = s.className, arrow, newClass;
+            if ('sf-dump-compact' == oldClass) {
+                arrow = '▼';
+                newClass = 'sf-dump-expanded';
+            } else if ('sf-dump-expanded' == oldClass) {
+                arrow = '▶';
+                newClass = 'sf-dump-compact';
+            } else {
+                return false;
+            }
+
+            a.lastChild.innerHTML = arrow;
+            s.className = newClass;
+
+            if (recursive) {
+                try {
+                    a = s.querySelectorAll('.'+oldClass);
+                    for (s = 0; s < a.length; ++s) {
+                        if (a[s].className !== newClass) {
+                            a[s].className = newClass;
+                            a[s].previousSibling.lastChild.innerHTML = arrow;
+                        }
+                    }
+                } catch (e) {
+                }
+            }
+
+            return true;
+        }
+    </script>
     <h2>Logical Authorization</h2>
     <div class="sf-tabs">
         <div class="tab">
@@ -37,42 +92,52 @@
             <p class="text-muted">Information about the access checks that were made during this request.</p>
 
             <div class="tab-content">
-                {% for log_item in collector.log %}
-                {% set item = log_item.item_name %}
-                {% if log_item.item is defined %}
-                    {% set item = {(log_item.item_name): log_item.item} %}
-                {% endif %}
+                {% for i, log_item in collector.log %}
+                  {% set item = log_item.item_name %}
+                  {% if log_item.item is defined %}
+                      {% set item = {(log_item.item_name): log_item.item} %}
+                  {% endif %}
 
-                <table>
-                    <tr>
-                        <th>Type</th>
-                        <th>Item</th>
-                        <th>User</th>
-                    </tr>
-                    <tr>
-                        <td>{{ log_item.type }}</td>
-                        <td>{{ profiler_dump(item) }}</td>
-                        <td>{{ profiler_dump(log_item.user) }}</td>
-                    </tr>
-                    <tr><td colspan="3">&nbsp;</td></tr>
-                    {% if log_item.permissions | default([]) %}
+                  <table>
                       <tr>
-                          <th>Permissions</th>
-                          <th>Access Bypass</th>
+                          <th>Type</th>
+                          <th>Item</th>
+                          <th>User</th>
                       </tr>
                       <tr>
-                          <td>
-                              {{ log_item.permissions | json_encode }}
-                              {{ profiler_dump(log_item.formatted_permission_checks) }}
-                          </td>
-                          <td>{{ log_item.bypassed_access }}</td>
+                          <td>{{ log_item.type }}</td>
+                          <td>{{ profiler_dump(item) }}</td>
+                          <td>{{ profiler_dump(log_item.user) }}</td>
                       </tr>
-                    {% else %}
-                      <tr>
-                        <td colspan="3">No permissions have been defined for this route.</td>
-                      </tr>
-                    {% endif %}
-                </table>
+                      <tr><td colspan="3">&nbsp;</td></tr>
+                      {% if log_item.permissions %}
+                        <tr>
+                            <th>Permissions</th>
+                            <th>Access Bypass</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="permission-check" title="{% if log_item.access %}This permission check returned TRUE{% else %}This permission check returned FALSE{% endif %}">
+                                  <span class="resolve {% if log_item.access %}success{% else %}fail{% endif %}"></span>
+                                  <span class="permissions">{{ log_item.permissions | json_encode }}</span>
+                                </div>
+                                {% if log_item.permission_checks %}
+                                  <div class="sf-dump">
+                                    <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
+                                    <samp class="sf-dump-compact" data-depth="1">
+                                      {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_checks }) }}
+                                    </samp>
+                                  </div>
+                                {% endif %}
+                            </td>
+                            <td>{{ log_item.bypassed_access }}</td>
+                        </tr>
+                      {% else %}
+                        <tr>
+                          <td colspan="3">No permissions have been defined for this route.</td>
+                        </tr>
+                      {% endif %}
+                  </table>
                 {% endfor %}
 
             </div>
