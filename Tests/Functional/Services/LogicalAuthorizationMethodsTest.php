@@ -972,7 +972,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model->setAuthor($user);
 
     $permissions = [
-      'no_bypass' => [
+      'NO_BYPASS' => [
         'NOT' => [
           'flag' => 'has_account',
         ],
@@ -1002,8 +1002,6 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'flag' => 'has_account',
     ];
     $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
-    unset($permissions['no_bypass']);
-    unset($permissions['NO_BYPASS']);
     $result = [
       'type' => 'field',
       'user' => $user,
@@ -1060,12 +1058,26 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
-    $permissions = ['no_bypass' => ['flag' => ['flag' => 'has_account']], 'flag' => ['flag' => 'has_account']];
+    $permissions = ['no_bypass' => true, 'flag' => ['flag' => 'has_account']];
     $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
     $first_item = array_shift($log);
-    $this->assertArrayHasKey('permission_check_error', $first_item);
-    $this->assertArrayHasKey('permission_no_bypass_check_error', $first_item);
+    $this->assertArrayHasKey('message', $first_item);
+  }
+
+  public function testDebugCollectorExceptionHandlingNoDebug() {
+    $request = new Request();
+    $response = new Response();
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $model->setAuthor($user);
+    $permissions = ['no_bypass' => ['flag' => ['flag' => 'has_account']], true];
+    $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
+    $debugCollector->collect($request, $response);
+    $log = $debugCollector->getLog();
+    $first_item = array_shift($log);
+    $this->assertArrayHasKey('message', $first_item);
   }
 }
