@@ -75,7 +75,7 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
         unset($log_item['permissions']['no_bypass']);
       }
       $type_keys = array_keys($this->lpProxy->getTypes());
-      $log_item['permission_no_bypass_checks'] = $this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys);
+      $log_item['permission_no_bypass_checks'] = array_reverse($this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys));
       if(count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
         $log_item['permission_no_bypass_check_error'] = $log_item['permission_no_bypass_checks'][0]['error'];
       }
@@ -132,56 +132,112 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     }
 
     $getPermissionChecksRecursive = function($permissions, $context, $type_keys, $type = null) use(&$getPermissionChecksRecursive) {
-      $checks = [];
+//       echo "\n\nnew round\n";
+//       echo "permissions: " . print_r($permissions, true) . "\n";
+//       echo "type: $type\n";
 
-      if(is_array($permissions)) {
-        foreach($permissions as $key => $subpermissions) {
-          $this_type = $type;
-          if(!$this_type && in_array($key, $type_keys, true)) {
-            $this_type = $key;
-          }
-          $checks = array_merge($checks, $getPermissionChecksRecursive($subpermissions, $context, $type_keys, $this_type));
-          if(!is_numeric($key)) {
-            if($this_type && $this_type !== $key) {
-              $checks[] = [
-                'permissions' => [$key => $subpermissions],
-                'resolve' => $this->lpProxy->checkAccess([$this_type => [$key => $subpermissions]], $context, false),
-              ];
-            }
-            if(!$this_type) {
-              $checks[] = [
-                'permissions' => [$key => $subpermissions],
-                'resolve' => $this->lpProxy->checkAccess([$key => $subpermissions], $context, false),
-              ];
-            }
-          }
+      if(!is_array($permissions)) {
+//         echo "permissions is not an array\n";
+        $resolve_permissions = $permissions;
+        if($type) {
+          $resolve_permissions = [$type => $permissions];
         }
+        return [[
+          'permissions' => $permissions,
+          'resolve' => $this->lpProxy->checkAccess($resolve_permissions, $context, false),
+        ]];
+      }
+
+//       echo "permissions is an array\n";
+
+      reset($permissions);
+      $key = key($permissions);
+      $value = current($permissions);
+
+//       echo "key: $key\n";
+
+      if(is_numeric($key)) {
+        return $getPermissionChecksRecursive($value, $context, $type_keys, $type);
       }
       else {
-        if($type) {
-          $checks[] = [
-            'permissions' => $permissions,
-            'resolve' => $this->lpProxy->checkAccess([$type => $permissions], $context, false),
-          ];
-        }
-        else {
-          $checks[] = [
-            'permissions' => $permissions,
-            'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
-          ];
+        if(in_array($key, $type_keys, true)) {
+          $type = $key;
         }
       }
+
+      if(is_array($value)) {
+//         echo "value is an array\n";
+        $checks = [];
+        foreach($value as $key2 => $value2) {
+          $checks = array_merge($checks, $getPermissionChecksRecursive([$key2 => $value2], $context, $type_keys, $type));
+        }
+        $resolve_permissions = $permissions;
+        if($type && $key !== $type) {
+          $resolve_permissions = [$type => $permissions];
+        }
+        $checks[] = [
+          'permissions' => $permissions,
+          'resolve' => $this->lpProxy->checkAccess($resolve_permissions, $context, false),
+        ];
+        return $checks;
+      }
+
+//       echo "value is not an array\n";
+
+      if($key === $type) {
+//         echo "key is same as type\n";
+        return [[
+          'permissions' => $permissions,
+          'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
+        ]];
+      }
+
+//       echo "key is not same as type\n";
+
+      $checks = [];
+      $resolve_value = $value;
+      if($type) {
+        $resolve_value = [$type => $resolve_value];
+      }
+      $checks[] = [
+        'permissions' => $value,
+        'resolve' => $this->lpProxy->checkAccess($resolve_value, $context, false),
+      ];
+
+      $resolve_permissions = $permissions;
+      if($type) {
+        $resolve_permissions = [$type => $resolve_permissions];
+      }
+      $checks[] = [
+        'permissions' => $permissions,
+        'resolve' => $this->lpProxy->checkAccess($resolve_permissions, $context, false),
+      ];
 
       return $checks;
     };
 
-    $checks = $getPermissionChecksRecursive($permissions, $context, $type_keys);
-    if(count($permissions) > 1) {
-      $checks[] = [
-        'permissions' => $permissions,
-        'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
-      ];
+//     echo "\npermissions\n";
+//     print_r($permissions);
+
+    $checks = [];
+
+    if(is_array($permissions)) {
+      foreach($permissions as $key => $value) {
+        $checks = array_merge($checks, $getPermissionChecksRecursive([$key => $value], $context, $type_keys));
+      }
+      if(count($permissions) > 1) {
+        $checks[] = [
+          'permissions' => $permissions,
+          'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
+        ];
+      }
     }
+    else {
+      $checks = array_merge($checks, $getPermissionChecksRecursive($permissions, $context, $type_keys));
+    }
+
+//     echo "\nchecks\n";
+//     print_r($checks);
 
     return $checks;
   }

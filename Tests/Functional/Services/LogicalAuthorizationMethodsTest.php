@@ -863,7 +863,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertArrayNotHasKey('context', $first_item);
   }
 
-  public function testDebugCollectorPermissionFormat() {
+  public function testDebugCollectorPermissionFormatBoolean() {
     $request = new Request();
     $response = new Response();
     $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
@@ -873,7 +873,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
 
     $permissions = true;
     $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), static::$superadmin_user, $permissions, ['model' => $model, 'user' => static::$superadmin_user]);
-    $first_result = [
+    $result = [
       'type' => 'field',
       'user' => static::$superadmin_user,
       'permissions' => $permissions,
@@ -885,6 +885,88 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'permission_checks' => [['permissions' => true, 'resolve' => true]],
       'access' => true,
     ];
+
+    $debugCollector->collect($request, $response);
+    $log = $debugCollector->getLog();
+    $item = array_shift($log);
+    foreach($item as $key => $value) {
+      $this->assertSame($result[$key], $value);
+    }
+  }
+
+  public function testDebugCollectorPermissionFormatTypeClose() {
+    $request = new Request();
+    $response = new Response();
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $model->setAuthor($user);
+
+    $permissions = [
+      'NOT' => [
+        'flag' => 'has_account',
+      ],
+    ];
+    $debugCollector->addPermissionCheck('route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
+    $result = [
+      'type' => 'route',
+      'user' => 'anon.',
+      'item_name' => 'testroute',
+      'permission_no_bypass_checks' => [],
+      'bypassed_access' => false,
+      'permissions' => $permissions,
+      'access' => true,
+      'permission_checks' => [['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => true], ['permissions' => ['flag' => 'has_account'], 'resolve' => false]],
+    ];
+
+    $debugCollector->collect($request, $response);
+    $log = $debugCollector->getLog();
+    $item = array_shift($log);
+    foreach($item as $key => $value) {
+      $this->assertSame($result[$key], $value);
+    }
+  }
+
+  public function testDebugCollectorPermissionFormatTypeSeparate() {
+    $request = new Request();
+    $response = new Response();
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $model->setAuthor($user);
+
+    $permissions = [
+      'flag' => [
+        'NOT' => 'has_account',
+      ],
+    ];
+    $debugCollector->addPermissionCheck('route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
+    $result = [
+      'type' => 'route',
+      'user' => 'anon.',
+      'item_name' => 'testroute',
+      'permission_no_bypass_checks' => [],
+      'bypassed_access' => false,
+      'permissions' => $permissions,
+      'access' => true,
+      'permission_checks' => [['permissions' => ['flag' => ['NOT' => 'has_account']], 'resolve' => true], ['permissions' => ['NOT' => 'has_account'], 'resolve' => true], ['permissions' => 'has_account', 'resolve' => false]],
+    ];
+
+    $debugCollector->collect($request, $response);
+    $log = $debugCollector->getLog();
+    $item = array_shift($log);
+    foreach($item as $key => $value) {
+      $this->assertSame($result[$key], $value);
+    }
+  }
+
+  public function testDebugCollectorPermissionFormatMixed() {
+    $request = new Request();
+    $response = new Response();
+    $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $model->setAuthor($user);
 
     $permissions = [
       'no_bypass' => [
@@ -919,31 +1001,51 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     unset($permissions['no_bypass']);
     unset($permissions['NO_BYPASS']);
-    $second_result = [
+    $result = [
       'type' => 'field',
       'user' => $user,
       'permissions' => $permissions,
       'action' => 'get',
       'item_name' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
       'item' => $model,
-      'permission_no_bypass_checks' => [['permissions' => 'has_account', 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => false]],
+      'permission_no_bypass_checks' => array_reverse([['permissions' => ['flag' => 'has_account'], 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => false]]),
       'bypassed_access' => false,
-      'permission_checks' => array_reverse([['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => 'ROLE_ADMIN', 'resolve' => false],['permissions' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']], 'resolve' => false],['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]], 'resolve' => true],['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]], 'resolve' => true],['permissions' => true, 'resolve' => true],['permissions' => 'TRUE', 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['NOT' => 'has_account'], 'resolve' => false],['permissions' => 'is_author', 'resolve' => true],['permissions' => ['NOT' => 'is_author'], 'resolve' => false],['permissions' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]], 'resolve' => false],['permissions' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]], 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]]], 'resolve' => true],['permissions' => 'has_account', 'resolve' => true],['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true]]),
+      'permission_checks' => [],
+      'permission_checks' => array_reverse([
+        0 => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
+        1 => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
+        2 => ['permissions' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']], 'resolve' => false],
+        3 => ['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]], 'resolve' => true],
+        4 => ['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]], 'resolve' => true],
+        5 => ['permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]]], 'resolve' => true],
+        6 => ['permissions' => true, 'resolve' => true],
+        7 => ['permissions' => 'TRUE', 'resolve' => true],
+        8 => ['permissions' => 'has_account', 'resolve' => true],
+        9 => ['permissions' => ['NOT' => 'has_account'], 'resolve' => false],
+        10 => ['permissions' => 'is_author', 'resolve' => true],
+        11 => ['permissions' => ['NOT' => 'is_author'], 'resolve' => false],
+        12 => ['permissions' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]], 'resolve' => false],
+        13 => ['permissions' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]], 'resolve' => true],
+        14 => ['permissions' => ['flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]], 'resolve' => true],
+        15 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]]], 'resolve' => true],
+        16 => ['permissions' => ['flag' => 'has_account'], 'resolve' => true],
+        17 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true],
+      ]),
       'access' => true,
     ];
 
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
-
-
-    $first_item = array_shift($log);
-    foreach($first_item as $key => $value) {
-      $this->assertSame($first_result[$key], $value);
-    }
-
-    $second_item = array_shift($log);
-    foreach($second_item as $key => $value) {
-      $this->assertSame($second_result[$key], $value);
+    $item = array_shift($log);
+    foreach($item as $key => $value) {
+      if($key === 'permission_checks') {
+        foreach($value as $i => $value2) {
+          $this->assertSame($result[$key][$i], $value2);
+        }
+      }
+      else {
+        $this->assertSame($result[$key], $value);
+      }
     }
   }
 
