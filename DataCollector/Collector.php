@@ -52,8 +52,8 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     return $this->data['log'];
   }
 
-  public function addPermissionCheck($type, $item, $user, $permissions, $context) {
-    $this->addPermissionLogItem(['type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context]);
+  public function addPermissionCheck($access, $type, $item, $user, $permissions, $context, $message = '') {
+    $this->addPermissionLogItem(['access' => $access, 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context, 'message' => $message]);
   }
 
   protected function addPermissionLogItem($log_item) {
@@ -85,9 +85,6 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       if(count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
         $log_item['permission_check_error'] = $log_item['permission_checks'][0]['error'];
       }
-
-      $first_permission_check = reset($log_item['permission_checks']);
-      $log_item['access'] = $first_permission_check['resolve'];
 
       unset($log_item['context']);
     }

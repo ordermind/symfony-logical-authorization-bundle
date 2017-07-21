@@ -100,16 +100,18 @@
 
                   <table>
                       <tr>
+                          <th>Access</th>
                           <th>Type</th>
                           <th>Item</th>
                           <th>User</th>
                       </tr>
                       <tr>
+                          <td><span style="font-weight: bold; color: {% if log_item.access %}green{% else %}red{% endif %};">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
                           <td>{{ log_item.type }}</td>
                           <td>{{ profiler_dump(item) }}</td>
                           <td>{{ profiler_dump(log_item.user) }}</td>
                       </tr>
-                      <tr><td colspan="3">&nbsp;</td></tr>
+                      <tr><td colspan="4">&nbsp;</td></tr>
                       {% if log_item.permissions %}
                         <tr>
                             <th>Permissions</th>
@@ -117,7 +119,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <div class="permission-check" title="{% if log_item.access %}This permission check returned TRUE{% else %}This permission check returned FALSE{% endif %}">
+                                <div class="permission-check" title="{% if log_item.access %}Access was granted{% else %}Access was denied{% endif %}">
                                   <span class="resolve {% if log_item.access %}success{% else %}fail{% endif %}"></span>
                                   <span class="permissions">{{ log_item.permissions | json_encode }}</span>
                                 </div>
@@ -134,7 +136,12 @@
                         </tr>
                       {% else %}
                         <tr>
-                          <td colspan="3">No permissions have been defined for this route.</td>
+                          <td colspan="4">
+                            <div class="permission-check" title="Access was granted">
+                              <span class="resolve success"></span>
+                              <span class="permissions">No permissions have been defined for this item. Access was therefore automatically granted.</span>
+                            </div>
+                          </td>
                         </tr>
                       {% endif %}
                   </table>

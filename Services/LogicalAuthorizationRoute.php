@@ -54,36 +54,54 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
   public function checkRouteAccess($route_name, $user = null) {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
-      if(is_null($user)) return true;
+      if(is_null($user)) {
+        if(!is_null($this->debugCollector)) {
+          $this->debugCollector->addPermissionCheck(true, 'route', $route_name, $user, [], [], 'No user was instantiated during this request (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
+        }
+        return true;
+      }
     }
 
     if(!is_string($route_name)) {
       $this->helper->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
+      if(!is_null($this->debugCollector)) {
+        $this->debugCollector->addPermissionCheck(false, 'route', $route_name, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+      }
       return false;
     }
     if(!$route_name) {
       $this->helper->handleError('Error checking route access: the route_name parameter cannot be empty.', ['route' => $route_name, 'user' => $user]);
+      if(!is_null($this->debugCollector)) {
+        $this->debugCollector->addPermissionCheck(false, 'route', $route_name, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+      }
       return false;
     }
     if(!is_string($user) && !is_object($user)) {
       $this->helper->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $route_name, 'user' => $user]);
+      if(!is_null($this->debugCollector)) {
+        $this->debugCollector->addPermissionCheck(false, 'route', $route_name, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+      }
       return false;
     }
 
     $route = $this->router->getRouteCollection()->get($route_name);
     if(is_null($route)) {
       $this->helper->handleError('Error checking route access: the route could not be found.', ['route' => $route_name, 'user' => $user]);
+      if(!is_null($this->debugCollector)) {
+        $this->debugCollector->addPermissionCheck(false, 'route', $route_name, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+      }
       return false;
     }
 
     $permissions = $this->getRoutePermissions($route_name);
     $context = ['route' => $route_name, 'user' => $user];
+    $access = $this->la->checkAccess($permissions, $context);
 
     if(!is_null($this->debugCollector)) {
-      $this->debugCollector->addPermissionCheck('route', $route_name, $user, $permissions, $context);
+      $this->debugCollector->addPermissionCheck($access, 'route', $route_name, $user, $permissions, $context);
     }
 
-    return $this->la->checkAccess($permissions, $context);
+    return $access;
   }
 
   protected function getRoutePermissions($route_name) {

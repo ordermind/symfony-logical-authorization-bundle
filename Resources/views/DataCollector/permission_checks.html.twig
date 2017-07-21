@@ -1,5 +1,5 @@
 {% for i, check in permission_checks %}
-    <div class="permission-check" title="{% if check.resolve %}This permission check returned TRUE{% else %}This permission check returned FALSE{% endif %}">
+    <div class="permission-check" title="{% if check.resolve %}This part returned TRUE{% else %}This part returned FALSE{% endif %}">
         <span class="resolve {% if check.resolve %}success{% else %}fail{% endif %}"></span>
         <span class="permissions">{{ check.permissions | json_encode }}</span>
     </div>

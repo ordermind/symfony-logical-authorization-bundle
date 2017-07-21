@@ -807,7 +807,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $response = new Response();
     $user = new TestUser();
     $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
-    $debugCollector->addPermissionCheck('route', 'route_role', $user, [], ['user' => $user]);
+    $debugCollector->addPermissionCheck(true, 'route', 'route_role', $user, [], ['user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
@@ -828,7 +828,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model = new TestModelBoolean();
     $model->setAuthor($user);
     $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
-    $debugCollector->addPermissionCheck('model', array('model' => $model, 'action' => 'read'), $user, [], ['user' => $user]);
+    $debugCollector->addPermissionCheck(true, 'model', array('model' => $model, 'action' => 'read'), $user, [], ['user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
@@ -849,7 +849,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model = new TestModelBoolean();
     $model->setAuthor($user);
     $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
-    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], ['user' => $user]);
+    $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], ['user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
 
@@ -872,7 +872,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model->setAuthor($user);
 
     $permissions = true;
-    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), static::$superadmin_user, $permissions, ['model' => $model, 'user' => static::$superadmin_user]);
+    $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), static::$superadmin_user, $permissions, ['model' => $model, 'user' => static::$superadmin_user]);
     $result = [
       'type' => 'field',
       'user' => static::$superadmin_user,
@@ -884,6 +884,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'bypassed_access' => true,
       'permission_checks' => [['permissions' => true, 'resolve' => true]],
       'access' => true,
+      'message' => '',
     ];
 
     $debugCollector->collect($request, $response);
@@ -907,7 +908,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
         'flag' => 'has_account',
       ],
     ];
-    $debugCollector->addPermissionCheck('route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
+    $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
     $result = [
       'type' => 'route',
       'user' => 'anon.',
@@ -917,6 +918,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'permissions' => $permissions,
       'access' => true,
       'permission_checks' => [['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => true], ['permissions' => ['flag' => 'has_account'], 'resolve' => false]],
+      'message' => '',
     ];
 
     $debugCollector->collect($request, $response);
@@ -940,7 +942,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
         'NOT' => 'has_account',
       ],
     ];
-    $debugCollector->addPermissionCheck('route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
+    $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
     $result = [
       'type' => 'route',
       'user' => 'anon.',
@@ -950,6 +952,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       'permissions' => $permissions,
       'access' => true,
       'permission_checks' => [['permissions' => ['flag' => ['NOT' => 'has_account']], 'resolve' => true], ['permissions' => ['NOT' => 'has_account'], 'resolve' => true], ['permissions' => 'has_account', 'resolve' => false]],
+      'message' => '',
     ];
 
     $debugCollector->collect($request, $response);
@@ -998,7 +1001,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
       ],
       'flag' => 'has_account',
     ];
-    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
+    $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     unset($permissions['no_bypass']);
     unset($permissions['NO_BYPASS']);
     $result = [
@@ -1032,6 +1035,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
         17 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true],
       ]),
       'access' => true,
+      'message' => '',
     ];
 
     $debugCollector->collect($request, $response);
@@ -1057,7 +1061,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $model = new TestModelBoolean();
     $model->setAuthor($user);
     $permissions = ['no_bypass' => ['flag' => ['flag' => 'has_account']], 'flag' => ['flag' => 'has_account']];
-    $debugCollector->addPermissionCheck('field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
+    $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
     $first_item = array_shift($log);
