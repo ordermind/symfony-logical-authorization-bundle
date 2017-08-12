@@ -3,10 +3,17 @@
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role;
 
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
+use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;
+use Symfony\Component\Security\Core\Role\Role as SecurityRole;
 
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
 
 class Role implements PermissionTypeInterface {
+  protected $roleHierarchy;
+
+  public function __construct(SecurityRoleHierarchyInterface $roleHierarchy) {
+    $this->roleHierarchy = $roleHierarchy;
+  }
 
   /**
    * {@inheritdoc}
@@ -47,14 +54,20 @@ class Role implements PermissionTypeInterface {
     }
 
     $roles = $user->getRoles();
-    foreach($roles as $thisRole) {
-      $strRole = '';
+
+    // Use Symfony Security Role class to make roles compatible with RoleHierarchy::getReachableRoles().
+    foreach($roles as $i => $thisRole) {
       if(is_string($thisRole)) {
-        $strRole = $thisRole;
+        $roles[$i] = new SecurityRole($thisRole);
       }
-      else {
-        $strRole = (string) $thisRole->getRole();
+      elseif(!($thisRole instanceof SecurityRole)) {
+        throw new \InvalidArgumentException('One of the roles of this user is neither a string nor an instance of Symfony\Component\Security\Core\Role\Role.');
       }
+    }
+    $roles = $this->roleHierarchy->getReachableRoles($roles);
+
+    foreach($roles as $thisRole) {
+      $strRole = (string) $thisRole->getRole();
       if($role === $strRole) {
         return true;
       }

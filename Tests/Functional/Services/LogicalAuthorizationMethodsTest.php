@@ -4,6 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Role\RoleHierarchy as SecurityRoleHierarchy;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
@@ -302,7 +303,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException InvalidArgumentException
     */
   public function testRoleWrongRoleType() {
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $role->checkPermission(true, []);
   }
 
@@ -310,7 +311,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException InvalidArgumentException
     */
   public function testRoleEmptyRole() {
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $role->checkPermission('', []);
   }
 
@@ -318,7 +319,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException InvalidArgumentException
     */
   public function testRoleWrongContextType() {
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $role->checkPermission('ROLE_USER', null);
   }
 
@@ -326,7 +327,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException InvalidArgumentException
     */
   public function testRoleMissingUser() {
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $role->checkPermission('ROLE_USER', []);
   }
 
@@ -334,27 +335,55 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     * @expectedException InvalidArgumentException
     */
   public function testRoleWrongUserType() {
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $role->checkPermission('ROLE_USER', ['user' => []]);
   }
 
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testRoleInvalidRoleType() {
+    $user = new TestUser();
+    $roles = array(
+      'ROLE_ADMIN',
+      5,
+    );
+    $user->setRoles($roles);
+    $role = new Role($this->roleHierarchy);
+    $role->checkPermission('ROLE_USER', ['user' => $user]);
+  }
+
   public function testRoleAnonymousUserDisallow() {
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $this->assertFalse($role->checkPermission('ROLE_USER', ['user' => 'anon.']));
   }
 
   public function testRoleDisallow() {
     $user = new TestUser();
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $this->assertFalse($role->checkPermission('ROLE_ADMIN', ['user' => $user]));
   }
 
   public function testRoleAllow() {
     $user = new TestUser();
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $this->assertTrue($role->checkPermission('ROLE_USER', ['user' => $user]));
     $user->setRoles(['ROLE_ADMIN']);
     $this->assertTrue($role->checkPermission('ROLE_ADMIN', ['user' => $user]));
+  }
+
+  public function testRoleHierarchyDisallow() {
+    $user = new TestUser();
+    $user->setRoles(['ROLE_ADMIN']);
+    $role = new Role($this->roleHierarchy);
+    $this->assertFalse($role->checkPermission('ROLE_CHILD', ['user' => $user]));
+  }
+
+  public function testRoleHierarchyAllow() {
+    $user = new TestUser();
+    $user->setRoles(['ROLE_PARENT']);
+    $role = new Role($this->roleHierarchy);
+    $this->assertTrue($role->checkPermission('ROLE_CHILD', ['user' => $user]));
   }
 
   /*------------ Services -------------*/
@@ -706,7 +735,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
 
   public function testEventInsertTreeGetTree() {
     $laProxy = new LogicalPermissionsProxy();
-    $role = new Role();
+    $role = new Role($this->roleHierarchy);
     $laProxy->addType($role);
     $flagManager = new FlagManager();
     $laProxy->addType($flagManager);

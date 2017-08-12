@@ -1,6 +1,9 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
+    role_hierarchy:
+        ROLE_PARENT: ROLE_CHILD
+
     encoders:
         Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser: plaintext
 

@@ -37,6 +37,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase {
     $this->helper = $container->get('logauth.service.helper');
     $this->treeBuilder = $container->get('logauth.service.permission_tree_builder');
     $this->twig = $container->get('twig');
+    $this->roleHierarchy = $container->get('security.role_hierarchy');
 
     $this->addUsers();
   }

@@ -106,5 +106,6 @@ services:
 
   logauth.permission_type.role:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role
+    arguments: ['@security.role_hierarchy']
     tags:
       - {name: logauth.tag.permission_type}
