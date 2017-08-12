@@ -109,3 +109,21 @@ services:
     arguments: ['@security.role_hierarchy']
     tags:
       - {name: logauth.tag.permission_type}
+
+  logauth.permission_type.host:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host
+    arguments: ['@request_stack']
+    tags:
+      - {name: logauth.tag.permission_type}
+
+  logauth.permission_type.method:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method
+    arguments: ['@request_stack']
+    tags:
+      - {name: logauth.tag.permission_type}
+
+  logauth.permission_type.ip:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip\Ip
+    arguments: ['@request_stack']
+    tags:
+      - {name: logauth.tag.permission_type}
