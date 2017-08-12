@@ -13,7 +13,6 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->sendRequestAs('GET', '/test/route-role', [], static::$authenticated_user);
     $response = $this->client->getResponse();
     $this->assertEquals(403, $response->getStatusCode());
-
   }
 
   public function testRouteBypassActionAllow() {

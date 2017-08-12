@@ -39,6 +39,6 @@ class Ip implements PermissionTypeInterface {
 
     $currentRequest = $this->requestStack->getCurrentRequest();
 
-    return IpUtils::checkIp($request->getClientIp(), $ip);
+    return IpUtils::checkIp($currentRequest->getClientIp(), $ip);
   }
 }

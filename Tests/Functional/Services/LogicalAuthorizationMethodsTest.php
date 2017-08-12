@@ -4,6 +4,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Role\RoleHierarchy as SecurityRoleHierarchy;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
@@ -19,6 +20,9 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousModel;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip\Ip;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
@@ -26,6 +30,8 @@ use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
 class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
 
   /*------------ Permission types ---------------*/
+
+  // --- Flag --- //
 
   /**
     * @expectedException InvalidArgumentException
@@ -299,6 +305,8 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertTrue($flagManager->checkPermission('test', []));
   }
 
+  // --- Role --- //
+
   /**
     * @expectedException InvalidArgumentException
     */
@@ -384,6 +392,114 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $user->setRoles(['ROLE_PARENT']);
     $role = new Role($this->roleHierarchy);
     $this->assertTrue($role->checkPermission('ROLE_CHILD', ['user' => $user]));
+  }
+
+  // --- Host --- //
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testHostWrongHostType() {
+    $requestStack = new RequestStack();
+    $host = new Host($requestStack);
+    $host->checkPermission(1, []);
+  }
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testHostEmptyHost() {
+    $requestStack = new RequestStack();
+    $host = new Host($requestStack);
+    $host->checkPermission('', []);
+  }
+
+  public function testHostDisallow() {
+    $requestStack = new RequestStack();
+    $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
+    $requestStack->push($request);
+    $host = new Host($requestStack);
+    $this->assertFalse($host->checkPermission('test.se', []));
+  }
+
+  public function testHostAllow() {
+    $requestStack = new RequestStack();
+    $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
+    $requestStack->push($request);
+    $host = new Host($requestStack);
+    $this->assertTrue($host->checkPermission('test.com', []));
+  }
+
+  // --- Method --- //
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testMethodWrongMethodType() {
+    $requestStack = new RequestStack();
+    $method = new Method($requestStack);
+    $method->checkPermission(1, []);
+  }
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testMethodEmptyMethod() {
+    $requestStack = new RequestStack();
+    $method = new Method($requestStack);
+    $method->checkPermission('', []);
+  }
+
+  public function testMethodDisallow() {
+    $requestStack = new RequestStack();
+    $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
+    $requestStack->push($request);
+    $method = new Method($requestStack);
+    $this->assertFalse($method->checkPermission('PUSH', []));
+  }
+
+  public function testMethodAllow() {
+    $requestStack = new RequestStack();
+    $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
+    $requestStack->push($request);
+    $method = new Method($requestStack);
+    $this->assertTrue($method->checkPermission('GET', []));
+  }
+
+  // --- Ip --- //
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testIpWrongIpType() {
+    $requestStack = new RequestStack();
+    $ip = new Ip($requestStack);
+    $ip->checkPermission(1, []);
+  }
+
+  /**
+    * @expectedException InvalidArgumentException
+    */
+  public function testIpEmptyIp() {
+    $requestStack = new RequestStack();
+    $ip = new Ip($requestStack);
+    $ip->checkPermission('', []);
+  }
+
+  public function testIpDisallow() {
+    $requestStack = new RequestStack();
+    $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
+    $requestStack->push($request);
+    $ip = new Ip($requestStack);
+    $this->assertFalse($ip->checkPermission('127.0.0.1', []));
+  }
+
+  public function testIpAllow() {
+    $requestStack = new RequestStack();
+    $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
+    $requestStack->push($request);
+    $ip = new Ip($requestStack);
+    $this->assertTrue($ip->checkPermission('127.0.0.55', []));
   }
 
   /*------------ Services -------------*/

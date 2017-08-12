@@ -38,6 +38,6 @@ class Method implements PermissionTypeInterface {
 
     $currentRequest = $this->requestStack->getCurrentRequest();
 
-    return $request->getMethod() === $method;
+    return $currentRequest->getMethod() === $method;
   }
 }
