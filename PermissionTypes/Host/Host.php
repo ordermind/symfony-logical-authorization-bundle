@@ -38,6 +38,8 @@ class Host implements PermissionTypeInterface {
 
     $currentRequest = $this->requestStack->getCurrentRequest();
 
+    if(!$currentRequest) return false;
+
     return !!preg_match('{'.$host.'}i', $currentRequest->getHost());
   }
 }

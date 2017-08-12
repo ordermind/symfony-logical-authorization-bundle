@@ -27,6 +27,62 @@ class LogicalAuthorizationRoutesTest extends LogicalAuthorizationBase {
     $this->assertEquals(403, $response->getStatusCode());
   }
 
+  public function testRouteHostAllow() {
+    $client = static::createClient([], ['HTTP_HOST' => 'test.com']);
+    $headers = [
+      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+    ];
+    $client->request('GET', '/test/route-host', [], [], $headers);
+    $response = $client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  public function testRouteHostDisallow() {
+    $client = static::createClient([], ['HTTP_HOST' => 'test.se']);
+    $headers = [
+      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+    ];
+    $client->request('GET', '/test/route-host', [], [], $headers);
+    $response = $client->getResponse();
+    $this->assertEquals(403, $response->getStatusCode());
+  }
+
+  public function testRouteMethodAllow() {
+    $this->sendRequestAs('GET', '/test/route-method', [], static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  public function testRouteMethodDisallow() {
+    $this->sendRequestAs('PUSH', '/test/route-method', [], static::$authenticated_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(403, $response->getStatusCode());
+  }
+
+  public function testRouteIpAllow() {
+    $client = static::createClient([], ['REMOTE_ADDR' => '127.0.0.1']);
+    $headers = [
+      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+    ];
+    $client->request('GET', '/test/route-ip', [], [], $headers);
+    $response = $client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  public function testRouteIpDisallow() {
+    $client = static::createClient([], ['REMOTE_ADDR' => '127.0.0.55']);
+    $headers = [
+      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+    ];
+    $client->request('GET', '/test/route-ip', [], [], $headers);
+    $response = $client->getResponse();
+    $this->assertEquals(403, $response->getStatusCode());
+  }
+
   public function testRouteHasAccountAllow() {
     $this->sendRequestAs('GET', '/test/route-has-account', [], static::$authenticated_user);
     $response = $this->client->getResponse();

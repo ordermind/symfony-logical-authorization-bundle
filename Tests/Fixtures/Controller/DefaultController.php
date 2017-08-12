@@ -35,4 +35,36 @@ class DefaultController extends Controller {
   public function routeNoBypassAction(Request $request) {
     return new Response('');
   }
+
+  /**
+    * @Route("/route-host", name="route_host")
+    * @Method({"GET"})
+    * @Permissions({
+    *   "host": "test.com"
+    * })
+    */
+  public function routeHostAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
+    * @Route("/route-method", name="route_method")
+    * @Permissions({
+    *   "method": "GET"
+    * })
+    */
+  public function routeMethodAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
+    * @Route("/route-ip", name="route_ip")
+    * @Method({"GET"})
+    * @Permissions({
+    *   "ip": "127.0.0.1"
+    * })
+    */
+  public function routeIpAction(Request $request) {
+    return new Response('');
+  }
 }
