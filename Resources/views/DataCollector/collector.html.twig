@@ -82,7 +82,7 @@
         background-color: red;
       }
     </style>
-    <script>
+    <script type="text/javascript">
         function logauth_toggle(a, recursive) {
             var s = a.nextSibling;
             while(s && s.nodeType != 1) {
@@ -117,53 +117,6 @@
 
             return true;
         }
-
-        function logauth_filter_elements() {
-          var filters = [];
-          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
-          var filter_elements = filters_wrapper.getElementsByClassName('filter');
-          for(var i in filter_elements) {
-            var filter_element = filter_elements[i];
-            if(!filter_element.tagName) continue;
-
-            var select = filter_element.getElementsByTagName('select')[0];
-            if(select.value !== '_none') {
-              filters.push({name: select.dataset.name, value: select.value});
-            }
-          }
-          var log_items_wrapper = document.getElementsByClassName('log-items')[0];
-          var log_items = log_items_wrapper.getElementsByClassName('log-item');
-          for(var i in log_items) {
-            var log_item = log_items[i];
-            if(!log_item.tagName) continue;
-
-            log_item.classList.remove('hidden');
-            for(var j in filters) {
-              var filter = filters[j];
-              if(log_item.dataset[filter.name] !== filter.value) {
-                log_item.classList.add('hidden');
-              }
-            }
-          }
-        }
-
-        function logauth_update_filters(type) {
-          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
-          var action_filter_elements = filters_wrapper.getElementsByClassName('filter-action');
-          for(var i in action_filter_elements) {
-            var action_filter_element = action_filter_elements[i];
-            if(!action_filter_element.tagName) continue;
-
-            if(action_filter_element.classList.contains('filter-action-' + type)) {
-              action_filter_element.classList.add('visible');
-            }
-            else {
-              action_filter_element.classList.remove('visible');
-              var select = action_filter_element.getElementsByTagName('select')[0];
-              select.value = '_none';
-            }
-          }
-        }
     </script>
     <h2>Logical Authorization</h2>
     <div class="sf-tabs">
@@ -171,7 +124,7 @@
             <h3 class="tab-title">Access Checks<span class="badge">{{ collector.log | length }}</span></h3>
             <p class="text-muted">Information about the access checks that were made during this request.</p>
             <div class="tab-content">
-                <div class="filters-wrapper">
+                <div class="filters-wrapper hidden">
                     <h4>Filters</h4>
                     <div class="filters">
                         <div class="filter filter-access">
@@ -318,4 +271,57 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        (function() {
+          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
+          filters_wrapper.classList.remove('hidden');
+        })();
+
+        function logauth_filter_elements() {
+          var filters = [];
+          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
+          var filter_elements = filters_wrapper.getElementsByClassName('filter');
+          for(var i in filter_elements) {
+            var filter_element = filter_elements[i];
+            if(!filter_element.tagName) continue;
+
+            var select = filter_element.getElementsByTagName('select')[0];
+            if(select.value !== '_none') {
+              filters.push({name: select.dataset.name, value: select.value});
+            }
+          }
+          var log_items_wrapper = document.getElementsByClassName('log-items')[0];
+          var log_items = log_items_wrapper.getElementsByClassName('log-item');
+          for(var i in log_items) {
+            var log_item = log_items[i];
+            if(!log_item.tagName) continue;
+
+            log_item.classList.remove('hidden');
+            for(var j in filters) {
+              var filter = filters[j];
+              if(log_item.dataset[filter.name] !== filter.value) {
+                log_item.classList.add('hidden');
+              }
+            }
+          }
+        }
+
+        function logauth_update_filters(type) {
+          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
+          var action_filter_elements = filters_wrapper.getElementsByClassName('filter-action');
+          for(var i in action_filter_elements) {
+            var action_filter_element = action_filter_elements[i];
+            if(!action_filter_element.tagName) continue;
+
+            if(action_filter_element.classList.contains('filter-action-' + type)) {
+              action_filter_element.classList.add('visible');
+            }
+            else {
+              action_filter_element.classList.remove('visible');
+              var select = action_filter_element.getElementsByTagName('select')[0];
+              select.value = '_none';
+            }
+          }
+        }
+    </script>
 {% endblock %}
