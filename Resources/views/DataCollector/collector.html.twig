@@ -102,12 +102,18 @@
                       <tr>
                           <th>Access</th>
                           <th>Type</th>
+                          {% if log_item.action is defined %}
+                            <th>Action</th>
+                          {% endif %}
                           <th>Item</th>
                           <th>User</th>
                       </tr>
                       <tr>
                           <td class="font-normal"><span class="label same-width {% if log_item.access %}status-success{% else %}status-error{% endif %}">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
                           <td>{{ log_item.type }}</td>
+                          {% if log_item.action is defined %}
+                            <td>{{ log_item.action }}</td>
+                          {% endif %}
                           <td>{{ profiler_dump(item) }}</td>
                           <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
                       </tr>
