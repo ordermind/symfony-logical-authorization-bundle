@@ -90,7 +90,6 @@
         <div class="tab">
             <h3 class="tab-title">Access Checks<span class="badge">{{ collector.log | length }}</span></h3>
             <p class="text-muted">Information about the access checks that were made during this request.</p>
-
             <div class="tab-content">
                 {% for i, log_item in collector.log %}
                   {% set item = log_item.item_name %}
@@ -102,6 +101,9 @@
                       <tr>
                           <th>Access</th>
                           <th>Type</th>
+                          {% if log_item.field is defined %}
+                            <th>Field</th>
+                          {% endif %}
                           {% if log_item.action is defined %}
                             <th>Action</th>
                           {% endif %}
@@ -111,6 +113,9 @@
                       <tr>
                           <td class="font-normal"><span class="label same-width {% if log_item.access %}status-success{% else %}status-error{% endif %}">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
                           <td>{{ log_item.type }}</td>
+                          {% if log_item.field is defined %}
+                            <td>{{ log_item.field }}</td>
+                          {% endif %}
                           {% if log_item.action is defined %}
                             <td>{{ log_item.action }}</td>
                           {% endif %}

@@ -69,6 +69,10 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
         $log_item['action'] = $log_item['item']['action'];
       }
 
+      if($log_item['type'] === 'field') {
+        $log_item['field'] = $log_item['item']['field'];
+      }
+
       $formatted_item = $this->formatItem($log_item['type'], $log_item['item']);
       unset($log_item['item']);
       $log_item += $formatted_item;
