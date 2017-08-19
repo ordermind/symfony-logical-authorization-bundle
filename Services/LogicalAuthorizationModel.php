@@ -6,6 +6,7 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
 
@@ -29,6 +30,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   }
 
   public function getAvailableActions($model, $model_actions, $field_actions, $user = null) {
+    if($model instanceof ModelDecoratorInterface) {
+      $model = $model->getModel();
+    }
+
     if(!is_array($model_actions)) {
       $this->helper->handleError('Error getting available actions for model: the model_actions parameter must be an array.', ['model' => $model, 'user' => $user, 'model_actions' => $model_actions, 'field_actions' => $field_actions]);
       return [];
@@ -63,6 +68,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * {@inheritdoc}
    */
   public function checkModelAccess($model, $action, $user = null) {
+    if($model instanceof ModelDecoratorInterface) {
+      $model = $model->getModel();
+    }
+
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) {
@@ -132,6 +141,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * {@inheritdoc}
    */
   public function checkFieldAccess($model, $field_name, $action, $user = null) {
+    if($model instanceof ModelDecoratorInterface) {
+      $model = $model->getModel();
+    }
+
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) {

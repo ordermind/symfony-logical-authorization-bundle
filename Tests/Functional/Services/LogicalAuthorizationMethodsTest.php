@@ -18,6 +18,7 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousModel;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ModelDecorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host;
@@ -574,6 +575,14 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertSame($available_actions_model, $available_actions_class);
   }
 
+  public function testGetAvailableActionsModelDecorator() {
+    $model = new TestModelBoolean();
+    $modelDecorator = new ModelDecorator($model);
+    $available_actions_model_decorator = $this->laModel->getAvailableActions($modelDecorator, ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    $available_actions_class = $this->laModel->getAvailableActions(get_class($model), ['create', 'read', 'update', 'delete'], ['get', 'set'], 'anon.');
+    $this->assertSame($available_actions_model_decorator, $available_actions_class);
+  }
+
   /**
     * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
     */
@@ -649,6 +658,20 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkModelAccess($model, 'create', $user));
+  }
+
+  public function testCheckModelDecoratorAccessDisallow() {
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $modelDecorator = new ModelDecorator($model);
+    $this->assertFalse($this->laModel->checkModelAccess($modelDecorator, 'read', $user));
+  }
+
+  public function testCheckModelDecoratorAccessAllow() {
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $modelDecorator = new ModelDecorator($model);
+    $this->assertTrue($this->laModel->checkModelAccess($modelDecorator, 'create', $user));
   }
 
   /**
@@ -734,16 +757,42 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'read', $user));
   }
 
-  public function testCheckFieldAccessDisallow() {
+  public function testCheckFieldAccessClassDisallow() {
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $this->assertFalse($this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', $user));
+  }
+
+  public function testCheckFieldAccessClassAllow() {
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $this->assertTrue($this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', $user));
+  }
+
+  public function testCheckFieldAccessObjectDisallow() {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'set', $user));
   }
 
-  public function testCheckFieldAccessAllow() {
+  public function testCheckFieldAccessObjectAllow() {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', $user));
+  }
+
+  public function testCheckModelDecoratorFieldAccessDisallow() {
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $modelDecorator = new ModelDecorator($model);
+    $this->assertFalse($this->laModel->checkFieldAccess($modelDecorator, 'field1', 'set', $user));
+  }
+
+  public function testCheckModelDecoratorFieldAccessAllow() {
+    $user = new TestUser();
+    $model = new TestModelBoolean();
+    $modelDecorator = new ModelDecorator($model);
+    $this->assertTrue($this->laModel->checkFieldAccess($modelDecorator, 'field1', 'get', $user));
   }
 
   public function testGetAvailableRoutes() {
@@ -1020,6 +1069,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), static::$superadmin_user, $permissions, ['model' => $model, 'user' => static::$superadmin_user]);
     $result = [
       'type' => 'field',
+      'field' => 'field1',
       'user' => static::$superadmin_user,
       'permissions' => $permissions,
       'action' => 'get',
@@ -1149,6 +1199,7 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $result = [
       'type' => 'field',
+      'field' => 'field1',
       'user' => $user,
       'permissions' => $permissions,
       'action' => 'get',
