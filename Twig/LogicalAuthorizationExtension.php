@@ -16,9 +16,9 @@ class LogicalAuthorizationExtension extends \Twig_Extension {
 
   public function getFunctions() {
     return array(
-      new \Twig_Function('logauth.check_route_access', array($this, 'checkRouteAccess')),
-      new \Twig_Function('logauth.check_model_access', array($this, 'checkModelAccess')),
-      new \Twig_Function('logauth.check_field_access', array($this, 'checkFieldAccess')),
+      new \Twig_SimpleFunction('logauth.check_route_access', array($this, 'checkRouteAccess')),
+      new \Twig_SimpleFunction('logauth.check_model_access', array($this, 'checkModelAccess')),
+      new \Twig_SimpleFunction('logauth.check_field_access', array($this, 'checkFieldAccess')),
     );
   }
 
