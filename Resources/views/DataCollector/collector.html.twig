@@ -95,7 +95,7 @@
                 {% for i, log_item in collector.log %}
                   {% set item = log_item.item_name %}
                   {% if log_item.item is defined %}
-                      {% set item = {(log_item.item_name): log_item.item} %}
+                      {% set item = log_item.item %}
                   {% endif %}
 
                   <table>
