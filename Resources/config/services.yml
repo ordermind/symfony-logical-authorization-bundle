@@ -27,6 +27,12 @@ services:
     tags:
       - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions, priority: -250}
 
+  logauth.twig.extension:
+    class: Ordermind\LogicalAuthorizationBundle\Twig\LogicalAuthorizationExtension
+    arguments: ['@logauth.service.logauth_route', '@logauth.service.logauth_model']
+    tags:
+      - {name: twig.extension}
+
   logauth.service.logical_permissions_proxy:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
 
