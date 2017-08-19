@@ -34,6 +34,42 @@
       .sf-dump .sf-dump-compact {
         display: none;
       }
+      .filters-wrapper .filter {
+        display: inline-block;
+        margin-right: 1em;
+      }
+      .filters-wrapper .filter select {
+        background: #fff;
+        height: 30px;
+        padding: 0 5px;
+      }
+      .filters-wrapper .filter-action {
+        display: none;
+      }
+      .filters-wrapper .filter-action.visible {
+        display: inline-block;
+      }
+      .log-items {
+        clear: both;
+      }
+      .log-item {
+        margin: 1em 0;
+        box-shadow: 0px 0px 1px rgba(128, 128, 128, .2);
+        border-top: 1px solid #E0E0E0;
+        border-bottom: 2px solid #E0E0E0;
+      }
+      .log-item.hidden {
+        display: none;
+      }
+      .log-item table {
+        margin: 0;
+        box-shadow: none;
+        border-top: 0;
+        border-bottom: 0;
+      }
+      .log-item table tr:last-child td {
+        border-bottom: 0;
+      }
       .permission-check .resolve {
         display: inline-block;
         width: 10px;
@@ -84,6 +120,53 @@
 
             return true;
         }
+
+        function logauth_filter_elements() {
+          var filters = [];
+          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
+          var filter_elements = filters_wrapper.getElementsByClassName('filter');
+          for(var i in filter_elements) {
+            var filter_element = filter_elements[i];
+            if(!filter_element.tagName) continue;
+
+            var select = filter_element.getElementsByTagName('select')[0];
+            if(select.value !== '_none') {
+              filters.push({name: select.dataset.name, value: select.value});
+            }
+          }
+          var log_items_wrapper = document.getElementsByClassName('log-items')[0];
+          var log_items = log_items_wrapper.getElementsByClassName('log-item');
+          for(var i in log_items) {
+            var log_item = log_items[i];
+            if(!log_item.tagName) continue;
+
+            log_item.classList.remove('hidden');
+            for(var j in filters) {
+              var filter = filters[j];
+              if(log_item.dataset[filter.name] !== filter.value) {
+                log_item.classList.add('hidden');
+              }
+            }
+          }
+        }
+
+        function logauth_update_filters(type) {
+          var filters_wrapper = document.getElementsByClassName('filters-wrapper')[0];
+          var action_filter_elements = filters_wrapper.getElementsByClassName('filter-action');
+          for(var i in action_filter_elements) {
+            var action_filter_element = action_filter_elements[i];
+            if(!action_filter_element.tagName) continue;
+
+            if(action_filter_element.classList.contains('filter-action-' + type)) {
+              action_filter_element.classList.add('visible');
+            }
+            else {
+              action_filter_element.classList.remove('visible');
+              var select = action_filter_element.getElementsByTagName('select')[0];
+              select.value = '_none';
+            }
+          }
+        }
     </script>
     <h2>Logical Authorization</h2>
     <div class="sf-tabs">
@@ -91,93 +174,142 @@
             <h3 class="tab-title">Access Checks<span class="badge">{{ collector.log | length }}</span></h3>
             <p class="text-muted">Information about the access checks that were made during this request.</p>
             <div class="tab-content">
+                <div class="filters-wrapper">
+                    <h4>Filters</h4>
+                    <div class="filters">
+                        <div class="filter filter-access">
+                            <label>Access</label>
+                            <select data-name="access" onchange="logauth_filter_elements();">
+                                <option value="_none"> - All - </option>
+                                <option value="true">Granted</option>
+                                <option value="false">Denied</option>
+                            </select>
+                        </div>
+                        <div class="filter filter-type">
+                            <label>Type</label>
+                            <select data-name="type" onchange="logauth_update_filters(this.value); logauth_filter_elements();">
+                                <option value="_none"> - All - </option>
+                                <option value="route">Route</option>
+                                <option value="model">Model</option>
+                                <option value="field">Field</option>
+                            </select>
+                        </div>
+                        <div class="filter filter-action filter-action-model">
+                          <label>Action</label>
+                          <select data-name="action" onchange="logauth_filter_elements();">
+                              <option value="_none"> - All - </option>
+                              <option value="create">Create</option>
+                              <option value="read">Read</option>
+                              <option value="update">Update</option>
+                              <option value="delete">Delete</option>
+                          </select>
+                        </div>
+                        <div class="filter filter-action filter-action-field">
+                          <label>Action</label>
+                          <select data-name="action" onchange="logauth_filter_elements();">
+                              <option value="_none"> - All - </option>
+                              <option value="get">Get</option>
+                              <option value="set">Set</option>
+                          </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="log-items">
                 {% for i, log_item in collector.log %}
                   {% set item = log_item.item_name %}
                   {% if log_item.item is defined %}
                       {% set item = log_item.item %}
                   {% endif %}
 
-                  <table>
-                      <tr>
-                          <th>Access</th>
-                          <th>Type</th>
-                          {% if log_item.field is defined %}
-                            <th>Field</th>
-                          {% endif %}
-                          {% if log_item.action is defined %}
-                            <th>Action</th>
-                          {% endif %}
-                          <th>Item</th>
-                          <th>User</th>
-                      </tr>
-                      <tr>
-                          <td class="font-normal"><span class="label same-width {% if log_item.access %}status-success{% else %}status-error{% endif %}">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
-                          <td>{{ log_item.type }}</td>
-                          {% if log_item.field is defined %}
-                            <td>{{ log_item.field }}</td>
-                          {% endif %}
-                          {% if log_item.action is defined %}
-                            <td>{{ log_item.action }}</td>
-                          {% endif %}
-                          <td>{{ profiler_dump(item) }}</td>
-                          <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
-                      </tr>
-                      {% if log_item.message %}
+                  <div class="log-item" data-access="{% if log_item.access %}true{% else %}false{% endif %}" data-type="{{ log_item.type }}" data-action="{% if log_item.action is defined %}{{ log_item.action }}{% endif %}">
+                    <table class="overview">
+                        {% set col_count = 4 %}
                         <tr>
-                          <td colspan="4">
-                            {{ log_item.message }}
-                          </td>
-                        </tr>
-                      {% elseif log_item.permissions %}
-                        <tr>
-                          <td colspan="4">
-                            <label>Permissions: </label><span class="permissions">{{ log_item.permissions | json_encode }}</span>
-                          </td>
+                            <th>Access</th>
+                            <th>Type</th>
+                            {% if log_item.field is defined %}
+                              {% set col_count = col_count + 1 %}
+                              <th>Field</th>
+                            {% endif %}
+                            {% if log_item.action is defined %}
+                              {% set col_count = col_count + 1 %}
+                              <th>Action</th>
+                            {% endif %}
+                            <th>Item</th>
+                            <th>User</th>
                         </tr>
                         <tr>
-                            <th colspan="2">Permissions debug</th>
-                            <th>No Bypass debug</th>
-                            <th>Access Bypass</th>
+                            <td class="font-normal"><span class="label same-width {% if log_item.access %}status-success{% else %}status-error{% endif %}">{% if log_item.access %}GRANTED{% else %}DENIED{% endif %}</td>
+                            <td>{{ log_item.type }}</td>
+                            {% if log_item.field is defined %}
+                              <td>{{ log_item.field }}</td>
+                            {% endif %}
+                            {% if log_item.action is defined %}
+                              <td>{{ log_item.action }}</td>
+                            {% endif %}
+                            <td>{{ profiler_dump(item) }}</td>
+                            <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
                         </tr>
-                        <tr>
-                            <td colspan="2">
-                              {% if log_item.permission_checks %}
-                                {% if log_item.permission_checks | length < 3 %}
-                                  {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_checks }) }}
-                                {% else %}
-                                  <div class="sf-dump">
-                                    <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
-                                    <samp class="sf-dump-compact" data-depth="1">
+                        {% if log_item.message %}
+                          <tr>
+                            <td colspan="{{ col_count }}">
+                              {{ log_item.message }}
+                            </td>
+                          </tr>
+                        {% elseif log_item.permissions %}
+                          <tr>
+                            <td colspan="{{ col_count }}">
+                              <label>Permissions: </label><span class="permissions">{{ log_item.permissions | json_encode }}</span>
+                            </td>
+                          </tr>
+                        {% else %}
+                          <tr>
+                            <td colspan="{{ col_count }}">No permissions have been defined for this item. Access was therefore automatically granted.</td>
+                          </tr>
+                        {% endif %}
+                    </table>
+                    {% if log_item.permissions %}
+                        <table class="details">
+                            <tr>
+                                <th>Permissions debug</th>
+                                <th>No Bypass debug</th>
+                                <th>Access Bypass</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                  {% if log_item.permission_checks %}
+                                    {% if log_item.permission_checks | length < 3 %}
                                       {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_checks }) }}
-                                    </samp>
-                                  </div>
-                                {% endif %}
-                              {% endif %}
-                            </td>
-                            <td>
-                              {% if log_item.permission_no_bypass_checks %}
-                                {% if log_item.permission_no_bypass_checks | length < 3 %}
-                                  {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_no_bypass_checks }) }}
-                                {% else %}
-                                  <div class="sf-dump">
-                                    <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
-                                    <samp class="sf-dump-compact" data-depth="1">
+                                    {% else %}
+                                      <div class="sf-dump">
+                                        <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
+                                        <samp class="sf-dump-compact" data-depth="1">
+                                          {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_checks }) }}
+                                        </samp>
+                                      </div>
+                                    {% endif %}
+                                  {% endif %}
+                                </td>
+                                <td>
+                                  {% if log_item.permission_no_bypass_checks %}
+                                    {% if log_item.permission_no_bypass_checks | length < 3 %}
                                       {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_no_bypass_checks }) }}
-                                    </samp>
-                                  </div>
-                                {% endif %}
-                              {% endif %}
-                            </td>
-                            <td>{% if log_item.bypassed_access %}Access was bypassed{% else %}Access was not bypassed{% endif %}</td>
-                        </tr>
-                      {% else %}
-                        <tr>
-                          <td colspan="4">No permissions have been defined for this item. Access was therefore automatically granted.</td>
-                        </tr>
-                      {% endif %}
-                  </table>
+                                    {% else %}
+                                      <div class="sf-dump">
+                                        <a class="sf-dump-ref sf-dump-toggle" title="[Ctrl+click] Expand all children" onclick="logauth_toggle(this, false);"><span>Show parts&nbsp;</span><span>▶</span></a>
+                                        <samp class="sf-dump-compact" data-depth="1">
+                                          {{ include('@OrdermindLogicalAuthorization/DataCollector/permission_checks.html.twig', { 'permission_checks': log_item.permission_no_bypass_checks }) }}
+                                        </samp>
+                                      </div>
+                                    {% endif %}
+                                  {% endif %}
+                                </td>
+                                <td>{% if log_item.bypassed_access %}Access was bypassed{% else %}Access was not bypassed{% endif %}</td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                </div>
                 {% endfor %}
-
             </div>
         </div>
         <div class="tab">
