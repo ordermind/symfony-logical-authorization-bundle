@@ -58,9 +58,6 @@
         border-top: 1px solid #E0E0E0;
         border-bottom: 2px solid #E0E0E0;
       }
-      .log-item.hidden {
-        display: none;
-      }
       .log-item table {
         margin: 0;
         box-shadow: none;
@@ -310,12 +307,12 @@
                     {% endif %}
                 </div>
                 {% endfor %}
-            </div>
+                </div>
+             </div>
         </div>
         <div class="tab">
             <h3 class="tab-title">Permission Tree</h3>
             <p class="text-muted">Information about the entire permission tree.</p>
-
             <div class="tab-content">
                 {{ profiler_dump(collector.permissionTree, maxDepth=2) }}
             </div>
