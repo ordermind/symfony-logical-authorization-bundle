@@ -43,6 +43,9 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       if(!empty($log_item['user']) && $log_item['user'] !== 'anon.') {
         $log_item['user'] = $this->cloneVar($log_item['user']);
       }
+      if(!empty($log_item['backtrace'])) {
+        $log_item['backtrace'] = $this->cloneVar($log_item['backtrace']);
+      }
     }
     unset($log_item);
   }
@@ -56,7 +59,9 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   }
 
   public function addPermissionCheck($access, $type, $item, $user, $permissions, $context, $message = '') {
-    $this->addPermissionLogItem(['access' => $access, 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context, 'message' => $message]);
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
+    array_shift($backtrace);
+    $this->addPermissionLogItem(['access' => $access, 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context, 'message' => $message, 'backtrace' => $backtrace]);
   }
 
   protected function addPermissionLogItem($log_item) {
