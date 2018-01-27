@@ -1086,6 +1086,11 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $log = $debugCollector->getLog();
     $item = array_shift($log);
     foreach($item as $key => $value) {
+      if($key === 'backtrace') {
+        $this->assertEquals(10, count($value));
+        $this->assertSame('testDebugCollectorPermissionFormatBoolean', $value[0]['function']);
+        continue;
+      }
       $this->assertSame($result[$key], $value);
     }
   }
@@ -1120,6 +1125,11 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $log = $debugCollector->getLog();
     $item = array_shift($log);
     foreach($item as $key => $value) {
+      if($key === 'backtrace') {
+        $this->assertEquals(10, count($value));
+        $this->assertSame('testDebugCollectorPermissionFormatTypeClose', $value[0]['function']);
+        continue;
+      }
       $this->assertSame($result[$key], $value);
     }
   }
@@ -1154,6 +1164,11 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $log = $debugCollector->getLog();
     $item = array_shift($log);
     foreach($item as $key => $value) {
+      if($key === 'backtrace') {
+        $this->assertEquals(10, count($value));
+        $this->assertSame('testDebugCollectorPermissionFormatTypeSeparate', $value[0]['function']);
+        continue;
+      }
       $this->assertSame($result[$key], $value);
     }
   }
@@ -1236,14 +1251,18 @@ class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
     $log = $debugCollector->getLog();
     $item = array_shift($log);
     foreach($item as $key => $value) {
+      if($key === 'backtrace') {
+        $this->assertEquals(10, count($value));
+        $this->assertSame('testDebugCollectorPermissionFormatMixed', $value[0]['function']);
+        continue;
+      }
       if($key === 'permission_checks') {
         foreach($value as $i => $value2) {
           $this->assertSame($result[$key][$i], $value2);
         }
+        continue;
       }
-      else {
-        $this->assertSame($result[$key], $value);
-      }
+      $this->assertSame($result[$key], $value);
     }
   }
 

@@ -42,22 +42,26 @@ class IsAuthor implements FlagInterface {
     }
 
     $model = $context['model'];
-    if(!($model instanceof ModelInterface)) {
-      if(is_string($model) && class_exists($model)) {
-        // A class string was passed which means that we don't have an actual object to evaluate. We interpret this as it not having an author which means that we return false.
-        return false;
-      }
-      throw new \InvalidArgumentException('The model class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface to be able to evaluate the ' . $this->getName() . ' flag.');
-    }
 
-    $author = $model->getAuthor();
-    if(!$author) {
+    if(is_string($model) && class_exists($model)) {
+      // A class string was passed which means that we don't have an actual object to evaluate. We interpret this as it not having an author which means that we return false.
       return false;
     }
-    if(!($author instanceof UserInterface)) {
-      throw new \InvalidArgumentException('The author class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the ' . $this->getName() . ' flag.');
+
+    if($model instanceof UserInterface) return $user->getId() === $model->getId();
+
+    if($model instanceof ModelInterface) {
+      $author = $model->getAuthor();
+      if(!$author) {
+        return false;
+      }
+      if(!($author instanceof UserInterface)) {
+        throw new \InvalidArgumentException('The author of the model must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the ' . $this->getName() . ' flag.');
+      }
+
+      return $user->getId() === $author->getId();
     }
 
-    return $user->getId() === $author->getId();
+    throw new \InvalidArgumentException('The model class must implement either Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface or Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the ' . $this->getName() . ' flag.');
   }
 }

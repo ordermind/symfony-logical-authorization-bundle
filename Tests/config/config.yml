@@ -112,7 +112,21 @@ logauth:
             set:
               role: ROLE_ADMIN
               flag: is_author
-
-
-
-
+      Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser:
+        create:
+          role: ROLE_ADMIN
+        read:
+          OR:
+            role: ROLE_ADMIN
+            flag: is_author
+        update:
+          OR:
+            role: ROLE_ADMIN
+            flag: is_author
+        delete:
+          no_bypass:
+            flag: is_author
+          AND:
+            role: ROLE_ADMIN
+            flag:
+              NOT: is_author
