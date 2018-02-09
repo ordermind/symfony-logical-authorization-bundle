@@ -13,6 +13,7 @@ class AppKernel extends Kernel
 
         if (in_array($this->getEnvironment(), array('test'))) {
             $bundles[] = new Symfony\Bundle\FrameworkBundle\FrameworkBundle();
+            $bundles[] = new Symfony\Bundle\MonologBundle\MonologBundle();
             $bundles[] = new Symfony\Bundle\SecurityBundle\SecurityBundle();
             $bundles[] = new Symfony\Bundle\TwigBundle\TwigBundle();
             $bundles[] = new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle();

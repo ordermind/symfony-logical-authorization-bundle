@@ -14,47 +14,57 @@ services:
     arguments: ['@logauth.service.logauth_route']
     tags:
       - {name: security.voter}
+    public: false
 
   logauth.event_listener.add_route_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
     arguments: ['@router']
     tags:
       - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions}
+    public: false
 
   logauth.event_listener.add_app_config_permissions:
     class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
     arguments: ['%logauth.config%']
     tags:
       - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions, priority: -250}
+    public: false
 
   logauth.twig.extension:
     class: Ordermind\LogicalAuthorizationBundle\Twig\LogicalAuthorizationExtension
     arguments: ['@logauth.service.logauth_route', '@logauth.service.logauth_model']
     tags:
       - {name: twig.extension}
+    public: false
 
   logauth.service.logical_permissions_proxy:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
+    public: true
 
   logauth.service.helper:
     class: Ordermind\LogicalAuthorizationBundle\Services\Helper
-    arguments: ['@security.token_storage', '@?logger']
+    arguments: ['%kernel.environment%', '@security.token_storage', '@?logger']
+    public: true
 
   logauth.service.permission_tree_builder:
     class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
     arguments: ['@logauth.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
+    public: true
 
   logauth.service.logauth_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
     arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper', '@?logauth.debug.collector']
+    public: true
 
   logauth.service.logauth_model:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
     arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper', '@?logauth.debug.collector']
+    public: true
 
   logauth.service.logauth:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
     arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper']
+    public: true
 
   logauth.routing.yml_file_loader:
     class: Ordermind\LogicalAuthorizationBundle\Routing\YamlLoader
@@ -94,42 +104,50 @@ services:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager
     tags:
       - {name: logauth.tag.permission_type}
+    public: false
 
   logauth.permission_type.flag.bypass_access:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess
     tags:
       - {name: logauth.tag.permission_type.flag}
+    public: false
 
   logauth.permission_type.flag.has_account:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount
     tags:
       - {name: logauth.tag.permission_type.flag}
+    public: false
 
   logauth.permission_type.flag.is_author:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor
     tags:
       - {name: logauth.tag.permission_type.flag}
+    public: false
 
   logauth.permission_type.role:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role
     arguments: ['@security.role_hierarchy']
     tags:
       - {name: logauth.tag.permission_type}
+    public: false
 
   logauth.permission_type.host:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host
     arguments: ['@request_stack']
     tags:
       - {name: logauth.tag.permission_type}
+    public: false
 
   logauth.permission_type.method:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method
     arguments: ['@request_stack']
     tags:
       - {name: logauth.tag.permission_type}
+    public: false
 
   logauth.permission_type.ip:
     class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip\Ip
     arguments: ['@request_stack']
     tags:
       - {name: logauth.tag.permission_type}
+    public: false

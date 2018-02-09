@@ -15,6 +15,7 @@
         "ordermind/logical-permissions": "^1.2.6"
     },
     "require-dev": {
-        "phpunit/phpunit": ">=4.8"
+        "phpunit/phpunit": ">=4.8",
+        "symfony/monolog-bundle": "^3.0"
     }
 }

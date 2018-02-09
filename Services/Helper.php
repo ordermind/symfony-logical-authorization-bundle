@@ -8,7 +8,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 
 class Helper implements HelperInterface {
-
+  protected $environment;
   protected $tokenStorage;
   protected $logger;
 
@@ -18,7 +18,8 @@ class Helper implements HelperInterface {
    * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
    * @param Psr\Log\LoggerInterface $logger (optional) A service for logging errors
    */
-  public function __construct(TokenStorageInterface $tokenStorage, LoggerInterface $logger = null) {
+  public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null) {
+    $this->environment = $environment;
     $this->tokenStorage = $tokenStorage;
     $this->logger = $logger;
   }
@@ -42,7 +43,7 @@ class Helper implements HelperInterface {
       throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
     }
 
-    if(!is_null($this->logger)) {
+    if('prod' === $this->environment && !is_null($this->logger)) {
       $this->logger->error($message, $context);
     }
     else {
