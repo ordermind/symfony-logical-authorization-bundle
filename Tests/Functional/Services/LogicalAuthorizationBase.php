@@ -3,6 +3,7 @@
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 
@@ -37,7 +38,8 @@ abstract class LogicalAuthorizationBase extends WebTestCase {
     $this->helper = $container->get('logauth.service.helper');
     $this->treeBuilder = $container->get('logauth.service.permission_tree_builder');
     $this->twig = $container->get('twig');
-    $this->roleHierarchy = $container->get('security.role_hierarchy');
+    $roleHierarchy = $container->getParameter('security.role_hierarchy.roles');
+    $this->roleHierarchy = new RoleHierarchy($roleHierarchy);
 
     $this->addUsers();
   }

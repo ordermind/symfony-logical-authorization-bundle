@@ -5,7 +5,6 @@ namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Role\RoleHierarchy as SecurityRoleHierarchy;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
