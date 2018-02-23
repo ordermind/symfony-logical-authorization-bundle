@@ -8,3 +8,27 @@ services:
 
     custom_user_provider:
         class: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Security\User\CustomUserProvider
+
+    test.logauth.service.logical_permissions_proxy:
+        alias: logauth.service.logical_permissions_proxy
+        public: true
+
+    test.logauth.service.helper:
+        alias: logauth.service.helper
+        public: true
+
+    test.logauth.service.permission_tree_builder:
+        alias: logauth.service.permission_tree_builder
+        public: true
+
+    test.logauth.service.logauth_route:
+        alias: logauth.service.logauth_route
+        public: true
+
+    test.logauth.service.logauth_model:
+        alias: logauth.service.logauth_model
+        public: true
+
+    test.logauth.service.logauth:
+        alias: logauth.service.logauth
+        public: true

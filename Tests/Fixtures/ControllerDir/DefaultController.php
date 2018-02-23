@@ -85,7 +85,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countAvailableRoutesAction(Request $request) {
-    $laRoute = $this->get('logauth.service.logauth_route');
+    $laRoute = $this->get('test.logauth.service.logauth_route');
     $result = $laRoute->getAvailableRoutes();
     if(empty($result['routes'])) return new Response(0);
     return new Response(count($result['routes']));
@@ -96,7 +96,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function countAvailableRoutePatternsAction(Request $request) {
-    $laRoute = $this->get('logauth.service.logauth_route');
+    $laRoute = $this->get('test.logauth.service.logauth_route');
     $result = $laRoute->getAvailableRoutes();
     if(empty($result['route_patterns'])) return new Response(0);
     return new Response(count($result['route_patterns']));
@@ -107,7 +107,7 @@ class DefaultController extends Controller {
     * @Method({"GET"})
     */
   public function getCurrentUsernameAction(Request $request) {
-    $user = $this->get('logauth.service.helper')->getCurrentUser();
+    $user = $this->get('test.logauth.service.helper')->getCurrentUser();
     if(is_null($user)) return new Response($user);
     if(is_string($user)) return new Response($user);
     return new Response($user->getUsername());

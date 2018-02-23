@@ -31,12 +31,12 @@ abstract class LogicalAuthorizationBase extends WebTestCase {
     $container = $kernel->getContainer();
 
     $this->client = static::createClient();
-    $this->la = $container->get('logauth.service.logauth');
-    $this->lpProxy = $container->get('logauth.service.logical_permissions_proxy');
-    $this->laModel = $container->get('logauth.service.logauth_model');
-    $this->laRoute = $container->get('logauth.service.logauth_route');
-    $this->helper = $container->get('logauth.service.helper');
-    $this->treeBuilder = $container->get('logauth.service.permission_tree_builder');
+    $this->la = $container->get('test.logauth.service.logauth');
+    $this->lpProxy = $container->get('test.logauth.service.logical_permissions_proxy');
+    $this->laModel = $container->get('test.logauth.service.logauth_model');
+    $this->laRoute = $container->get('test.logauth.service.logauth_route');
+    $this->helper = $container->get('test.logauth.service.helper');
+    $this->treeBuilder = $container->get('test.logauth.service.permission_tree_builder');
     $this->twig = $container->get('twig');
     $roleHierarchy = $container->getParameter('security.role_hierarchy.roles');
     $this->roleHierarchy = new RoleHierarchy($roleHierarchy);

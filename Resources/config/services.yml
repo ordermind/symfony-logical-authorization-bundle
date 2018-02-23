@@ -39,32 +39,32 @@ services:
 
   logauth.service.logical_permissions_proxy:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
-    public: true
+    public: false
 
   logauth.service.helper:
     class: Ordermind\LogicalAuthorizationBundle\Services\Helper
     arguments: ['%kernel.environment%', '@security.token_storage', '@?logger']
-    public: true
+    public: false
 
   logauth.service.permission_tree_builder:
     class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
     arguments: ['@logauth.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
-    public: true
+    public: false
 
   logauth.service.logauth_route:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
     arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper', '@?logauth.debug.collector']
-    public: true
+    public: false
 
   logauth.service.logauth_model:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
     arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper', '@?logauth.debug.collector']
-    public: true
+    public: false
 
   logauth.service.logauth:
     class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
     arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper']
-    public: true
+    public: false
 
   logauth.routing.yml_file_loader:
     class: Ordermind\LogicalAuthorizationBundle\Routing\YamlLoader
