@@ -6,7 +6,7 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelHasAccoun
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelNoBypass;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelRoleAuthor;
 
-class LogicalAuthorizationModelsTest extends LogicalAuthorizationBase {
+class LogicalAuthorizationModelTest extends LogicalAuthorizationBase {
   public function testModelRoleAllow() {
     $model = new TestModelRoleAuthor();
     $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', self::$admin_user));

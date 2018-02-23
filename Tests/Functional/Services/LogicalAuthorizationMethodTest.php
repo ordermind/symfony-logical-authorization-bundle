@@ -27,7 +27,7 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
 
-class LogicalAuthorizationMethodsTest extends LogicalAuthorizationBase {
+class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
 
   /*------------ Permission types ---------------*/
 
