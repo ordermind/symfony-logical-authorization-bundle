@@ -209,7 +209,7 @@
                               {{ log_item.message }}
                             </td>
                           </tr>
-                        {% elseif log_item.permissions %}
+                        {% elseif not (log_item.permissions is iterable and log_item.permissions is empty) %}
                           <tr>
                             <td colspan="{{ col_count }}">
                               <label>Permissions: </label><span class="permissions">{{ log_item.permissions | json_encode }}</span>
@@ -221,7 +221,7 @@
                           </tr>
                         {% endif %}
                     </table>
-                    {% if log_item.permissions %}
+                    {% if not (log_item.permissions is iterable and log_item.permissions is empty) %}
                         <table class="details">
                             <tr>
                                 <th>Permissions debug</th>
