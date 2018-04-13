@@ -175,11 +175,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
     $this->assertFalse($flag->checkFlag(['user' => 'anon.', 'model' => $model]));
   }
 
-  public function testFlagIsAuthorModelAnonymousAuthorDisallow() {
+  public function testFlagIsAuthorModelAnonymousAuthorAllow() {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $flag = new IsAuthorFlag();
-    $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => $model]));
+    $this->assertTrue($flag->checkFlag(['user' => $user, 'model' => $model]));
   }
 
   public function testFlagIsAuthorModelAllow() {

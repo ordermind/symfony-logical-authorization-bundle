@@ -52,8 +52,10 @@ class IsAuthor implements FlagInterface {
 
     if($model instanceof ModelInterface) {
       $author = $model->getAuthor();
+      // If there is no author it probably means that the entity is not yet persisted. In that case it's reasonable to assume that the current user is the author.
+      // If the lack of author is due to some other reason it's also reasonable to fall back to granting permission because the reason for this flag is to protect models that do have an author against other users.
       if(!$author) {
-        return false;
+        return true;
       }
       if(!($author instanceof UserInterface)) {
         throw new \InvalidArgumentException('The author of the model must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the ' . $this->getName() . ' flag.');
