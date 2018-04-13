@@ -13,11 +13,11 @@
             {% if log_item.access %}{% set access_granted_count = access_granted_count + 1 %}{% else %}{% set access_denied_count = access_denied_count + 1 %}{% endif %}
         {% endfor %}
         <div class="sf-toolbar-info-piece">
-            <b>Access granted</b>
+            <b>Access Granted</b>
             <span class="sf-toolbar-status sf-toolbar-status-green">{{ access_granted_count }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
-            <b>Access denied</b>
+            <b>Access Denied</b>
             <span class="sf-toolbar-status sf-toolbar-status-red">{{ access_denied_count }}</span>
         </div>
     {% endset %}
