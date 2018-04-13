@@ -20,7 +20,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
     $this->lpProxy = $lpProxy;
     if(!$this->lpProxy->getBypassCallback()) {
       $this->lpProxy->setBypassCallback(function($context) {
-        return $this->lpProxy->checkAccess(['flag' => 'bypass_access'], $context, false);
+        return $this->lpProxy->checkAccess(['flag' => 'user_can_bypass_access'], $context, false);
       });
     }
     $this->helper = $helper;

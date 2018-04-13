@@ -4,13 +4,13 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
-class BypassAccess implements FlagInterface {
+class UserCanBypassAccess implements FlagInterface {
 
   /**
    * {@inheritdoc}
    */
   public function getName() {
-    return 'bypass_access';
+    return 'user_can_bypass_access';
   }
 
   /**

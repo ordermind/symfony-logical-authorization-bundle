@@ -9,9 +9,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Services\Helper;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess as BypassAccessFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount as HasAccountFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor as IsAuthorFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserCanBypassAccess as BypassAccessFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserHasAccount as HasAccountFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserIsAuthor as IsAuthorFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
@@ -1104,7 +1104,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
 
     $permissions = [
       'NOT' => [
-        'flag' => 'has_account',
+        'flag' => 'user_has_account',
       ],
     ];
     $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
@@ -1116,7 +1116,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
       'bypassed_access' => false,
       'permissions' => $permissions,
       'access' => true,
-      'permission_checks' => [['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => true], ['permissions' => ['flag' => 'has_account'], 'resolve' => false]],
+      'permission_checks' => [['permissions' => ['NOT' => ['flag' => 'user_has_account']], 'resolve' => true], ['permissions' => ['flag' => 'user_has_account'], 'resolve' => false]],
       'message' => '',
     ];
 
@@ -1143,7 +1143,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
 
     $permissions = [
       'flag' => [
-        'NOT' => 'has_account',
+        'NOT' => 'user_has_account',
       ],
     ];
     $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
@@ -1155,7 +1155,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
       'bypassed_access' => false,
       'permissions' => $permissions,
       'access' => true,
-      'permission_checks' => [['permissions' => ['flag' => ['NOT' => 'has_account']], 'resolve' => true], ['permissions' => ['NOT' => 'has_account'], 'resolve' => true], ['permissions' => 'has_account', 'resolve' => false]],
+      'permission_checks' => [['permissions' => ['flag' => ['NOT' => 'user_has_account']], 'resolve' => true], ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => true], ['permissions' => 'user_has_account', 'resolve' => false]],
       'message' => '',
     ];
 
@@ -1183,7 +1183,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
     $permissions = [
       'NO_BYPASS' => [
         'NOT' => [
-          'flag' => 'has_account',
+          'flag' => 'user_has_account',
         ],
       ],
       'AND' => [
@@ -1202,13 +1202,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
         'flag' => [
           'NOT' => [
             'OR' => [
-              ['NOT' => 'has_account'],
-              ['NOT' => 'is_author'],
+              ['NOT' => 'user_has_account'],
+              ['NOT' => 'user_is_author'],
             ],
           ],
         ],
       ],
-      'flag' => 'has_account',
+      'flag' => 'user_has_account',
     ];
     $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $result = [
@@ -1219,7 +1219,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
       'action' => 'get',
       'item_name' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
       'item' => $model,
-      'permission_no_bypass_checks' => array_reverse([['permissions' => ['flag' => 'has_account'], 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'has_account']], 'resolve' => false]]),
+      'permission_no_bypass_checks' => array_reverse([['permissions' => ['flag' => 'user_has_account'], 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'user_has_account']], 'resolve' => false]]),
       'bypassed_access' => false,
       'permission_checks' => [],
       'permission_checks' => array_reverse([
@@ -1231,16 +1231,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
         5 => ['permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]]], 'resolve' => true],
         6 => ['permissions' => true, 'resolve' => true],
         7 => ['permissions' => 'TRUE', 'resolve' => true],
-        8 => ['permissions' => 'has_account', 'resolve' => true],
-        9 => ['permissions' => ['NOT' => 'has_account'], 'resolve' => false],
-        10 => ['permissions' => 'is_author', 'resolve' => true],
-        11 => ['permissions' => ['NOT' => 'is_author'], 'resolve' => false],
-        12 => ['permissions' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]], 'resolve' => false],
-        13 => ['permissions' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]], 'resolve' => true],
-        14 => ['permissions' => ['flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]], 'resolve' => true],
-        15 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]]], 'resolve' => true],
-        16 => ['permissions' => ['flag' => 'has_account'], 'resolve' => true],
-        17 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'has_account'],['NOT' => 'is_author']]]]],'flag' => 'has_account'], 'resolve' => true],
+        8 => ['permissions' => 'user_has_account', 'resolve' => true],
+        9 => ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => false],
+        10 => ['permissions' => 'user_is_author', 'resolve' => true],
+        11 => ['permissions' => ['NOT' => 'user_is_author'], 'resolve' => false],
+        12 => ['permissions' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]], 'resolve' => false],
+        13 => ['permissions' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]], 'resolve' => true],
+        14 => ['permissions' => ['flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]]], 'resolve' => true],
+        15 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]]]], 'resolve' => true],
+        16 => ['permissions' => ['flag' => 'user_has_account'], 'resolve' => true],
+        17 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]]],'flag' => 'user_has_account'], 'resolve' => true],
       ]),
       'access' => true,
       'message' => '',
@@ -1272,7 +1272,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
-    $permissions = ['no_bypass' => true, 'flag' => ['flag' => 'has_account']];
+    $permissions = ['no_bypass' => true, 'flag' => ['flag' => 'user_has_account']];
     $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();
@@ -1287,7 +1287,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
     $user = new TestUser();
     $model = new TestModelBoolean();
     $model->setAuthor($user);
-    $permissions = ['no_bypass' => ['flag' => ['flag' => 'has_account']], true];
+    $permissions = ['no_bypass' => ['flag' => ['flag' => 'user_has_account']], true];
     $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
     $debugCollector->collect($request, $response);
     $log = $debugCollector->getLog();

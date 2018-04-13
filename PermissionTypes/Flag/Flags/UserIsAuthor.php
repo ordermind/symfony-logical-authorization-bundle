@@ -5,13 +5,13 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
-class IsAuthor implements FlagInterface {
+class UserIsAuthor implements FlagInterface {
 
   /**
    * {@inheritdoc}
    */
   public function getName() {
-    return 'is_author';
+    return 'user_is_author';
   }
 
   /**

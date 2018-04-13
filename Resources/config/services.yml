@@ -106,20 +106,20 @@ services:
       - {name: logauth.tag.permission_type}
     public: false
 
-  logauth.permission_type.flag.bypass_access:
-    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\BypassAccess
+  logauth.permission_type.flag.user_can_bypass_access:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserCanBypassAccess
     tags:
       - {name: logauth.tag.permission_type.flag}
     public: false
 
-  logauth.permission_type.flag.has_account:
-    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\HasAccount
+  logauth.permission_type.flag.user_has_account:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserHasAccount
     tags:
       - {name: logauth.tag.permission_type.flag}
     public: false
 
-  logauth.permission_type.flag.is_author:
-    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\IsAuthor
+  logauth.permission_type.flag.user_is_author:
+    class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserIsAuthor
     tags:
       - {name: logauth.tag.permission_type.flag}
     public: false

@@ -2,13 +2,13 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
-class HasAccount implements FlagInterface {
+class UserHasAccount implements FlagInterface {
 
   /**
    * {@inheritdoc}
    */
   public function getName() {
-    return 'has_account';
+    return 'user_has_account';
   }
 
   /**

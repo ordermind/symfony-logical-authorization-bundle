@@ -14,10 +14,10 @@ use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 class DefaultController extends Controller {
 
   /**
-    * @Route("/route-has-account", name="route_has_account")
+    * @Route("/route-has-account", name="route_user_has_account")
     * @Method({"GET"})
     * @Permissions({
-    *   "flag": "has_account"
+    *   "flag": "user_has_account"
     * })
     */
   public function routeHasAccountAction(Request $request) {
