@@ -97,6 +97,7 @@ services:
   logauth.routing.annotation_class_loader:
     class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationClassLoader
     arguments: ['@annotation_reader']
+    public: false
 
   # Permission type handlers
 

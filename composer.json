@@ -1,7 +1,7 @@
 {
     "name": "ordermind/logical-authorization-bundle",
     "version": "0.14.2",
-    "description": "Bundle for Symfony 3 supporting flexible and convenient model, field and route level permissions.",
+    "description": "Bundle for Symfony 4 supporting flexible and convenient model, field and route level permissions.",
     "keywords": ["authorization"],
     "autoload": {
         "psr-4": {
@@ -9,13 +9,21 @@
         }
     },
     "require": {
-        "php": ">=5.5.9",
-        "symfony/symfony": "^3.1",
-        "ordermind/logical-permissions": "^1.2.6"
+        "doctrine/common": "^2.0",
+        "ordermind/logical-permissions": "^1.2.6",
+        "symfony/cache": "^4.0",
+        "symfony/config": "^4.0",
+        "symfony/console": "^4.0",
+        "symfony/dependency-injection": "^4.0",
+        "symfony/event-dispatcher": "^4.0",
+        "symfony/http-foundation": "^4.0",
+        "symfony/routing": "^4.0",
+        "symfony/security": "^4.0",
+        "symfony/yaml": "^4.0"
     },
     "require-dev": {
-        "sensio/framework-extra-bundle": "^3.0",
         "phpunit/phpunit": ">=4.8",
-        "symfony/monolog-bundle": "^3.0"
+        "sensio/framework-extra-bundle": ">=3.0",
+        "symfony/monolog-bundle": ">=3.0"
     }
 }
