@@ -13,6 +13,7 @@
 >
     <php>
         <server name="KERNEL_DIR" value="./Tests/" />
+        <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
     <testsuites>
         <testsuite name="LogicalAuthorizationBundle Test Suite">

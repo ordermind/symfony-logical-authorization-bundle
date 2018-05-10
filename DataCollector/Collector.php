@@ -14,11 +14,13 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
   protected $treeBuilder;
   protected $lpProxy;
   protected $permission_log;
+  protected $data;
 
   public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy) {
     $this->treeBuilder = $treeBuilder;
     $this->lpProxy = $lpProxy;
     $this->permission_log = [];
+    $this->data = [];
   }
 
   public function getName() {
@@ -48,6 +50,11 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       }
     }
     unset($log_item);
+  }
+
+  public function reset()
+  {
+    $this->data = [];
   }
 
   public function getPermissionTree() {

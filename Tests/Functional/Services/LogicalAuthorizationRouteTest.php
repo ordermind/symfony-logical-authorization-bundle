@@ -97,10 +97,14 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase {
 
   public function testMultipleRoute1Allow() {
     $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
   }
 
   public function testMultipleRoute2Allow() {
     $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
   }
 
   public function testMultipleRoute1Disallow() {
