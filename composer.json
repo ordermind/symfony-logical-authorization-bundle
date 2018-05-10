@@ -1,6 +1,6 @@
 {
     "name": "ordermind/logical-authorization-bundle",
-    "version": "0.14.2",
+    "version": "0.15.0",
     "description": "Bundle for Symfony 4 supporting flexible and convenient model, field and route level permissions.",
     "keywords": ["authorization"],
     "autoload": {
