@@ -212,7 +212,9 @@
                             {% else %}
                               <td>{{ profiler_dump(item) }}</td>
                             {% endif %}
-                            <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
+                            {% if log_item.user %}
+                              <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                           <td colspan="{{ col_count }}">Backtrace: {{ profiler_dump(log_item.backtrace) }}</td>
