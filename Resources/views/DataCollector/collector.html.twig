@@ -207,7 +207,11 @@
                             {% if log_item.action is defined %}
                               <td>{{ log_item.action }}</td>
                             {% endif %}
-                            <td>{{ profiler_dump(item) }}</td>
+                            {% if item is same as(log_item.item_name) %}
+                              <td>{{ item }}</td>
+                            {% else %}
+                              <td>{{ profiler_dump(item) }}</td>
+                            {% endif %}
                             <td>{% if log_item.user == 'anon.' %}Anonymous user{% else %}{{ profiler_dump(log_item.user) }}{% endif %}</td>
                         </tr>
                         <tr>
