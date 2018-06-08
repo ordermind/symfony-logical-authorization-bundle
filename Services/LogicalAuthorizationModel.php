@@ -76,7 +76,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) {
         if(!is_null($this->debugCollector)) {
-          $this->debugCollector->addPermissionCheck(true, 'model', array('model' => $model, 'action' => $action), $user, [], [], 'No user was instantiated during this request (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
+          $this->debugCollector->addPermissionCheck(true, 'model', array('model' => $model, 'action' => $action), $user, [], [], 'No user was available during this permission check (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
         }
         return true;
       }
@@ -149,7 +149,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) {
         if(!is_null($this->debugCollector)) {
-          $this->debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user, [], [], 'No user was instantiated during this request (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
+          $this->debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user, [], [], 'No user was available during this permission check (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
         }
         return true;
       }

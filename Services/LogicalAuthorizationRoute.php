@@ -56,7 +56,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) {
         if(!is_null($this->debugCollector)) {
-          $this->debugCollector->addPermissionCheck(true, 'route', $route_name, $user, [], [], 'No user was instantiated during this request (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
+          $this->debugCollector->addPermissionCheck(true, 'route', $route_name, $user, [], [], 'No user was available during this permission check (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
         }
         return true;
       }
