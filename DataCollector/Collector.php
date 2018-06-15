@@ -156,12 +156,7 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     }
 
     $getPermissionChecksRecursive = function($permissions, $context, $type_keys, $type = null) use(&$getPermissionChecksRecursive) {
-//       echo "\n\nnew round\n";
-//       echo "permissions: " . print_r($permissions, true) . "\n";
-//       echo "type: $type\n";
-
       if(!is_array($permissions)) {
-//         echo "permissions is not an array\n";
         $resolve_permissions = $permissions;
         if($type) {
           $resolve_permissions = [$type => $permissions];
@@ -172,13 +167,9 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
         ]];
       }
 
-//       echo "permissions is an array\n";
-
       reset($permissions);
       $key = key($permissions);
       $value = current($permissions);
-
-//       echo "key: $key\n";
 
       if(is_numeric($key)) {
         return $getPermissionChecksRecursive($value, $context, $type_keys, $type);
@@ -190,7 +181,6 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       }
 
       if(is_array($value)) {
-//         echo "value is an array\n";
         $checks = [];
         foreach($value as $key2 => $value2) {
           $checks = array_merge($checks, $getPermissionChecksRecursive([$key2 => $value2], $context, $type_keys, $type));
@@ -206,17 +196,12 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
         return $checks;
       }
 
-//       echo "value is not an array\n";
-
       if($key === $type) {
-//         echo "key is same as type\n";
         return [[
           'permissions' => $permissions,
           'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
         ]];
       }
-
-//       echo "key is not same as type\n";
 
       $checks = [];
       $resolve_value = $value;
@@ -240,9 +225,6 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
       return $checks;
     };
 
-//     echo "\npermissions\n";
-//     print_r($permissions);
-
     $checks = [];
 
     if(is_array($permissions)) {
@@ -259,9 +241,6 @@ class Collector extends DataCollector implements CollectorInterface, LateDataCol
     else {
       $checks = array_merge($checks, $getPermissionChecksRecursive($permissions, $context, $type_keys));
     }
-
-//     echo "\nchecks\n";
-//     print_r($checks);
 
     return $checks;
   }
