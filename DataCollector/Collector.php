@@ -5,12 +5,11 @@ namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 
-class Collector extends DataCollector implements CollectorInterface, LateDataCollectorInterface {
+class Collector extends DataCollector implements CollectorInterface {
   protected $treeBuilder;
   protected $lpProxy;
   protected $permission_log;

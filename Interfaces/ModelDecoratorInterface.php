@@ -2,8 +2,11 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Interfaces;
 
-use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
-
 interface ModelDecoratorInterface {
+  /**
+   * Gets the model for this decorator
+   *
+   * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface The model
+   */
   public function getModel();
 }
