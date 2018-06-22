@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes;
 
@@ -7,7 +8,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\FlagInterfac
 class TestFlag implements FlagInterface {
   protected $name;
 
-  public function getName() {
+  public function getName(): string {
     return $this->name;
   }
 
@@ -15,7 +16,7 @@ class TestFlag implements FlagInterface {
     $this->name = $name;
   }
 
-  public function checkFlag($context) {
+  public function checkFlag(array $context): bool {
     return true;
   }
 }

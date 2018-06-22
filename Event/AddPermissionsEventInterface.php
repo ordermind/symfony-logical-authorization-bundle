@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Event;
 
@@ -9,12 +10,12 @@ interface AddPermissionsEventInterface {
    *
    * @return array The permission tree
    */
-  public function getTree();
+  public function getTree(): array;
 
   /**
    * Inserts a new permission tree and merges it into the existing tree, making it possible to override permissions.
    *
    * @param array $tree The new permission tree
    */
-  public function insertTree($tree);
+  public function insertTree(array $tree);
 }

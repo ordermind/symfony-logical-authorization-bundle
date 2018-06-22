@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
@@ -15,14 +16,14 @@ class PermissionsCacheWarmer implements CacheWarmerInterface {
   /**
    * {@inheritdoc}
    */
-  public function warmUp($cacheDir) {
+  public function warmUp(string $cacheDir) {
     $this->treeBuilder->getTree(TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isOptional() {
+  public function isOptional(): bool {
     return true;
   }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -33,18 +34,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAvailableActions($model, $model_actions, $field_actions, $user = null) {
+  public function getAvailableActions($model, array $model_actions, array $field_actions, $user = null): array {
     if($model instanceof ModelDecoratorInterface) {
       $model = $model->getModel();
-    }
-
-    if(!is_array($model_actions)) {
-      $this->helper->handleError('Error getting available actions for model: the model_actions parameter must be an array.', ['model' => $model, 'user' => $user, 'model_actions' => $model_actions, 'field_actions' => $field_actions]);
-      return [];
-    }
-    if(!is_array($field_actions)) {
-      $this->helper->handleError('Error getting available actions for model: the field_actions parameter must be an array.', ['model' => $model, 'user' => $user, 'model_actions' => $model_actions, 'field_actions' => $field_actions]);
-      return [];
     }
 
     $available_actions = [];
@@ -71,7 +63,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkModelAccess($model, $action, $user = null) {
+  public function checkModelAccess($model, string $action, $user = null): bool {
     if($model instanceof ModelDecoratorInterface) {
       $model = $model->getModel();
     }
@@ -95,13 +87,6 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     }
     if(is_string($model) && !class_exists($model)) {
       $this->helper->handleError('Error checking model access: the model parameter is a class string but the class could not be found.', ['model' => $model, 'action' => $action, 'user' => $user]);
-      if(!is_null($this->debugCollector)) {
-        $this->debugCollector->addPermissionCheck(false, 'model', array('model' => $model, 'action' => $action), $user, [], [], 'There was an error checking the model access and access was therefore automatically denied. Please refer to the error log for more information.');
-      }
-      return false;
-    }
-    if(!is_string($action)) {
-      $this->helper->handleError('Error checking model access: the action parameter must be a string.', ['model' => $model, 'action' => $action, 'user' => $user]);
       if(!is_null($this->debugCollector)) {
         $this->debugCollector->addPermissionCheck(false, 'model', array('model' => $model, 'action' => $action), $user, [], [], 'There was an error checking the model access and access was therefore automatically denied. Please refer to the error log for more information.');
       }
@@ -144,7 +129,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkFieldAccess($model, $field_name, $action, $user = null) {
+  public function checkFieldAccess($model, string $field_name, string $action, $user = null): bool {
     if($model instanceof ModelDecoratorInterface) {
       $model = $model->getModel();
     }
@@ -173,22 +158,8 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
       }
       return false;
     }
-    if(!is_string($field_name)) {
-      $this->helper->handleError('Error checking field access: the field_name parameter must be a string.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
-      if(!is_null($this->debugCollector)) {
-        $this->debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user, [], [], 'There was an error checking the field access and access was therefore automatically denied. Please refer to the error log for more information.');
-      }
-      return false;
-    }
     if(!$field_name) {
       $this->helper->handleError('Error checking field access: the field_name parameter cannot be empty.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
-      if(!is_null($this->debugCollector)) {
-        $this->debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user, [], [], 'There was an error checking the field access and access was therefore automatically denied. Please refer to the error log for more information.');
-      }
-      return false;
-    }
-    if(!is_string($action)) {
-      $this->helper->handleError('Error checking field access: the action parameter must be a string.', ['model' => $model, 'field name' => $field_name, 'action' => $action, 'user' => $user]);
       if(!is_null($this->debugCollector)) {
         $this->debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => $field_name, 'action' => $action), $user, [], [], 'There was an error checking the field access and access was therefore automatically denied. Please refer to the error log for more information.');
       }

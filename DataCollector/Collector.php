@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 
@@ -31,7 +32,7 @@ class Collector extends DataCollector implements CollectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'logauth.collector';
   }
 
@@ -77,31 +78,31 @@ class Collector extends DataCollector implements CollectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPermissionTree() {
+  public function getPermissionTree(): array {
     return $this->data['tree'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLog() {
+  public function getLog(): array {
     return $this->data['log'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addPermissionCheck($access, $type, $item, $user, $permissions, $context, $message = '') {
+  public function addPermissionCheck(bool $access, string $type, $item, $user, $permissions, array $context, string $message = '') {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
     array_shift($backtrace);
     $this->addPermissionLogItem(['access' => $access, 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context, 'message' => $message, 'backtrace' => $backtrace]);
   }
 
-  protected function addPermissionLogItem($log_item) {
+  protected function addPermissionLogItem(array $log_item) {
     $this->permission_log[] = $log_item;
   }
 
-  protected function formatLog($log) {
+  protected function formatLog(array $log): array {
     foreach($log as &$log_item) {
       if($log_item['type'] === 'model' || $log_item['type'] === 'field') {
         $log_item['action'] = $log_item['item']['action'];
@@ -146,7 +147,7 @@ class Collector extends DataCollector implements CollectorInterface {
     return $log;
   }
 
-  protected function formatItem($type, $item) {
+  protected function formatItem(string $type, $item): array {
     $formatted_item = [];
 
     if($type === 'route') {
@@ -168,7 +169,7 @@ class Collector extends DataCollector implements CollectorInterface {
     return $formatted_item;
   }
 
-  protected function getPermissionChecks($permissions, $context, $type_keys) {
+  protected function getPermissionChecks($permissions, array $context, array $type_keys): array {
     // Extra permission check of the whole tree to catch errors
     try {
       $this->lpProxy->checkAccess($permissions, $context, false);
@@ -181,7 +182,7 @@ class Collector extends DataCollector implements CollectorInterface {
       ]];
     }
 
-    $getPermissionChecksRecursive = function($permissions, $context, $type_keys, $type = null) use(&$getPermissionChecksRecursive) {
+    $getPermissionChecksRecursive = function($permissions, array $context, array $type_keys, string $type = null) use(&$getPermissionChecksRecursive): array {
       if(!is_array($permissions)) {
         $resolve_permissions = $permissions;
         if($type) {
@@ -271,7 +272,7 @@ class Collector extends DataCollector implements CollectorInterface {
     return $checks;
   }
 
-  protected function getPermissionNoBypassChecks($permissions, $context, $type_keys) {
+  protected function getPermissionNoBypassChecks($permissions, array $context, array $type_keys): array {
     if(is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
       return $this->getPermissionChecks($permissions['NO_BYPASS'], $context, $type_keys);
     }
@@ -279,7 +280,7 @@ class Collector extends DataCollector implements CollectorInterface {
     return [];
   }
 
-  protected function getBypassedAccess($permissions, $context) {
+  protected function getBypassedAccess($permissions, array $context): bool {
     $new_permissions = [false];
     if(is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
       $new_permissions['NO_BYPASS'] = $permissions['NO_BYPASS'];

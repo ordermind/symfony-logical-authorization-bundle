@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
@@ -11,14 +12,14 @@ class YamlLoader extends YamlFileLoader {
   /**
    * {@inheritdoc}
    */
-  public function load($file, $type = null) {
+  public function load($file, $type = null): RouteCollection {
     return parent::load($file, 'yaml');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function supports($resource, $type = null) {
+  public function supports($resource, $type = null): bool {
     return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), true) && ('logauth_yml' === $type || 'logauth_yaml' === $type);
   }
 

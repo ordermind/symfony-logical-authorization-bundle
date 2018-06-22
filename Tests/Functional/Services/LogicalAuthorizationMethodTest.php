@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
@@ -34,7 +35,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   // --- Flag --- //
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagBypassAccessWrongContextType() {
     $flag = new BypassAccessFlag();
@@ -58,7 +59,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException UnexpectedValueException
+    * @expectedException TypeError
     */
   public function testFlagBypassAccessWrongReturnType() {
     $user = new ErroneousUser();
@@ -85,7 +86,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagHasAccountWrongContextType() {
     $flag = new HasAccountFlag();
@@ -112,7 +113,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagIsAuthorWrongContextType() {
     $flag = new IsAuthorFlag();
@@ -160,7 +161,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagIsAuthorModelWrongAuthorType() {
     $user = new TestUser();
@@ -191,7 +192,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagManagerAddFlagWrongNameType() {
     $flagManager = new FlagManager();
@@ -232,7 +233,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagManagerRemoveFlagWrongNameType() {
     $flagManager = new FlagManager();
@@ -274,7 +275,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testFlagManagerCheckPermissionWrongNameType() {
     $flagManager = new FlagManager();
@@ -308,7 +309,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   // --- Role --- //
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testRoleWrongRoleType() {
     $role = new Role($this->roleHierarchy);
@@ -324,7 +325,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testRoleWrongContextType() {
     $role = new Role($this->roleHierarchy);
@@ -397,7 +398,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   // --- Host --- //
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testHostWrongHostType() {
     $requestStack = new RequestStack();
@@ -433,7 +434,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   // --- Method --- //
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testMethodWrongMethodType() {
     $requestStack = new RequestStack();
@@ -469,7 +470,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   // --- Ip --- //
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testIpWrongIpType() {
     $requestStack = new RequestStack();
@@ -599,7 +600,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    * @expectedException TypeError
     */
   public function testCheckModelAccessWrongActionType() {
     $user = new TestUser();
@@ -678,7 +679,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessWrongModelType() {
     $user = new TestUser();
-    $this->laModel->checkFieldAccess(null, null, null, $user);
+    $this->laModel->checkFieldAccess(null, 'field', 'action', $user);
   }
 
   /**
@@ -686,16 +687,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
     */
   public function testCheckFieldAccessModelClassDoesntExist() {
     $user = new TestUser();
-    $this->laModel->checkFieldAccess('TestModelBoolean', null, null, $user);
+    $this->laModel->checkFieldAccess('TestModelBoolean', 'field', 'action', $user);
   }
 
   /**
-    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    * @expectedException TypeError
     */
   public function testCheckFieldAccessWrongFieldType() {
     $user = new TestUser();
     $model = new TestModelBoolean();
-    $this->laModel->checkFieldAccess($model, null, null, $user);
+    $this->laModel->checkFieldAccess($model, null, 'action', $user);
   }
 
   /**
@@ -704,11 +705,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   public function testCheckFieldAccessEmptyField() {
     $user = new TestUser();
     $model = new TestModelBoolean();
-    $this->laModel->checkFieldAccess($model, '', null, $user);
+    $this->laModel->checkFieldAccess($model, '', 'action', $user);
   }
 
   /**
-    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    * @expectedException TypeError
     */
   public function testCheckFieldAccessWrongActionType() {
     $user = new TestUser();
@@ -807,7 +808,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
+    * @expectedException TypeError
     */
   public function testCheckRouteAccessWrongRouteType() {
     $user = new TestUser();
@@ -889,7 +890,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase {
   }
 
   /**
-    * @expectedException InvalidArgumentException
+    * @expectedException TypeError
     */
   public function testEventInsertTreeWrongTreeType() {
     $laProxy = new LogicalPermissionsProxy();

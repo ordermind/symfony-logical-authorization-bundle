@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
 
@@ -118,7 +119,7 @@ class TestModelHasAccountNoInterface
      *
      * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      */
-    public function getAuthor() {
+    public function getAuthor(): ?UserInterface {
         return $this->author;
     }
 

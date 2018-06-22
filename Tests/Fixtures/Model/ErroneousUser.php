@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
 
@@ -187,11 +188,11 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
   /**
    * Set bypassAccess
    *
-   * @param boolean $bypassAccess
+   * @param bool $bypassAccess
    *
    * @return TestUser
    */
-  public function setBypassAccess($bypassAccess)
+  public function setBypassAccess(bool $bypassAccess)
   {
     $this->bypassAccess = $bypassAccess;
 
@@ -201,9 +202,9 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
   /**
    * Get bypassAccess
    *
-   * @return string
+   * @return bool
    */
-  public function getBypassAccess()
+  public function getBypassAccess(): bool
   {
     return (string) $this->bypassAccess;
   }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -17,5 +18,5 @@ interface HelperInterface {
    * @param string $message The error message
    * @param array $context The context for the error
    */
-  public function handleError($message, $context);
+  public function handleError(string $message, array $context);
 }

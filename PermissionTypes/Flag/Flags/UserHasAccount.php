@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
@@ -7,7 +8,7 @@ class UserHasAccount implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'user_has_account';
   }
 
@@ -18,10 +19,7 @@ class UserHasAccount implements FlagInterface {
    *
    * @return bool TRUE if the user is not a string and FALSE if the user is a string and thereby anonymous
    */
-  public function checkFlag($context) {
-    if(!is_array($context)) {
-      throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
-    }
+  public function checkFlag(array $context): bool {
     if(!isset($context['user'])) {
       throw new \InvalidArgumentException('The context parameter must contain a "user" key to be able to evaluate the ' . $this->getName() . ' flag.');
     }

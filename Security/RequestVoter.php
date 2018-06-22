@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Security;
 
@@ -20,7 +21,7 @@ class RequestVoter extends VoterBase {
         $this->laRoute = $laRoute;
     }
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         if(strtolower($attribute) === 'logauth' && $subject instanceof Request) {
             return true;
@@ -29,7 +30,7 @@ class RequestVoter extends VoterBase {
         return false;
     }
 
-    protected function voteOnAttribute($attribute, $request, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $request, TokenInterface $token): bool
     {
         $routeName = $request->get('_route');
         if($routeName) {

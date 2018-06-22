@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip;
 
@@ -22,7 +23,7 @@ class Ip implements PermissionTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'ip';
   }
 
@@ -34,10 +35,7 @@ class Ip implements PermissionTypeInterface {
    *
    * @return bool TRUE if the ip is allowed or FALSE if it is not allowed
    */
-  public function checkPermission($ip, $context) {
-    if(!is_string($ip)) {
-      throw new \InvalidArgumentException('The ip parameter must be a string.');
-    }
+  public function checkPermission(string $ip, array $context): bool {
     if(!$ip) {
       throw new \InvalidArgumentException('The ip parameter cannot be empty.');
     }

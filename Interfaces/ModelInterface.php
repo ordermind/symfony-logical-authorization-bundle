@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Interfaces;
 
@@ -17,5 +18,5 @@ interface ModelInterface {
    *
    * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface The author
    */
-  public function getAuthor();
+  public function getAuthor(): ?UserInterface;
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -38,49 +39,49 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface {
   /**
    * {@inheritdoc}
    */
-  public function removeType($name) {
+  public function removeType(string $name) {
     $this->lp->removeType($name);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function typeExists($name) {
+  public function typeExists(string $name): bool {
     return $this->lp->typeExists($name);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTypes() {
+  public function getTypes(): array {
     return $this->lp->getTypes();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setBypassCallback($callback) {
+  public function setBypassCallback(callable $callback) {
     $this->lp->setBypassCallback($callback);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getBypassCallback() {
+  public function getBypassCallback(): ?callable {
     return $this->lp->getBypassCallback();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getValidPermissionKeys() {
+  public function getValidPermissionKeys(): array {
     return $this->lp->getValidPermissionKeys();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function checkAccess($permissions, $context, $allow_bypass = TRUE) {
+  public function checkAccess($permissions, array $context, bool $allow_bypass = TRUE): bool {
     try {
       return $this->lp->checkAccess($permissions, $context, $allow_bypass);
     }

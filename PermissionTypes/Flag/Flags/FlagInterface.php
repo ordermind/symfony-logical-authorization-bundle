@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
@@ -9,7 +10,7 @@ interface FlagInterface {
    *
    * @return string The flag name
    */
-  public function getName();
+  public function getName(): string;
 
   /**
    * Checks if this flag is on or off in the current context.
@@ -18,6 +19,6 @@ interface FlagInterface {
    *
    * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
    */
-  public function checkFlag($context);
+  public function checkFlag(array $context): bool;
 }
 

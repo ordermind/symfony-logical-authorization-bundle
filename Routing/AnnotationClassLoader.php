@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
@@ -19,7 +20,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader {
         }
     }
 
-    protected function createRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition)
+    protected function createRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition): Route
     {
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method;
 
@@ -21,7 +22,7 @@ class Method implements PermissionTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'method';
   }
 
@@ -33,10 +34,7 @@ class Method implements PermissionTypeInterface {
    *
    * @return bool TRUE if the method is allowed or FALSE if it is not allowed
    */
-  public function checkPermission($method, $context) {
-    if(!is_string($method)) {
-      throw new \InvalidArgumentException('The method parameter must be a string.');
-    }
+  public function checkPermission(string $method, array $context): bool {
     if(!$method) {
       throw new \InvalidArgumentException('The method parameter cannot be empty.');
     }

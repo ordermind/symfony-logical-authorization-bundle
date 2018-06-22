@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
 
@@ -12,7 +13,7 @@ class FlagManager implements FlagManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'flag';
   }
 
@@ -39,10 +40,7 @@ class FlagManager implements FlagManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function removeFlag($name) {
-    if(!is_string($name)) {
-      throw new \InvalidArgumentException('The name parameter must be a string.');
-    }
+  public function removeFlag(string $name) {
     if(!$name) {
       throw new \InvalidArgumentException('The name parameter cannot be empty.');
     }
@@ -58,11 +56,11 @@ class FlagManager implements FlagManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlags() {
+  public function getFlags(): array {
     return $this->flags;
   }
 
-  protected function setFlags($flags) {
+  protected function setFlags(array $flags) {
     $this->flags = $flags;
   }
 
@@ -74,10 +72,7 @@ class FlagManager implements FlagManagerInterface {
    *
    * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
    */
-  public function checkPermission($name, $context) {
-    if(!is_string($name)) {
-      throw new \InvalidArgumentException('The name parameter must be a string.');
-    }
+  public function checkPermission(string $name, array $context): bool {
     if(!$name) {
       throw new \InvalidArgumentException('The name parameter cannot be empty.');
     }
@@ -89,7 +84,7 @@ class FlagManager implements FlagManagerInterface {
     return $flags[$name]->checkFlag($context);
   }
 
-  protected function flagExists($name) {
+  protected function flagExists(string $name): bool {
     $flags = $this->getFlags();
     return isset($flags[$name]);
   }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
 
@@ -189,7 +190,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
    *
    * @return TestUser
    */
-  public function setBypassAccess($bypassAccess)
+  public function setBypassAccess(bool $bypassAccess)
   {
     $this->bypassAccess = $bypassAccess;
 
@@ -201,7 +202,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
    *
    * @return bool
    */
-  public function getBypassAccess()
+  public function getBypassAccess(): bool
   {
     return $this->bypassAccess;
   }

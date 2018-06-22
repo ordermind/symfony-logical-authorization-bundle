@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 
@@ -10,14 +11,14 @@ interface CollectorInterface extends LateDataCollectorInterface {
    *
    * @return array The permission tree
    */
-  public function getPermissionTree();
+  public function getPermissionTree(): array;
 
   /**
    * Gets the log items that have been collected
    *
    * @return array The collected log items
    */
-  public function getLog();
+  public function getLog(): array;
 
   /**
    * Adds a permission check to the log
@@ -30,5 +31,5 @@ interface CollectorInterface extends LateDataCollectorInterface {
    * @param array $context The context of the evaluation
    * @param string $message (optional) A message to display in the log
    */
-  public function addPermissionCheck($access, $type, $item, $user, $permissions, $context, $message = '');
+  public function addPermissionCheck(bool $access, string $type, $item, $user, $permissions, array $context, string $message = '');
 }

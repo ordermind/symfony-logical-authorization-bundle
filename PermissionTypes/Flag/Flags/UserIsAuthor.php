@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
@@ -10,7 +11,7 @@ class UserIsAuthor implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'user_is_author';
   }
 
@@ -21,10 +22,7 @@ class UserIsAuthor implements FlagInterface {
    *
    * @return bool TRUE if the user is the author of the model and FALSE if it isn't. There is no support for anonymous authors so if the user is anonymous it will always return FALSE.
    */
-  public function checkFlag($context) {
-    if(!is_array($context)) {
-      throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
-    }
+  public function checkFlag(array $context): bool {
     if(!isset($context['user'])) {
       throw new \InvalidArgumentException('The context parameter must contain a "user" key to be able to evaluate the ' . $this->getName() . ' flag.');
     }

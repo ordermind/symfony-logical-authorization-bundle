@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -34,7 +35,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTree($reset = false, $debug = false) {
+  public function getTree(bool $reset = false, bool $debug = false): array {
     if(!$reset && !is_null($this->tree)) {
       $tree = $this->tree;
       if($debug) {
@@ -65,7 +66,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
     return $tree;
   }
 
-  protected function loadTreeFromCache() {
+  protected function loadTreeFromCache(): ?array {
     $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
     if($cachedTree->isHit()) {
       return $cachedTree->get();
@@ -80,7 +81,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface {
     $this->cache->save($cachedTree);
   }
 
-  protected function loadTreeFromEvent() {
+  protected function loadTreeFromEvent(): array {
     $event = new AddPermissionsEvent($this->permissionKeys);
     $this->dispatcher->dispatch('logauth.add_permissions', $event);
 

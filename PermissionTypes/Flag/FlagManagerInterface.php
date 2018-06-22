@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
 
@@ -19,12 +20,12 @@ interface FlagManagerInterface extends PermissionTypeInterface {
    *
    * @param string $name The name of the flag that should be removed
    */
-  public function removeFlag($name);
+  public function removeFlag(string $name);
 
   /**
    * Gets all registered flags
    *
    * @return array flags
    */
-  public function getFlags();
+  public function getFlags(): array;
 }

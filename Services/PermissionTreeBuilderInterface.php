@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -14,5 +15,5 @@ interface PermissionTreeBuilderInterface {
    *
    * @return array The permission tree
    */
-  public function getTree($reset = false, $debug = false);
+  public function getTree(bool $reset = false, bool $debug = false): array;
 }

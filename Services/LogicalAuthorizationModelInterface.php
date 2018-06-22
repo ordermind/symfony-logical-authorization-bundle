@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -16,7 +17,7 @@ interface LogicalAuthorizationModelInterface {
    *
    * @return array A map of available actions
    */
-  public function getAvailableActions($model, $model_actions, $field_actions, $user = null);
+  public function getAvailableActions($model, array $model_actions, array $field_actions, $user = null): array;
 
   /**
    * Checks access for an action on a model for a given user.
@@ -29,7 +30,7 @@ interface LogicalAuthorizationModelInterface {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkModelAccess($model, $action, $user = null);
+  public function checkModelAccess($model, string $action, $user = null): bool;
 
   /**
    * Checks access for an action on a specific field in a model for a given user.
@@ -43,5 +44,5 @@ interface LogicalAuthorizationModelInterface {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkFieldAccess($model, $field_name, $action, $user = null);
+  public function checkFieldAccess($model, string $field_name, string $action, $user = null): bool;
 }

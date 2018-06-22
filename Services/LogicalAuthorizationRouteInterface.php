@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -13,7 +14,7 @@ interface LogicalAuthorizationRouteInterface {
    *
    * @return array A map of available routes and patterns.
    */
-  public function getAvailableRoutes($user = null);
+  public function getAvailableRoutes($user = null): array;
 
   /**
    * Checks route access for a given user.
@@ -25,5 +26,5 @@ interface LogicalAuthorizationRouteInterface {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkRouteAccess($route_name, $user = null);
+  public function checkRouteAccess(string $route_name, $user = null): bool;
 }

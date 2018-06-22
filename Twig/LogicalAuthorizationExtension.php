@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Twig;
 
@@ -17,7 +18,7 @@ class LogicalAuthorizationExtension extends \Twig_Extension {
   /**
    * {@inheritdoc}
    */
-  public function getFunctions() {
+  public function getFunctions(): array {
     return array(
       new \Twig_SimpleFunction('logauth_check_route_access', array($this, 'checkRouteAccess')),
       new \Twig_SimpleFunction('logauth_check_model_access', array($this, 'checkModelAccess')),
@@ -35,7 +36,7 @@ class LogicalAuthorizationExtension extends \Twig_Extension {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkRouteAccess($route_name, $user = null) {
+  public function checkRouteAccess(string $route_name, $user = null): bool {
     return $this->laRoute->checkRouteAccess($route_name, $user);
   }
 
@@ -50,7 +51,7 @@ class LogicalAuthorizationExtension extends \Twig_Extension {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkModelAccess($model, $action, $user = null) {
+  public function checkModelAccess($model, string $action, $user = null): bool {
     return $this->laModel->checkModelAccess($model, $action, $user);
   }
 
@@ -66,7 +67,7 @@ class LogicalAuthorizationExtension extends \Twig_Extension {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkFieldAccess($model, $field_name, $action, $user = null) {
+  public function checkFieldAccess($model, string $field_name, string $action, $user = null): bool {
     return $this->laModel->checkFieldAccess($model, $field_name, $action, $user);
   }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -38,11 +39,7 @@ class Helper implements HelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function handleError($message, $context) {
-    if(!is_array($context)) {
-      throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
-    }
-
+  public function handleError(string $message, array $context) {
     if('prod' === $this->environment && !is_null($this->logger)) {
       $this->logger->error($message, $context);
     }

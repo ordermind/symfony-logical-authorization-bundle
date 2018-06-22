@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
@@ -52,7 +53,7 @@ class Route extends RouteBase implements RouteInterface {
 
   private $permissions;
 
-  public function __construct($path, array $defaults = array(), array $requirements = array(), array $options = array(), $host = '', $schemes = array(), $methods = array(), $condition = '', $permissions = null) {
+  public function __construct($path, array $defaults = [], array $requirements = [], array $options = [], $host = '', $schemes = [], $methods = [], $condition = '', $permissions = null) {
     $this->setPath($path);
     $this->setDefaults($defaults);
     $this->setRequirements($requirements);

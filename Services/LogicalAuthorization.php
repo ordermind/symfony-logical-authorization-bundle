@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -29,7 +30,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkAccess($permissions, $context, $allow_bypass = true) {
+  public function checkAccess($permissions, array $context, bool $allow_bypass = true): bool {
     try {
       return $this->lpProxy->checkAccess($permissions, $context, $allow_bypass);
     }

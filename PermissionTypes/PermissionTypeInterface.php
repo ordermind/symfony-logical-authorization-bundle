@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes;
 
@@ -9,7 +10,7 @@ interface PermissionTypeInterface {
    *
    * @return string $name The permission type's name
    */
-  public function getName();
+  public function getName(): string;
 
   /**
    * Checks if access should be granted for this permission in a given context
@@ -19,5 +20,5 @@ interface PermissionTypeInterface {
    *
    * @return bool TRUE if access is granted or FALSE if access is not granted
    */
-  public function checkPermission($permission, $context);
+  public function checkPermission(string $permission, array $context): bool;
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host;
 
@@ -21,7 +22,7 @@ class Host implements PermissionTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'host';
   }
 
@@ -33,10 +34,7 @@ class Host implements PermissionTypeInterface {
    *
    * @return bool TRUE if the host is allowed or FALSE if it is not allowed
    */
-  public function checkPermission($host, $context) {
-    if(!is_string($host)) {
-      throw new \InvalidArgumentException('The host parameter must be a string.');
-    }
+  public function checkPermission(string $host, array $context): bool {
     if(!$host) {
       throw new \InvalidArgumentException('The host parameter cannot be empty.');
     }

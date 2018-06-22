@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
@@ -8,7 +9,7 @@ class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase {
   /**
    * {@inheritdoc}
    */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         if (!is_string($resource)) {
             return false;

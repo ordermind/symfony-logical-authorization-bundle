@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -37,7 +38,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAvailableRoutes($user = null) {
+  public function getAvailableRoutes($user = null): array {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
     }
@@ -66,7 +67,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkRouteAccess($route_name, $user = null) {
+  public function checkRouteAccess(string $route_name, $user = null): bool {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
       if(is_null($user)) {
@@ -77,13 +78,6 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
       }
     }
 
-    if(!is_string($route_name)) {
-      $this->helper->handleError('Error checking route access: the route_name parameter must be a string.', ['route' => $route_name, 'user' => $user]);
-      if(!is_null($this->debugCollector)) {
-        $this->debugCollector->addPermissionCheck(false, 'route', $route_name, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
-      }
-      return false;
-    }
     if(!$route_name) {
       $this->helper->handleError('Error checking route access: the route_name parameter cannot be empty.', ['route' => $route_name, 'user' => $user]);
       if(!is_null($this->debugCollector)) {
@@ -119,7 +113,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     return $access;
   }
 
-  protected function getRoutePermissions($route_name) {
+  protected function getRoutePermissions(string $route_name) {
     //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
     $tree = $this->treeBuilder->getTree();
 

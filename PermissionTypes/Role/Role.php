@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role;
 
@@ -23,7 +24,7 @@ class Role implements PermissionTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return 'role';
   }
 
@@ -35,15 +36,9 @@ class Role implements PermissionTypeInterface {
    *
    * @return bool TRUE if the role is present on the user or FALSE if it is not present
    */
-  public function checkPermission($role, $context) {
-    if(!is_string($role)) {
-      throw new \InvalidArgumentException('The role parameter must be a string.');
-    }
+  public function checkPermission(string $role, array $context): bool {
     if(!$role) {
       throw new \InvalidArgumentException('The role parameter cannot be empty.');
-    }
-    if(!is_array($context)) {
-      throw new \InvalidArgumentException('The context parameter must be an array. Current type is ' . gettype($context) . '.');
     }
     if(!isset($context['user'])) {
       throw new \InvalidArgumentException('The context parameter must contain a "user" key to be able to evaluate the ' . $this->getName() . ' flag.');

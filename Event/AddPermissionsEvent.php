@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Event;
 
@@ -20,26 +21,22 @@ class AddPermissionsEvent extends Event implements AddPermissionsEventInterface 
   /**
    * {@inheritdoc}
    */
-  public function getTree() {
+  public function getTree(): array {
     return $this->tree;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function insertTree($tree) {
-    if(!is_array($tree)) {
-      throw new \InvalidArgumentException('Error inserting tree: The tree parameter must be an array. Current type: ' . gettype($tree));
-    }
-
+  public function insertTree(array $tree) {
     $this->setTree($this->mergeTrees([$this->getTree(), $tree]));
   }
 
-  protected function setTree($tree) {
+  protected function setTree(array $tree) {
     $this->tree = $tree;
   }
 
-  protected function mergeTrees($trees) {
+  protected function mergeTrees(array $trees): array {
     if(count($trees) == 0) return [];
 
     $tree1 = array_shift($trees);

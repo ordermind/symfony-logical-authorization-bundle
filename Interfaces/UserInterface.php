@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Interfaces;
 
@@ -17,12 +18,12 @@ interface UserInterface extends SecurityUserInterface {
    *
    * @param bool $bypassAccess TRUE if the user should be able to bypass access checks, or FALSE if not.
    */
-  public function setBypassAccess($bypassAccess);
+  public function setBypassAccess(bool $bypassAccess);
 
   /**
    * Gets the bypass access flag for this user
    *
    * @return bool The value of the bypass access flag
    */
-  public function getBypassAccess();
+  public function getBypassAccess(): bool;
 }

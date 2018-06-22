@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DependencyInjection;
 
@@ -34,7 +35,7 @@ class LogAuthExtension extends Extension
   /**
    * {@inheritdoc}
    */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'logauth';
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
@@ -13,5 +14,5 @@ interface LogicalAuthorizationInterface {
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkAccess($permissions, $context, $allow_bypass = true);
+  public function checkAccess($permissions, array $context, bool $allow_bypass = true): bool;
 }
