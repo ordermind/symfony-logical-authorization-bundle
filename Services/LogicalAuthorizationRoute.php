@@ -17,6 +17,15 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
   protected $helper;
   protected $debugCollector;
 
+  /**
+   * @internal
+   *
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface $la LogicalAuthorization service
+   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder Permission tree builder service
+   * @param Symfony\Component\Routing\RouterInterface $router Router service
+   * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorization helper service
+   * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface $debugCollector (optional) Collector service
+   */
   public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, RouterInterface $router, HelperInterface $helper, CollectorInterface $debugCollector = null) {
     $this->la = $la;
     $this->treeBuilder = $treeBuilder;
@@ -25,6 +34,9 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     $this->debugCollector = $debugCollector;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getAvailableRoutes($user = null) {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();
@@ -51,6 +63,9 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface {
     return $routes;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function checkRouteAccess($route_name, $user = null) {
     if(is_null($user)) {
       $user = $this->helper->getCurrentUser();

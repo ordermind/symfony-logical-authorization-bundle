@@ -8,14 +8,25 @@ class AddPermissionsEvent extends Event implements AddPermissionsEventInterface 
   protected $tree = [];
   protected $permissionKeys;
 
+  /**
+   * @internal
+   *
+   * @param array $permissionKeys array of valid permission keys
+   */
   public function __construct($permissionKeys) {
     $this->permissionKeys = $permissionKeys;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getTree() {
     return $this->tree;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function insertTree($tree) {
     if(!is_array($tree)) {
       throw new \InvalidArgumentException('Error inserting tree: The tree parameter must be an array. Current type: ' . gettype($tree));

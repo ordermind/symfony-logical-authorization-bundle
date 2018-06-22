@@ -11,6 +11,11 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface
 class Role implements PermissionTypeInterface {
   protected $roleHierarchy;
 
+  /**
+   * @internal
+   *
+   * @param \Symfony\Component\Security\Core\Role\RoleHierarchyInterface $roleHierarchy RoleHiearchy service
+   */
   public function __construct(SecurityRoleHierarchyInterface $roleHierarchy) {
     $this->roleHierarchy = $roleHierarchy;
   }

@@ -15,6 +15,9 @@ class AddRoutePermissions {
     $this->router = $router;
   }
 
+  /**
+   * Event listener callback for adding permissions to the tree
+   */
   public function onAddPermissions(AddPermissionsEventInterface $event) {
     $permissionTree = ['routes' => []];
     foreach($this->router->getRouteCollection()->getIterator() as $name => $route) {

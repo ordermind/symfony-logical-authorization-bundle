@@ -9,6 +9,11 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface
 class Host implements PermissionTypeInterface {
   protected $requestStack;
 
+  /**
+   * @internal
+   *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
+   */
   public function __construct(RequestStack $requestStack) {
     $this->requestStack = $requestStack;
   }

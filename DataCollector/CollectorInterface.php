@@ -25,8 +25,8 @@ interface CollectorInterface extends LateDataCollectorInterface {
    * @param bool $access TRUE if access was granted of FALSE if it was denied
    * @param string $type The type of item that was the subject of the permission check, for example "route", "model" or "field".
    * @param mixed $item The item that was the subject of the permission check, for example a route name
-   * @param mixed $user The current user
-   * @param mixed $permissions The permissions that were evaluated
+   * @param object|string $user The user for which the permissions were checked. Supply either a user object or a string to signify an anonymous user.
+   * @param array|string|bool $permissions The permissions that were evaluated
    * @param array $context The context of the evaluation
    * @param string $message (optional) A message to display in the log
    */

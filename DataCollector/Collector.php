@@ -15,6 +15,12 @@ class Collector extends DataCollector implements CollectorInterface {
   protected $permission_log;
   protected $data;
 
+  /**
+   * @internal
+   *
+   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder A tree builder for fetching the full permission tree
+   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy A proxy for checking permissions
+   */
   public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy) {
     $this->treeBuilder = $treeBuilder;
     $this->lpProxy = $lpProxy;
@@ -22,10 +28,16 @@ class Collector extends DataCollector implements CollectorInterface {
     $this->data = [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
     return 'logauth.collector';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function collect(Request $request, Response $response, \Exception $exception = null) {
     $log = $this->formatLog($this->permission_log);
     $this->data = [
@@ -34,6 +46,9 @@ class Collector extends DataCollector implements CollectorInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function lateCollect()
   {
     $this->data['tree'] = $this->cloneVar($this->data['tree']);
@@ -51,19 +66,31 @@ class Collector extends DataCollector implements CollectorInterface {
     unset($log_item);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function reset()
   {
     $this->data = [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getPermissionTree() {
     return $this->data['tree'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getLog() {
     return $this->data['log'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addPermissionCheck($access, $type, $item, $user, $permissions, $context, $message = '') {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
     array_shift($backtrace);

@@ -31,6 +31,9 @@ class LogAuthExtension extends Extension
         }
     }
 
+  /**
+   * {@inheritdoc}
+   */
     public function getAlias()
     {
         return 'logauth';

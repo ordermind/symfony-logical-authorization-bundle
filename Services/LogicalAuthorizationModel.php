@@ -21,6 +21,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
    * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface $la LogicalAuthorization service
    * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder Permission tree builder service
    * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface $helper LogicalAuthorization helper service
+   * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface $debugCollector (optional) Collector service
    */
   public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, HelperInterface $helper, CollectorInterface $debugCollector = null) {
     $this->la = $la;
@@ -29,6 +30,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface {
     $this->debugCollector = $debugCollector;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getAvailableActions($model, $model_actions, $field_actions, $user = null) {
     if($model instanceof ModelDecoratorInterface) {
       $model = $model->getModel();

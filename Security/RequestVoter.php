@@ -11,6 +11,11 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInter
 class RequestVoter extends VoterBase {
     protected $laRoute;
 
+  /**
+   * @internal
+   *
+   * @param \Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface $laRoute LogicalAuthorizationRoute service for checking route access
+   */
     public function __construct(LogicalAuthorizationRouteInterface $laRoute) {
         $this->laRoute = $laRoute;
     }

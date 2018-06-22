@@ -64,6 +64,9 @@ class Route extends RouteBase implements RouteInterface {
     $this->setPermissions($permissions);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function serialize() {
     return serialize(array(
       'path' => $this->path,
@@ -79,6 +82,9 @@ class Route extends RouteBase implements RouteInterface {
     ));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function unserialize($serialized) {
     $data = unserialize($serialized);
     $this->path = $data['path'];
@@ -100,10 +106,16 @@ class Route extends RouteBase implements RouteInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setPermissions($permissions) {
     $this->permissions = $permissions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getPermissions() {
     return $this->permissions;
   }
