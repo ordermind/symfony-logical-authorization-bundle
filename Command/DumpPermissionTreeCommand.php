@@ -11,8 +11,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * {@inheritdoc}
+ */
 class DumpPermissionTreeCommand extends ContainerAwareCommand
 {
+   /**
+    * {@inheritdoc}
+    */
     protected function configure()
     {
         $this->setName('logauth:dump-permission-tree');
@@ -26,15 +32,18 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
         );
     }
 
+   /**
+    * {@inheritdoc}
+    */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
         $tree = $container->get('logauth.service.permission_tree_builder')->getTree();
         $format = $input->getOption('format');
 
-        if ($format === 'yml') {
+        if ('yml' === $format) {
             $output->write(Yaml::dump($tree, 20));
-        } elseif ($format === 'json') {
+        } elseif ('json' === $format) {
             $output->write(json_encode($tree));
         } else {
             $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');

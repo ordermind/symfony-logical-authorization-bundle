@@ -8,8 +8,16 @@ namespace Ordermind\LogicalAuthorizationBundle\Annotation\Routing;
  */
 class Permissions
 {
+    /**
+     * @var array|string|bool
+     */
     protected $permissions;
 
+    /**
+     * @internal
+     *
+     * @param array $data
+     */
     public function __construct(array $data)
     {
         $this->permissions = $data['value'];
