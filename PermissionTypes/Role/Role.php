@@ -51,7 +51,7 @@ class Role implements PermissionTypeInterface
             throw new \InvalidArgumentException('The role parameter cannot be empty.');
         }
         if (!isset($context['user'])) {
-            throw new \InvalidArgumentException(printf('The context parameter must contain a "user" key to be able to evaluate the %s flag.', $this->getName()));
+            throw new \InvalidArgumentException(sprintf('The context parameter must contain a "user" key to be able to evaluate the %s flag.', $this->getName()));
         }
 
         $user = $context['user'];
