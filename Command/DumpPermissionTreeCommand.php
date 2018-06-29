@@ -32,14 +32,12 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
         $tree = $container->get('logauth.service.permission_tree_builder')->getTree();
         $format = $input->getOption('format');
 
-        if($format === 'yml') {
-          $output->write(Yaml::dump($tree, 20));
-        }
-        elseif($format === 'json') {
-          $output->write(json_encode($tree));
-        }
-        else {
-          $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');
+        if ($format === 'yml') {
+            $output->write(Yaml::dump($tree, 20));
+        } elseif ($format === 'json') {
+            $output->write(json_encode($tree));
+        } else {
+            $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');
         }
     }
 }

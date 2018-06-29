@@ -5,7 +5,8 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
 use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader as AnnotationDirectoryLoaderBase;
 
-class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase {
+class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase
+{
   /**
    * {@inheritdoc}
    */

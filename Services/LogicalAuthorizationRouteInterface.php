@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-interface LogicalAuthorizationRouteInterface {
+interface LogicalAuthorizationRouteInterface
+{
 
   /**
    * Gets a map of all available route paths and route patterns for a given user.
@@ -14,17 +15,17 @@ interface LogicalAuthorizationRouteInterface {
    *
    * @return array A map of available routes and patterns.
    */
-  public function getAvailableRoutes($user = null): array;
+    public function getAvailableRoutes($user = null): array;
 
   /**
    * Checks route access for a given user.
    *
    * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for the provided route it will return TRUE.
    *
-   * @param string $route_name The name of the route
-   * @param object|string $user (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+   * @param string        $route_name The name of the route
+   * @param object|string $user       (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-  public function checkRouteAccess(string $route_name, $user = null): bool;
+    public function checkRouteAccess(string $route_name, $user = null): bool;
 }

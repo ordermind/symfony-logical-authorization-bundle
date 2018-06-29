@@ -23,5 +23,4 @@ class FlagRegistrationPass implements CompilerPassInterface
             $definition->addMethodCall('addFlag', array(new Reference($id)));
         }
     }
-
 }

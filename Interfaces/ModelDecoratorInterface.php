@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Interfaces;
 
-interface ModelDecoratorInterface {
+interface ModelDecoratorInterface
+{
   /**
    * Gets the model for this decorator
    *
    * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface The model
    */
-  public function getModel();
+    public function getModel();
 }

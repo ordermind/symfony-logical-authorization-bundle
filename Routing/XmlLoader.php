@@ -10,7 +10,8 @@ use Symfony\Component\Config\Util\XmlUtils;
 
 use Ordermind\LogicalAuthorizationBundle\Routing\Route;
 
-class XmlLoader extends FileLoader {
+class XmlLoader extends FileLoader
+{
     const NAMESPACE_URI = 'http://symfony.com/schema/routing';
     const SCHEME_PATH = '/schema/routing/routing-1.0.xsd';
 

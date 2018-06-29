@@ -5,7 +5,8 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
 use Symfony\Component\Routing\Loader\AnnotationFileLoader as AnnotationFileLoaderBase;
 
-class AnnotationFileLoader extends AnnotationFileLoaderBase {
+class AnnotationFileLoader extends AnnotationFileLoaderBase
+{
   /**
    * {@inheritdoc}
    */

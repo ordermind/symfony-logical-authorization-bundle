@@ -23,5 +23,4 @@ class PermissionTypeRegistrationPass implements CompilerPassInterface
             $definition->addMethodCall('addType', array(new Reference($id)));
         }
     }
-
 }

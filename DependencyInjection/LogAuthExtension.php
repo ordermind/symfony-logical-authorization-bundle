@@ -40,4 +40,3 @@ class LogAuthExtension extends Extension
         return 'logauth';
     }
 }
-

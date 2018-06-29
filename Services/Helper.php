@@ -8,47 +8,51 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 
-class Helper implements HelperInterface {
-  protected $environment;
-  protected $tokenStorage;
-  protected $logger;
+class Helper implements HelperInterface
+{
+    protected $environment;
+    protected $tokenStorage;
+    protected $logger;
 
   /**
    * @internal
    *
    * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
-   * @param Psr\Log\LoggerInterface $logger (optional) A service for logging errors
+   * @param Psr\Log\LoggerInterface                                                            $logger       (optional) A service for logging errors
    */
-  public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null) {
-    $this->environment = $environment;
-    $this->tokenStorage = $tokenStorage;
-    $this->logger = $logger;
-  }
+    public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    {
+        $this->environment = $environment;
+        $this->tokenStorage = $tokenStorage;
+        $this->logger = $logger;
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function getCurrentUser() {
-    $token = $this->tokenStorage->getToken();
-    if(!is_null($token)) {
-      return $token->getUser();
+    public function getCurrentUser()
+    {
+        $token = $this->tokenStorage->getToken();
+        if (!is_null($token)) {
+            return $token->getUser();
+        }
+
+        return null;
     }
-    return null;
-  }
 
   /**
    * {@inheritdoc}
    */
-  public function handleError(string $message, array $context) {
-    if('prod' === $this->environment && !is_null($this->logger)) {
-      $this->logger->error($message, $context);
+    public function handleError(string $message, array $context)
+    {
+        if ('prod' === $this->environment && !is_null($this->logger)) {
+            $this->logger->error($message, $context);
+        } else {
+            $message .= "\nContext:\n";
+            foreach ($context as $key => $value) {
+                $message .= "$key => ".print_r($value, true)."\n";
+            }
+            throw new LogicalAuthorizationException($message);
+        }
     }
-    else {
-      $message .= "\nContext:\n";
-      foreach($context as $key => $value) {
-        $message .= "$key => " . print_r($value, true) . "\n";
-      }
-      throw new LogicalAuthorizationException($message);
-    }
-  }
 }

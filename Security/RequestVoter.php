@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
 
-class RequestVoter extends VoterBase {
+class RequestVoter extends VoterBase
+{
     protected $laRoute;
 
   /**
@@ -17,13 +18,14 @@ class RequestVoter extends VoterBase {
    *
    * @param \Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface $laRoute LogicalAuthorizationRoute service for checking route access
    */
-    public function __construct(LogicalAuthorizationRouteInterface $laRoute) {
+    public function __construct(LogicalAuthorizationRouteInterface $laRoute)
+    {
         $this->laRoute = $laRoute;
     }
 
     protected function supports($attribute, $subject): bool
     {
-        if(strtolower($attribute) === 'logauth' && $subject instanceof Request) {
+        if (strtolower($attribute) === 'logauth' && $subject instanceof Request) {
             return true;
         }
 
@@ -33,7 +35,7 @@ class RequestVoter extends VoterBase {
     protected function voteOnAttribute($attribute, $request, TokenInterface $token): bool
     {
         $routeName = $request->get('_route');
-        if($routeName) {
+        if ($routeName) {
             return $this->laRoute->checkRouteAccess($routeName);
         }
 
