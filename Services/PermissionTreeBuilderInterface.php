@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-interface PermissionTreeBuilderInterface {
+/**
+ * Service for building and retrieving the full permission tree.
+ */
+interface PermissionTreeBuilderInterface
+{
 
   /**
    * Gets the full permission tree
@@ -15,5 +19,5 @@ interface PermissionTreeBuilderInterface {
    *
    * @return array The permission tree
    */
-  public function getTree(bool $reset = false, bool $debug = false): array;
+    public function getTree(bool $reset = false, bool $debug = false): array;
 }

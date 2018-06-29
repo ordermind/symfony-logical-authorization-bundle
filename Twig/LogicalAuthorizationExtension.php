@@ -6,11 +6,27 @@ namespace Ordermind\LogicalAuthorizationBundle\Twig;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
 
+/**
+ * {@inheritdoc}
+ */
 class LogicalAuthorizationExtension extends \Twig_Extension
 {
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface
+     */
     protected $laRoute;
+
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface
+     */
     protected $laModel;
 
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface $laRoute
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface $laModel
+     */
     public function __construct(LogicalAuthorizationRouteInterface $laRoute, LogicalAuthorizationModelInterface $laModel)
     {
         $this->laRoute = $laRoute;
@@ -34,14 +50,14 @@ class LogicalAuthorizationExtension extends \Twig_Extension
    *
    * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for the provided route it will return TRUE.
    *
-   * @param string        $route_name The name of the route
-   * @param object|string $user       (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+   * @param string        $routeName The name of the route
+   * @param object|string $user      (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-    public function checkRouteAccess(string $route_name, $user = null): bool
+    public function checkRouteAccess(string $routeName, $user = null): bool
     {
-        return $this->laRoute->checkRouteAccess($route_name, $user);
+        return $this->laRoute->checkRouteAccess($routeName, $user);
     }
 
   /**
@@ -65,15 +81,15 @@ class LogicalAuthorizationExtension extends \Twig_Extension
    *
    * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for this action on the provided field and model it will return TRUE.
    *
-   * @param object|string $model      A model object or class string.
-   * @param string        $field_name The name of the field.
-   * @param string        $action     Examples of field actions are "get" and "set".
-   * @param object|string $user       (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+   * @param object|string $model     A model object or class string.
+   * @param string        $fieldName The name of the field.
+   * @param string        $action    Examples of field actions are "get" and "set".
+   * @param object|string $user      (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-    public function checkFieldAccess($model, string $field_name, string $action, $user = null): bool
+    public function checkFieldAccess($model, string $fieldName, string $action, $user = null): bool
     {
-        return $this->laModel->checkFieldAccess($model, $field_name, $action, $user);
+        return $this->laModel->checkFieldAccess($model, $fieldName, $action, $user);
     }
 }

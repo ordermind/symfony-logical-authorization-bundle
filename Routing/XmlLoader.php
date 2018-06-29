@@ -10,6 +10,9 @@ use Symfony\Component\Config\Util\XmlUtils;
 
 use Ordermind\LogicalAuthorizationBundle\Routing\Route;
 
+/**
+ * {@inheritdoc}
+ */
 class XmlLoader extends FileLoader
 {
     const NAMESPACE_URI = 'http://symfony.com/schema/routing';
@@ -48,6 +51,14 @@ class XmlLoader extends FileLoader
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function supports($resource, $type = null): bool
+    {
+        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && 'logauth_xml' === $type;
+    }
+
+    /**
      * Parses a node from a loaded XML file.
      *
      * @param RouteCollection $collection Collection to associate with the node
@@ -73,14 +84,6 @@ class XmlLoader extends FileLoader
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "route" or "import".', $node->localName, $path));
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($resource, $type = null): bool
-    {
-        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && 'logauth_xml' === $type;
     }
 
     /**
@@ -321,6 +324,13 @@ class XmlLoader extends FileLoader
         }
     }
 
+    /**
+     * @internal
+     *
+     * @param DOMElement $element
+     *
+     * @return bool
+     */
     private function isElementValueNull(\DOMElement $element): bool
     {
         $namespaceUri = 'http://www.w3.org/2001/XMLSchema-instance';

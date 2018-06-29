@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
 
+/**
+ * {@inheritdoc}
+ */
 class RequestVoter extends VoterBase
 {
     protected $laRoute;
@@ -23,6 +26,9 @@ class RequestVoter extends VoterBase
         $this->laRoute = $laRoute;
     }
 
+  /**
+   * {@inheritdoc}
+   */
     protected function supports($attribute, $subject): bool
     {
         if (strtolower($attribute) === 'logauth' && $subject instanceof Request) {
@@ -32,6 +38,9 @@ class RequestVoter extends VoterBase
         return false;
     }
 
+  /**
+   * {@inheritdoc}
+   */
     protected function voteOnAttribute($attribute, $request, TokenInterface $token): bool
     {
         $routeName = $request->get('_route');

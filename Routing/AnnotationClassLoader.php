@@ -9,8 +9,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
 use Ordermind\LogicalAuthorizationBundle\Routing\Route;
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
+/**
+ * {@inheritdoc}
+ */
 class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 {
+  /**
+   * {@inheritdoc}
+   */
     protected function configureRoute(RouteBase $route, \ReflectionClass $class, \ReflectionMethod $method, $annot)
     {
         parent::configureRoute($route, $class, $method, $annot);
@@ -21,6 +27,9 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
         }
     }
 
+  /**
+   * {@inheritdoc}
+   */
     protected function createRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition): Route
     {
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);

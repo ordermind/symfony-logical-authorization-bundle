@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Event;
 
+/**
+ * Event for adding permissions
+ */
 interface AddPermissionsEventInterface
 {
 

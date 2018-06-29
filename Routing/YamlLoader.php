@@ -8,6 +8,9 @@ use Symfony\Component\Routing\RouteCollection;
 
 use Ordermind\LogicalAuthorizationBundle\Routing\Route;
 
+/**
+ * {@inheritdoc}
+ */
 class YamlLoader extends YamlFileLoader
 {
   /**
@@ -26,12 +29,18 @@ class YamlLoader extends YamlFileLoader
         return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), true) && ('logauth_yml' === $type || 'logauth_yaml' === $type);
     }
 
+  /**
+   * {@inheritdoc}
+   */
     protected function validate($config, $name, $path)
     {
         unset($config['permissions']);
         parent::validate($config, $name, $path);
     }
 
+  /**
+   * {@inheritdoc}
+   */
     protected function parseRoute(RouteCollection $collection, $name, array $config, $path)
     {
         $defaults = isset($config['defaults']) ? $config['defaults'] : array();

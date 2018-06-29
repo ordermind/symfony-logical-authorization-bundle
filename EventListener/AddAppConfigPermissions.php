@@ -5,8 +5,14 @@ namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface;
 
+/**
+ * Adds permissions from app config file
+ */
 class AddAppConfigPermissions
 {
+    /**
+     * @var array
+     */
     protected $config;
 
   /**
@@ -21,6 +27,8 @@ class AddAppConfigPermissions
 
   /**
    * Event listener callback for adding permissions to the tree
+   *
+   * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
    */
     public function onAddPermissions(AddPermissionsEventInterface $event)
     {

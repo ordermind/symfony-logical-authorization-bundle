@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
+/**
+ * Custom route interface that allows for having permissions in a route
+ */
 interface RouteInterface
 {
   /**

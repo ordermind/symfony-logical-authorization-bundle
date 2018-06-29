@@ -6,10 +6,19 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
+/**
+ * {@inheritdoc}
+ */
 class LogicalAuthorization implements LogicalAuthorizationInterface
 {
-
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface
+     */
     protected $lpProxy;
+
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\HelperInterface
+     */
     protected $helper;
 
   /**
@@ -32,10 +41,10 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
   /**
    * {@inheritdoc}
    */
-    public function checkAccess($permissions, array $context, bool $allow_bypass = true): bool
+    public function checkAccess($permissions, array $context, bool $allowBypass = true): bool
     {
         try {
-            return $this->lpProxy->checkAccess($permissions, $context, $allow_bypass);
+            return $this->lpProxy->checkAccess($permissions, $context, $allowBypass);
         } catch (\Exception $e) {
             $class = get_class($e);
             $message = $e->getMessage();

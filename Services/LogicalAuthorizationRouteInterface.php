@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
+/**
+ * Service for checking route access
+ */
 interface LogicalAuthorizationRouteInterface
 {
 
@@ -22,10 +25,10 @@ interface LogicalAuthorizationRouteInterface
    *
    * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for the provided route it will return TRUE.
    *
-   * @param string        $route_name The name of the route
-   * @param object|string $user       (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+   * @param string        $routeName The name of the route
+   * @param object|string $user      (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
    *
    * @return bool TRUE if access is granted or FALSE if access is denied.
    */
-    public function checkRouteAccess(string $route_name, $user = null): bool;
+    public function checkRouteAccess(string $routeName, $user = null): bool;
 }

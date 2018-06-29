@@ -5,6 +5,9 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
 use Symfony\Component\Routing\Route as RouteBase;
 
+/**
+ * Overridden route class that allows for having permissions in a route.
+ */
 class Route extends RouteBase implements RouteInterface
 {
   /**
@@ -54,6 +57,19 @@ class Route extends RouteBase implements RouteInterface
 
     private $permissions;
 
+    /**
+     * @internal
+     *
+     * @param string            $path
+     * @param array             $defaults     (optional)
+     * @param array             $requirements (optional)
+     * @param array             $options      (optional)
+     * @param string            $host         (optional)
+     * @param array             $schemes      (optional)
+     * @param array             $methods      (optional)
+     * @param string            $condition    (optional)
+     * @param array|string|bool $permissions  (optional)
+     */
     public function __construct($path, array $defaults = [], array $requirements = [], array $options = [], $host = '', $schemes = [], $methods = [], $condition = '', $permissions = null)
     {
         $this->setPath($path);

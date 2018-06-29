@@ -13,6 +13,9 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterfa
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 
+/**
+ * {@inheritdoc}
+ */
 class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 {
     protected $permissionKeys;
@@ -24,7 +27,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
    * @internal
    *
    * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy    LogicalPermissionsProxy service
-   * @param Symfony\Component\EventDispatcher\EventDispatcherInterface                     $dispatched Event dispatcher service
+   * @param Symfony\Component\EventDispatcher\EventDispatcherInterface                     $dispatcher Event dispatcher service
    * @param Psr\Cache\CacheItemPoolInterface                                               $cache      Caching service
    */
     public function __construct(LogicalPermissionsProxyInterface $lpProxy, EventDispatcherInterface $dispatcher, CacheItemPoolInterface $cache)
@@ -69,6 +72,11 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         return $tree;
     }
 
+  /**
+   * @internal
+   *
+   * @return ?array
+   */
     protected function loadTreeFromCache(): ?array
     {
         $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
@@ -79,6 +87,11 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         return null;
     }
 
+  /**
+   * @internal
+   *
+   * @param array $tree
+   */
     protected function saveTreeToCache(array $tree)
     {
         $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
@@ -86,6 +99,11 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         $this->cache->save($cachedTree);
     }
 
+  /**
+   * @internal
+   *
+   * @return array
+   */
     protected function loadTreeFromEvent(): array
     {
         $event = new AddPermissionsEvent($this->permissionKeys);

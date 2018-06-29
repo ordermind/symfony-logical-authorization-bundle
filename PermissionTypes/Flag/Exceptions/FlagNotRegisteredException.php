@@ -3,5 +3,10 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Exceptions;
 
-class FlagNotRegisteredException extends \InvalidArgumentException {}
- 
+/**
+ * Thrown during attempted uses of flags that are not registered.
+ */
+class FlagNotRegisteredException extends \InvalidArgumentException
+{
+
+}

@@ -3,14 +3,18 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
-interface FlagInterface {
+/**
+ * Flag permission type.
+ */
+interface FlagInterface
+{
 
   /**
    * Gets the name of the flag.
    *
    * @return string The flag name
    */
-  public function getName(): string;
+    public function getName(): string;
 
   /**
    * Checks if this flag is on or off in the current context.
@@ -19,6 +23,5 @@ interface FlagInterface {
    *
    * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
    */
-  public function checkFlag(array $context): bool;
+    public function checkFlag(array $context): bool;
 }
-

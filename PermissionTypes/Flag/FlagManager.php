@@ -6,86 +6,106 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\FlagInterface;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Exceptions\FlagNotRegisteredException;
 
-class FlagManager implements FlagManagerInterface {
+/**
+ * {@inheritdoc}
+ */
+class FlagManager implements FlagManagerInterface
+{
 
-  protected $flags = [];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getName(): string {
-    return 'flag';
-  }
+    protected $flags = [];
 
   /**
    * {@inheritdoc}
    */
-  public function addFlag(FlagInterface $flag) {
-    $name = $flag->getName();
-    if(!is_string($name)) {
-      throw new \InvalidArgumentException('The name of a flag must be a string.');
+    public function getName(): string
+    {
+        return 'flag';
     }
-    if(!$name) {
-      throw new \InvalidArgumentException('The name of a flag cannot be empty.');
-    }
-    if($this->flagExists($name)) {
-      throw new \InvalidArgumentException("The flag \"$name\" already exists! If you want to change the class that handles a flag, you may do so by overriding the service definition for that flag.");
-    }
-
-    $flags = $this->getFlags();
-    $flags[$name] = $flag;
-    $this->setFlags($flags);
-  }
 
   /**
    * {@inheritdoc}
    */
-  public function removeFlag(string $name) {
-    if(!$name) {
-      throw new \InvalidArgumentException('The name parameter cannot be empty.');
-    }
-    if(!$this->flagExists($name)) {
-      throw new FlagNotRegisteredException("The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service tag to register a flag.");
-    }
+    public function addFlag(FlagInterface $flag)
+    {
+        $name = $flag->getName();
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException('The name of a flag must be a string.');
+        }
+        if (!$name) {
+            throw new \InvalidArgumentException('The name of a flag cannot be empty.');
+        }
+        if ($this->flagExists($name)) {
+            throw new \InvalidArgumentException("The flag \"$name\" already exists! If you want to change the class that handles a flag, you may do so by overriding the service definition for that flag.");
+        }
 
-    $flags = $this->getFlags();
-    unset($flags[$name]);
-    $this->setFlags($flags);
-  }
+        $flags = $this->getFlags();
+        $flags[$name] = $flag;
+        $this->setFlags($flags);
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function getFlags(): array {
-    return $this->flags;
-  }
+    public function removeFlag(string $name)
+    {
+        if (!$name) {
+            throw new \InvalidArgumentException('The name parameter cannot be empty.');
+        }
+        if (!$this->flagExists($name)) {
+            throw new FlagNotRegisteredException("The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service tag to register a flag.");
+        }
 
-  protected function setFlags(array $flags) {
-    $this->flags = $flags;
-  }
+        $flags = $this->getFlags();
+        unset($flags[$name]);
+        $this->setFlags($flags);
+    }
 
   /**
-   * Checks if a flag is switched on in a given context
-   *
-   * @param string $name The name of the flag to evaluate
-   * @param array $context The context for evaluating the flag. For more specific information, check the documentation for the flag you want to evaluate.
-   *
-   * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
+   * {@inheritdoc}
    */
-  public function checkPermission(string $name, array $context): bool {
-    if(!$name) {
-      throw new \InvalidArgumentException('The name parameter cannot be empty.');
-    }
-    if(!$this->flagExists($name)) {
-      throw new FlagNotRegisteredException("The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service tag to register a flag.");
+    public function getFlags(): array
+    {
+        return $this->flags;
     }
 
-    $flags = $this->getFlags();
-    return $flags[$name]->checkFlag($context);
-  }
+  /**
+   * {@inheritdoc}
+   */
+    public function checkPermission(string $name, array $context): bool
+    {
+        if (!$name) {
+            throw new \InvalidArgumentException('The name parameter cannot be empty.');
+        }
+        if (!$this->flagExists($name)) {
+            throw new FlagNotRegisteredException("The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service tag to register a flag.");
+        }
 
-  protected function flagExists(string $name): bool {
-    $flags = $this->getFlags();
-    return isset($flags[$name]);
-  }
+        $flags = $this->getFlags();
+
+        return $flags[$name]->checkFlag($context);
+    }
+
+    /**
+     * @internal
+     *
+     * @param array $flags
+     */
+    protected function setFlags(array $flags)
+    {
+        $this->flags = $flags;
+    }
+
+    /**
+     * @internal
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function flagExists(string $name): bool
+    {
+        $flags = $this->getFlags();
+
+        return isset($flags[$name]);
+    }
 }

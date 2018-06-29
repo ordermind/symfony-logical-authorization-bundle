@@ -5,6 +5,9 @@ namespace Ordermind\LogicalAuthorizationBundle\Interfaces;
 
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 
+/**
+ * Implement this interface in your user class to make it compatible with this bundle.
+ */
 interface UserInterface extends SecurityUserInterface
 {
   /**

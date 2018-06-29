@@ -7,42 +7,51 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
 
-class Host implements PermissionTypeInterface {
-  protected $requestStack;
+/**
+ * Permission type for checking host
+ */
+class Host implements PermissionTypeInterface
+{
+    protected $requestStack;
 
   /**
    * @internal
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
    */
-  public function __construct(RequestStack $requestStack) {
-    $this->requestStack = $requestStack;
-  }
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function getName(): string {
-    return 'host';
-  }
+    public function getName(): string
+    {
+        return 'host';
+    }
 
   /**
    * Checks if the current request uses an allowed host
    *
-   * @param string $host The host to evaluate
-   * @param array $context The context for evaluating the host
+   * @param string $host    The host to evaluate
+   * @param array  $context The context for evaluating the host
    *
    * @return bool TRUE if the host is allowed or FALSE if it is not allowed
    */
-  public function checkPermission(string $host, array $context): bool {
-    if(!$host) {
-      throw new \InvalidArgumentException('The host parameter cannot be empty.');
+    public function checkPermission(string $host, array $context): bool
+    {
+        if (!$host) {
+            throw new \InvalidArgumentException('The host parameter cannot be empty.');
+        }
+
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        if (!$currentRequest) {
+            return false;
+        }
+
+        return !!preg_match('{'.$host.'}i', $currentRequest->getHost());
     }
-
-    $currentRequest = $this->requestStack->getCurrentRequest();
-
-    if(!$currentRequest) return false;
-
-    return !!preg_match('{'.$host.'}i', $currentRequest->getHost());
-  }
 }

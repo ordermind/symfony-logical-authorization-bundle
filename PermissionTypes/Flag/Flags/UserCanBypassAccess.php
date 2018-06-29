@@ -5,6 +5,9 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
+/**
+ * Flag for checking if a user can bypass access
+ */
 class UserCanBypassAccess implements FlagInterface
 {
 
@@ -26,7 +29,7 @@ class UserCanBypassAccess implements FlagInterface
     public function checkFlag(array $context): bool
     {
         if (!isset($context['user'])) {
-            throw new \InvalidArgumentException('The context parameter must contain a "user" key to be able to evaluate the '.$this->getName().' flag.');
+            throw new \InvalidArgumentException(sprintf('The context parameter must contain a "user" key to be able to evaluate the %s flag.', $this->getName()));
         }
 
         $user = $context['user'];
@@ -34,12 +37,12 @@ class UserCanBypassAccess implements FlagInterface
             return false;
         }
         if (!($user instanceof UserInterface)) {
-            throw new \InvalidArgumentException('The user class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the '.$this->getName().' flag.');
+            throw new \InvalidArgumentException(sprintf('The user class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the %s flag.', $this->getName()));
         }
 
         $access = $user->getBypassAccess();
         if (!is_bool($access)) {
-            throw new \UnexpectedValueException('The method getBypassAccess() on the user object must return a boolean. Returned type is '.gettype($access).'.');
+            throw new \UnexpectedValueException(sprintf('The method getBypassAccess() on the user object must return a boolean. Returned type is %s.', gettype($access)));
         }
 
         return $access;

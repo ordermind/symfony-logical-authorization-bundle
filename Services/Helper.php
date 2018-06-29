@@ -8,15 +8,30 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 
+/**
+ * {@inheritdoc}
+ */
 class Helper implements HelperInterface
 {
+    /**
+     * @var string
+     */
     protected $environment;
+
+    /**
+     * @var Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     */
     protected $tokenStorage;
+
+    /**
+     * @var Psr\Log\LoggerInterface
+     */
     protected $logger;
 
   /**
    * @internal
    *
+   * @param string                                                                             $environment  The current Symfony environment
    * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
    * @param Psr\Log\LoggerInterface                                                            $logger       (optional) A service for logging errors
    */
