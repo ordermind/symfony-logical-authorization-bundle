@@ -6,15 +6,34 @@ namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 
+/**
+ * {@inheritdoc}
+ */
 class Collector extends DataCollector implements CollectorInterface
 {
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
+     */
     protected $treeBuilder;
+
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface
+     */
     protected $lpProxy;
-    protected $permission_log;
+
+    /**
+     * @var array
+     */
+    protected $permissionLog;
+
+    /**
+     * @var array
+     */
     protected $data;
 
   /**
@@ -27,7 +46,7 @@ class Collector extends DataCollector implements CollectorInterface
     {
         $this->treeBuilder = $treeBuilder;
         $this->lpProxy = $lpProxy;
-        $this->permission_log = [];
+        $this->permissionLog = [];
         $this->data = [];
     }
 
@@ -44,7 +63,7 @@ class Collector extends DataCollector implements CollectorInterface
    */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $log = $this->formatLog($this->permission_log);
+        $log = $this->formatLog($this->permissionLog);
         $this->data = [
         'tree' => $this->treeBuilder->getTree(),
         'log' => $log,
@@ -57,18 +76,18 @@ class Collector extends DataCollector implements CollectorInterface
     public function lateCollect()
     {
         $this->data['tree'] = $this->cloneVar($this->data['tree']);
-        foreach ($this->data['log'] as &$log_item) {
-            if (!empty($log_item['item'])) {
-                $log_item['item'] = $this->cloneVar($log_item['item']);
+        foreach ($this->data['log'] as &$logItem) {
+            if (!empty($logItem['item'])) {
+                $logItem['item'] = $this->cloneVar($logItem['item']);
             }
-            if (!empty($log_item['user']) && $log_item['user'] !== 'anon.') {
-                $log_item['user'] = $this->cloneVar($log_item['user']);
+            if (!empty($logItem['user']) && $logItem['user'] !== 'anon.') {
+                $logItem['user'] = $this->cloneVar($logItem['user']);
             }
-            if (!empty($log_item['backtrace'])) {
-                $log_item['backtrace'] = $this->cloneVar($log_item['backtrace']);
+            if (!empty($logItem['backtrace'])) {
+                $logItem['backtrace'] = $this->cloneVar($logItem['backtrace']);
             }
         }
-        unset($log_item);
+        unset($logItem);
     }
 
   /**
@@ -82,7 +101,7 @@ class Collector extends DataCollector implements CollectorInterface
   /**
    * {@inheritdoc}
    */
-    public function getPermissionTree(): array
+    public function getPermissionTree(): Data
     {
         return $this->data['tree'];
     }
@@ -105,83 +124,112 @@ class Collector extends DataCollector implements CollectorInterface
         $this->addPermissionLogItem(['access' => $access, 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context, 'message' => $message, 'backtrace' => $backtrace]);
     }
 
-    protected function addPermissionLogItem(array $log_item)
+    /**
+     * @internal
+     *
+     * @param array $logItem
+     */
+    protected function addPermissionLogItem(array $logItem)
     {
-        $this->permission_log[] = $log_item;
+        $this->permissionLog[] = $logItem;
     }
 
+    /**
+     * @internal
+     *
+     * @param array $log
+     *
+     * @return array
+     */
     protected function formatLog(array $log): array
     {
-        foreach ($log as &$log_item) {
-            if ($log_item['type'] === 'model' || $log_item['type'] === 'field') {
-                $log_item['action'] = $log_item['item']['action'];
+        foreach ($log as &$logItem) {
+            if ($logItem['type'] === 'model' || $logItem['type'] === 'field') {
+                $logItem['action'] = $logItem['item']['action'];
             }
 
-            if ($log_item['type'] === 'field') {
-                $log_item['field'] = $log_item['item']['field'];
+            if ($logItem['type'] === 'field') {
+                $logItem['field'] = $logItem['item']['field'];
             }
 
-            $formatted_item = $this->formatItem($log_item['type'], $log_item['item']);
-            unset($log_item['item']);
-            $log_item += $formatted_item;
+            $formattedItem = $this->formatItem($logItem['type'], $logItem['item']);
+            unset($logItem['item']);
+            $logItem += $formattedItem;
 
-            if (!empty($log_item['message'])) {
+            if (!empty($logItem['message'])) {
                 continue;
             }
 
-            if (is_array($log_item['permissions']) && array_key_exists('no_bypass', $log_item['permissions'])) {
-                $log_item['permissions']['NO_BYPASS'] = $log_item['permissions']['no_bypass'];
-                unset($log_item['permissions']['no_bypass']);
+            if (is_array($logItem['permissions']) && array_key_exists('no_bypass', $logItem['permissions'])) {
+                $logItem['permissions']['NO_BYPASS'] = $logItem['permissions']['no_bypass'];
+                unset($logItem['permissions']['no_bypass']);
             }
 
-            $type_keys = array_keys($this->lpProxy->getTypes());
+            $typeKeys = array_keys($this->lpProxy->getTypes());
 
-            $log_item['permission_no_bypass_checks'] = array_reverse($this->getPermissionNoBypassChecks($log_item['permissions'], $log_item['context'], $type_keys));
-            if (count($log_item['permission_no_bypass_checks']) == 1 && !empty($log_item['permission_no_bypass_checks'][0]['error'])) {
-                $log_item['message'] = $log_item['permission_no_bypass_checks'][0]['error'];
+            $logItem['permission_no_bypass_checks'] = array_reverse($this->getPermissionNoBypassChecks($logItem['permissions'], $logItem['context'], $typeKeys));
+            if (count($logItem['permission_no_bypass_checks']) == 1 && !empty($logItem['permission_no_bypass_checks'][0]['error'])) {
+                $logItem['message'] = $logItem['permission_no_bypass_checks'][0]['error'];
             }
 
-            $log_item['bypassed_access'] = $this->getBypassedAccess($log_item['permissions'], $log_item['context']);
+            $logItem['bypassed_access'] = $this->getBypassedAccess($logItem['permissions'], $logItem['context']);
 
-            $pure_permissions = $log_item['permissions'];
-            unset($pure_permissions['NO_BYPASS']);
+            $purePermissions = $logItem['permissions'];
+            unset($purePermissions['NO_BYPASS']);
 
-            $log_item['permission_checks'] = array_reverse($this->getPermissionChecks($pure_permissions, $log_item['context'], $type_keys));
-            if (count($log_item['permission_checks']) == 1 && !empty($log_item['permission_checks'][0]['error'])) {
-                $log_item['message'] = $log_item['permission_checks'][0]['error'];
+            $logItem['permission_checks'] = array_reverse($this->getPermissionChecks($purePermissions, $logItem['context'], $typeKeys));
+            if (count($logItem['permission_checks']) == 1 && !empty($logItem['permission_checks'][0]['error'])) {
+                $logItem['message'] = $logItem['permission_checks'][0]['error'];
             }
 
-            unset($log_item['context']);
+            unset($logItem['context']);
         }
-        unset($log_item);
+        unset($logItem);
 
         return $log;
     }
 
+    /**
+     * @internal
+     *
+     * @param string       $type
+     * @param string|array $item
+     *
+     * @return array
+     */
     protected function formatItem(string $type, $item): array
     {
-        $formatted_item = [];
+        $formattedItem = [];
 
-        if ($type === 'route') {
+        if ('route' === $type) {
             return [
             'item_name' => $item,
             ];
         }
 
         $model = $item['model'];
-        $formatted_item['item_name'] = $model;
+        $formattedItem['item_name'] = $model;
         if (is_object($model)) {
-            $formatted_item['item'] = $model;
-            $formatted_item['item_name'] = get_class($model);
+            $formattedItem['item'] = $model;
+            $formattedItem['item_name'] = get_class($model);
         }
-        if ($type === 'field') {
-            $formatted_item['item_name'] .= ":{$item['field']}";
+        if ('field' === $type) {
+            $formattedItem['item_name'] .= ":{$item['field']}";
         }
 
-        return $formatted_item;
+        return $formattedItem;
     }
 
-    protected function getPermissionChecks($permissions, array $context, array $type_keys): array
+    /**
+     * @internal
+     *
+     * @param string|array|bool $permissions
+     * @param array             $context
+     * @param array             $typeKeys
+     *
+     * @return array
+     */
+    protected function getPermissionChecks($permissions, array $context, array $typeKeys): array
     {
       // Extra permission check of the whole tree to catch errors
         try {
@@ -194,16 +242,16 @@ class Collector extends DataCollector implements CollectorInterface
             ], ];
         }
 
-        $getPermissionChecksRecursive = function ($permissions, array $context, array $type_keys, string $type = null) use (&$getPermissionChecksRecursive): array {
+        $getPermissionChecksRecursive = function ($permissions, array $context, array $typeKeys, string $type = null) use (&$getPermissionChecksRecursive): array {
             if (!is_array($permissions)) {
-                $resolve_permissions = $permissions;
+                $resolvePermissions = $permissions;
                 if ($type) {
-                    $resolve_permissions = [$type => $permissions];
+                    $resolvePermissions = [$type => $permissions];
                 }
 
                 return [[
                 'permissions' => $permissions,
-                'resolve' => $this->lpProxy->checkAccess($resolve_permissions, $context, false),
+                'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
                 ], ];
             }
 
@@ -212,25 +260,25 @@ class Collector extends DataCollector implements CollectorInterface
             $value = current($permissions);
 
             if (is_numeric($key)) {
-                return $getPermissionChecksRecursive($value, $context, $type_keys, $type);
-            } else {
-                if (in_array($key, $type_keys, true)) {
-                    $type = $key;
-                }
+                return $getPermissionChecksRecursive($value, $context, $typeKeys, $type);
+            }
+
+            if (in_array($key, $typeKeys, true)) {
+                $type = $key;
             }
 
             if (is_array($value)) {
                 $checks = [];
                 foreach ($value as $key2 => $value2) {
-                    $checks = array_merge($checks, $getPermissionChecksRecursive([$key2 => $value2], $context, $type_keys, $type));
+                    $checks = array_merge($checks, $getPermissionChecksRecursive([$key2 => $value2], $context, $typeKeys, $type));
                 }
-                $resolve_permissions = $permissions;
+                $resolvePermissions = $permissions;
                 if ($type && $key !== $type) {
-                    $resolve_permissions = [$type => $permissions];
+                    $resolvePermissions = [$type => $permissions];
                 }
                 $checks[] = [
                 'permissions' => $permissions,
-                'resolve' => $this->lpProxy->checkAccess($resolve_permissions, $context, false),
+                'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
                 ];
 
                 return $checks;
@@ -244,22 +292,22 @@ class Collector extends DataCollector implements CollectorInterface
             }
 
             $checks = [];
-            $resolve_value = $value;
+            $resolveValue = $value;
             if ($type) {
-                $resolve_value = [$type => $resolve_value];
+                $resolveValue = [$type => $resolveValue];
             }
             $checks[] = [
             'permissions' => $value,
-            'resolve' => $this->lpProxy->checkAccess($resolve_value, $context, false),
+            'resolve' => $this->lpProxy->checkAccess($resolveValue, $context, false),
             ];
 
-            $resolve_permissions = $permissions;
+            $resolvePermissions = $permissions;
             if ($type) {
-                $resolve_permissions = [$type => $resolve_permissions];
+                $resolvePermissions = [$type => $resolvePermissions];
             }
             $checks[] = [
             'permissions' => $permissions,
-            'resolve' => $this->lpProxy->checkAccess($resolve_permissions, $context, false),
+            'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
             ];
 
             return $checks;
@@ -269,7 +317,7 @@ class Collector extends DataCollector implements CollectorInterface
 
         if (is_array($permissions)) {
             foreach ($permissions as $key => $value) {
-                $checks = array_merge($checks, $getPermissionChecksRecursive([$key => $value], $context, $type_keys));
+                $checks = array_merge($checks, $getPermissionChecksRecursive([$key => $value], $context, $typeKeys));
             }
             if (count($permissions) > 1) {
                 $checks[] = [
@@ -278,30 +326,47 @@ class Collector extends DataCollector implements CollectorInterface
                 ];
             }
         } else {
-            $checks = array_merge($checks, $getPermissionChecksRecursive($permissions, $context, $type_keys));
+            $checks = array_merge($checks, $getPermissionChecksRecursive($permissions, $context, $typeKeys));
         }
 
         return $checks;
     }
 
-    protected function getPermissionNoBypassChecks($permissions, array $context, array $type_keys): array
+    /**
+     * @internal
+     *
+     * @param string|array|bool $permissions
+     * @param array             $context
+     * @param array             $typeKeys
+     *
+     * @return array
+     */
+    protected function getPermissionNoBypassChecks($permissions, array $context, array $typeKeys): array
     {
         if (is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
-            return $this->getPermissionChecks($permissions['NO_BYPASS'], $context, $type_keys);
+            return $this->getPermissionChecks($permissions['NO_BYPASS'], $context, $typeKeys);
         }
 
         return [];
     }
 
+    /**
+     * @internal
+     *
+     * @param string|array|bool $permissions
+     * @param array             $context
+     *
+     * @return bool
+     */
     protected function getBypassedAccess($permissions, array $context): bool
     {
-        $new_permissions = [false];
+        $newPermissions = [false];
         if (is_array($permissions) && array_key_exists('NO_BYPASS', $permissions)) {
-            $new_permissions['NO_BYPASS'] = $permissions['NO_BYPASS'];
+            $newPermissions['NO_BYPASS'] = $permissions['NO_BYPASS'];
         }
 
         try {
-            return $this->lpProxy->checkAccess($new_permissions, $context);
+            return $this->lpProxy->checkAccess($newPermissions, $context);
         } catch (\Exception $e) {
         }
 

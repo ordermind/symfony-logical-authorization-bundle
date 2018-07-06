@@ -4,15 +4,19 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
+use Symfony\Component\VarDumper\Cloner\Data;
 
+/**
+ * Data collector for debugging purposes
+ */
 interface CollectorInterface extends LateDataCollectorInterface
 {
   /**
    * Gets the full permission tree.
    *
-   * @return array The permission tree
+   * @return Symfony\Component\VarDumper\Cloner\Data The permission tree
    */
-    public function getPermissionTree(): array;
+    public function getPermissionTree(): Data;
 
   /**
    * Gets the log items that have been collected
