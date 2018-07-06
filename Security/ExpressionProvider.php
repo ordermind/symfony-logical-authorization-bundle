@@ -33,11 +33,12 @@ class ExpressionProvider implements ExpressionFunctionProviderInterface
     {
         return [
             new ExpressionFunction(
-                'logauth',
-                function (Request $request) {
-                    return $request;
+                'logauth_route',
+                function () {
+                    return '$routeName = $request->get(\'_route\'); return $routeName ? $this->get(\'logauth.service.logauth_route\')->checkRouteAccess($routeName) : true;';
                 },
-                function (array $arguments, Request $request) {
+                function (array $arguments) {
+                    $request = $arguments['request'];
                     $routeName = $request->get('_route');
                     if ($routeName) {
                         return $this->laRoute->checkRouteAccess($routeName);
