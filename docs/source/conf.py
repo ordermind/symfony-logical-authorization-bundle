@@ -21,7 +21,7 @@
 
 project = 'Logical Authorization Bundle'
 copyright = '2018, Kristofer Tengström'
-author = 'Kristofer Tengström'
+author = u'Kristofer Tengström'
 
 # The short X.Y version
 version = ''
