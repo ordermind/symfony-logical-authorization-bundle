@@ -9,11 +9,11 @@ services:
       - {name: kernel.cache_warmer}
     public: false
 
-  logauth.security.request_voter:
-    class: Ordermind\LogicalAuthorizationBundle\Security\RequestVoter
+  logauth.security.expression_provider:
+    class: Ordermind\LogicalAuthorizationBundle\Security\ExpressionProvider
     arguments: ['@logauth.service.logauth_route']
     tags:
-      - {name: security.voter}
+      - {name: security.expression_language_provider}
     public: false
 
   logauth.event_listener.add_route_permissions:
