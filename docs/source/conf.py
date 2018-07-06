@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Logical Authorization Bundle'
-copyright = '2018, Kristofer Tengström'
+copyright = u'2018, Kristofer Tengström'
 author = u'Kristofer Tengström'
 
 # The short X.Y version
@@ -136,7 +136,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'LogicalAuthorizationBundle.tex', 'Logical Authorization Bundle Documentation',
-     'Kristofer Tengström', 'manual'),
+     u'Kristofer Tengström', 'manual'),
 ]
 
 
