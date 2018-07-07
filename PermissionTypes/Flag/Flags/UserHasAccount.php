@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
 
 /**
  * Flag for checking if a user has an account, i.e. not an anonymous user.

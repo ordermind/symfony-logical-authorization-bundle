@@ -26,6 +26,10 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/tabs.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/semantic-ui-2.2.10/segment.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/semantic-ui-2.2.10/menu.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/sphinx_tabs/semantic-ui-2.2.10/tab.min.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
@@ -81,7 +85,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#making-a-request">Making a Request</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#permission-types">Permission types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#route-permissions">Route permissions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#creating-a-client">Creating a Client</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sending-requests">Sending Requests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#async-requests">Async Requests</a></li>
@@ -173,13 +178,122 @@
             
   <div class="section" id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
-<p>This page provides a quick introduction to Guzzle and introductory examples.
-If you have not already installed, Guzzle, head over to the <a class="reference internal" href="overview.html#installation"><span class="std std-ref">Installation</span></a>
+<p>This page provides a quick introduction to Logical Authorization Bundle and introductory examples.
+If you have not already installed Logical Authorization Bundle, head over to the <a class="reference internal" href="overview.html#installation"><span class="std std-ref">Installation</span></a>
 page.</p>
-<div class="section" id="making-a-request">
-<h2>Making a Request<a class="headerlink" href="#making-a-request" title="Permalink to this headline">¶</a></h2>
-<p>You can send requests with Guzzle using a <code class="docutils literal notranslate"><span class="pre">GuzzleHttp\ClientInterface</span></code>
-object.</p>
+<div class="section" id="permission-types">
+<h2>Permission types<a class="headerlink" href="#permission-types" title="Permalink to this headline">¶</a></h2>
+<p>Here are the permission types available by default:</p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">role</span></code></dt>
+<dd><p class="first">Checks if a user has one or more roles.</p>
+<p><strong>Examples</strong></p>
+<div class="last highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Allow access only if user has a single role</span>
+
+<span class="s2">&quot;role&quot;</span><span class="o">:</span> <span class="s2">&quot;ROLE_ADMIN&quot;</span>
+
+<span class="c1">// Allow access only if user has at least one of the following roles</span>
+
+<span class="s2">&quot;role&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;OR&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;ROLE_ADMIN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ROLE_SALES&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1">// Allow access only if user has both roles</span>
+
+<span class="s2">&quot;role&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;AND&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;ROLE_ADMIN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ROLE_SALES&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">flag</span></code></dt>
+<dd><p class="first">A flag is a boolean condition of some sort. The following flags are available by default:</p>
+<p><code class="docutils literal notranslate"><span class="pre">user_can_bypass_access</span></code> checks if the user can bypass access.</p>
+<p><code class="docutils literal notranslate"><span class="pre">user_has_account</span></code> checks if the user has an account, i.e. is not an anonymous user.</p>
+<p><code class="docutils literal notranslate"><span class="pre">user_is_author</span></code> checks if the user is the author of an entity or document.</p>
+<p><strong>Examples</strong></p>
+<div class="last highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Allow access if user normally can bypass access</span>
+
+<span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="s2">&quot;user_can_bypass_access&quot;</span>
+
+<span class="c1">// Allow access if user has an account</span>
+
+<span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="s2">&quot;user_has_account&quot;</span>
+
+<span class="c1">// Allow access if user is the author of an entity or document</span>
+
+<span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="s2">&quot;user_is_author&quot;</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">host</span></code></dt>
+<dd><p class="first">Checks if the current request comes from an approved host.</p>
+<p><strong>Example</strong></p>
+<div class="last highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Allow access only if the request comes from localhost</span>
+
+<span class="s2">&quot;host&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ip</span></code></dt>
+<dd>Checks if the current request comes from an approved ip address.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">method</span></code></dt>
+<dd>Checks if the current request uses an approved method.</dd>
+</dl>
+</div>
+<div class="section" id="route-permissions">
+<h2>Route permissions<a class="headerlink" href="#route-permissions" title="Permalink to this headline">¶</a></h2>
+<p>Inline route permission declarations are supported for routes defined with annotations, YAML and XML. You can also declare permissions in the logauth configuration file. These permissions will override any inline permission declarations.</p>
+<div class="sphinx-tabs docutils container">
+<div class="ui top attached tabular menu sphinx-menu docutils container">
+<div class="active item sphinx-data-tab-0 docutils container">
+<div class="docutils container">
+Annotations</div>
+</div>
+<div class="item sphinx-data-tab-1 docutils container">
+<div class="docutils container">
+YAML</div>
+</div>
+<div class="item sphinx-data-tab-2 docutils container">
+<div class="docutils container">
+XML</div>
+</div>
+<div class="item sphinx-data-tab-3 docutils container">
+<div class="docutils container">
+Config</div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-0 active docutils container">
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Sensio\Bundle\FrameworkExtraBundle\Configuration\Route</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="sd">/**</span>
+<span class="sd">  * @Route(&quot;/route-role&quot;, name=&quot;route_role&quot;)</span>
+<span class="sd">  * @Method({&quot;GET&quot;})</span>
+<span class="sd">  * @Permissions({</span>
+<span class="sd">  *   &quot;role&quot;: &quot;ROLE_ADMIN&quot;</span>
+<span class="sd">  * })</span>
+<span class="sd">  */</span>
+<span class="k">public</span> <span class="k">function</span> <span class="nf">routeRoleAction</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-1 docutils container">
+Pears are green.</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-2 docutils container">
+Oranges are orange.</div>
+<div class="ui bottom attached sphinx-tab tab segment sphinx-data-tab-3 docutils container">
+Test</div>
+</div>
 <div class="section" id="creating-a-client">
 <h3>Creating a Client<a class="headerlink" href="#creating-a-client" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">GuzzleHttp\Client</span><span class="p">;</span>
@@ -758,6 +872,8 @@ requests over “https”. See: <a class="reference external" href="https://wiki
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_tabs/tabs.js"></script>
+      <script type="text/javascript" src="_static/sphinx_tabs/semantic-ui-2.2.10/tab.min.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   

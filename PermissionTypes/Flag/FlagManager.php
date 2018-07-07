@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Exceptions\FlagNotRegisteredException;
 
 /**

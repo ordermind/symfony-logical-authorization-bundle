@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
 
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
 
 /**
  * Permission type for checking a flag.

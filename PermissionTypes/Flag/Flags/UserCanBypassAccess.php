@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
 
 /**
  * Flag for checking if a user can bypass access

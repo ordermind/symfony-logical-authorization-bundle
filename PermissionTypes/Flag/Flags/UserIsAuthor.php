@@ -5,6 +5,7 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
 
 /**
  * Flag for checking if a user if the author of a model

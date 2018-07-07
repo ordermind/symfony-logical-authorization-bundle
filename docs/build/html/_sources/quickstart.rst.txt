@@ -2,16 +2,122 @@
 Quickstart
 ==========
 
-This page provides a quick introduction to Guzzle and introductory examples.
-If you have not already installed, Guzzle, head over to the :ref:`installation`
+This page provides a quick introduction to Logical Authorization Bundle and introductory examples.
+If you have not already installed Logical Authorization Bundle, head over to the :ref:`installation`
 page.
 
-
-Making a Request
+Permission types
 ================
 
-You can send requests with Guzzle using a ``GuzzleHttp\ClientInterface``
-object.
+Here are the permission types available by default:
+
+``role``
+    Checks if a user has one or more roles.
+
+    **Examples**
+
+    .. code-block:: javascript
+
+        // Allow access only if user has a single role
+
+        "role": "ROLE_ADMIN"
+
+        // Allow access only if user has at least one of the following roles
+
+        "role": {
+            "OR": [
+                "ROLE_ADMIN",
+                "ROLE_SALES"
+            ]
+        }
+
+        // Allow access only if user has both roles
+
+        "role": {
+            "AND": [
+                "ROLE_ADMIN",
+                "ROLE_SALES"
+            ]
+        }
+
+``flag``
+    A flag is a boolean condition of some sort. The following flags are available by default:
+
+    ``user_can_bypass_access`` checks if the user can bypass access.
+
+    ``user_has_account`` checks if the user has an account, i.e. is not an anonymous user.
+
+    ``user_is_author`` checks if the user is the author of an entity or document.
+
+    **Examples**
+
+    .. code-block:: javascript
+
+        // Allow access if user normally can bypass access
+
+        "flag": "user_can_bypass_access"
+
+        // Allow access if user has an account
+
+        "flag": "user_has_account"
+
+        // Allow access if user is the author of an entity or document
+
+        "flag": "user_is_author"
+``host``
+    Checks if the current request comes from an approved host.
+
+    **Example**
+
+    .. code-block:: javascript
+
+        // Allow access only if the request comes from localhost
+
+        "host": "localhost"
+``ip``
+    Checks if the current request comes from an approved ip address.
+``method``
+    Checks if the current request uses an approved method.
+
+
+Route permissions
+=================
+
+Inline route permission declarations are supported for routes defined with annotations, YAML and XML. You can also declare permissions in the logauth configuration file. These permissions will override any inline permission declarations.
+
+.. tabs::
+
+    .. tab:: Annotations
+
+        .. code-block:: php
+
+            use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+            use Symfony\Component\HttpFoundation\Request;
+            use Symfony\Component\HttpFoundation\Response;
+
+            /**
+              * @Route("/route-role", name="route_role")
+              * @Method({"GET"})
+              * @Permissions({
+              *   "role": "ROLE_ADMIN"
+              * })
+              */
+            public function routeRoleAction(Request $request) {
+                return new Response('');
+            }
+
+    .. tab:: YAML
+
+        Pears are green.
+
+    .. tab:: XML
+
+        Oranges are orange.
+
+    .. tab:: Config
+
+        Test
+
 
 
 Creating a Client
