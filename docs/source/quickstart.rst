@@ -9,7 +9,7 @@ page.
 Permission types
 ================
 
-Here are the permission types available by default:
+Permission types are used to check different kinds of conditions for access control. Listed below are the permission types available by default. You can also use boolean permissions if you want to allow or disallow an action completely. Boolean permissions are useful in combination with access bypass in some situations. Please refer to https://github.com/ordermind/logical-permissions-php#boolean-permissions for details regarding boolean permissions.
 
 ``role``
     Checks if a user has one or more roles.
@@ -95,15 +95,40 @@ Here are the permission types available by default:
 
         "method": "POST"
 
+Adding a custom permission type
+===============================
 
-Route permissions
-=================
+Custom permission types can be added by creating a service with the tag ``logauth.tag.permission_type`` and which implements ``Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface``.
 
-Inline route permission declarations are supported for routes defined with annotations, YAML and XML. You can also declare permissions in the logauth configuration file. These permissions will override any inline permission declarations.
+If your needs are simple you may prefer to create a flag instead of a whole permission type. You can do that by creating a service with the tag ``logauth.tag.permission_type.flag`` and which implements ``Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface``.
+
+Declaring Permissions
+=====================
+
+Permissions may be declared both inline together with for example the declaration of a route, or in the logauth configuration file. These permissions will override any inline permission declarations. For help with nesting and use of logical gates, please refer to the documentation at https://github.com/ordermind/logical-permissions-php#logic-gates.
+
+Routes
+------
+
+Inline route permission declarations are supported for routes defined with annotations, YAML and XML.
 
 .. tabs::
 
     .. tab:: Annotations
+
+        In order to declare permissions in annotations within a controller, the type ``logauth_annotation`` must be used in the routing file for this controller.
+
+        **Example**
+
+        If you want to enable the default application controllers for declaring permissions in the annotations, you can create the file ``/config/routes/logauth_annotations.yaml`` with this content:
+
+        .. code-block:: yaml
+
+            logauth_annotations:
+                resource: ../src/Controller/
+                type: logauth_annotation
+
+        Then you can declare permissions with your route like this:
 
         .. code-block:: php
 
