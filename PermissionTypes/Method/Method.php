@@ -52,6 +52,6 @@ class Method implements PermissionTypeInterface
             return false;
         }
 
-        return $currentRequest->getMethod() === $method;
+        return strcasecmp($currentRequest->getMethod(), $method) == 0;
     }
 }

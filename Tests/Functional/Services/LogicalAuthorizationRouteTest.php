@@ -55,6 +55,12 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase {
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  public function testRouteMethodLowercaseAllow() {
+    $this->sendRequestAs('GET', '/test/route-method-lowercase', [], static::$admin_user);
+    $response = $this->client->getResponse();
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
   public function testRouteMethodDisallow() {
     $this->sendRequestAs('PUSH', '/test/route-method', [], static::$authenticated_user);
     $response = $this->client->getResponse();

@@ -58,6 +58,16 @@ class DefaultController extends Controller {
   }
 
   /**
+    * @Route("/route-method-lowercase", name="route_method_lowercase")
+    * @Permissions({
+    *   "method": "get"
+    * })
+    */
+  public function routeMethodLowercaseAction(Request $request) {
+    return new Response('');
+  }
+
+  /**
     * @Route("/route-ip", name="route_ip")
     * @Method({"GET"})
     * @Permissions({

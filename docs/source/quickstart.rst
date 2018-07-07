@@ -76,8 +76,24 @@ Here are the permission types available by default:
         "host": "localhost"
 ``ip``
     Checks if the current request comes from an approved ip address.
+
+    **Example**
+
+    .. code-block:: javascript
+
+        // Allow access only if the request comes from 127.0.0.1
+
+        "ip": "127.0.0.1"
 ``method``
     Checks if the current request uses an approved method.
+
+    **Example**
+
+    .. code-block:: javascript
+
+        // Allow access only if the request uses the POST method
+
+        "method": "POST"
 
 
 Route permissions
