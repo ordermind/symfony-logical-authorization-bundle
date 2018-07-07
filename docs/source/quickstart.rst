@@ -9,7 +9,7 @@ page.
 Permission types
 ================
 
-Permission types are used to check different kinds of conditions for access control. Listed below are the permission types available by default. You can also use boolean permissions if you want to allow or disallow an action completely. Boolean permissions are useful in combination with access bypass in some situations. Please refer to https://github.com/ordermind/logical-permissions-php#boolean-permissions for details regarding boolean permissions.
+Permission types are used to check different kinds of conditions for access control. Listed below are the permission types available by default. You can also use boolean permissions if you want to allow or disallow an action completely. Boolean permissions are useful in combination with access bypass in some situations. Please refer to https://github.com/ordermind/logical-permissions-js#boolean-permissions for details regarding boolean permissions.
 
 ``role``
     Checks if a user has one or more roles.
@@ -20,24 +20,28 @@ Permission types are used to check different kinds of conditions for access cont
 
         // Allow access only if user has a single role
 
-        "role": "ROLE_ADMIN"
+        {"role": "ROLE_ADMIN"}
 
         // Allow access only if user has at least one of the following roles
 
-        "role": {
-            "OR": [
-                "ROLE_ADMIN",
-                "ROLE_SALES"
-            ]
+        {
+            "role": {
+                "OR": [
+                    "ROLE_ADMIN",
+                    "ROLE_SALES"
+                ]
+            }
         }
 
         // Allow access only if user has both roles
 
-        "role": {
-            "AND": [
-                "ROLE_ADMIN",
-                "ROLE_SALES"
-            ]
+        {
+            "role": {
+                "AND": [
+                    "ROLE_ADMIN",
+                    "ROLE_SALES"
+                ]
+            }
         }
 
 ``flag``
@@ -55,15 +59,15 @@ Permission types are used to check different kinds of conditions for access cont
 
         // Allow access if user normally can bypass access
 
-        "flag": "user_can_bypass_access"
+        {"flag": "user_can_bypass_access"}
 
         // Allow access if user has an account
 
-        "flag": "user_has_account"
+        {"flag": "user_has_account"}
 
         // Allow access if user is the author of an entity or document
 
-        "flag": "user_is_author"
+        {"flag": "user_is_author"}
 ``host``
     Checks if the current request comes from an approved host.
 
@@ -73,7 +77,7 @@ Permission types are used to check different kinds of conditions for access cont
 
         // Allow access only if the request comes from localhost
 
-        "host": "localhost"
+        {"host": "localhost"}
 ``ip``
     Checks if the current request comes from an approved ip address.
 
@@ -83,7 +87,7 @@ Permission types are used to check different kinds of conditions for access cont
 
         // Allow access only if the request comes from 127.0.0.1
 
-        "ip": "127.0.0.1"
+        {"ip": "127.0.0.1"}
 ``method``
     Checks if the current request uses an approved method.
 
@@ -93,7 +97,7 @@ Permission types are used to check different kinds of conditions for access cont
 
         // Allow access only if the request uses the POST method
 
-        "method": "POST"
+        {"method": "POST"}
 
 Adding a custom permission type
 ===============================
@@ -102,10 +106,30 @@ Custom permission types can be added by creating a service with the tag ``logaut
 
 If your needs are simple you may prefer to create a flag instead of a whole permission type. You can do that by creating a service with the tag ``logauth.tag.permission_type.flag`` and which implements ``Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface``.
 
+Access Bypass
+=============
+
+This library supports the ability for a superuser to completely circumvent access checks. To enable a user to bypass access, implement ``Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface`` in your user class and use the ``setBypassAccess()`` method. This user will now always be granted access, except if you use ``NO_BYPASS`` at the first level of a permission declaration.
+
+**Examples**
+
+.. code-block:: javascript
+
+    // A user with bypass access enabled will be granted access no matter if they have this role or not.
+
+    {"role": "ROLE_ADMIN"}
+
+    // If you want to negate the ability to bypass access for an action, add NO_BYPASS to the first level of nesting like this:
+
+    {
+        "role": "ROLE_ADMIN",
+        "NO_BYPASS": true
+    }
+
 Declaring Permissions
 =====================
 
-Permissions may be declared both inline together with for example the declaration of a route, or in the logauth configuration file. These permissions will override any inline permission declarations. For help with nesting and use of logical gates, please refer to the documentation at https://github.com/ordermind/logical-permissions-php#logic-gates.
+Permissions may be declared both inline together with for example the declaration of a route, or in the logauth configuration file. These permissions will override any inline permission declarations. For help with the use of logic gates and nesting, please refer to the documentation at https://github.com/ordermind/logical-permissions-js#logic-gates.
 
 Routes
 ------
