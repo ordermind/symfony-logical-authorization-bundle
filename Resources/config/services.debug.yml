@@ -1,4 +1,9 @@
 services:
+  logauth.command.dump_permissions:
+    class: Ordermind\LogicalAuthorizationBundle\Command\DumpPermissionTreeCommand
+    tags:
+      - {name: console.command}
+
   logauth.debug.collector:
     class: Ordermind\LogicalAuthorizationBundle\DataCollector\Collector
     arguments: ['@logauth.service.permission_tree_builder', '@logauth.service.logical_permissions_proxy']
