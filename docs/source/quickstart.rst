@@ -134,56 +134,369 @@ Permissions may be declared both inline together with for example the declaratio
 Routes
 ------
 
-Inline route permission declarations are supported for routes defined with annotations, YAML and XML.
+Inline route permission declarations are supported for routes defined with annotations, YAML and XML. You can also declare them in a configuration file, and there it is also possible to use regex patterns to declare permissions for multiple routes at once.
 
 .. tabs::
 
     .. tab:: Annotations
 
-        In order to declare permissions in annotations within a controller, the type ``logauth_annotation`` must be used in the routing file for this controller.
+        .. note::
+            In order to declare route permissions in annotations within a controller, the type ``logauth_annotation`` must be used in the routing file for this controller.
 
-        **Example**
+            **Example**
 
-        If you want to enable the default application controllers for declaring permissions in the annotations, you can create the file ``/config/routes/logauth_annotations.yaml`` with this content:
+            If you want to enable the default application controllers for declaring permissions in the annotations, you can create the file ``/config/routes/logauth_annotations.yaml`` with this content:
 
-        .. code-block:: yaml
+            .. code-block:: yaml
 
-            logauth_annotations:
-                resource: ../src/Controller/
-                type: logauth_annotation
+                logauth_annotations:
+                    resource: ../src/Controller/
+                    type: logauth_annotation
 
-        Then you can declare permissions with your route like this:
+        Once your controller is configured to work with ``logauth_annotation``, you may declare permissions in json format with your route like this:
 
         .. code-block:: php
 
             use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+            use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+            use Symfony\Bundle\FrameworkBundle\Controller\Controller;
             use Symfony\Component\HttpFoundation\Request;
             use Symfony\Component\HttpFoundation\Response;
+            use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
-            /**
-              * @Route("/route-role", name="route_role")
-              * @Method({"GET"})
-              * @Permissions({
-              *   "role": "ROLE_ADMIN"
-              * })
-              */
-            public function routeRoleAction(Request $request) {
-                return new Response('');
+            class DefaultController extends Controller {
+                /**
+                  * @Route("/route-role", name="route_role")
+                  * @Method({"GET"})
+                  * @Permissions({
+                  *   "role": "ROLE_ADMIN"
+                  * })
+                  */
+                public function routeRoleAction(Request $request) {
+                    return new Response('');
+                }
             }
 
     .. tab:: YAML
 
-        Pears are green.
+        If you define your route in yaml you can declare permissions like this:
+
+        .. code-block:: yaml
+
+            route_role:
+                path: /route-role
+                defaults: { _controller: App\Controller\DefaultController::routeRoleAction }
+                permissions:
+                    role: ROLE_ADMIN
 
     .. tab:: XML
 
-        Oranges are orange.
+        If you define your route in xml you can declare permissions like this:
 
-    .. tab:: Config
+        .. code-block:: xml
 
-        Test
+            <route id="route_role" path="/route-role">
+                <default key="_controller">App\Controller\DefaultController::routeRoleAction</default>
+                <permissions>
+                    <role>ROLE_ADMIN</role>
+                </permissions>
+            </route>
 
+    .. tab:: Config File
 
+        Here are a couple of examples of permission declaration that you can put in ``/config/packages/logauth.yaml``.
+
+        **Single route example**
+
+        .. code-block:: yaml
+
+            # LogicalAuthorization Configuration
+            logauth:
+                permissions:
+                    routes:
+                        route_role:
+                            role: ROLE_ADMIN
+
+        **Route pattern example**
+
+        .. code-block:: yaml
+
+            # LogicalAuthorization Configuration
+            logauth:
+                permissions:
+                    route_patterns:
+                        ^/route-role:
+                            role: ROLE_ADMIN
+
+Doctrine ORM
+------------
+
+Inline entity permission declarations are supported for entities mapped with annotations, YAML and XML. You can also declare these permissions in a configuration file. You can declare permissions both on the entity level and on the field level. The permissions are separately declared for each action. For entities the default actions are "create", "read", "update" and "delete", while for fields they are "get" and "set".
+
+.. tabs::
+
+    .. tab:: Annotations
+
+        If you map your entity with annotations, you can declare permissions in json format. Here is an example of permission declarations on both entity and field levels.
+
+        .. code-block:: php
+
+            use Doctrine\ORM\Mapping as ORM;
+            use Ordermind\LogicalAuthorizationDoctrineORMBundle\Annotation\Doctrine\Permissions;
+            use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
+            use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
+
+            /**
+            * TestEntityRoleAuthor
+            *
+            * @ORM\Table(name="testentities_roleauthor")
+            * @ORM\Entity(repositoryClass="App\Repository\TestEntityRoleAuthorRepository")
+            * @Permissions({
+            *   "create": {
+            *     "role": "ROLE_ADMIN"
+            *   },
+            *   "read": {
+            *     "OR": {
+            *       "role": "ROLE_ADMIN",
+            *       "flag": "user_is_author"
+            *     }
+            *   },
+            *   "update": {
+            *     "OR": {
+            *       "role": "ROLE_ADMIN",
+            *       "flag": "user_is_author"
+            *     }
+            *   },
+            *   "delete": {
+            *     "OR": {
+            *       "role": "ROLE_ADMIN",
+            *       "flag": "user_is_author"
+            *     }
+            *   }
+            * })
+            */
+            class TestEntityRoleAuthor implements ModelInterface
+            {
+                /**
+                * @var int
+                *
+                * @ORM\Column(name="id", type="integer")
+                * @ORM\Id
+                * @ORM\GeneratedValue(strategy="AUTO")
+                */
+                private $id;
+
+                /**
+                * @var string
+                *
+                * @ORM\Column(name="field1", type="string", length=255)
+                * @Permissions({
+                *   "get": {
+                *     "role": "ROLE_ADMIN",
+                *     "flag": "user_is_author"
+                *   },
+                *   "set": {
+                *     "role": "ROLE_ADMIN",
+                *     "flag": "user_is_author"
+                *   }
+                * })
+                */
+                private $field1 = '';
+
+                /**
+                * @var Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+                *
+                * @ORM\ManyToOne(targetEntity="App\Entity\TestUser")
+                * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+                */
+                private $author;
+
+                /**
+                * Set field1
+                *
+                * @param string $field1
+                *
+                * @return TestEntityRoleAuthor
+                */
+                public function setField1($field1)
+                {
+                    $this->field1 = $field1;
+
+                    return $this;
+                }
+
+                /**
+                * Get field1
+                *
+                * @return string
+                */
+                public function getField1()
+                {
+                    return $this->field1;
+                }
+
+                /**
+                * Set author
+                *
+                * @param \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
+                *
+                * @return entity implementing ModelInterface
+                */
+                public function setAuthor(UserInterface $author)
+                {
+                    $this->author = $author;
+
+                    return $this;
+                }
+
+                /**
+                * Get authorId
+                *
+                * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+                */
+                public function getAuthor(): ?UserInterface
+                {
+                    return $this->author;
+                }
+            }
+
+    .. tab:: YAML
+
+        If you map your entity with yaml you can declare permissions like this in the mapping file:
+
+        .. code-block:: yaml
+
+            App\Entity\TestEntityRoleAuthor:
+                type: entity
+                repositoryClass: App\Repository\TestEntityRoleAuthorRepository
+                table: testentities_roleauthor
+
+                permissions:
+                    create:
+                        role: ROLE_ADMIN
+                    read:
+                        OR:
+                            role: ROLE_ADMIN
+                            flag: user_is_author
+                    update:
+                        OR:
+                            role: ROLE_ADMIN
+                            flag: user_is_author
+                    delete:
+                        OR:
+                            role: ROLE_ADMIN
+                            flag: user_is_author
+
+                id:
+                    id:
+                        type: integer
+                        generator:
+                            strategy: AUTO
+
+                fields:
+                    field1:
+                        type: string
+                        length: 255
+                        permissions:
+                            get:
+                                role: ROLE_ADMIN
+                                flag: user_is_author
+                            set:
+                                role: ROLE_ADMIN
+                                flag: user_is_author
+                manyToOne:
+                    author:
+                        targetEntity: App\Entity\TestUser
+                        joinColumn:
+                            name: author_id
+                            referencedColumnName: id
+
+    .. tab:: XML
+
+        If you map your entity with xml you can declare permissions like this in the mapping file:
+
+        .. code-block:: xml
+
+            <entity name="App\Entity\TestEntityRoleAuthor" repository-class="App\Repository\TestEntityRoleAuthorRepository" table="testentities_roleauthor">
+                <permissions>
+                    <create>
+                        <role>ROLE_ADMIN</role>
+                    </create>
+                    <read>
+                        <OR>
+                            <role>ROLE_ADMIN</role>
+                            <flag>user_is_author</flag>
+                        </OR>
+                    </read>
+                    <update>
+                        <OR>
+                            <role>ROLE_ADMIN</role>
+                            <flag>user_is_author</flag>
+                        </OR>
+                    </update>
+                    <delete>
+                        <OR>
+                            <role>ROLE_ADMIN</role>
+                            <flag>user_is_author</flag>
+                        </OR>
+                    </delete>
+                </permissions>
+
+                <id name="id" type="integer" column="id">
+                    <generator strategy="AUTO"/>
+                </id>
+
+                <field name="field1" column="field1" type="string" length="255">
+                    <permissions>
+                        <get>
+                            <role>ROLE_ADMIN</role>
+                            <flag>user_is_author</flag>
+                        </get>
+                        <set>
+                            <role>ROLE_ADMIN</role>
+                            <flag>user_is_author</flag>
+                        </set>
+                    </permissions>
+                </field>
+
+                <many-to-one field="author" target-entity="App\Entity\TestUser">
+                    <join-column name="author_id" referenced-column-name="id" />
+                </many-to-one>
+            </entity>
+
+    .. tab:: Config File
+
+        In the config file you can declare entity and field permissions like this:
+
+        .. code-block:: yaml
+
+            # LogicalAuthorization Configuration
+            logauth:
+                permissions:
+                    models:
+                        App\Entity\TestEntityRoleAuthor:
+                            create:
+                                role: ROLE_ADMIN
+                            read:
+                                OR:
+                                    role: ROLE_ADMIN
+                                    flag: user_is_author
+                            update:
+                                OR:
+                                    role: ROLE_ADMIN
+                                    flag: user_is_author
+                            delete:
+                                OR:
+                                    role: ROLE_ADMIN
+                                    flag: user_is_author
+                            fields:
+                                field1:
+                                    get:
+                                        role: ROLE_ADMIN
+                                        flag: user_is_author
+                                    set:
+                                        role: ROLE_ADMIN
+                                        flag: user_is_author
 
 Creating a Client
 -----------------
