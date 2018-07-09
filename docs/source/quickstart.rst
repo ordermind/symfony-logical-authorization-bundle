@@ -830,6 +830,11 @@ One exception to this rule is lazy loaded documents, which are sometimes used fo
 
 If you already have an document object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service that you have declared as laid out above and then use ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\RepositoryDecoratorInterface::wrapDocument()`` to get the decorator.
 
+Debugging
+=========
+
+This bundle has extensive support for debugging in order to make it crystal clear exactly what goes on when the permissions are being checked. If you run the environment in dev mode, you will see a padlock icon in the devbar with the total amount of access checks for the current request, as well as their outcome. If you click on the icon you end up on the debug panel where you can take a closer look at each of the access checks to see which permissions were checked and, thanks to a backtrace, from where the access check was made. Here you can also see a tree of all the declared permissions. This tree can also be output by
+
 Using Responses
 ===============
 

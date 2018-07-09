@@ -5,82 +5,36 @@ Overview
 Requirements
 ============
 
-#. PHP 5.5.0
-#. To use the PHP stream handler, ``allow_url_fopen`` must be enabled in your
-   system's php.ini.
-#. To use the cURL handler, you must have a recent version of cURL >= 7.19.4
-   compiled with OpenSSL and zlib.
-
-.. note::
-
-    Guzzle no longer requires cURL in order to send HTTP requests. Guzzle will
-    use the PHP stream wrapper to send HTTP requests if cURL is not installed.
-    Alternatively, you can provide your own HTTP handler used to send requests.
-
-.. _installation:
-
+#. Symfony 4.1 or higher
+#. Optionally MongoDB or any database supported by Doctrine ORM
 
 Installation
 ============
 
-The recommended way to install Guzzle is with
-`Composer <http://getcomposer.org>`_. Composer is a dependency management tool
-for PHP that allows you to declare the dependencies your project needs and
-installs them into your project.
+Main bundle:
 
 .. code-block:: bash
 
-    # Install Composer
-    curl -sS https://getcomposer.org/installer | php
+    composer require ordermind/logical-authorization-bundle
 
-You can add Guzzle as a dependency using the composer.phar CLI:
+Support for Doctrine ORM:
 
 .. code-block:: bash
 
-    php composer.phar require guzzlehttp/guzzle:~6.0
+    composer require ordermind/logical-authorization-doctrine-orm-bundle
 
-Alternatively, you can specify Guzzle as a dependency in your project's
-existing composer.json file:
+Support for Doctrine MongoDB:
 
-.. code-block:: js
+.. code-block:: bash
 
-    {
-      "require": {
-         "guzzlehttp/guzzle": "~6.0"
-      }
-   }
-
-After installing, you need to require Composer's autoloader:
-
-.. code-block:: php
-
-    require 'vendor/autoload.php';
-
-You can find out more on how to install Composer, configure autoloading, and
-other best-practices for defining dependencies at `getcomposer.org <http://getcomposer.org>`_.
-
-
-Bleeding edge
--------------
-
-During your development, you can keep up with the latest changes on the master
-branch by setting the version requirement for Guzzle to ``~6.0@dev``.
-
-.. code-block:: js
-
-   {
-      "require": {
-         "guzzlehttp/guzzle": "~6.0@dev"
-      }
-   }
-
+    composer require ordermind/logical-authorization-doctrine-mongo-bundle
 
 License
 =======
 
 Licensed using the `MIT license <http://opensource.org/licenses/MIT>`_.
 
-    Copyright (c) 2015 Michael Dowling <https://github.com/mtdowling>
+    Copyright (c) 2018 Kristofer Tengström <https://github.com/ordermind>
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
