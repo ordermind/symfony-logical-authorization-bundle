@@ -11,11 +11,29 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Yaml\Yaml;
 
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
+
 /**
  * {@inheritdoc}
  */
 class DumpPermissionTreeCommand extends ContainerAwareCommand
 {
+    /**
+     * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
+     */
+    protected $treeBuilder;
+
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
+     */
+    public function __construct(PermissionTreeBuilderInterface $treeBuilder)
+    {
+        $this->treeBuilder = $treeBuilder;
+        parent::__construct();
+    }
+
    /**
     * {@inheritdoc}
     */
@@ -37,8 +55,7 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        $tree = $container->get('logauth.service.permission_tree_builder')->getTree();
+        $tree = $this->treeBuilder->getTree();
         $format = $input->getOption('format');
 
         if ('yml' === $format) {
