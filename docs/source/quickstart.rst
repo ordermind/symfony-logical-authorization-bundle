@@ -766,6 +766,69 @@ Inline document permission declarations are supported for documents mapped with 
                                         role: ROLE_ADMIN
                                         flag: user_is_author
         
+Checking Permissions
+====================
+
+Now that you have declared your permissions, it's time to put them to use. This section explains how you check these permissions.
+
+Routes
+------
+
+Route permissions are automatically checked, so if you have declared permissions for a route correctly they should just work without any further effort on your part.
+
+Doctrine ORM
+------------
+
+Entity permissions are not checked automatically. In order to make that job easier for you, there are decorators that you can use for this purpose. The recommended way is to declare each repository as a service like this:
+
+.. code-block:: yaml
+
+    repository.test_entity_roleauthor:
+        class: Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\RepositoryDecorator
+        factory: ['@logauth_doctrine_orm.service.repository_decorator_factory', getRepositoryDecorator]
+        arguments:
+            - App\Entity\TestEntityRoleAuthor
+
+The only thing you will need to alter in the above configuration is the service name (``repository.test_entity_roleauthor``) and the entity class argument (``App\Entity\TestEntityRoleAuthor``) for the related entity. The rest can be left as is.
+
+Once you have declared a repository as a service in this way, it can easily be fetched by dependency injection. You can now use it as a regular repository, but the difference is that the results from queries are automatically filtered by permissions, so if a user doesn't have permissions for the "read" action for an entity, it will be removed from the result. The resulting objects will also be instances of ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\EntityDecorator`` rather than the raw entities. The entity decorators, just like the repository decorators, act just like the wrapped objects but allows for automatic permission checks when you try to interact with it.
+
+One exception to this rule is lazy loaded entities, which are sometimes used for performance purposes. Because filtering would require instantiating the objects and thus defeat the whole purpose of using lazy loaded collections in the first place, these are not filtered or wrapped by decorators by default. If you do want to filter and wrap them, you can enable it like this:
+
+.. code-block:: yaml
+
+    # LogicalAuthorization Doctrine ORM Configuration
+    logauth_doctrine_orm:
+        check_lazy_loaded_entities: true
+
+If you already have an entity object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service that you have declared as laid out above and then use ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\RepositoryDecoratorInterface::wrapEntity()`` to get the decorator.
+
+Doctrine MongoDB
+----------------
+
+Document permissions are not checked automatically. In order to make that job easier for you, there are decorators that you can use for this purpose. The recommended way is to declare each repository as a service like this:
+
+.. code-block:: yaml
+
+    repository.test_document_roleauthor:
+        class: Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\RepositoryDecorator
+        factory: ['@logauth_doctrine_mongo.service.repository_decorator_factory', getRepositoryDecorator]
+        arguments:
+            - App\Document\TestDocumentRoleAuthor
+
+The only thing you will need to alter in the above configuration is the service name (``repository.test_document_roleauthor``) and the document class argument (``App\Document\TestDocumentRoleAuthor``) for the related document. The rest can be left as is.
+
+Once you have declared a repository as a service in this way, it can easily be fetched by dependency injection. You can now use it as a regular repository, but the difference is that the results from queries are automatically filtered by permissions, so if a user doesn't have permissions for the "read" action for an document, it will be removed from the result. The resulting objects will also be instances of ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\DocumentDecorator`` rather than the raw documents. The document decorators, just like the repository decorators, act just like the wrapped objects but allows for automatic permission checks when you try to interact with it.
+
+One exception to this rule is lazy loaded documents, which are sometimes used for performance purposes. Because filtering would require instantiating the objects and thus defeat the whole purpose of using lazy loaded collections in the first place, these are not filtered or wrapped by decorators by default. If you do want to filter and wrap them, you can enable it like this:
+
+.. code-block:: yaml
+
+    # LogicalAuthorization Mongo Configuration
+    logauth_doctrine_mongo:
+        check_lazy_loaded_documents: true
+
+If you already have an document object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service that you have declared as laid out above and then use ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\RepositoryDecoratorInterface::wrapDocument()`` to get the decorator.
 
 Using Responses
 ===============
