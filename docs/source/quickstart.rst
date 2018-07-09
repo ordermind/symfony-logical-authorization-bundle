@@ -129,7 +129,7 @@ This library supports the ability for a superuser to completely circumvent acces
 Declaring Permissions
 =====================
 
-Permissions may be declared both inline together with for example the declaration of a route, or in the logauth configuration file. These permissions will override any inline permission declarations. For help with the use of logic gates and nesting, please refer to the documentation at https://github.com/ordermind/logical-permissions-js#logic-gates.
+Permissions may be declared both inline together with for example the declaration of a route, or in the logauth configuration file located at ``/config/packages/logauth.yaml``. These permissions will override any inline permission declarations. For help with the use of logic gates and nesting, please refer to the documentation at https://github.com/ordermind/logical-permissions-js#logic-gates.
 
 Routes
 ------
@@ -153,7 +153,7 @@ Inline route permission declarations are supported for routes defined with annot
                     resource: ../src/Controller/
                     type: logauth_annotation
 
-        Once your controller is configured to work with ``logauth_annotation``, you may declare permissions in json format with your route like this:
+        Once your controller is configured to work with ``logauth_annotation``, you may declare permissions with your route in json format by using the ``@Permissions`` annotation defined in ``Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions``:
 
         .. code-block:: php
 
@@ -204,7 +204,7 @@ Inline route permission declarations are supported for routes defined with annot
 
     .. tab:: Config File
 
-        Here are a couple of examples of permission declaration that you can put in ``/config/packages/logauth.yaml``.
+        Here are a couple of examples of permission declarations that you can put in the configuration file.
 
         **Single route example**
 
@@ -231,13 +231,13 @@ Inline route permission declarations are supported for routes defined with annot
 Doctrine ORM
 ------------
 
-Inline entity permission declarations are supported for entities mapped with annotations, YAML and XML. You can also declare these permissions in a configuration file. You can declare permissions both on the entity level and on the field level. The permissions are separately declared for each action. For entities the default actions are "create", "read", "update" and "delete", while for fields they are "get" and "set".
+Inline entity permission declarations are supported for entities mapped with annotations, YAML and XML. You can also declare these permissions in the configuration file. You can declare permissions both on the entity level and on the field level. The permissions are separately declared for each action. For entities the default actions are "create", "read", "update" and "delete", while for fields they are "get" and "set".
 
 .. tabs::
 
     .. tab:: Annotations
 
-        If you map your entity with annotations, you can declare permissions in json format. Here is an example of permission declarations on both entity and field levels.
+        If you map your entity with annotations, you can declare permissions in json format by using the ``@Permissions`` annotation defined in ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Annotation\Doctrine\Permissions``. Here is an example of permission declarations on both entity and field levels.
 
         .. code-block:: php
 
@@ -338,7 +338,7 @@ Inline entity permission declarations are supported for entities mapped with ann
                 /**
                 * Set author
                 *
-                * @param \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
+                * @param Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
                 *
                 * @return entity implementing ModelInterface
                 */
@@ -352,7 +352,7 @@ Inline entity permission declarations are supported for entities mapped with ann
                 /**
                 * Get authorId
                 *
-                * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+                * @return Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
                 */
                 public function getAuthor(): ?UserInterface
                 {
@@ -404,6 +404,7 @@ Inline entity permission declarations are supported for entities mapped with ann
                             set:
                                 role: ROLE_ADMIN
                                 flag: user_is_author
+
                 manyToOne:
                     author:
                         targetEntity: App\Entity\TestUser
@@ -475,6 +476,273 @@ Inline entity permission declarations are supported for entities mapped with ann
                 permissions:
                     models:
                         App\Entity\TestEntityRoleAuthor:
+                            create:
+                                role: ROLE_ADMIN
+                            read:
+                                OR:
+                                    role: ROLE_ADMIN
+                                    flag: user_is_author
+                            update:
+                                OR:
+                                    role: ROLE_ADMIN
+                                    flag: user_is_author
+                            delete:
+                                OR:
+                                    role: ROLE_ADMIN
+                                    flag: user_is_author
+                            fields:
+                                field1:
+                                    get:
+                                        role: ROLE_ADMIN
+                                        flag: user_is_author
+                                    set:
+                                        role: ROLE_ADMIN
+                                        flag: user_is_author
+
+Doctrine MongoDB
+----------------
+
+Inline document permission declarations are supported for entities mapped with annotations, YAML and XML. You can also declare these permissions in a configuration file. You can declare permissions both on the document level and on the field level. The permissions are separately declared for each action. For entities the default actions are "create", "read", "update" and "delete", while for fields they are "get" and "set".
+
+.. tabs::
+
+    .. tab:: Annotations
+
+        If you map your document with annotations, you can declare permissions in json format by using the ``@Permissions`` annotation defined in ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Annotation\Doctrine\Permissions``. Here is an example of permission declarations on both document and field levels.
+
+        .. code-block:: php
+
+            use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+            use Ordermind\LogicalAuthorizationDoctrineMongoBundle\Annotation\Doctrine\Permissions;
+            use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
+            use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
+
+            /**
+            * TestDocumentRoleAuthor
+            *
+            * @ODM\Document(repositoryClass="App\Repository\TestDocumentRoleAuthorRepository", collection="testdocuments_roleauthor")
+            * @Permissions({
+            *   "create": {
+            *     "role": "ROLE_ADMIN"
+            *   },
+            *   "read": {
+            *     "OR": {
+            *       "role": "ROLE_ADMIN",
+            *       "flag": "user_is_author"
+            *     }
+            *   },
+            *   "update": {
+            *     "OR": {
+            *       "role": "ROLE_ADMIN",
+            *       "flag": "user_is_author"
+            *     }
+            *   },
+            *   "delete": {
+            *     "OR": {
+            *       "role": "ROLE_ADMIN",
+            *       "flag": "user_is_author"
+            *     }
+            *   }
+            * })
+            */
+            class TestDocumentRoleAuthor implements ModelInterface
+            {
+                /**
+                * @var int
+                *
+                * @ODM\Field(name="id", type="integer")
+                * @ODM\Id
+                */
+                private $id;
+
+                /**
+                * @var string
+                *
+                * @ODM\Field(name="field1", type="string")
+                * @Permissions({
+                *   "get": {
+                *     "role": "ROLE_ADMIN",
+                *     "flag": "user_is_author"
+                *   },
+                *   "set": {
+                *     "role": "ROLE_ADMIN",
+                *     "flag": "user_is_author"
+                *   }
+                * })
+                */
+                private $field1 = '';
+
+                /**
+                * @var Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+                *
+                * @ODM\ReferenceOne(targetDocument="App\Document\TestUser")
+                */
+                protected $author;
+
+                /**
+                * Get id
+                *
+                * @return int
+                */
+                public function getId()
+                {
+                    return $this->id;
+                }
+
+                /**
+                * Set field1
+                *
+                * @param string $field1
+                *
+                * @return TestDocumentRoleAuthor
+                */
+                public function setField1($field1)
+                {
+                    $this->field1 = $field1;
+
+                    return $this;
+                }
+
+                /**
+                * Get field1
+                *
+                * @return string
+                */
+                public function getField1()
+                {
+                    return $this->field1;
+                }
+
+                /**
+                * Set author
+                *
+                * @param Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
+                *
+                * @return TestDocumentRoleAuthor
+                */
+                public function setAuthor(UserInterface $author)
+                {
+                    $this->author = $author;
+
+                    return $this;
+                }
+
+                /**
+                * Get authorId
+                *
+                * @return Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+                */
+                public function getAuthor(): ?UserInterface
+                {
+                    return $this->author;
+                }
+            }
+
+    .. tab:: YAML
+
+        If you map your document with yaml you can declare permissions like this in the mapping file:
+
+        .. code-block:: yaml
+
+            App\Document\TestDocumentRoleAuthor:
+                type: document
+                repositoryClass: App\Repository\TestDocumentRoleAuthorRepository
+                collection: testdocuments_roleauthor
+
+                permissions:
+                    create:
+                        role: ROLE_ADMIN
+                    read:
+                        OR:
+                            role: ROLE_ADMIN
+                            flag: user_is_author
+                    update:
+                        OR:
+                            role: ROLE_ADMIN
+                            flag: user_is_author
+                    delete:
+                        OR:
+                            role: ROLE_ADMIN
+                            flag: user_is_author
+
+                fields:
+                    id:
+                        id: true
+                    field1:
+                        type: string
+                        permissions:
+                            get:
+                                role: ROLE_ADMIN
+                                flag: user_is_author
+                            set:
+                                role: ROLE_ADMIN
+                                flag: user_is_author
+
+                referenceOne:
+                    author:
+                        targetDocument: App\Document\TestUser
+
+
+    .. tab:: XML
+
+        If you map your document with xml you can declare permissions like this in the mapping file:
+
+        .. code-block:: xml
+
+            <document name="App\Document\TestDocumentRoleAuthor" repository-class="App\Repository\TestDocumentRoleAuthorRepository" collection="testdocuments_roleauthor">
+              <permissions>
+                <create>
+                  <role>ROLE_ADMIN</role>
+                </create>
+                <read>
+                  <OR>
+                    <role>ROLE_ADMIN</role>
+                    <flag>user_is_author</flag>
+                  </OR>
+                </read>
+                <update>
+                  <OR>
+                    <role>ROLE_ADMIN</role>
+                    <flag>user_is_author</flag>
+                  </OR>
+                </update>
+                <delete>
+                  <OR>
+                    <role>ROLE_ADMIN</role>
+                    <flag>user_is_author</flag>
+                  </OR>
+                </delete>
+              </permissions>
+
+              <field name="id" id="true" />
+
+              <field name="field1" type="string">
+                <permissions>
+                  <get>
+                    <role>ROLE_ADMIN</role>
+                    <flag>user_is_author</flag>
+                  </get>
+                  <set>
+                    <role>ROLE_ADMIN</role>
+                    <flag>user_is_author</flag>
+                  </set>
+                </permissions>
+              </field>
+
+              <reference-one field="author" target-document="App\Document\TestUser" />
+            </document>
+
+    .. tab:: Config File
+
+        In the config file you can declare document and field permissions like this:
+
+        .. code-block:: yaml
+
+            # LogicalAuthorization Configuration
+            logauth:
+                permissions:
+                    models:
+                        App\Document\TestDocumentRoleAuthor:
                             create:
                                 role: ROLE_ADMIN
                             read:
