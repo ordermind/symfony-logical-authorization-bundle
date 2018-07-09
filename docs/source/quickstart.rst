@@ -833,7 +833,7 @@ If you already have an document object and want to wrap it in a decorator to do 
 Debugging
 =========
 
-This bundle has extensive support for debugging in order to make it crystal clear exactly what goes on when the permissions are being checked. If you run the environment in dev mode, you will see a padlock icon in the devbar with the total amount of access checks for the current request, as well as their outcome. If you click on the icon you end up on the debug panel where you can take a closer look at each of the access checks to see which permissions were checked and, thanks to a backtrace, from where the access check was made. Here you can also see a tree of all the declared permissions. This tree can also be output by
+This bundle has extensive support for debugging to help making it crystal clear exactly what goes on when the permissions are being checked. If you run the environment in dev mode, you will see a padlock icon in the devbar with the total amount of access checks for the current request, as well as their outcome. If you click on the icon you end up on the debug panel where you can take a closer look at each of the access checks to see which permissions were checked, the context and from where the access check was made. If the permissions are complex, they will be broken down into parts so that you can see the return value for each part. If you click the "Permission Tree" tab, you can navigate a tree of all the declared permissions for the site. This tree can also be seen by running the console command ``logauth:dump-permission-tree``.
 
 Using Responses
 ===============
