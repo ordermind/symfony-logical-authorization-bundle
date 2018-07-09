@@ -835,6 +835,30 @@ Debugging
 
 This bundle has extensive support for debugging to help making it crystal clear exactly what goes on when the permissions are being checked. If you run the environment in dev mode, you will see a padlock icon in the devbar with the total amount of access checks for the current request, as well as their outcome. If you click on the icon you end up on the debug panel where you can take a closer look at each of the access checks to see which permissions were checked, the context and from where the access check was made. If the permissions are complex, they will be broken down into parts so that you can see the return value for each part. If you click the "Permission Tree" tab, you can navigate a tree of all the declared permissions for the site. This tree can also be seen by running the console command ``logauth:dump-permission-tree``.
 
+Caching
+-------
+
+The whole permissions tree is cached for performance reasons, so if you change the permissions you'll need to make sure that the cache is cleared before the updated permissions work. In order to disable caching for debugging purposes, you can use a NULL adapter for Symfony's caching system. Here's how you do that.
+
+1. Copy the code below into ``/config/services.yml``:
+
+.. code-block:: yaml
+
+    cache.adapter.null:
+        class: Symfony\Component\Cache\Adapter\NullAdapter
+        abstract: true
+        arguments: [~, ~, ~]
+        tags:
+            - {name: cache.pool, clearer: cache.default_clearer}
+
+2. Use this configuration in ``config/packages/framework.yaml``:
+
+.. code-block:: yaml
+
+    framework:
+        cache:
+            app: cache.adapter.null
+
 Using Responses
 ===============
 
