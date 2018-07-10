@@ -4,6 +4,12 @@
     "version": "0.16.4",
     "description": "Bundle for Symfony 4 supporting flexible and convenient model, field and route level permissions.",
     "keywords": ["authorization"],
+    "authors": [
+        {
+            "name": "Kristofer Tengström",
+            "email": "ordermind@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Ordermind\\LogicalAuthorizationBundle\\": ""
