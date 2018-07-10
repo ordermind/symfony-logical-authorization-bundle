@@ -5,8 +5,7 @@ Overview
 Requirements
 ============
 
-#. Symfony 4.1 or higher
-#. Optionally MongoDB or any database supported by Doctrine ORM
+This bundle requires Symfony 4.1 or higher.
 
 Installation
 ============
@@ -54,60 +53,23 @@ Licensed using the `MIT license <http://opensource.org/licenses/MIT>`_.
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 
+Contribution Guidelines
+=======================
 
-Contributing
-============
-
-
-Guidelines
-----------
-
-1. Guzzle utilizes PSR-1, PSR-2, PSR-4, and PSR-7.
-2. Guzzle is meant to be lean and fast with very few dependencies. This means
-   that not every feature request will be accepted.
-3. Guzzle has a minimum PHP version requirement of PHP 5.5. Pull requests must
-   not require a PHP version greater than PHP 5.5 unless the feature is only
-   utilized conditionally.
-4. All pull requests must include unit tests to ensure the change works as
+#. Make sure that your code is formatted according to the Symfony coding standards at https://symfony.com/doc/current/contributing/code/standards.html
+#. All pull requests must include unit tests to ensure the change works as
    expected and to prevent regressions.
-
-
-Running the tests
------------------
-
-In order to contribute, you'll need to checkout the source from GitHub and
-install Guzzle's dependencies using Composer:
-
-.. code-block:: bash
-
-    git clone https://github.com/guzzle/guzzle.git
-    cd guzzle && curl -s http://getcomposer.org/installer | php && ./composer.phar install --dev
-
-Guzzle is unit tested with PHPUnit. Run the tests using the Makefile:
-
-.. code-block:: bash
-
-    make test
-
-.. note::
-
-    You'll need to install node.js v0.5.0 or newer in order to perform
-    integration tests on Guzzle's HTTP handlers.
-
 
 Reporting a security vulnerability
 ==================================
 
-We want to ensure that Guzzle is a secure HTTP client library for everyone. If
-you've discovered a security vulnerability in Guzzle, we appreciate your help
+If you've discovered a security vulnerability in Logical Authorization Bundle, we appreciate your help
 in disclosing it to us in a `responsible manner <http://en.wikipedia.org/wiki/Responsible_disclosure>`_.
 
 Publicly disclosing a vulnerability can put the entire community at risk. If
 you've discovered a security concern, please email us at
-security@guzzlephp.org. We'll work with you to make sure that we understand the
-scope of the issue, and that we fully address your concern. We consider
-correspondence sent to security@guzzlephp.org our highest priority, and work to
-address any issues that arise as quickly as possible.
+ordermind@gmail.com. We'll work with you to make sure that we understand the
+scope of the issue, and that we fully address your concern.
 
 After a security vulnerability has been corrected, a security hotfix release will
 be deployed as soon as possible.
