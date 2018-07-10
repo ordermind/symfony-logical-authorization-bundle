@@ -15,16 +15,14 @@ class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase
      */
     public function supports($resource, $type = null): bool
     {
-        if (!is_string($resource)) {
+        if (!is_string($resource) || !is_string($type)) {
             return false;
         }
 
-        try {
-            $path = $this->locator->locate($resource);
-        } catch (\Exception $e) {
+        if ('logauth_annotation' !== $type) {
             return false;
         }
 
-        return is_dir($path) && 'logauth_annotation' === $type;
+        return parent::supports($resource, 'annotation');
     }
 }
