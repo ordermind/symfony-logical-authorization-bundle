@@ -45,7 +45,7 @@ Permission types are used to check different kinds of conditions for access cont
         }
 
 ``flag``
-    A flag is a boolean condition of some sort. The following flags are available by default:
+    A flag is a boolean condition that does not require any additional parameter, just a context. The following flags are available by default:
 
     ``user_can_bypass_access`` checks if the user can bypass access.
 
