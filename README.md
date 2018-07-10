@@ -17,19 +17,19 @@ This Symfony bundle provides a unifying solution for authorization that aims to 
 
 Requirements: Symfony 4.1 or higher.
 
-### Main bundle
+**Main bundle**
 
 ```
 composer require ordermind/logical-authorization-bundle
 ```
 
-### Support for Doctrine ORM
+**Support for Doctrine ORM**
 
 ```
 composer require ordermind/logical-authorization-doctrine-orm-bundle
 ```
 
-### Support for Doctrine MongoDB
+**Support for Doctrine MongoDB**
 
 ```
 composer require ordermind/logical-authorization-doctrine-mongo-bundle
