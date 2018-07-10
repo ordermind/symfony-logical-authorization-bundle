@@ -7,6 +7,8 @@ Requirements
 
 This bundle requires Symfony 4.1 or higher.
 
+.. _installation:
+
 Installation
 ============
 

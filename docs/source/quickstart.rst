@@ -774,7 +774,15 @@ Now that you have declared your permissions, it's time to put them to use. This 
 Routes
 ------
 
-Route permissions are automatically checked, so if you have declared permissions for a route correctly they should just work without any further effort on your part.
+In order to enable checking for route permissions, you need to set the following configuration in ``/config/packages/security.yaml``:
+
+.. code-block:: yaml
+
+    security:
+        access_control:
+            - { path: ^/, allow_if: "logauth_route()" }
+
+It is recommended to remove all other configuration for access_control. That way you make sure that all route permissions are handled by Logical Authorization Bundle. After setting this configuration, route permissions should work as expected.
 
 Doctrine ORM
 ------------
