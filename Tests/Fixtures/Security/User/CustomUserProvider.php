@@ -35,8 +35,8 @@ class CustomUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         if (!empty($this->users[$username])) {
-          $user_data = $this->users[$username];
-          return new TestUser($username, $user_data['password'], $user_data['roles'], $user_data['email'], !empty($user_data['bypass_access']));
+            $user_data = $this->users[$username];
+            return new TestUser($username, $user_data['password'], $user_data['roles'], $user_data['email'], !empty($user_data['bypass_access']));
         }
 
         throw new UsernameNotFoundException(

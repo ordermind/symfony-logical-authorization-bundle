@@ -34,9 +34,9 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
         parent::__construct();
     }
 
-   /**
-    * {@inheritdoc}
-    */
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this->setName('logauth:dump-permission-tree');
@@ -50,9 +50,9 @@ class DumpPermissionTreeCommand extends ContainerAwareCommand
         );
     }
 
-   /**
-    * {@inheritdoc}
-    */
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tree = $this->treeBuilder->getTree();

@@ -23,11 +23,11 @@ class Permissions
         $this->permissions = $data['value'];
     }
 
-  /**
-   * Gets the permission tree for this route
-   *
-   * @return array|string|bool The permission tree for this route
-   */
+    /**
+     * Gets the permission tree for this route
+     *
+     * @return array|string|bool The permission tree for this route
+     */
     public function getPermissions()
     {
         return $this->permissions;

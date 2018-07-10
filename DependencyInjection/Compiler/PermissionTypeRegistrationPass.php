@@ -12,9 +12,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class PermissionTypeRegistrationPass implements CompilerPassInterface
 {
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->has('logauth.service.logical_permissions_proxy')) {

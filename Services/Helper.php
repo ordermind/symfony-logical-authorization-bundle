@@ -28,13 +28,13 @@ class Helper implements HelperInterface
      */
     protected $logger;
 
-  /**
-   * @internal
-   *
-   * @param string                                                                             $environment  The current Symfony environment
-   * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
-   * @param Psr\Log\LoggerInterface                                                            $logger       (optional) A service for logging errors
-   */
+    /**
+     * @internal
+     *
+     * @param string                                                                             $environment  The current Symfony environment
+     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
+     * @param Psr\Log\LoggerInterface                                                            $logger       (optional) A service for logging errors
+     */
     public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
         $this->environment = $environment;
@@ -42,9 +42,9 @@ class Helper implements HelperInterface
         $this->logger = $logger;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getCurrentUser()
     {
         $token = $this->tokenStorage->getToken();
@@ -55,9 +55,9 @@ class Helper implements HelperInterface
         return null;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function handleError(string $message, array $context)
     {
         if ('prod' === $this->environment && !is_null($this->logger)) {

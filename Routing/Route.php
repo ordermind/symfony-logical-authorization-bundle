@@ -10,49 +10,49 @@ use Symfony\Component\Routing\Route as RouteBase;
  */
 class Route extends RouteBase implements RouteInterface
 {
-  /**
-    * @var string
-    */
+    /**
+      * @var string
+      */
     private $path = '/';
 
-  /**
-    * @var string
-    */
+    /**
+      * @var string
+      */
     private $host = '';
 
-  /**
-    * @var array
-    */
+    /**
+      * @var array
+      */
     private $schemes = array();
 
-  /**
-    * @var array
-    */
+    /**
+      * @var array
+      */
     private $methods = array();
 
-  /**
-    * @var array
-    */
+    /**
+      * @var array
+      */
     private $defaults = array();
 
-  /**
-    * @var array
-    */
+    /**
+      * @var array
+      */
     private $requirements = array();
 
-  /**
-    * @var array
-    */
+    /**
+      * @var array
+      */
     private $options = array();
 
-  /**
-    * @var null|CompiledRoute
-    */
+    /**
+      * @var null|CompiledRoute
+      */
     private $compiled;
 
-  /**
-    * @var string
-    */
+    /**
+      * @var string
+      */
     private $condition = '';
 
     private $permissions;
@@ -83,9 +83,9 @@ class Route extends RouteBase implements RouteInterface
         $this->setPermissions($permissions);
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function serialize()
     {
         return serialize(array(
@@ -102,9 +102,9 @@ class Route extends RouteBase implements RouteInterface
         ));
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function unserialize($serialized)
     {
         $data = unserialize($serialized);
@@ -127,17 +127,17 @@ class Route extends RouteBase implements RouteInterface
         }
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getPermissions()
     {
         return $this->permissions;

@@ -16,10 +16,10 @@ interface AddPermissionsEventInterface
    */
     public function getTree(): array;
 
-  /**
-   * Inserts a new permission tree and merges it into the existing tree, making it possible to override permissions.
-   *
-   * @param array $tree The new permission tree
-   */
+    /**
+     * Inserts a new permission tree and merges it into the existing tree, making it possible to override permissions.
+     *
+     * @param array $tree The new permission tree
+     */
     public function insertTree(array $tree);
 }

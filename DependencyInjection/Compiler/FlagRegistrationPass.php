@@ -12,9 +12,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class FlagRegistrationPass implements CompilerPassInterface
 {
-   /**
-    * {@inheritdoc}
-    */
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->has('logauth.permission_type.flag')) {

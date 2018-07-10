@@ -20,13 +20,13 @@ class UserCanBypassAccess implements FlagInterface
         return 'user_can_bypass_access';
     }
 
-  /**
-   * Checks if access can be bypassed in a given context.
-   *
-   * @param array $context The context for evaluating the flag. The context must contain a 'user' key which references either a user string (to signify an anonymous user) or an object implementing Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface. You can get the current user by calling getCurrentUser() from the service 'logauth.service.helper'.
-   *
-   * @return bool TRUE if access can be bypassed or FALSE if access can't be bypassed.
-   */
+    /**
+     * Checks if access can be bypassed in a given context.
+     *
+     * @param array $context The context for evaluating the flag. The context must contain a 'user' key which references either a user string (to signify an anonymous user) or an object implementing Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface. You can get the current user by calling getCurrentUser() from the service 'logauth.service.helper'.
+     *
+     * @return bool TRUE if access can be bypassed or FALSE if access can't be bypassed.
+     */
     public function checkFlag(array $context): bool
     {
         if (!isset($context['user'])) {

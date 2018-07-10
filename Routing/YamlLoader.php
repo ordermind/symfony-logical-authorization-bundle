@@ -13,34 +13,34 @@ use Ordermind\LogicalAuthorizationBundle\Routing\Route;
  */
 class YamlLoader extends YamlFileLoader
 {
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function load($file, $type = null): RouteCollection
     {
         return parent::load($file, 'yaml');
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function supports($resource, $type = null): bool
     {
         return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), true) && ('logauth_yml' === $type || 'logauth_yaml' === $type);
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     protected function validate($config, $name, $path)
     {
         unset($config['permissions']);
         parent::validate($config, $name, $path);
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     protected function parseRoute(RouteCollection $collection, $name, array $config, $path)
     {
         $defaults = isset($config['defaults']) ? $config['defaults'] : array();

@@ -10,9 +10,9 @@ use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader as AnnotationDire
  */
 class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase
 {
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function supports($resource, $type = null): bool
     {
         if (!is_string($resource)) {

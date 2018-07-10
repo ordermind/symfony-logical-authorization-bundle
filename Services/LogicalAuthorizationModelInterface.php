@@ -23,30 +23,30 @@ interface LogicalAuthorizationModelInterface
    */
     public function getAvailableActions($model, array $modelActions, array $fieldActions, $user = null): array;
 
-  /**
-   * Checks access for an action on a model for a given user.
-   *
-   * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for this action on the provided model it will return TRUE.
-   *
-   * @param object|string $model  A model object or class string.
-   * @param string        $action Examples of model actions are "create", "read", "update" and "delete".
-   * @param object|string $user   (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
-   *
-   * @return bool TRUE if access is granted or FALSE if access is denied.
-   */
+    /**
+     * Checks access for an action on a model for a given user.
+     *
+     * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for this action on the provided model it will return TRUE.
+     *
+     * @param object|string $model  A model object or class string.
+     * @param string        $action Examples of model actions are "create", "read", "update" and "delete".
+     * @param object|string $user   (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+     *
+     * @return bool TRUE if access is granted or FALSE if access is denied.
+     */
     public function checkModelAccess($model, string $action, $user = null): bool;
 
-  /**
-   * Checks access for an action on a specific field in a model for a given user.
-   *
-   * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for this action on the provided field and model it will return TRUE.
-   *
-   * @param object|string $model     A model object or class string.
-   * @param string        $fieldName The name of the field.
-   * @param string        $action    Examples of field actions are "get" and "set".
-   * @param object|string $user      (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
-   *
-   * @return bool TRUE if access is granted or FALSE if access is denied.
-   */
+    /**
+     * Checks access for an action on a specific field in a model for a given user.
+     *
+     * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for this action on the provided field and model it will return TRUE.
+     *
+     * @param object|string $model     A model object or class string.
+     * @param string        $fieldName The name of the field.
+     * @param string        $action    Examples of field actions are "get" and "set".
+     * @param object|string $user      (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+     *
+     * @return bool TRUE if access is granted or FALSE if access is denied.
+     */
     public function checkFieldAccess($model, string $fieldName, string $action, $user = null): bool;
 }

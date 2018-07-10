@@ -29,11 +29,11 @@ class AddRoutePermissions
         $this->router = $router;
     }
 
-  /**
-   * Event listener callback for adding permissions to the tree
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
-   */
+    /**
+     * Event listener callback for adding permissions to the tree
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
+     */
     public function onAddPermissions(AddPermissionsEventInterface $event)
     {
         $permissionTree = ['routes' => []];

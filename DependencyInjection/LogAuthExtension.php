@@ -32,9 +32,9 @@ class LogAuthExtension extends Extension
         }
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias(): string
     {
         return 'logauth';

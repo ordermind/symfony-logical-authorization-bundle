@@ -14,32 +14,32 @@ class Host implements PermissionTypeInterface
 {
     protected $requestStack;
 
-  /**
-   * @internal
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
-   */
+    /**
+     * @internal
+     *
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
+     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getName(): string
     {
         return 'host';
     }
 
-  /**
-   * Checks if the current request uses an allowed host
-   *
-   * @param string $host    The host to evaluate
-   * @param array  $context The context for evaluating the host
-   *
-   * @return bool TRUE if the host is allowed or FALSE if it is not allowed
-   */
+    /**
+     * Checks if the current request uses an allowed host
+     *
+     * @param string $host    The host to evaluate
+     * @param array  $context The context for evaluating the host
+     *
+     * @return bool TRUE if the host is allowed or FALSE if it is not allowed
+     */
     public function checkPermission(string $host, array $context): bool
     {
         if (!$host) {

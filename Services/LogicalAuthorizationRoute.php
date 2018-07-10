@@ -40,15 +40,15 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      */
     protected $debugCollector;
 
-  /**
-   * @internal
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la             LogicalAuthorization service
-   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder    Permission tree builder service
-   * @param Symfony\Component\Routing\RouterInterface                                    $router         Router service
-   * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper         LogicalAuthorization helper service
-   * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector (optional) Collector service
-   */
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la             LogicalAuthorization service
+     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder    Permission tree builder service
+     * @param Symfony\Component\Routing\RouterInterface                                    $router         Router service
+     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper         LogicalAuthorization helper service
+     * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector (optional) Collector service
+     */
     public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, RouterInterface $router, HelperInterface $helper, CollectorInterface $debugCollector = null)
     {
         $this->la = $la;
@@ -58,11 +58,11 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
         $this->debugCollector = $debugCollector;
     }
 
-  /**
-   * {@inheritdoc}
-   *
-   * @return array
-   */
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
     public function getAvailableRoutes($user = null): array
     {
         if (is_null($user)) {
@@ -98,11 +98,11 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
         return $routes;
     }
 
-  /**
-   * {@inheritdoc}
-   *
-   * @return bool
-   */
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
     public function checkRouteAccess(string $routeName, $user = null): bool
     {
         if (is_null($user)) {
@@ -163,15 +163,15 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      */
     protected function getRoutePermissions(string $routeName)
     {
-      //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
+        //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
         $tree = $this->treeBuilder->getTree();
 
-      //Check individual route permissions
+        //Check individual route permissions
         if (!empty($tree['routes']) && array_key_exists($routeName, $tree['routes'])) {
             return $tree['routes'][$routeName];
         }
 
-      //Check pattern permissions
+        //Check pattern permissions
         if (!empty($tree['route_patterns'])) {
             $route = $this->router->getRouteCollection()->get($routeName);
             if ($route) {

@@ -11,20 +11,19 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Exceptions\FlagNot
  */
 class FlagManager implements FlagManagerInterface
 {
-
     protected $flags = [];
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getName(): string
     {
         return 'flag';
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function addFlag(FlagInterface $flag)
     {
         $name = $flag->getName();
@@ -43,9 +42,9 @@ class FlagManager implements FlagManagerInterface
         $this->setFlags($flags);
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function removeFlag(string $name)
     {
         if (!$name) {
@@ -60,17 +59,17 @@ class FlagManager implements FlagManagerInterface
         $this->setFlags($flags);
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getFlags(): array
     {
         return $this->flags;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function checkPermission(string $name, array $context): bool
     {
         if (!$name) {

@@ -36,12 +36,12 @@ class Collector extends DataCollector implements CollectorInterface
      */
     protected $data;
 
-  /**
-   * @internal
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface   $treeBuilder A tree builder for fetching the full permission tree
-   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy     A proxy for checking permissions
-   */
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface   $treeBuilder A tree builder for fetching the full permission tree
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy     A proxy for checking permissions
+     */
     public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy)
     {
         $this->treeBuilder = $treeBuilder;
@@ -50,17 +50,17 @@ class Collector extends DataCollector implements CollectorInterface
         $this->data = [];
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getName(): string
     {
         return 'logauth.collector';
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         $log = $this->formatLog($this->permissionLog);
@@ -70,9 +70,9 @@ class Collector extends DataCollector implements CollectorInterface
         ];
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function lateCollect()
     {
         $this->data['tree'] = $this->cloneVar($this->data['tree']);
@@ -90,33 +90,33 @@ class Collector extends DataCollector implements CollectorInterface
         unset($logItem);
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function reset()
     {
         $this->data = [];
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getPermissionTree(): Data
     {
         return $this->data['tree'];
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getLog(): array
     {
         return $this->data['log'];
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function addPermissionCheck(bool $access, string $type, $item, $user, $permissions, array $context, string $message = '')
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
@@ -231,7 +231,7 @@ class Collector extends DataCollector implements CollectorInterface
      */
     protected function getPermissionChecks($permissions, array $context, array $typeKeys): array
     {
-      // Extra permission check of the whole tree to catch errors
+        // Extra permission check of the whole tree to catch errors
         try {
             $this->lpProxy->checkAccess($permissions, $context, false);
         } catch (\Exception $e) {

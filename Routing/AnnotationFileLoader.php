@@ -10,9 +10,9 @@ use Symfony\Component\Routing\Loader\AnnotationFileLoader as AnnotationFileLoade
  */
 class AnnotationFileLoader extends AnnotationFileLoaderBase
 {
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function supports($resource, $type = null): bool
     {
         return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && 'logauth_annotation' === $type;

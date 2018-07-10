@@ -21,12 +21,12 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
      */
     protected $helper;
 
-  /**
-   * @internal
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy The logical permissions proxy to use
-   * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                  $helper  LogicalAuthorization helper service
-   */
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy The logical permissions proxy to use
+     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                  $helper  LogicalAuthorization helper service
+     */
     public function __construct(LogicalPermissionsProxyInterface $lpProxy, HelperInterface $helper)
     {
         $this->lpProxy = $lpProxy;
@@ -38,9 +38,9 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
         $this->helper = $helper;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function checkAccess($permissions, array $context, bool $allowBypass = true): bool
     {
         try {

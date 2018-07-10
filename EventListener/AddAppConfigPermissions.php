@@ -15,21 +15,21 @@ class AddAppConfigPermissions
      */
     protected $config;
 
-  /**
-   * @internal
-   *
-   * @param array $config The logauth.config parameter
-   */
+    /**
+     * @internal
+     *
+     * @param array $config The logauth.config parameter
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
     }
 
-  /**
-   * Event listener callback for adding permissions to the tree
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
-   */
+    /**
+     * Event listener callback for adding permissions to the tree
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
+     */
     public function onAddPermissions(AddPermissionsEventInterface $event)
     {
         if (!empty($this->config['permissions'])) {

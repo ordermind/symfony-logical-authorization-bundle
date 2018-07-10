@@ -16,13 +16,13 @@ interface PermissionTypeInterface
    */
     public function getName(): string;
 
-  /**
-   * Checks if access should be granted for this permission in a given context
-   *
-   * @param string $permission The name of the permission to check, for example a certain role or flag
-   * @param array  $context    The context for evaluating the permission
-   *
-   * @return bool TRUE if access is granted or FALSE if access is not granted
-   */
+    /**
+     * Checks if access should be granted for this permission in a given context
+     *
+     * @param string $permission The name of the permission to check, for example a certain role or flag
+     * @param array  $context    The context for evaluating the permission
+     *
+     * @return bool TRUE if access is granted or FALSE if access is not granted
+     */
     public function checkPermission(string $permission, array $context): bool;
 }

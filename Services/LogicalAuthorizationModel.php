@@ -34,14 +34,14 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
      */
     protected $debugCollector;
 
-  /**
-   * @internal
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la             LogicalAuthorization service
-   * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder    Permission tree builder service
-   * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper         LogicalAuthorization helper service
-   * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector (optional) Collector service
-   */
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la             LogicalAuthorization service
+     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder    Permission tree builder service
+     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper         LogicalAuthorization helper service
+     * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector (optional) Collector service
+     */
     public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, HelperInterface $helper, CollectorInterface $debugCollector = null)
     {
         $this->la = $la;
@@ -50,9 +50,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         $this->debugCollector = $debugCollector;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getAvailableActions($model, array $modelActions, array $fieldActions, $user = null): array
     {
         if ($model instanceof ModelDecoratorInterface) {
@@ -84,9 +84,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         return $availableActions;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function checkModelAccess($model, string $action, $user = null): bool
     {
         if ($model instanceof ModelDecoratorInterface) {
@@ -156,9 +156,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         return true;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function checkFieldAccess($model, string $fieldName, string $action, $user = null): bool
     {
         if ($model instanceof ModelDecoratorInterface) {

@@ -14,32 +14,32 @@ class Method implements PermissionTypeInterface
 {
     protected $requestStack;
 
-  /**
-   * @internal
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
-   */
+    /**
+     * @internal
+     *
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
+     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getName(): string
     {
         return 'method';
     }
 
-  /**
-   * Checks if the current request uses an allowed method
-   *
-   * @param string $method  The method to evaluate
-   * @param array  $context The context for evaluating the method
-   *
-   * @return bool TRUE if the method is allowed or FALSE if it is not allowed
-   */
+    /**
+     * Checks if the current request uses an allowed method
+     *
+     * @param string $method  The method to evaluate
+     * @param array  $context The context for evaluating the method
+     *
+     * @return bool TRUE if the method is allowed or FALSE if it is not allowed
+     */
     public function checkPermission(string $method, array $context): bool
     {
         if (!$method) {
