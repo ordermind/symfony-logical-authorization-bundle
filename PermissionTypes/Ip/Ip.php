@@ -37,7 +37,7 @@ class Ip implements PermissionTypeInterface
     }
 
     /**
-     * Checks if the current request comes from an allowed ip address
+     * Checks if the current request comes from an approved ip address
      *
      * @param string $ip      The ip to evaluate
      * @param array  $context The context for evaluating the ip

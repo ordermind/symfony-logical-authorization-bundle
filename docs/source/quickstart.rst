@@ -69,17 +69,17 @@ Permission types are used to check different kinds of conditions for access cont
 
         {"flag": "user_is_author"}
 ``host``
-    Checks if the current request comes from an approved host.
+    Checks if the current request is sent to an approved host.
 
     **Example**
 
     .. code-block:: javascript
 
-        // Allow access only if the request comes from localhost
+        // Allow access only if the request is sent to localhost
 
         {"host": "localhost"}
 ``ip``
-    Checks if the current request comes from an approved ip address.
+    Checks if the current request comes from an approved ip address or range.
 
     **Example**
 
@@ -853,16 +853,17 @@ Caching
 
 The whole permissions tree is cached for performance reasons, so if you change the permissions you'll need to make sure that the cache is cleared before the updated permissions work. In order to disable caching for debugging purposes, you can use a NULL adapter for Symfony's caching system. Here's how you do that.
 
-1. Copy the code below into ``/config/services.yml``:
+1. Add the following service to ``/config/services.yml``:
 
 .. code-block:: yaml
 
-    cache.adapter.null:
-        class: Symfony\Component\Cache\Adapter\NullAdapter
-        abstract: true
-        arguments: [~, ~, ~]
-        tags:
-            - {name: cache.pool, clearer: cache.default_clearer}
+    services:
+        cache.adapter.null:
+            class: Symfony\Component\Cache\Adapter\NullAdapter
+            abstract: true
+            arguments: [~, ~, ~]
+            tags:
+                - {name: cache.pool, clearer: cache.default_clearer}
 
 2. Use this configuration in ``config/packages/framework.yaml``:
 
