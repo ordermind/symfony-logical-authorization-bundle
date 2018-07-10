@@ -145,12 +145,12 @@ Inline route permission declarations are supported for routes defined with annot
 
             **Example**
 
-            If you want to enable the default application controllers for declaring permissions in the annotations, you can create the file ``/config/routes/logauth_annotations.yaml`` with this content:
+            If you want to enable the default application controllers for declaring permissions in the annotations, the easiest way is to find the file ``/config/routes/annotations.yaml`` and replace the existing type with ``logauth_annotation`` so that it looks like this:
 
             .. code-block:: yaml
 
-                logauth_annotations:
-                    resource: ../src/Controller/
+                controllers:
+                    resource: ../../src/Controller/
                     type: logauth_annotation
 
         Once your controller is configured to work with ``logauth_annotation``, you may declare permissions with your route in json format by using the ``@Permissions`` annotation defined in ``Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions``:
