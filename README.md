@@ -4,7 +4,7 @@
 
 This Symfony bundle provides a unifying solution for authorization that aims to be flexible, convenient and consistent. It combines the expressive power of https://github.com/ordermind/logical-permissions-php with the philosophy of Matthias Noback in his blog post https://matthiasnoback.nl/2014/05/inject-a-repository-instead-of-an-entity-manager to create a solid authorization experience for the developer.
 
-- Declare your permissions in the mappings for your routes and entities
+- Declare your permissions in the mappings for your routes, entities and fields
 - Combine multiple permissions with logic gates such as AND and OR
 - Support for routes, Doctrine ORM and Doctrine MongoDB
 - Review all of your permissions in a single overview tree
