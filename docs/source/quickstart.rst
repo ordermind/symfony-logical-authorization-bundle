@@ -784,6 +784,10 @@ In order to enable checking for route permissions, you need to set the following
 
 It is recommended to remove all other configuration for access_control. That way you make sure that all route permissions are handled by Logical Authorization Bundle. After setting this configuration, route permissions should work as expected.
 
+.. note::
+
+    Unless you use Sonata Admin or something similar, it is not possible to check entity permissions automatically in order to decide access to a route. The reason for this is that there's no way to tell for sure from the route what kind of action (such as "create", "read", "update" and "delete") you need to check the access for. Therefore, if you pass an entity parameter to a route and want to check those permissions to decide whether access to the route should be granted or not, you have to do that manually. See the following section for information about how to achieve that.
+
 Doctrine ORM
 ------------
 
@@ -797,9 +801,13 @@ Entity permissions are not checked automatically. In order to make that job easi
         arguments:
             - App\Entity\TestEntityRoleAuthor
 
-The only thing you will need to alter in the above configuration is the service name (``repository.test_entity_roleauthor``) and the entity class argument (``App\Entity\TestEntityRoleAuthor``) for the related entity. The rest can be left as is.
+The only thing you will need to alter in the above configuration is the service name (``repository.test_entity_roleauthor``) and the entity class argument (``App\Entity\TestEntityRoleAuthor``) for the related entity. The rest can be left as is. When you have declared a repository as a service in this way, it can easily be fetched by dependency injection.
 
-Once you have declared a repository as a service in this way, it can easily be fetched by dependency injection. You can now use it as a regular repository, but the difference is that the results from queries are automatically filtered by permissions, so if a user doesn't have permissions for the "read" action for an entity, it will be removed from the result. The resulting objects will also be instances of ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\EntityDecorator`` rather than the raw entities. The entity decorators, just like the repository decorators, act just like the wrapped objects but allows for automatic permission checks when you try to interact with it.
+.. note::
+
+    If you need to use several repository decorators in the same class, it can be more convenient to inject the factory service ``logauth_doctrine_orm.service.repository_decorator_factory`` instead of each individual repository decorator service. Then you can use ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Factory\RepositoryDecoratorFactoryInterface::getRepositoryDecorator()`` to get the repository decorator that you want.
+
+Once you have injected the repository decorator you can use it as a regular repository, but the difference is that the results from queries are automatically filtered by permissions, so if a user doesn't have permissions for the "read" action for an entity, it will be removed from the result. The resulting objects will also be instances of ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\EntityDecorator`` rather than the raw entities. The entity decorators, just like the repository decorators, act just like the wrapped objects but allows for automatic permission checks when you try to interact with it.
 
 One exception to this rule is lazy loaded entities, which are sometimes used for performance purposes. Because filtering would require instantiating the objects and thus defeat the whole purpose of using lazy loaded collections in the first place, these are not filtered or wrapped by decorators by default. If you do want to filter and wrap them, you can enable it like this:
 
@@ -809,7 +817,53 @@ One exception to this rule is lazy loaded entities, which are sometimes used for
     logauth_doctrine_orm:
         check_lazy_loaded_entities: true
 
-If you already have an entity object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service that you have declared as laid out above and then use ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\RepositoryDecoratorInterface::wrapEntity()`` to get the decorator.
+If you already have an entity object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service either by injecting the service for the decorator or the factory service as mentioned above. Once you have the repository decorator you can use ``Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Decorator\RepositoryDecoratorInterface::wrapEntity()`` to get the entity decorator. This is useful if you want to check entity permissions in a controller, like this for example:
+
+.. code-block:: yaml
+
+    # File: /config/services.yaml
+    services:
+        App\Controller\:
+            resource: '../src/Controller'
+            arguments: ['@logauth_doctrine_orm.service.repository_decorator_factory']
+            tags: ['controller.service_arguments']
+
+.. code-block:: php
+
+    # File: /src/Controller/DefaultController.php
+
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\Routing\Annotation\Route;
+    use Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Factory\RepositoryDecoratorFactoryInterface;
+    use App\Entity\TestEntityRoleAuthor;
+
+    class DefaultController extends Controller
+    {
+        /**
+        * @var Ordermind\LogicalAuthorizationDoctrineORMBundle\Services\Factory\RepositoryDecoratorFactoryInterface
+        */
+        private $repositoryDecoratorFactory;
+
+        public function __construct(RepositoryDecoratorFactoryInterface $repositoryDecoratorFactory)
+        {
+            $this->repositoryDecoratorFactory = $repositoryDecoratorFactory;
+        }
+
+        /**
+        * @Route("/testentity-role-author/view/{id}", name="testentity_role_author_view")
+        */
+        public function testEntityRoleAuthorViewAction(Request $request, TestEntityRoleAuthor $testEntityRoleAuthor)
+        {
+            // Check read access to entity and throw access denied exception if access is not granted.
+            $repositoryDecorator = $this->repositoryDecoratorFactory->getRepositoryDecorator(TestEntityRoleAuthor::class);
+            $entityDecorator = $repositoryDecorator->wrapEntity($testEntityRoleAuthor);
+            if(!$entityDecorator->checkEntityAccess('read')) {
+                throw $this->createAccessDeniedException('Read access to entity denied.');
+            }
+
+            // Code to execute if access is granted
+        }
+    }
 
 Doctrine MongoDB
 ----------------
@@ -824,9 +878,13 @@ Document permissions are not checked automatically. In order to make that job ea
         arguments:
             - App\Document\TestDocumentRoleAuthor
 
-The only thing you will need to alter in the above configuration is the service name (``repository.test_document_roleauthor``) and the document class argument (``App\Document\TestDocumentRoleAuthor``) for the related document. The rest can be left as is.
+The only thing you will need to alter in the above configuration is the service name (``repository.test_document_roleauthor``) and the document class argument (``App\Document\TestDocumentRoleAuthor``) for the related document. The rest can be left as is. When you have declared a repository as a service in this way, it can easily be fetched by dependency injection.
 
-Once you have declared a repository as a service in this way, it can easily be fetched by dependency injection. You can now use it as a regular repository, but the difference is that the results from queries are automatically filtered by permissions, so if a user doesn't have permissions for the "read" action for an document, it will be removed from the result. The resulting objects will also be instances of ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\DocumentDecorator`` rather than the raw documents. The document decorators, just like the repository decorators, act just like the wrapped objects but allows for automatic permission checks when you try to interact with it.
+.. note::
+
+    If you need to use several repository decorators in the same class, it can be more convenient to inject the factory service ``logauth_doctrine_mongo.service.repository_decorator_factory`` instead of each individual repository decorator service. Then you can use ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Factory\RepositoryDecoratorFactoryInterface::getRepositoryDecorator()`` to get the repository decorator that you want.
+
+Once you have injected the repository decorator you can use it as a regular repository, but the difference is that the results from queries are automatically filtered by permissions, so if a user doesn't have permissions for the "read" action for an document, it will be removed from the result. The resulting objects will also be instances of ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\DocumentDecorator`` rather than the raw documents. The document decorators, just like the repository decorators, act just like the wrapped objects but allows for automatic permission checks when you try to interact with it.
 
 One exception to this rule is lazy loaded documents, which are sometimes used for performance purposes. Because filtering would require instantiating the objects and thus defeat the whole purpose of using lazy loaded collections in the first place, these are not filtered or wrapped by decorators by default. If you do want to filter and wrap them, you can enable it like this:
 
@@ -836,7 +894,53 @@ One exception to this rule is lazy loaded documents, which are sometimes used fo
     logauth_doctrine_mongo:
         check_lazy_loaded_documents: true
 
-If you already have an document object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service that you have declared as laid out above and then use ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\RepositoryDecoratorInterface::wrapDocument()`` to get the decorator.
+If you already have an document object and want to wrap it in a decorator to do permission checks, you can load the corresponding repository decorator service either by injecting the service for the decorator or the factory service as mentioned above. Once you have the repository decorator you can use ``Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Decorator\RepositoryDecoratorInterface::wrapDocument()`` to get the document decorator. This is useful if you want to check document permissions in a controller, like this for example:
+
+.. code-block:: yaml
+
+    # File: /config/services.yaml
+    services:
+        App\Controller\:
+            resource: '../src/Controller'
+            arguments: ['@logauth_doctrine_mongo.service.repository_decorator_factory']
+            tags: ['controller.service_arguments']
+
+.. code-block:: php
+
+    # File: /src/Controller/DefaultController.php
+
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\Routing\Annotation\Route;
+    use Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Factory\RepositoryDecoratorFactoryInterface;
+    use App\Document\TestDocumentRoleAuthor;
+
+    class DefaultController extends Controller
+    {
+        /**
+        * @var Ordermind\LogicalAuthorizationDoctrineMongoBundle\Services\Factory\RepositoryDecoratorFactoryInterface
+        */
+        private $repositoryDecoratorFactory;
+
+        public function __construct(RepositoryDecoratorFactoryInterface $repositoryDecoratorFactory)
+        {
+            $this->repositoryDecoratorFactory = $repositoryDecoratorFactory;
+        }
+
+        /**
+        * @Route("/testentity-role-author/view/{id}", name="testentity_role_author_view")
+        */
+        public function testEntityRoleAuthorViewAction(Request $request, TestDocumentRoleAuthor $testDocumentRoleAuthor)
+        {
+            // Check read access to document and throw access denied exception if access is not granted.
+            $repositoryDecorator = $this->repositoryDecoratorFactory->getRepositoryDecorator(TestDocumentRoleAuthor::class);
+            $documentDecorator = $repositoryDecorator->wrapDocument($testDocumentRoleAuthor);
+            if(!$documentDecorator->checkDocumentAccess('read')) {
+                throw $this->createAccessDeniedException('Read access to document denied.');
+            }
+
+            // Code to execute if access is granted
+        }
+    }
 
 Debugging
 =========
