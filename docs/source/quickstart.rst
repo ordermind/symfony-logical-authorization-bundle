@@ -786,7 +786,7 @@ It is recommended to remove all other configuration for access_control. That way
 
 .. note::
 
-    Unless you use Sonata Admin or something similar, it is not possible to check entity permissions automatically in order to decide access to a route. The reason for this is that there's no way to tell for sure from the route what kind of action (such as "create", "read", "update" and "delete") you need to check the access for. Therefore, if you pass an entity parameter to a route and want to check those permissions to decide whether access to the route should be granted or not, you have to do that manually. See the following section for information about how to achieve that.
+    At this time there is no support for checking entity permissions automatically in routes, unless you use Sonata Admin or something similar where you can hook into their security logic. Otherwise, if you pass an entity parameter to a route and want to check those permissions to decide whether access to the route should be granted or not, you have to do that manually. See the following section for information about how to achieve that.
 
 Doctrine ORM
 ------------
