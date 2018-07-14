@@ -788,6 +788,12 @@ It is recommended to remove all other configuration for access_control. That way
 
     At this time there is no support for checking entity permissions automatically in routes, unless you use Sonata Admin or something similar where you can hook into their security logic. Otherwise, if you pass an entity parameter to a route and want to check those permissions to decide whether access to the route should be granted or not, you have to do that manually inside the controller. See the following section for information about how to achieve that.
 
+To check route access in Twig, you can use the function ``logauth_check_route_access`` like this:
+
+.. code-block:: twig
+
+    logauth_check_route_access(route_name)
+
 Doctrine ORM
 ------------
 
@@ -865,6 +871,18 @@ If you already have an entity object and want to wrap it in a decorator to do pe
         }
     }
 
+To check entity access in Twig, you can use the function ``logauth_check_model_access`` like this:
+
+.. code-block:: twig
+
+    logauth_check_model_access(object, action)
+
+To check field access in Twig, you can use the function ``logauth_check_field_access`` like this:
+
+.. code-block:: twig
+
+    logauth_check_field_access(object, fieldName, action)
+
 Doctrine MongoDB
 ----------------
 
@@ -941,6 +959,18 @@ If you already have an document object and want to wrap it in a decorator to do 
             // Code to execute if access is granted
         }
     }
+
+To check document access in Twig, you can use the function ``logauth_check_model_access`` like this:
+
+.. code-block:: twig
+
+    logauth_check_model_access(object, action)
+
+To check field access in Twig, you can use the function ``logauth_check_field_access`` like this:
+
+.. code-block:: twig
+
+    logauth_check_field_access(object, fieldName, action)
 
 Debugging
 =========
