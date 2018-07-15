@@ -58,6 +58,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         if ($model instanceof ModelDecoratorInterface) {
             $model = $model->getModel();
         }
+        if ($user instanceof ModelDecoratorInterface) {
+            $user = $user->getModel();
+        }
 
         $availableActions = [];
         foreach ($modelActions as $action) {
@@ -91,6 +94,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     {
         if ($model instanceof ModelDecoratorInterface) {
             $model = $model->getModel();
+        }
+        if ($user instanceof ModelDecoratorInterface) {
+            $user = $user->getModel();
         }
 
         if (is_null($user)) {
@@ -163,6 +169,9 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     {
         if ($model instanceof ModelDecoratorInterface) {
             $model = $model->getModel();
+        }
+        if ($user instanceof ModelDecoratorInterface) {
+            $user = $user->getModel();
         }
 
         if (is_null($user)) {

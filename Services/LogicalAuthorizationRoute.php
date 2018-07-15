@@ -9,6 +9,7 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 
 /**
  * {@inheritdoc}
@@ -65,6 +66,9 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      */
     public function getAvailableRoutes($user = null): array
     {
+        if ($user instanceof ModelDecoratorInterface) {
+            $user = $user->getModel();
+        }
         if (is_null($user)) {
             $user = $this->helper->getCurrentUser();
         }
@@ -105,6 +109,9 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      */
     public function checkRouteAccess(string $routeName, $user = null): bool
     {
+        if ($user instanceof ModelDecoratorInterface) {
+            $user = $user->getModel();
+        }
         if (is_null($user)) {
             $user = $this->helper->getCurrentUser();
             if (is_null($user)) {
