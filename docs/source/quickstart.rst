@@ -871,17 +871,17 @@ If you already have an entity object and want to wrap it in a decorator to do pe
         }
     }
 
-To check entity access in Twig, you can use the function ``logauth_check_model_access`` like this:
+To check entity access in Twig, you can use the function ``logauth_doctrine_orm_check_entity_access`` like this:
 
 .. code-block:: twig
 
-    logauth_check_model_access(object, action)
+    logauth_doctrine_orm_check_entity_access(object, action)
 
-To check field access in Twig, you can use the function ``logauth_check_field_access`` like this:
+To check field access in Twig, you can use the function ``logauth_doctrine_orm_check_field_access`` like this:
 
 .. code-block:: twig
 
-    logauth_check_field_access(object, fieldName, action)
+    logauth_doctrine_orm_check_field_access(object, fieldName, action)
 
 Doctrine MongoDB
 ----------------
@@ -960,17 +960,17 @@ If you already have an document object and want to wrap it in a decorator to do 
         }
     }
 
-To check document access in Twig, you can use the function ``logauth_check_model_access`` like this:
+To check document access in Twig, you can use the function ``logauth_doctrine_mongo_check_document_access`` like this:
 
 .. code-block:: twig
 
-    logauth_check_model_access(object, action)
+    logauth_doctrine_mongo_check_document_access(object, action)
 
-To check field access in Twig, you can use the function ``logauth_check_field_access`` like this:
+To check field access in Twig, you can use the function ``logauth_doctrine_mongo_check_field_access`` like this:
 
 .. code-block:: twig
 
-    logauth_check_field_access(object, fieldName, action)
+    logauth_doctrine_mongo_check_field_access(object, fieldName, action)
 
 Debugging
 =========
