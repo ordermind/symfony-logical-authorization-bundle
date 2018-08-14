@@ -6,6 +6,9 @@ namespace Ordermind\LogicalAuthorizationBundle\BypassAccessChecker;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 
+/**
+ * Default bypass access checker
+ */
 class BypassAccessChecker implements BypassAccessCheckerInterface
 {
     /**
@@ -28,6 +31,6 @@ class BypassAccessChecker implements BypassAccessCheckerInterface
      */
     public function checkBypassAccess($context)
     {
-      return $this->lpProxy->checkAccess(['flag' => 'user_can_bypass_access'], $context, false);
+        return $this->lpProxy->checkAccess(['flag' => 'user_can_bypass_access'], $context, false);
     }
 }

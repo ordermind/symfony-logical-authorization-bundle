@@ -25,8 +25,8 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy The logical permissions proxy to use
-     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                  $helper  LogicalAuthorization helper service
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy             The logical permissions proxy to use
+     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                  $helper              LogicalAuthorization helper service
      * @param Ordermind\LogicalPermissions\BypassAccessCheckerInterface                      $bypassAccessChecker The bypass access checker to use
      */
     public function __construct(LogicalPermissionsProxyInterface $lpProxy, HelperInterface $helper, BypassAccessCheckerInterface $bypassAccessChecker)
