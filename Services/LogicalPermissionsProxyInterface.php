@@ -12,9 +12,9 @@ interface LogicalPermissionsProxyInterface
   /**
    * @internal Add a permission type
    *
-   * @param Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface $type The permission type to add
+   * @param Ordermind\LogicalPermissions\PermissionTypeInterface $type The permission type to add
    */
-    public function addType(\Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface $type);
+    public function addType(\Ordermind\LogicalPermissions\PermissionTypeInterface $type);
 
   /**
    * @internal Removes a permission type
@@ -33,25 +33,25 @@ interface LogicalPermissionsProxyInterface
     public function typeExists(string $name);
 
   /**
-   * @internal Gets all valid permission types
+   * @internal Gets all registered permission types
    *
    * @return array
    */
     public function getTypes(): array;
 
   /**
-   * @internal Sets the bypass access callback
+   * @internal Sets the bypass access checker
    *
-   * @param callable $callback The bypass access callback
+   * @param Ordermind\LogicalPermissions\BypassAccessCheckerInterface $bypassAccessChecker The bypass access checker
    */
-    public function setBypassCallback(callable $callback);
+    public function setBypassAccessChecker(\Ordermind\LogicalPermissions\BypassAccessCheckerInterface $bypassAccessChecker);
 
   /**
-   * @internal Gets the bypass access callback
+   * @internal Gets the bypass access checker
    *
-   * @return callable|null The currently registered bypass callback, or NULL if no bypass callback has been registered.
+   * @return Ordermind\LogicalPermissions\BypassAccessCheckerInterface|null The currently registered bypass access checker, or NULL if no bypass access checker has been registered.
    */
-    public function getBypassCallback(): ?callable;
+    public function getBypassAccessChecker(): ?\Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 
   /**
    * @internal Gets all currently valid permission keys

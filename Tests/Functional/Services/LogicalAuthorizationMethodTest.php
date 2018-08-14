@@ -20,6 +20,8 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousModel;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ModelDecorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker\AlwaysAllow;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker\AlwaysDeny;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method;
@@ -599,10 +601,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $lpProxy = new LogicalPermissionsProxy();
         $type = new TestType();
         $lpProxy->addType($type);
-        $lpProxy->setBypassCallback(function ($context) {
-            return false;
-        });
-        $la = new LogicalAuthorization($lpProxy, $this->helper);
+        $la = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
         $this->assertFalse($la->checkAccess(['test' => 'no'], []));
     }
 
@@ -611,10 +610,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $lpProxy = new LogicalPermissionsProxy();
         $type = new TestType();
         $lpProxy->addType($type);
-        $lpProxy->setBypassCallback(function ($context) {
-            return false;
-        });
-        $la = new LogicalAuthorization($lpProxy, $this->helper);
+        $la = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
         $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
     }
 

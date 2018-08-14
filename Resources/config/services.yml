@@ -51,6 +51,11 @@ services:
         arguments: ['@logauth.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
         public: false
 
+    logauth.bypass_access_checker:
+        class: Ordermind\LogicalAuthorizationBundle\BypassAccessChecker\BypassAccessChecker
+        arguments: ['@logauth.service.logical_permissions_proxy']
+        public: false
+
     logauth.service.logauth_route:
         class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
         arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper', '@?logauth.debug.collector']
@@ -63,7 +68,7 @@ services:
 
     logauth.service.logauth:
         class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
-        arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper']
+        arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper', '@logauth.bypass_access_checker']
         public: false
 
     logauth.routing.yml_file_loader:

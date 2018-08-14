@@ -5,7 +5,7 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
 /**
  * Permission type for checking http method
@@ -27,7 +27,7 @@ class Method implements PermissionTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'method';
     }
@@ -40,8 +40,11 @@ class Method implements PermissionTypeInterface
      *
      * @return bool TRUE if the method is allowed or FALSE if it is not allowed
      */
-    public function checkPermission(string $method, array $context): bool
+    public function checkPermission($method, $context)
     {
+        if (!is_string($method)) {
+            throw new \TypeError('The method parameter must be a string.');
+        }
         if (!$method) {
             throw new \InvalidArgumentException('The method parameter cannot be empty.');
         }

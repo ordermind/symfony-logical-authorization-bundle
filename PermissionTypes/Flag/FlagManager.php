@@ -16,7 +16,7 @@ class FlagManager implements FlagManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'flag';
     }
@@ -70,7 +70,7 @@ class FlagManager implements FlagManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkPermission(string $name, array $context): bool
+    public function checkPermission($name, $context)
     {
         if (!$name) {
             throw new \InvalidArgumentException('The name parameter cannot be empty.');

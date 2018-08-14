@@ -18,7 +18,7 @@
     },
     "require": {
         "doctrine/common": "^2.0",
-        "ordermind/logical-permissions": "^1.2.6",
+        "ordermind/logical-permissions": "^2.0",
         "symfony/cache": "^4.1",
         "symfony/config": "^4.1",
         "symfony/console": "^4.1",

@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;
 use Symfony\Component\Security\Core\Role\Role as SecurityRole;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
 /**
  * Permission type for checking a role on a user.
@@ -32,7 +32,7 @@ class Role implements PermissionTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'role';
     }
@@ -45,10 +45,16 @@ class Role implements PermissionTypeInterface
      *
      * @return bool TRUE if the role is present on the user or FALSE if it is not present
      */
-    public function checkPermission(string $role, array $context): bool
+    public function checkPermission($role, $context)
     {
+        if (!is_string($role)) {
+            throw new \TypeError('The role parameter must be a string.');
+        }
         if (!$role) {
             throw new \InvalidArgumentException('The role parameter cannot be empty.');
+        }
+        if (!is_array($context)) {
+            throw new \TypeError('The context parameter must be a string.');
         }
         if (!isset($context['user'])) {
             throw new \InvalidArgumentException(sprintf('The context parameter must contain a "user" key to be able to evaluate the %s flag.', $this->getName()));

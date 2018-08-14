@@ -6,7 +6,7 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\IpUtils;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
 /**
  * Permission type for checking ip address
@@ -31,7 +31,7 @@ class Ip implements PermissionTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'ip';
     }
@@ -44,8 +44,11 @@ class Ip implements PermissionTypeInterface
      *
      * @return bool TRUE if the ip is allowed or FALSE if it is not allowed
      */
-    public function checkPermission(string $ip, array $context): bool
+    public function checkPermission($ip, $context)
     {
+        if (!is_string($ip)) {
+            throw new \TypeError('The ip parameter must be a string.');
+        }
         if (!$ip) {
             throw new \InvalidArgumentException('The ip parameter cannot be empty.');
         }

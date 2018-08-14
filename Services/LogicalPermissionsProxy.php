@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalPermissions\LogicalPermissions;
+use Ordermind\LogicalPermissions\AccessChecker;
+use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 
 /**
@@ -15,14 +16,16 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterfa
  */
 class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
 {
-    protected $lp;
+    protected $accessChecker;
+    protected $permissionTypeCollection;
 
   /**
    * @internal
    */
     public function __construct()
     {
-        $this->lp = new LogicalPermissions();
+        $this->accessChecker = new AccessChecker();
+        $this->permissionTypeCollection = $this->accessChecker->getPermissionTypeCollection();
     }
 
   /**
@@ -31,13 +34,12 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
     public function addType(PermissionTypeInterface $type)
     {
         try {
-            $this->lp->addType($type->getName(), [$type, 'checkPermission']);
+            $this->permissionTypeCollection->add($type);
         } catch (PermissionTypeAlreadyExistsException $e) {
             $class = get_class($e);
             $message = $e->getMessage();
-            $exploded = explode('If you want', $message);
-            $newMessage = $exploded[0].'If you want to change the class that handles a permission type, you may do so by overriding the service definition for that permission type.';
-            throw new $class($newMessage);
+            $message .= ' If you want to change the class that handles a permission type, you may do so by overriding the service definition for that permission type.';
+            throw new $class($message);
         }
     }
 
@@ -46,7 +48,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
    */
     public function removeType(string $name)
     {
-        $this->lp->removeType($name);
+        $this->permissionTypeCollection->remove($name);
     }
 
   /**
@@ -54,7 +56,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
    */
     public function typeExists(string $name): bool
     {
-        return $this->lp->typeExists($name);
+        return $this->permissionTypeCollection->has($name);
     }
 
   /**
@@ -62,23 +64,23 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
    */
     public function getTypes(): array
     {
-        return $this->lp->getTypes();
+        return $this->permissionTypeCollection->toArray();
     }
 
   /**
    * {@inheritdoc}
    */
-    public function setBypassCallback(callable $callback)
+    public function setBypassAccessChecker(BypassAccessCheckerInterface $bypassAccessChecker)
     {
-        $this->lp->setBypassCallback($callback);
+        $this->accessChecker->setBypassAccessChecker($bypassAccessChecker);
     }
 
   /**
    * {@inheritdoc}
    */
-    public function getBypassCallback(): ?callable
+    public function getBypassAccessChecker(): ?BypassAccessCheckerInterface
     {
-        return $this->lp->getBypassCallback();
+        return $this->accessChecker->getBypassAccessChecker();
     }
 
   /**
@@ -86,7 +88,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
    */
     public function getValidPermissionKeys(): array
     {
-        return $this->lp->getValidPermissionKeys();
+        return $this->accessChecker->getValidPermissionKeys();
     }
 
   /**
@@ -95,13 +97,12 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
     public function checkAccess($permissions, array $context, bool $allowBypass = true): bool
     {
         try {
-            return $this->lp->checkAccess($permissions, $context, $allowBypass);
+            return $this->accessChecker->checkAccess($permissions, $context, $allowBypass);
         } catch (PermissionTypeNotRegisteredException $e) {
             $class = get_class($e);
             $message = $e->getMessage();
-            $exploded = explode('Please use', $message);
-            $newMessage = $exploded[0].'Please use the \'logauth.tag.permission_type\' service tag to register a permission type.';
-            throw new $class($newMessage);
+            $message .= ' Please use the \'logauth.tag.permission_type\' service tag to register a permission type.';
+            throw new $class($message);
         }
     }
 }

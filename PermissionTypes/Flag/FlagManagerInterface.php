@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
 
 /**
@@ -41,5 +41,5 @@ interface FlagManagerInterface extends PermissionTypeInterface
      *
      * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
      */
-    public function checkPermission(string $name, array $context): bool;
+    public function checkPermission($name, $context);
 }

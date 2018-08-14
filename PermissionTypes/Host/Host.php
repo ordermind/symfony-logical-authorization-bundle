@@ -5,7 +5,7 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
 /**
  * Permission type for checking host
@@ -27,7 +27,7 @@ class Host implements PermissionTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'host';
     }
@@ -40,8 +40,11 @@ class Host implements PermissionTypeInterface
      *
      * @return bool TRUE if the host is allowed or FALSE if it is not allowed
      */
-    public function checkPermission(string $host, array $context): bool
+    public function checkPermission($host, $context)
     {
+        if (!is_string($host)) {
+            throw new \TypeError('The host parameter must be a string.');
+        }
         if (!$host) {
             throw new \InvalidArgumentException('The host parameter cannot be empty.');
         }
