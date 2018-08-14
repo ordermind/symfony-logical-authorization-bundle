@@ -102,7 +102,7 @@ Permission types are used to check different kinds of conditions for access cont
 Adding a custom permission type
 ===============================
 
-Custom permission types can be added by creating a service with the tag ``logauth.tag.permission_type`` and which implements ``Ordermind\LogicalAuthorizationBundle\PermissionTypes\PermissionTypeInterface``.
+Custom permission types can be added by creating a service with the tag ``logauth.tag.permission_type`` and which implements ``Ordermind\LogicalPermissions\PermissionTypeInterface``.
 
 If your needs are simple you may prefer to create a flag instead of a whole permission type. You can do that by creating a service with the tag ``logauth.tag.permission_type.flag`` and which implements ``Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface``.
 
