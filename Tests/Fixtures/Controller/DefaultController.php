@@ -26,6 +26,18 @@ class DefaultController extends Controller
         return new Response('');
     }
 
+  /**
+    * @Route("/route-role-multiple", name="route_role_multiple")
+    * @Method({"GET"})
+    * @Permissions({
+    *   "role": {"ROLE_SALES", "ROLE_ADMIN"}
+    * })
+    */
+    public function routeRoleMultipleAction(Request $request)
+    {
+        return new Response('');
+    }
+
     /**
       * @Route("/route-no-bypass", name="route_no_bypass")
       * @Method({"GET"})

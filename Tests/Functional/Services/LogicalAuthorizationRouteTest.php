@@ -11,6 +11,13 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testRouteRoleMultipleAllow()
+    {
+        $this->sendRequestAs('GET', '/test/route-role-multiple', [], static::$admin_user);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testRouteRoleDisallow()
     {
         $this->sendRequestAs('GET', '/test/route-role', [], static::$authenticated_user);
