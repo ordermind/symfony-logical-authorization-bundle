@@ -4,7 +4,9 @@ env:
         - MIN_PHP=7.1.3
 php:
   - '7.1'
-  - 'nightly'
+  - '7.2'
+  - '7.3'
+  - '7'
 install: composer install
 script: phpunit -c ./phpunit.xml.dist
 notifications:
