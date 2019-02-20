@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
+use InvalidArgumentException;
+use TypeError;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Services\Helper;
@@ -30,6 +34,9 @@ use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
 
+use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException;
+use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
+
 class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 {
 
@@ -37,38 +44,30 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- Flag --- //
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagBypassAccessWrongContextType()
     {
+        $this->expectException(TypeError::class);
         $flag = new BypassAccessFlag();
         $flag->checkFlag(null);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagBypassAccessMissingUser()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flag = new BypassAccessFlag();
         $flag->checkFlag([]);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagBypassAccessWrongUserType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flag = new BypassAccessFlag();
         $flag->checkFlag(['user' => []]);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagBypassAccessWrongReturnType()
     {
+        $this->expectException(TypeError::class);
         $user = new ErroneousUser();
         $flag = new BypassAccessFlag();
         $flag->checkFlag(['user' => $user]);
@@ -95,20 +94,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($flag->checkFlag(['user' => $user]));
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagHasAccountWrongContextType()
     {
+        $this->expectException(TypeError::class);
         $flag = new HasAccountFlag();
         $flag->checkFlag(null);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagHasAccountMissingUser()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flag = new HasAccountFlag();
         $flag->checkFlag([]);
     }
@@ -126,38 +121,30 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($flag->checkFlag(['user' => $user]));
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagIsAuthorWrongContextType()
     {
+        $this->expectException(TypeError::class);
         $flag = new IsAuthorFlag();
         $flag->checkFlag(null);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagIsAuthorMissingUser()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flag = new IsAuthorFlag();
         $flag->checkFlag([]);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagIsAuthorWrongUserType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flag = new IsAuthorFlag();
         $flag->checkFlag(['user' => []]);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagIsAuthorMissingModel()
     {
+        $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
         $flag = new IsAuthorFlag();
         $flag->checkFlag(['user' => $user]);
@@ -170,21 +157,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser']));
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagIsAuthorWrongModelType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
         $flag = new IsAuthorFlag();
         $flag->checkFlag(['user' => $user, 'model' => []]);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagIsAuthorModelWrongAuthorType()
     {
+        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new ErroneousModel();
         $flag = new IsAuthorFlag();
@@ -215,33 +198,27 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($flag->checkFlag(['user' => $user, 'model' => $model]));
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagManagerAddFlagWrongNameType()
     {
+        $this->expectException(TypeError::class);
         $flagManager = new FlagManager();
         $flag = new TestFlag();
         $flag->setName(true);
         $flagManager->addFlag($flag);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagManagerAddFlagEmptyName()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flagManager = new FlagManager();
         $flag = new TestFlag();
         $flag->setName('');
         $flagManager->addFlag($flag);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagManagerAddFlagAlreadyRegistered()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flagManager = new FlagManager();
         $flag = new TestFlag();
         $flag->setName('test');
@@ -260,11 +237,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertSame($flag, $flags['test']);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagManagerRemoveFlagWrongNameType()
     {
+        $this->expectException(TypeError::class);
         $flagManager = new FlagManager();
         $flag = new TestFlag();
         $flag->setName('test');
@@ -272,11 +247,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $flagManager->removeFlag(true);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagManagerRemoveFlagEmptyName()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flagManager = new FlagManager();
         $flag = new TestFlag();
         $flag->setName('test');
@@ -284,11 +257,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $flagManager->removeFlag('');
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagManagerRemoveFlagNotRegistered()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flagManager = new FlagManager();
         $flagManager->removeFlag('test');
     }
@@ -306,29 +277,23 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertFalse(isset($flags['test']));
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testFlagManagerCheckPermissionWrongNameType()
     {
+        $this->expectException(TypeError::class);
         $flagManager = new FlagManager();
         $flagManager->checkPermission(true, []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagManagerCheckPermissionEmptyName()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flagManager = new FlagManager();
         $flagManager->checkPermission('', []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testFlagManagerCheckPermissionNotRegistered()
     {
+        $this->expectException(InvalidArgumentException::class);
         $flagManager = new FlagManager();
         $flagManager->checkPermission('test', []);
     }
@@ -344,56 +309,44 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- Role --- //
 
-    /**
-      * @expectedException TypeError
-      */
     public function testRoleWrongRoleType()
     {
+        $this->expectException(TypeError::class);
         $role = new Role($this->roleHierarchy);
         $role->checkPermission(true, []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testRoleEmptyRole()
     {
+        $this->expectException(InvalidArgumentException::class);
         $role = new Role($this->roleHierarchy);
         $role->checkPermission('', []);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testRoleWrongContextType()
     {
+        $this->expectException(TypeError::class);
         $role = new Role($this->roleHierarchy);
         $role->checkPermission('ROLE_USER', null);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testRoleMissingUser()
     {
+        $this->expectException(InvalidArgumentException::class);
         $role = new Role($this->roleHierarchy);
         $role->checkPermission('ROLE_USER', []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testRoleWrongUserType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $role = new Role($this->roleHierarchy);
         $role->checkPermission('ROLE_USER', ['user' => []]);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testRoleInvalidRoleType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
         $roles = array(
       'ROLE_ADMIN',
@@ -444,21 +397,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- Host --- //
 
-    /**
-      * @expectedException TypeError
-      */
     public function testHostWrongHostType()
     {
+        $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
         $host = new Host($requestStack);
         $host->checkPermission(1, []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testHostEmptyHost()
     {
+        $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
         $host = new Host($requestStack);
         $host->checkPermission('', []);
@@ -484,21 +433,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- Method --- //
 
-    /**
-      * @expectedException TypeError
-      */
     public function testMethodWrongMethodType()
     {
+        $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
         $method = new Method($requestStack);
         $method->checkPermission(1, []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testMethodEmptyMethod()
     {
+        $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
         $method = new Method($requestStack);
         $method->checkPermission('', []);
@@ -524,21 +469,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- Ip --- //
 
-    /**
-      * @expectedException TypeError
-      */
     public function testIpWrongIpType()
     {
+        $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
         $ip = new Ip($requestStack);
         $ip->checkPermission(1, []);
     }
 
-    /**
-      * @expectedException InvalidArgumentException
-      */
     public function testIpEmptyIp()
     {
+        $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
         $ip = new Ip($requestStack);
         $ip->checkPermission('', []);
@@ -578,21 +519,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertSame('anon.', $response->getContent());
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      * @expectedExceptionMessageRegExp /service tag to register a permission type/
-      */
     public function testCheckAccessPermissionTypeNotRegistered()
     {
+        $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessageRegExp('/service tag to register a permission type/');
         $this->la->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      * @expectedExceptionMessageRegExp /^An exception was caught while checking access: /
-      */
     public function testCheckAccessOtherExceptions()
     {
+        $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessageRegExp('/^An exception was caught while checking access: /');
         $this->la->checkAccess(['test' => 'hej'], []);
     }
 
@@ -649,49 +586,39 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertSame($available_actions_model_decorator, $available_actions_class);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckModelAccessWrongModelType()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $this->laModel->checkModelAccess(null, 'read', $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckModelAccessModelClassDoesntExist()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $this->laModel->checkModelAccess('TestModelBoolean', 'read', $user);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testCheckModelAccessWrongActionType()
     {
+        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $this->laModel->checkModelAccess($model, null, $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckModelAccessEmptyAction()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $this->laModel->checkModelAccess($model, '', $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckModelAccessWrongUserType()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $model = new TestModelBoolean();
         $this->laModel->checkModelAccess($model, 'read', []);
     }
@@ -753,69 +680,55 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laModel->checkModelAccess($modelDecorator, 'create', $user));
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckFieldAccessWrongModelType()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $this->laModel->checkFieldAccess(null, 'field', 'action', $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckFieldAccessModelClassDoesntExist()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $this->laModel->checkFieldAccess('TestModelBoolean', 'field', 'action', $user);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testCheckFieldAccessWrongFieldType()
     {
+        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $this->laModel->checkFieldAccess($model, null, 'action', $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckFieldAccessEmptyField()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $this->laModel->checkFieldAccess($model, '', 'action', $user);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testCheckFieldAccessWrongActionType()
     {
+        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $this->laModel->checkFieldAccess($model, 'field1', null, $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckFieldAccessEmptyAction()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $this->laModel->checkFieldAccess($model, 'field1', '', $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckFieldAccessWrongUserType()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $model = new TestModelBoolean();
         $this->laModel->checkFieldAccess($model, 'field1', 'get', []);
     }
@@ -904,37 +817,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         }
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testCheckRouteAccessWrongRouteType()
     {
+        $this->expectException(TypeError::class);
         $user = new TestUser();
         $this->laRoute->checkRouteAccess(null, $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckRouteAccessEmptyRoute()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $this->laRoute->checkRouteAccess('', $user);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckRouteAccessWrongUserType()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laRoute->checkRouteAccess('route_allowed', []);
     }
 
-    /**
-      * @expectedException Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException
-      */
     public function testCheckRouteAccessRouteDoesntExist()
     {
+        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $this->laRoute->checkRouteAccess('hej', $user);
     }
@@ -954,11 +859,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laRoute->checkRouteAccess('route_allowed', 'anon.'));
     }
 
-    /**
-      * @expectedException Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException
-      */
     public function testLogicalPermissionsProxyAddTypeAlreadyExists()
     {
+        $this->expectException(PermissionTypeAlreadyExistsException::class);
         $laProxy = new LogicalPermissionsProxy();
         $type = new TestType();
         $laProxy->addType($type);
@@ -973,11 +876,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($laProxy->typeExists('test'));
     }
 
-    /**
-      * @expectedException Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException
-      */
     public function testLogicalPermissionsProxyCheckAccessTypeDoesntExist()
     {
+        $this->expectException(PermissionTypeNotRegisteredException::class);
         $laProxy = new LogicalPermissionsProxy();
         $laProxy->checkAccess(['test' => 'hej'], []);
     }
@@ -998,11 +899,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertSame('cache', $tree['fetch']);
     }
 
-    /**
-      * @expectedException TypeError
-      */
     public function testEventInsertTreeWrongTreeType()
     {
+        $this->expectException(TypeError::class);
         $laProxy = new LogicalPermissionsProxy();
         $event = new AddPermissionsEvent($laProxy->getValidPermissionKeys());
         $event->insertTree('key');
