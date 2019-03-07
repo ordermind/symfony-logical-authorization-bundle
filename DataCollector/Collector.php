@@ -242,82 +242,11 @@ class Collector extends DataCollector implements CollectorInterface
             ], ];
         }
 
-        $getPermissionChecksRecursive = function ($permissions, array $context, array $typeKeys, string $type = null) use (&$getPermissionChecksRecursive): array {
-            if (!is_array($permissions)) {
-                $resolvePermissions = $permissions;
-                if ($type) {
-                    $resolvePermissions = [$type => $permissions];
-                }
-
-                return [[
-                'permissions' => $permissions,
-                'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
-                ], ];
-            }
-
-            reset($permissions);
-            $key = key($permissions);
-            $value = current($permissions);
-
-            if (is_numeric($key)) {
-                return $getPermissionChecksRecursive($value, $context, $typeKeys, $type);
-            }
-
-            if (in_array($key, $typeKeys, true)) {
-                $type = $key;
-            }
-
-            if (is_array($value)) {
-                $checks = [];
-                foreach ($value as $key2 => $value2) {
-                    $checks = array_merge($checks, $getPermissionChecksRecursive([$key2 => $value2], $context, $typeKeys, $type));
-                }
-                $resolvePermissions = $permissions;
-                if ($type && $key !== $type) {
-                    $resolvePermissions = [$type => $permissions];
-                }
-                $checks[] = [
-                'permissions' => $permissions,
-                'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
-                ];
-
-                return $checks;
-            }
-
-            if ($key === $type) {
-                return [[
-                'permissions' => $permissions,
-                'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
-                ], ];
-            }
-
-            $checks = [];
-            $resolveValue = $value;
-            if ($type) {
-                $resolveValue = [$type => $resolveValue];
-            }
-            $checks[] = [
-            'permissions' => $value,
-            'resolve' => $this->lpProxy->checkAccess($resolveValue, $context, false),
-            ];
-
-            $resolvePermissions = $permissions;
-            if ($type) {
-                $resolvePermissions = [$type => $resolvePermissions];
-            }
-            $checks[] = [
-            'permissions' => $permissions,
-            'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
-            ];
-
-            return $checks;
-        };
-
         $checks = [];
 
         if (is_array($permissions)) {
             foreach ($permissions as $key => $value) {
-                $checks = array_merge($checks, $getPermissionChecksRecursive([$key => $value], $context, $typeKeys));
+                $checks = array_merge($checks, $this->getPermissionChecksRecursive([$key => $value], $context, $typeKeys));
             }
             if (count($permissions) > 1) {
                 $checks[] = [
@@ -326,8 +255,91 @@ class Collector extends DataCollector implements CollectorInterface
                 ];
             }
         } else {
-            $checks = array_merge($checks, $getPermissionChecksRecursive($permissions, $context, $typeKeys));
+            $checks = array_merge($checks, $this->getPermissionChecksRecursive($permissions, $context, $typeKeys));
         }
+
+        return $checks;
+    }
+
+    /**
+     * @internal
+     *
+     * @param string|array|bool $permissions
+     * @param array             $context
+     * @param array             $typeKeys
+     * @param string|null       $type
+     *
+     * @return array
+     */
+    protected function getPermissionChecksRecursive($permissions, array $context, array $typeKeys, string $type = null): array {
+        if (!is_array($permissions)) {
+            $resolvePermissions = $permissions;
+            if ($type) {
+                $resolvePermissions = [$type => $permissions];
+            }
+
+            return [
+                [
+                    'permissions' => $permissions,
+                    'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
+                ],
+            ];
+        }
+
+        reset($permissions);
+        $key = key($permissions);
+        $value = current($permissions);
+
+        if (is_numeric($key)) {
+            return $this->getPermissionChecksRecursive($value, $context, $typeKeys, $type);
+        }
+
+        if (in_array($key, $typeKeys, true)) {
+            $type = $key;
+        }
+
+        if (is_array($value)) {
+            $checks = [];
+            foreach ($value as $key2 => $value2) {
+                $checks = array_merge($checks, $this->getPermissionChecksRecursive([$key2 => $value2], $context, $typeKeys, $type));
+            }
+            $resolvePermissions = $permissions;
+            if ($type && $key !== $type) {
+                $resolvePermissions = [$type => $permissions];
+            }
+            $checks[] = [
+            'permissions' => $permissions,
+            'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
+            ];
+
+            return $checks;
+        }
+
+        if ($key === $type) {
+            return [[
+            'permissions' => $permissions,
+            'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
+            ], ];
+        }
+
+        $checks = [];
+        $resolveValue = $value;
+        if ($type) {
+            $resolveValue = [$type => $resolveValue];
+        }
+        $checks[] = [
+        'permissions' => $value,
+        'resolve' => $this->lpProxy->checkAccess($resolveValue, $context, false),
+        ];
+
+        $resolvePermissions = $permissions;
+        if ($type) {
+            $resolvePermissions = [$type => $resolvePermissions];
+        }
+        $checks[] = [
+        'permissions' => $permissions,
+        'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
+        ];
 
         return $checks;
     }
