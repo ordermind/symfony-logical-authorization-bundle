@@ -220,6 +220,20 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
+    public function testRouteComplexAllow()
+    {
+        $this->sendRequestAs('GET', '/test/route-complex', [], static::$admin_user);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testRouteComplexDeny()
+    {
+        $this->sendRequestAs('GET', '/test/route-complex', [], static::$authenticated_user);
+        $response = $this->client->getResponse();
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
     public function testRoutePatternDenyAll()
     {
         $this->sendRequestAs('GET', '/test/route-forbidden', [], static::$superadmin_user);

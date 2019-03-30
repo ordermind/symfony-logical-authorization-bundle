@@ -96,4 +96,19 @@ class DefaultController extends Controller
     {
         return new Response('');
     }
+
+  /**
+    * @Route("/route-complex", name="route_complex")
+    * @Method({"GET"})
+    * @Permissions({
+    *   "AND": {
+    *     "role": {"ROLE_SALES", "ROLE_ADMIN"},
+    *     "ip": "127.0.0.1"
+    *   }
+    * })
+    */
+    public function routeComplexAction(Request $request)
+    {
+        return new Response('');
+    }
 }
