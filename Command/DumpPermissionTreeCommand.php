@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +15,7 @@ use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
 /**
  * {@inheritdoc}
  */
-class DumpPermissionTreeCommand extends ContainerAwareCommand
+class DumpPermissionTreeCommand extends Command
 {
     /**
      * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
