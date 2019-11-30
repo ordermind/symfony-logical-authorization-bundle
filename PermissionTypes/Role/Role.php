@@ -5,7 +5,6 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role;
 
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;
-use Symfony\Component\Security\Core\Role\Role as SecurityRole;
 
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
@@ -69,21 +68,10 @@ class Role implements PermissionTypeInterface
             throw new \InvalidArgumentException('The user class must implement Symfony\Component\Security\Core\User\UserInterface to be able to evaluate the user role.');
         }
 
-        $roles = $user->getRoles();
-
-        // Use Symfony Security Role class to make roles compatible with RoleHierarchy::getReachableRoles().
-        foreach ($roles as $i => $thisRole) {
-            if (is_string($thisRole)) {
-                $roles[$i] = new SecurityRole($thisRole);
-            } elseif (!($thisRole instanceof SecurityRole)) {
-                throw new \InvalidArgumentException('One of the roles of this user is neither a string nor an instance of Symfony\Component\Security\Core\Role\Role.');
-            }
-        }
-        $roles = $this->roleHierarchy->getReachableRoles($roles);
+        $roles = $this->roleHierarchy->getReachableRoleNames($user->getRoles());
 
         foreach ($roles as $thisRole) {
-            $strRole = (string) $thisRole->getRole();
-            if ($role === $strRole) {
+            if ($role === $thisRole) {
                 return true;
             }
         }
