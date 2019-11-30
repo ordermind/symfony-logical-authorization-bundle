@@ -25,7 +25,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     /**
      * This method is run before each public test method
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         require_once __DIR__.'/../../AppKernel.php';
         $kernel = new \AppKernel('test', true);
@@ -51,7 +51,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
      *
      * It is important to reset all non-static properties to minimize memory leaks.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->client = null;
 
