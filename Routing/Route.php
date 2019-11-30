@@ -23,27 +23,27 @@ class Route extends RouteBase implements RouteInterface
     /**
       * @var array
       */
-    private $schemes = array();
+    private $schemes = [];
 
     /**
       * @var array
       */
-    private $methods = array();
+    private $methods = [];
 
     /**
       * @var array
       */
-    private $defaults = array();
+    private $defaults = [];
 
     /**
       * @var array
       */
-    private $requirements = array();
+    private $requirements = [];
 
     /**
       * @var array
       */
-    private $options = array();
+    private $options = [];
 
     /**
       * @var null|CompiledRoute
@@ -55,6 +55,9 @@ class Route extends RouteBase implements RouteInterface
       */
     private $condition = '';
 
+    /**
+     * @var mixed
+     */
     private $permissions;
 
     /**
@@ -86,9 +89,9 @@ class Route extends RouteBase implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize(array(
+        return [
             'path' => $this->path,
             'host' => $this->host,
             'defaults' => $this->defaults,
@@ -99,15 +102,14 @@ class Route extends RouteBase implements RouteInterface
             'condition' => $this->condition,
             'compiled' => $this->compiled,
             'permissions' => $this->permissions,
-        ));
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        $data = unserialize($serialized);
         $this->path = $data['path'];
         $this->host = $data['host'];
         $this->defaults = $data['defaults'];
