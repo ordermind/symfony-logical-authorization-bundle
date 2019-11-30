@@ -5,11 +5,13 @@ namespace Ordermind\LogicalAuthorizationBundle\Twig;
 
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * {@inheritdoc}
  */
-class LogicalAuthorizationExtension extends \Twig_Extension
+class LogicalAuthorizationExtension extends AbstractExtension
 {
     /**
      * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface
@@ -38,11 +40,11 @@ class LogicalAuthorizationExtension extends \Twig_Extension
      */
     public function getFunctions(): array
     {
-        return array(
-        new \Twig_SimpleFunction('logauth_check_route_access', array($this, 'checkRouteAccess')),
-        new \Twig_SimpleFunction('logauth_check_model_access', array($this, 'checkModelAccess')),
-        new \Twig_SimpleFunction('logauth_check_field_access', array($this, 'checkFieldAccess')),
-        );
+        return [
+            new TwigFunction('logauth_check_route_access', [$this, 'checkRouteAccess']),
+            new TwigFunction('logauth_check_model_access', [$this, 'checkModelAccess']),
+            new TwigFunction('logauth_check_field_access', [$this, 'checkFieldAccess']),
+        ];
     }
 
     /**
