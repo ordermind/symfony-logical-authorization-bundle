@@ -2,12 +2,12 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class YmlController extends Controller
+class YmlController extends AbstractController
 {
     public function routeYmlAction(Request $request)
     {
