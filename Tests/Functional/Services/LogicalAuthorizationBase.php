@@ -13,26 +13,33 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     protected static $admin_user;
     protected static $authenticated_user;
     protected $user_credentials = [
-    'authenticated_user' => 'userpass',
-    'admin_user' => 'adminpass',
-    'superadmin_user' => 'superadminpass',
-  ];
+        'authenticated_user' => 'userpass',
+        'admin_user' => 'adminpass',
+        'superadmin_user' => 'superadminpass',
+    ];
     protected $load_services = array();
     protected $client;
     protected $la;
     protected $helper;
 
     /**
+     * {@inheritDoc}
+     */
+    protected static function createKernel(array $options = [])
+    {
+        require_once __DIR__.'/../../AppKernel.php';
+
+        return new \AppKernel('test', true);
+    }
+
+    /**
      * This method is run before each public test method
      */
     protected function setUp(): void
     {
-        require_once __DIR__.'/../../AppKernel.php';
-        $kernel = new \AppKernel('test', true);
-        $kernel->boot();
-        $container = $kernel->getContainer();
-
         $this->client = static::createClient();
+        $container = static::$kernel->getContainer();
+
         $this->la = $container->get('test.logauth.service.logauth');
         $this->lpProxy = $container->get('test.logauth.service.logical_permissions_proxy');
         $this->laModel = $container->get('test.logauth.service.logauth_model');
