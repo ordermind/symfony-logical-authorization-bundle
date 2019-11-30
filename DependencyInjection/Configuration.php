@@ -18,10 +18,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('logauth');
+        $treeBuilder = new TreeBuilder('logauth');
 
-        $rootNode
+        $treeBuilder
+            ->getRootNode()
             ->children()
                 ->variableNode('permissions')->end()
             ->end()
