@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * {@inheritdoc}

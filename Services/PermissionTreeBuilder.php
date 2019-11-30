@@ -107,7 +107,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     protected function loadTreeFromEvent(): array
     {
         $event = new AddPermissionsEvent($this->permissionKeys);
-        $this->dispatcher->dispatch('logauth.add_permissions', $event);
+        $this->dispatcher->dispatch($event, 'logauth.add_permissions');
 
         return $event->getTree();
     }
