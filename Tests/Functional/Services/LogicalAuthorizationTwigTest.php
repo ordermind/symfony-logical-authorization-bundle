@@ -1,16 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelRoleAuthor;
+use Twig\TwigFunction;
 
 class LogicalAuthorizationTwigTest extends LogicalAuthorizationBase
 {
     public function testTwigCheckRouteAccess()
     {
         $function = $this->twig->getFunction('logauth_check_route_access');
-        $this->assertTrue($function instanceof \Twig_SimpleFunction);
+        $this->assertTrue($function instanceof TwigFunction);
         $callable = $function->getCallable();
         $this->assertTrue($callable('route_role', static::$admin_user));
         $this->assertFalse($callable('route_role', static::$authenticated_user));
@@ -19,7 +21,7 @@ class LogicalAuthorizationTwigTest extends LogicalAuthorizationBase
     public function testTwigCheckModelAccess()
     {
         $function = $this->twig->getFunction('logauth_check_model_access');
-        $this->assertTrue($function instanceof \Twig_SimpleFunction);
+        $this->assertTrue($function instanceof TwigFunction);
         $callable = $function->getCallable();
         $model = new TestModelRoleAuthor();
         $this->assertTrue($callable(get_class($model), 'create', static::$admin_user));
@@ -35,7 +37,7 @@ class LogicalAuthorizationTwigTest extends LogicalAuthorizationBase
     public function testTwigCheckFieldAccess()
     {
         $function = $this->twig->getFunction('logauth_check_field_access');
-        $this->assertTrue($function instanceof \Twig_SimpleFunction);
+        $this->assertTrue($function instanceof TwigFunction);
         $callable = $function->getCallable();
         $model = new TestModelRoleAuthor();
         $this->assertTrue($callable(get_class($model), 'field1', 'set', static::$admin_user));
