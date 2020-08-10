@@ -1,46 +1,41 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
 use InvalidArgumentException;
-use TypeError;
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RequestStack;
-
+use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
+use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
-use Ordermind\LogicalAuthorizationBundle\Services\Helper;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserCanBypassAccess as BypassAccessFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserHasAccount as HasAccountFlag;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserIsAuthor as IsAuthorFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousUser;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip\Ip;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method;
+use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker\AlwaysDeny;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousModel;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean;
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ModelDecorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker\AlwaysAllow;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker\AlwaysDeny;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip\Ip;
 use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType;
-use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
-use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
-
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use TypeError;
 
 class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 {
-
-  /*------------ Permission types ---------------*/
+    // ------------ Permission types ---------------
 
     // --- Flag --- //
 
@@ -344,19 +339,6 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $role->checkPermission('ROLE_USER', ['user' => []]);
     }
 
-    public function testRoleInvalidRoleType()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $user = new TestUser();
-        $roles = array(
-      'ROLE_ADMIN',
-      5,
-    );
-        $user->setRoles($roles);
-        $role = new Role($this->roleHierarchy);
-        $role->checkPermission('ROLE_USER', ['user' => $user]);
-    }
-
     public function testRoleAnonymousUserDisallow()
     {
         $role = new Role($this->roleHierarchy);
@@ -503,7 +485,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($ip->checkPermission('127.0.0.55', []));
     }
 
-    /*------------ Services -------------*/
+    // ------------ Services -------------
 
     public function testHelperCurrentUser()
     {
@@ -522,14 +504,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testCheckAccessPermissionTypeNotRegistered()
     {
         $this->expectException(LogicalAuthorizationException::class);
-        $this->expectExceptionMessageRegExp('/service tag to register a permission type/');
+        $this->expectExceptionMessageMatches('/service tag to register a permission type/');
         $this->la->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
     }
 
     public function testCheckAccessOtherExceptions()
     {
         $this->expectException(LogicalAuthorizationException::class);
-        $this->expectExceptionMessageRegExp('/^An exception was caught while checking access: /');
+        $this->expectExceptionMessageMatches('/^An exception was caught while checking access: /');
         $this->la->checkAccess(['test' => 'hej'], []);
     }
 
@@ -1034,7 +1016,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
         $model->setAuthor($user);
         $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
-        $debugCollector->addPermissionCheck(true, 'model', array('model' => $model, 'action' => 'read'), $user, [], ['user' => $user]);
+        $debugCollector->addPermissionCheck(true, 'model', ['model' => $model, 'action' => 'read'], $user, [], ['user' => $user]);
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
 
@@ -1056,7 +1038,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
         $model->setAuthor($user);
         $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
-        $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, [], ['user' => $user]);
+        $debugCollector->addPermissionCheck(true, 'field', ['model' => $model, 'field' => 'field1', 'action' => 'get'], $user, [], ['user' => $user]);
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
 
@@ -1080,28 +1062,28 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model->setAuthor($user);
 
         $permissions = true;
-        $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), static::$superadmin_user, $permissions, ['model' => $model, 'user' => static::$superadmin_user]);
+        $debugCollector->addPermissionCheck(true, 'field', ['model' => $model, 'field' => 'field1', 'action' => 'get'], static::$superadmin_user, $permissions, ['model' => $model, 'user' => static::$superadmin_user]);
         $result = [
-      'type' => 'field',
-      'field' => 'field1',
-      'user' => static::$superadmin_user,
-      'permissions' => $permissions,
-      'action' => 'get',
-      'item_name' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
-      'item' => $model,
-      'permission_no_bypass_checks' => [],
-      'bypassed_access' => true,
-      'permission_checks' => [['permissions' => true, 'resolve' => true]],
-      'access' => true,
-      'message' => '',
-    ];
+            'type'                        => 'field',
+            'field'                       => 'field1',
+            'user'                        => static::$superadmin_user,
+            'permissions'                 => $permissions,
+            'action'                      => 'get',
+            'item_name'                   => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
+            'item'                        => $model,
+            'permission_no_bypass_checks' => [],
+            'bypassed_access'             => true,
+            'permission_checks'           => [['permissions' => true, 'resolve' => true]],
+            'access'                      => true,
+            'message'                     => '',
+        ];
 
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
             if ($key === 'backtrace') {
-                $this->assertEquals(10, count($value));
+                $this->assertLessThanOrEqual(11, count($value));
                 $this->assertSame('testDebugCollectorPermissionFormatBoolean', $value[0]['function']);
                 continue;
             }
@@ -1119,29 +1101,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model->setAuthor($user);
 
         $permissions = [
-      'NOT' => [
-        'flag' => 'user_has_account',
-      ],
-    ];
+            'NOT' => [
+                'flag' => 'user_has_account',
+            ],
+        ];
         $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
         $result = [
-      'type' => 'route',
-      'user' => 'anon.',
-      'item_name' => 'testroute',
-      'permission_no_bypass_checks' => [],
-      'bypassed_access' => false,
-      'permissions' => $permissions,
-      'access' => true,
-      'permission_checks' => [['permissions' => ['NOT' => ['flag' => 'user_has_account']], 'resolve' => true], ['permissions' => ['flag' => 'user_has_account'], 'resolve' => false]],
-      'message' => '',
-    ];
+            'type'                        => 'route',
+            'user'                        => 'anon.',
+            'item_name'                   => 'testroute',
+            'permission_no_bypass_checks' => [],
+            'bypassed_access'             => false,
+            'permissions'                 => $permissions,
+            'access'                      => true,
+            'permission_checks'           => [['permissions' => ['NOT' => ['flag' => 'user_has_account']], 'resolve' => true], ['permissions' => ['flag' => 'user_has_account'], 'resolve' => false]],
+            'message'                     => '',
+        ];
 
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
             if ($key === 'backtrace') {
-                $this->assertEquals(10, count($value));
+                $this->assertLessThanOrEqual(11, count($value));
                 $this->assertSame('testDebugCollectorPermissionFormatTypeClose', $value[0]['function']);
                 continue;
             }
@@ -1165,15 +1147,15 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     ];
         $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
         $result = [
-      'type' => 'route',
-      'user' => 'anon.',
-      'item_name' => 'testroute',
+      'type'                        => 'route',
+      'user'                        => 'anon.',
+      'item_name'                   => 'testroute',
       'permission_no_bypass_checks' => [],
-      'bypassed_access' => false,
-      'permissions' => $permissions,
-      'access' => true,
-      'permission_checks' => [['permissions' => ['flag' => ['NOT' => 'user_has_account']], 'resolve' => true], ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => true], ['permissions' => 'user_has_account', 'resolve' => false]],
-      'message' => '',
+      'bypassed_access'             => false,
+      'permissions'                 => $permissions,
+      'access'                      => true,
+      'permission_checks'           => [['permissions' => ['flag' => ['NOT' => 'user_has_account']], 'resolve' => true], ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => true], ['permissions' => 'user_has_account', 'resolve' => false]],
+      'message'                     => '',
     ];
 
         $debugCollector->collect($request, $response);
@@ -1181,7 +1163,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $item = array_shift($log);
         foreach ($item as $key => $value) {
             if ($key === 'backtrace') {
-                $this->assertEquals(10, count($value));
+                $this->assertLessThanOrEqual(11, count($value));
                 $this->assertSame('testDebugCollectorPermissionFormatTypeSeparate', $value[0]['function']);
                 continue;
             }
@@ -1228,39 +1210,39 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
       ],
       'flag' => 'user_has_account',
     ];
-        $debugCollector->addPermissionCheck(true, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
+        $debugCollector->addPermissionCheck(true, 'field', ['model' => $model, 'field' => 'field1', 'action' => 'get'], $user, $permissions, ['model' => $model, 'user' => $user]);
         $result = [
-      'type' => 'field',
-      'field' => 'field1',
-      'user' => $user,
-      'permissions' => $permissions,
-      'action' => 'get',
-      'item_name' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
-      'item' => $model,
+      'type'                        => 'field',
+      'field'                       => 'field1',
+      'user'                        => $user,
+      'permissions'                 => $permissions,
+      'action'                      => 'get',
+      'item_name'                   => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
+      'item'                        => $model,
       'permission_no_bypass_checks' => array_reverse([['permissions' => ['flag' => 'user_has_account'], 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'user_has_account']], 'resolve' => false]]),
-      'bypassed_access' => false,
-      'permission_checks' => [],
-      'permission_checks' => array_reverse([
-        0 => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
-        1 => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
-        2 => ['permissions' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']], 'resolve' => false],
-        3 => ['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]], 'resolve' => true],
-        4 => ['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]], 'resolve' => true],
-        5 => ['permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]]], 'resolve' => true],
-        6 => ['permissions' => true, 'resolve' => true],
-        7 => ['permissions' => 'TRUE', 'resolve' => true],
-        8 => ['permissions' => 'user_has_account', 'resolve' => true],
-        9 => ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => false],
+      'bypassed_access'             => false,
+      'permission_checks'           => [],
+      'permission_checks'           => array_reverse([
+        0  => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
+        1  => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
+        2  => ['permissions' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']], 'resolve' => false],
+        3  => ['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]], 'resolve' => true],
+        4  => ['permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]], 'resolve' => true],
+        5  => ['permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]]], 'resolve' => true],
+        6  => ['permissions' => true, 'resolve' => true],
+        7  => ['permissions' => 'TRUE', 'resolve' => true],
+        8  => ['permissions' => 'user_has_account', 'resolve' => true],
+        9  => ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => false],
         10 => ['permissions' => 'user_is_author', 'resolve' => true],
         11 => ['permissions' => ['NOT' => 'user_is_author'], 'resolve' => false],
-        12 => ['permissions' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]], 'resolve' => false],
-        13 => ['permissions' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]], 'resolve' => true],
-        14 => ['permissions' => ['flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]]], 'resolve' => true],
-        15 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]]]], 'resolve' => true],
+        12 => ['permissions' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]], 'resolve' => false],
+        13 => ['permissions' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]], 'resolve' => true],
+        14 => ['permissions' => ['flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]]], 'resolve' => true],
+        15 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]], '0' => true, '1' => 'TRUE', 'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]]]], 'resolve' => true],
         16 => ['permissions' => ['flag' => 'user_has_account'], 'resolve' => true],
-        17 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN','ROLE_ADMIN']]]],'0' => true,'1' => 'TRUE','flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'],['NOT' => 'user_is_author']]]]],'flag' => 'user_has_account'], 'resolve' => true],
+        17 => ['permissions' => ['AND' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]], '0' => true, '1' => 'TRUE', 'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]]], 'flag' => 'user_has_account'], 'resolve' => true],
       ]),
-      'access' => true,
+      'access'  => true,
       'message' => '',
     ];
 
@@ -1269,7 +1251,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $item = array_shift($log);
         foreach ($item as $key => $value) {
             if ($key === 'backtrace') {
-                $this->assertEquals(10, count($value));
+                $this->assertLessThanOrEqual(11, count($value));
                 $this->assertSame('testDebugCollectorPermissionFormatMixed', $value[0]['function']);
                 continue;
             }
@@ -1292,7 +1274,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
         $model->setAuthor($user);
         $permissions = ['no_bypass' => true, 'flag' => ['flag' => 'user_has_account']];
-        $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
+        $debugCollector->addPermissionCheck(false, 'field', ['model' => $model, 'field' => 'field1', 'action' => 'get'], $user, $permissions, ['model' => $model, 'user' => $user]);
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
         $first_item = array_shift($log);
@@ -1308,7 +1290,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
         $model->setAuthor($user);
         $permissions = ['no_bypass' => ['flag' => ['flag' => 'user_has_account']], true];
-        $debugCollector->addPermissionCheck(false, 'field', array('model' => $model, 'field' => 'field1', 'action' => 'get'), $user, $permissions, ['model' => $model, 'user' => $user]);
+        $debugCollector->addPermissionCheck(false, 'field', ['model' => $model, 'field' => 'field1', 'action' => 'get'], $user, $permissions, ['model' => $model, 'user' => $user]);
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
         $first_item = array_shift($log);
