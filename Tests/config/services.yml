@@ -32,3 +32,25 @@ services:
     test.logauth.service.logauth:
         alias: logauth.service.logauth
         public: true
+
+    # Controllers
+
+    Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\DefaultController:
+        tags: ['controller.service_arguments', 'controller.service_subscriber']
+        calls:
+            - [setContainer, ['@service_container']]
+
+    Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController:
+        tags: ['controller.service_arguments', 'controller.service_subscriber']
+        calls:
+            - [setContainer, ['@service_container']]
+
+    Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController:
+        tags: ['controller.service_arguments', 'controller.service_subscriber']
+        calls:
+            - [setContainer, ['@service_container']]
+    
+    Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ControllerDir\DefaultController:
+        tags: ['controller.service_arguments', 'controller.service_subscriber']
+        calls:
+            - [setContainer, ['@service_container']]
