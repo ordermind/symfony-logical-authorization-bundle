@@ -2,10 +2,9 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
 
+use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
-
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
 
 abstract class LogicalAuthorizationBase extends WebTestCase
 {
@@ -14,31 +13,31 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     protected static $authenticated_user;
     protected $user_credentials = [
         'authenticated_user' => 'userpass',
-        'admin_user' => 'adminpass',
-        'superadmin_user' => 'superadminpass',
+        'admin_user'         => 'adminpass',
+        'superadmin_user'    => 'superadminpass',
     ];
-    protected $load_services = array();
+    protected $load_services = [];
     protected $client;
     protected $la;
     protected $helper;
+    protected $twig;
 
     /**
      * {@inheritDoc}
      */
     protected static function createKernel(array $options = [])
     {
-        require_once __DIR__.'/../../AppKernel.php';
+        require_once __DIR__ . '/../../AppKernel.php';
 
         return new \AppKernel('test', true);
     }
 
     /**
-     * This method is run before each public test method
+     * This method is run before each public test method.
      */
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->client->catchExceptions(false);
         $container = static::$kernel->getContainer();
 
         $this->la = $container->get('test.logauth.service.logauth');
@@ -55,7 +54,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     }
 
     /**
-     * This method is run after each public test method
+     * This method is run after each public test method.
      *
      * It is important to reset all non-static properties to minimize memory leaks.
      */
@@ -95,15 +94,15 @@ abstract class LogicalAuthorizationBase extends WebTestCase
         }
     }
 
-    protected function sendRequestAs($method = 'GET', $slug, array $params = array(), $user = null)
+    protected function sendRequestAs($method = 'GET', $slug, array $params = [], $user = null)
     {
-        $headers = array();
+        $headers = [];
         if ($user) {
-            $headers = array(
-        'PHP_AUTH_USER' => $user->getUsername(),
-        'PHP_AUTH_PW'   => $this->user_credentials[$user->getUsername()],
-      );
+            $headers = [
+                'PHP_AUTH_USER' => $user->getUsername(),
+                'PHP_AUTH_PW'   => $this->user_credentials[$user->getUsername()],
+            ];
         }
-        $this->client->request($method, $slug, $params, array(), $headers);
+        $this->client->request($method, $slug, $params, [], $headers);
     }
 }

@@ -7,7 +7,9 @@ services:
             - {name: cache.pool, clearer: cache.default_clearer}
 
     custom_user_provider:
-        class: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Security\User\CustomUserProvider
+        class: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Security\User\CustomUserProvider    
+
+    # Service definition overrides
 
     test.logauth.service.logical_permissions_proxy:
         alias: logauth.service.logical_permissions_proxy
