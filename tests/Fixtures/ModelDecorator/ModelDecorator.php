@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ModelDecorator;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ModelDecorator;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 

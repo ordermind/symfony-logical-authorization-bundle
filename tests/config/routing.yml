@@ -15,19 +15,19 @@ xml_routes:
 
 yml_route:
     path: /test/route-yml
-    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlAction }
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\YmlController::routeYmlAction }
     permissions:
         role: ROLE_ADMIN
 
 yml_route_allowed:
     path: /test/route-yml-allowed
-    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlAllowedAction }
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\YmlController::routeYmlAllowedAction }
     permissions:
         true
 
 yml_route_denied:
     path: /test/route-yml-denied
-    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\YmlController::routeYmlDeniedAction }
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\YmlController::routeYmlDeniedAction }
     permissions:
         false
 

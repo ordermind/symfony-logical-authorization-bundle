@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes;
 
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Security\User;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Security\User;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 
 class CustomUserProvider implements UserProviderInterface
 {

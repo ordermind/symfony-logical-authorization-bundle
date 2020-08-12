@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
@@ -18,14 +18,14 @@ use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method;
 use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker\AlwaysDeny;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousModel;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\ErroneousUser;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ModelDecorator\ModelDecorator;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestFlag;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\PermissionTypes\TestType;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\BypassAccessChecker\AlwaysDeny;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\ErroneousModel;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\ErroneousUser;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelBoolean;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ModelDecorator\ModelDecorator;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes\TestFlag;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes\TestType;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
 use Symfony\Component\HttpFoundation\Request;
@@ -149,7 +149,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $user = new TestUser();
         $flag = new IsAuthorFlag();
-        $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser']));
+        $this->assertFalse($flag->checkFlag(['user' => $user, 'model' => 'Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser']));
     }
 
     public function testFlagIsAuthorWrongModelType()
@@ -1069,7 +1069,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'user'                        => static::$superadmin_user,
             'permissions'                 => $permissions,
             'action'                      => 'get',
-            'item_name'                   => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
+            'item_name'                   => 'Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelBoolean:field1',
             'item'                        => $model,
             'permission_no_bypass_checks' => [],
             'bypassed_access'             => true,
@@ -1217,7 +1217,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
       'user'                        => $user,
       'permissions'                 => $permissions,
       'action'                      => 'get',
-      'item_name'                   => 'Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:field1',
+      'item_name'                   => 'Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelBoolean:field1',
       'item'                        => $model,
       'permission_no_bypass_checks' => array_reverse([['permissions' => ['flag' => 'user_has_account'], 'resolve' => true], ['permissions' => ['NOT' => ['flag' => 'user_has_account']], 'resolve' => false]]),
       'bypassed_access'             => false,

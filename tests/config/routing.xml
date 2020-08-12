@@ -5,17 +5,17 @@
         http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="xml_route" path="/route-xml">
-        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController::routeXmlAction</default>
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\XmlController::routeXmlAction</default>
         <permissions>
             <role>ROLE_ADMIN</role>
         </permissions>
     </route>
     <route id="xml_route_allowed" path="/route-xml-allowed">
-        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController::routeXmlAllowedAction</default>
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\XmlController::routeXmlAllowedAction</default>
         <permissions>TRUE</permissions>
     </route>
     <route id="xml_route_denied" path="/route-xml-denied">
-        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller\XmlController::routeXmlDeniedAction</default>
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\XmlController::routeXmlDeniedAction</default>
         <permissions>FALSE</permissions>
     </route>
 </routes>

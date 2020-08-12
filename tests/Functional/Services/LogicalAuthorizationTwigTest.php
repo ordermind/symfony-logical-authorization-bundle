@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelRoleAuthor;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelRoleAuthor;
 use Twig\TwigFunction;
 
 class LogicalAuthorizationTwigTest extends LogicalAuthorizationBase

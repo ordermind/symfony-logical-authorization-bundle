@@ -1,8 +1,8 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 

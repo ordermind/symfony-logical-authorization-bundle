@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;

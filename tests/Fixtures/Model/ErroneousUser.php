@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;

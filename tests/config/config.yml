@@ -38,7 +38,7 @@ logauth:
                 0: false
             ^/test/pattern-: true
         models:
-            Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelBoolean:
+            Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelBoolean:
                 create: true
                 read: false
                 update: true
@@ -47,7 +47,7 @@ logauth:
                     field1:
                         get: true
                         set: false
-            Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelHasAccountNoInterface:
+            Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelHasAccountNoInterface:
                 create:
                     flag: user_has_account
                 read:
@@ -62,7 +62,7 @@ logauth:
                             flag: user_has_account
                         set:
                             flag: user_has_account
-            Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelNoBypass:
+            Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelNoBypass:
                 create:
                     no_bypass: true
                     0: false
@@ -84,7 +84,7 @@ logauth:
                         set:
                             no_bypass: true
                             0: false
-            Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelRoleAuthor:
+            Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelRoleAuthor:
                 create:
                     role: ROLE_ADMIN
                 read:
@@ -107,7 +107,7 @@ logauth:
                         set:
                             role: ROLE_ADMIN
                             flag: user_is_author
-            Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser:
+            Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser:
                 create:
                     role: ROLE_ADMIN
                 read:

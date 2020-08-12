@@ -5,7 +5,7 @@ security:
         ROLE_PARENT: ROLE_CHILD
 
     encoders:
-        Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestUser: plaintext
+        Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser: plaintext
 
     providers:
         custom:

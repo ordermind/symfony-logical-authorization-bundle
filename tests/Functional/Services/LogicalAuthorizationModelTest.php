@@ -1,10 +1,10 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Functional\Services;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelHasAccountNoInterface;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelNoBypass;
-use Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Model\TestModelRoleAuthor;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelHasAccountNoInterface;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelNoBypass;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelRoleAuthor;
 
 class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
 {
