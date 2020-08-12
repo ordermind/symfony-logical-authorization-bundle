@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Config\Loader\FileLoader;
-
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface;
 use Ordermind\LogicalAuthorizationBundle\Routing\RouteInterface;
 

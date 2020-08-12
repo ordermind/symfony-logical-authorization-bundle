@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
 class DefaultController extends AbstractController
@@ -16,7 +15,9 @@ class DefaultController extends AbstractController
 
   /**
     * @Route("/route-has-account", name="route_user_has_account")
+    *
     * @Method({"GET"})
+    *
     * @Permissions({
     *   "flag": "user_has_account"
     * })
@@ -29,6 +30,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/multiple-route-1", name="multiple_route_1")
      * @Route("/multiple-route-2")
+     *
      * @Permissions({
      *  "role": "ROLE_ADMIN"
      * })
@@ -48,6 +50,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/pattern-forbidden", name="pattern_forbidden")
+     *
      * @Permissions({
      *   "no_bypass": true,
      *   FALSE
@@ -60,6 +63,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/route-allowed", name="route_allowed")
+     *
      * @Permissions({
      *   TRUE
      * })
@@ -71,6 +75,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/route-denied", name="route_denied")
+     *
      * @Permissions({
      *   FALSE
      * })
@@ -90,6 +95,7 @@ class DefaultController extends AbstractController
 
     /**
       * @Route("/count-available-routes", name="count_available_routes")
+      *
       * @Method({"GET"})
       */
     public function countAvailableRoutesAction(Request $request)
@@ -99,11 +105,13 @@ class DefaultController extends AbstractController
         if (empty($result['routes'])) {
             return new Response(0);
         }
+
         return new Response(count($result['routes']));
     }
 
     /**
       * @Route("/count-available-route-patterns", name="count_available_route_patterns")
+      *
       * @Method({"GET"})
       */
     public function countAvailableRoutePatternsAction(Request $request)
@@ -113,11 +121,13 @@ class DefaultController extends AbstractController
         if (empty($result['route_patterns'])) {
             return new Response(0);
         }
+
         return new Response(count($result['route_patterns']));
     }
 
     /**
       * @Route("/get-current-username", name="get_current_username")
+      *
       * @Method({"GET"})
       */
     public function getCurrentUsernameAction(Request $request)
@@ -129,11 +139,13 @@ class DefaultController extends AbstractController
         if (is_string($user)) {
             return new Response($user);
         }
+
         return new Response($user->getUsername());
     }
 
     /**
       * @Route("/count-forbidden-entities-lazy", name="test_count_forbidden_entities_lazy")
+      *
       * @Method({"GET"})
       */
     public function countForbiddenEntitiesLazyLoadAction(Request $request)
@@ -141,6 +153,7 @@ class DefaultController extends AbstractController
         $operations = $this->get('test_model_operations');
         $operations->setRepositoryDecorator($this->get('repository_decorator.forbidden_entity'));
         $collection = $operations->getLazyLoadedModelResult();
+
         return new Response(count($collection));
     }
 }

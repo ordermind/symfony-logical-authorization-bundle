@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DependencyInjection;
@@ -24,7 +25,7 @@ class LogAuthExtension extends Extension
         $processedConfig = $this->processConfiguration($configuration, $configs);
         $container->setParameter('logauth.config', $processedConfig);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__. '/../Resources/config'));
         $loader->load('services.yml');
 
         if ($container->getParameter('kernel.debug')) {

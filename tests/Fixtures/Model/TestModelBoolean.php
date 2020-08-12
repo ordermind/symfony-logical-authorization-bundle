@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 

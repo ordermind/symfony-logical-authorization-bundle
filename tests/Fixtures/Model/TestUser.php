@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
@@ -159,6 +160,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
         if (($key = array_search('ROLE_USER', $roles)) !== false) {
             unset($roles[$key]);
         }
+
         return $roles;
     }
 
@@ -222,9 +224,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     public function serialize()
     {
         return serialize(array(
-        $this->id,
-        $this->username,
-        $this->password,
+            $this->id,
+            $this->username,
+            $this->password,
         ));
     }
 

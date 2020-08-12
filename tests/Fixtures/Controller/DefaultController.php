@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
 class DefaultController extends AbstractController
@@ -16,7 +15,9 @@ class DefaultController extends AbstractController
 
   /**
     * @Route("/route-role", name="route_role")
+    *
     * @Method({"GET"})
+    *
     * @Permissions({
     *   "role": "ROLE_ADMIN"
     * })
@@ -28,7 +29,9 @@ class DefaultController extends AbstractController
 
   /**
     * @Route("/route-role-multiple", name="route_role_multiple")
+    *
     * @Method({"GET"})
+    *
     * @Permissions({
     *   "role": {"ROLE_SALES", "ROLE_ADMIN"}
     * })
@@ -40,7 +43,9 @@ class DefaultController extends AbstractController
 
     /**
       * @Route("/route-no-bypass", name="route_no_bypass")
+      *
       * @Method({"GET"})
+      *
       * @Permissions({
       *   "no_bypass": true,
       *   FALSE
@@ -53,7 +58,9 @@ class DefaultController extends AbstractController
 
     /**
       * @Route("/route-host", name="route_host")
+      *
       * @Method({"GET"})
+      *
       * @Permissions({
       *   "host": "test.com"
       * })
@@ -65,6 +72,7 @@ class DefaultController extends AbstractController
 
     /**
       * @Route("/route-method", name="route_method")
+      *
       * @Permissions({
       *   "method": "GET"
       * })
@@ -76,6 +84,7 @@ class DefaultController extends AbstractController
 
     /**
       * @Route("/route-method-lowercase", name="route_method_lowercase")
+      *
       * @Permissions({
       *   "method": "get"
       * })
@@ -87,7 +96,9 @@ class DefaultController extends AbstractController
 
     /**
       * @Route("/route-ip", name="route_ip")
+      *
       * @Method({"GET"})
+      *
       * @Permissions({
       *   "ip": "127.0.0.1"
       * })
@@ -99,7 +110,9 @@ class DefaultController extends AbstractController
 
   /**
     * @Route("/route-complex", name="route_complex")
+    *
     * @Method({"GET"})
+    *
     * @Permissions({
     *   "AND": {
     *     "role": {"ROLE_SALES", "ROLE_ADMIN"},

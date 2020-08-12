@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
@@ -161,6 +162,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         if (($key = array_search('ROLE_USER', $roles)) !== false) {
             unset($roles[$key]);
         }
+
         return $roles;
     }
 
@@ -224,9 +226,9 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     public function serialize()
     {
         return serialize(array(
-        $this->id,
-        $this->username,
-        $this->password,
+            $this->id,
+            $this->username,
+            $this->password,
         ));
     }
 
