@@ -27,6 +27,8 @@ class XmlLoader extends FileLoader
      *
      * @throws \InvalidArgumentException when the file cannot be loaded or when the XML cannot be
      *                                   parsed because it does not validate against the scheme
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function load($file, $type = null): RouteCollection
     {

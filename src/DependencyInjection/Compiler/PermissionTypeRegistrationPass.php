@@ -23,7 +23,7 @@ class PermissionTypeRegistrationPass implements CompilerPassInterface
         }
         $definition = $container->findDefinition('logauth.service.logical_permissions_proxy');
         $taggedServices = $container->findTaggedServiceIds('logauth.tag.permission_type');
-        foreach ($taggedServices as $id => $tags) {
+        foreach (array_keys($taggedServices) as $id) {
             $definition->addMethodCall('addType', [new Reference($id)]);
         }
     }

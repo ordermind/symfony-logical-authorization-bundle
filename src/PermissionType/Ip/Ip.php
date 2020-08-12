@@ -43,6 +43,8 @@ class Ip implements PermissionTypeInterface
      * @param array  $context
      *
      * @return bool TRUE if the ip is allowed or FALSE if it is not allowed
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function checkPermission($ip, $context)
     {

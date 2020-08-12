@@ -39,6 +39,8 @@ class Method implements PermissionTypeInterface
      * @param array  $context The context for evaluating the method
      *
      * @return bool TRUE if the method is allowed or FALSE if it is not allowed
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function checkPermission($method, $context)
     {

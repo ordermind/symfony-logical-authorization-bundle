@@ -23,7 +23,7 @@ class FlagRegistrationPass implements CompilerPassInterface
         }
         $definition = $container->findDefinition('logauth.permission_type.flag');
         $taggedServices = $container->findTaggedServiceIds('logauth.tag.permission_type.flag');
-        foreach ($taggedServices as $id => $tags) {
+        foreach (array_keys($taggedServices) as $id) {
             $definition->addMethodCall('addFlag', [new Reference($id)]);
         }
     }

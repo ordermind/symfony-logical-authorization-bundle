@@ -39,6 +39,8 @@ class Host implements PermissionTypeInterface
      * @param array  $context The context for evaluating the host
      *
      * @return bool TRUE if the host is allowed or FALSE if it is not allowed
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function checkPermission($host, $context)
     {
