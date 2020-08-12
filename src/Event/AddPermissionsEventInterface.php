@@ -12,7 +12,7 @@ interface AddPermissionsEventInterface
     /**
      * Gets the permission tree.
      *
-     * @return array The permission tree
+     * @return array
      */
     public function getTree(): array;
 

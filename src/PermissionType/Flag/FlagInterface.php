@@ -12,7 +12,7 @@ interface FlagInterface
     /**
      * Gets the name of the flag.
      *
-     * @return string The flag name
+     * @return string
      */
     public function getName(): string;
 

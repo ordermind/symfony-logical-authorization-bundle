@@ -14,7 +14,7 @@ interface UserInterface extends SecurityUserInterface
     /**
      * Gets the id of this user.
      *
-     * @return mixed id
+     * @return mixed
      */
     public function getId();
 
@@ -26,9 +26,9 @@ interface UserInterface extends SecurityUserInterface
     public function setBypassAccess(bool $bypassAccess);
 
     /**
-     * Gets the bypass access flag for this user.
+     * Gets the value of the bypass access flag for this user.
      *
-     * @return bool The value of the bypass access flag
+     * @return bool
      */
     public function getBypassAccess(): bool;
 }

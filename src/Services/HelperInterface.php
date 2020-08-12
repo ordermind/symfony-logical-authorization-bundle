@@ -21,8 +21,8 @@ interface HelperInterface
      * @internal Logs an error if a logging service is available. Otherwise it outputs the error as a
      * Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException.
      *
-     * @param string $message The error message
-     * @param array  $context The context for the error
+     * @param string $message
+     * @param array  $context
      */
     public function handleError(string $message, array $context);
 }

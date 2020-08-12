@@ -15,21 +15,21 @@ interface LogicalPermissionsProxyInterface
     /**
      * @internal Add a permission type
      *
-     * @param PermissionTypeInterface $type The permission type to add
+     * @param PermissionTypeInterface $type
      */
     public function addType(PermissionTypeInterface $type);
 
     /**
      * @internal Removes a permission type
      *
-     * @param string $name The name of the permission to remove
+     * @param string $name
      */
     public function removeType(string $name);
 
     /**
      * @internal Checks if a permission type has been registered
      *
-     * @param string $name The name of the permission type
+     * @param string $name
      *
      * @return bool TRUE if the permission type has been registered or FALSE if it has not been registered
      */
@@ -52,24 +52,23 @@ interface LogicalPermissionsProxyInterface
     /**
      * @internal Gets the bypass access checker
      *
-     * @return BypassAccessCheckerInterface|null the currently registered bypass access checker, or NULL if no bypass
-     *                                           access checker has been registered
+     * @return BypassAccessCheckerInterface|null
      */
     public function getBypassAccessChecker(): ?BypassAccessCheckerInterface;
 
     /**
      * @internal Gets all currently valid permission keys
      *
-     * @return string[] Valid permission keys
+     * @return string[]
      */
     public function getValidPermissionKeys(): array;
 
     /**
      * @internal Checks if access should be granted for a set of permissions in a given context
      *
-     * @param array|string|bool $permissions the permission tree to be evaluated
-     * @param array             $context     The context for checking access
-     * @param bool              $allowBypass (optional) Determines whether bypassing access should possible be allowed.
+     * @param array|string|bool $permissions
+     * @param array             $context
+     * @param bool              $allowBypass (optional) Determines whether bypassing access should be allowed.
      *                                       Default value is TRUE.
      *
      * @return bool TRUE if access is granted or FALSE if access is denied

@@ -13,7 +13,7 @@ interface LogicalAuthorizationInterface
      * Checks if access should be granted for a set of permissions in a given context. If something goes wrong an error
      * will be logged and the method will return FALSE.
      *
-     * @param array|string|bool $permissions the permission tree to be evaluated
+     * @param array|string|bool $permissions
      * @param array             $context     The context for checking access. By default the context must contain a
      *                                       'user' key which references either a user string (to signify an anonymous
      *                                       user) or an object implementing

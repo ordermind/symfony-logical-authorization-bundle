@@ -37,8 +37,8 @@ class Method implements PermissionTypeInterface
     /**
      * Checks if the current request uses an allowed method.
      *
-     * @param string $method  The method to evaluate
-     * @param array  $context The context for evaluating the method
+     * @param string $method
+     * @param array  $context
      *
      * @return bool TRUE if the method is allowed or FALSE if it is not allowed
      *

@@ -37,8 +37,8 @@ class Host implements PermissionTypeInterface
     /**
      * Checks if the current request is sent to an approved host.
      *
-     * @param string $host    The host to evaluate
-     * @param array  $context The context for evaluating the host
+     * @param string $host
+     * @param array  $context
      *
      * @return bool TRUE if the host is allowed or FALSE if it is not allowed
      *
