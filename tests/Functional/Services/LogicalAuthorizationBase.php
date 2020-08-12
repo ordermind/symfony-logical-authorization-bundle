@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Test\AppKernel;

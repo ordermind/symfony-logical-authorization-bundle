@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ControllerDir;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

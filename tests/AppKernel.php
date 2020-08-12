@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ordermind\LogicalAuthorizationBundle\Test;
 
 use Ordermind\LogicalAuthorizationBundle\OrdermindLogicalAuthorizationBundle;

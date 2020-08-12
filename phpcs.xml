@@ -17,5 +17,7 @@
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
 
+    <rule ref="Generic.PHP.RequireStrictTypes" />
+
     <rule ref="PSR12" />
 </ruleset>

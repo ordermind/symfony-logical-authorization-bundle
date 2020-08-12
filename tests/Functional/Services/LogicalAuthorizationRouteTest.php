@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
