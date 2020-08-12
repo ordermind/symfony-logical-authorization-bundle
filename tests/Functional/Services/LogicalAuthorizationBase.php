@@ -2,6 +2,7 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
+use Ordermind\LogicalAuthorizationBundle\Test\AppKernel;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
@@ -29,7 +30,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     {
         require_once __DIR__ . '/../../AppKernel.php';
 
-        return new \AppKernel('test', true);
+        return new AppKernel('test', true);
     }
 
     /**
@@ -95,7 +96,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
         }
     }
 
-    protected function sendRequestAs($method = 'GET', $slug, array $params = [], $user = null)
+    protected function sendRequestAs($method, $slug, array $params = [], $user = null)
     {
         $headers = [];
         if ($user) {

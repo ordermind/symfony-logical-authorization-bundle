@@ -2,20 +2,20 @@
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-$file = __DIR__.'/../vendor/autoload.php';
+$file = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($file)) {
-    $file = __DIR__.'/../../../../vendor/autoload.php';
+    $file = __DIR__ . '/../../../../vendor/autoload.php';
     if (!file_exists($file)) {
         throw new RuntimeException('Install dependencies to run test suite.');
     }
 }
 
 $autoload = require $file;
-AnnotationRegistry::registerLoader(array($autoload, 'loadClass'));
+AnnotationRegistry::registerLoader([$autoload, 'loadClass']);
 
-/*--------------BOOT KERNEL--------------*/
+// --------------BOOT KERNEL--------------
 
-require_once __DIR__.'/AppKernel.php';
+require_once __DIR__ . '/AppKernel.php';
 
-$kernel = new AppKernel('test', true); // create a "test" kernel
+$kernel = new Ordermind\LogicalAuthorizationBundle\Test\AppKernel('test', true); // create a "test" kernel
 $kernel->boot();

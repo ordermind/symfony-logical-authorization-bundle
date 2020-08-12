@@ -2,6 +2,12 @@
 
 namespace Ordermind\LogicalAuthorizationBundle\Test;
 
+use Ordermind\LogicalAuthorizationBundle\OrdermindLogicalAuthorizationBundle;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -12,12 +18,12 @@ class AppKernel extends Kernel
         $bundles = [];
 
         if (in_array($this->getEnvironment(), ['test'])) {
-            $bundles[] = new Symfony\Bundle\FrameworkBundle\FrameworkBundle();
-            $bundles[] = new Symfony\Bundle\MonologBundle\MonologBundle();
-            $bundles[] = new Symfony\Bundle\SecurityBundle\SecurityBundle();
-            $bundles[] = new Symfony\Bundle\TwigBundle\TwigBundle();
-            $bundles[] = new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle();
-            $bundles[] = new Ordermind\LogicalAuthorizationBundle\OrdermindLogicalAuthorizationBundle();
+            $bundles[] = new FrameworkBundle();
+            $bundles[] = new MonologBundle();
+            $bundles[] = new SecurityBundle();
+            $bundles[] = new TwigBundle();
+            $bundles[] = new SensioFrameworkExtraBundle();
+            $bundles[] = new OrdermindLogicalAuthorizationBundle();
         }
 
         return $bundles;

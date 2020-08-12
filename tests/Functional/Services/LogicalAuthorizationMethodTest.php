@@ -1232,11 +1232,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             ],
             [
                 'permissions' => ['NOT' => 'user_has_account'],
-                'resolve' => true],
+                'resolve'     => true,
             ],
             [
                 'permissions' => 'user_has_account',
-                'resolve' => false,
+                'resolve'     => false,
             ],
         ],
         'message'                     => '',
@@ -1315,11 +1315,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             [
                 [
                     'permissions' => ['flag' => 'user_has_account'],
-                    'resolve' => true,
+                    'resolve'     => true,
                 ],
                 [
                     'permissions' => ['NOT' => ['flag' => 'user_has_account']],
-                    'resolve' => false,
+                    'resolve'     => false,
                 ],
             ]
         ),
@@ -1333,11 +1333,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 3  => ['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]], 'resolve' => true],
                 4  => [
                     'permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                    'resolve' => true,
+                    'resolve'     => true,
                 ],
                 5  => [
                     'permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]]],
-                    'resolve' => true,
+                    'resolve'     => true,
                 ],
                 6  => ['permissions' => true, 'resolve' => true],
                 7  => ['permissions' => 'TRUE', 'resolve' => true],
@@ -1347,11 +1347,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 11 => ['permissions' => ['NOT' => 'user_is_author'], 'resolve' => false],
                 12 => [
                     'permissions' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]],
-                    'resolve' => false,
+                    'resolve'     => false,
                 ],
                 13 => [
                     'permissions' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
-                    'resolve' => true,
+                    'resolve'     => true,
                 ],
                 14 => [
                     'permissions' => [
@@ -1363,8 +1363,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                     'permissions' => [
                         'AND' => [
                             'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                            '0' => true,
-                            '1' => 'TRUE',
+                            '0'    => true,
+                            '1'    => 'TRUE',
                             'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
                         ],
                     ],
@@ -1375,8 +1375,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                     'permissions' => [
                         'AND' => [
                             'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                            '0' => true,
-                            '1' => 'TRUE',
+                            '0'    => true,
+                            '1'    => 'TRUE',
                             'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
                         ],
                         'flag' => 'user_has_account',
