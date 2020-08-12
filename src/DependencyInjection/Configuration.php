@@ -25,8 +25,7 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->children()
                 ->variableNode('permissions')->end()
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }

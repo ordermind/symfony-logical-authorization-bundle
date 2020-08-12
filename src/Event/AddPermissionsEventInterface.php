@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Event;
 
 /**
- * Event for adding permissions
+ * Event for adding permissions.
  */
 interface AddPermissionsEventInterface
 {
-
-  /**
-   * Gets the permission tree
-   *
-   * @return array The permission tree
-   */
+    /**
+     * Gets the permission tree.
+     *
+     * @return array The permission tree
+     */
     public function getTree(): array;
 
     /**

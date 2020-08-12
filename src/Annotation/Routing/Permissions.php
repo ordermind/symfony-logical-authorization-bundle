@@ -25,7 +25,7 @@ class Permissions
     }
 
     /**
-     * Gets the permission tree for this route
+     * Gets the permission tree for this route.
      *
      * @return array|string|bool The permission tree for this route
      */

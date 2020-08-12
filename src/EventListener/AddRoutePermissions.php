@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\EventListener;
 
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Config\Loader\FileLoader;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface;
 use Ordermind\LogicalAuthorizationBundle\Routing\RouteInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Adds permissions from routes
+ * Adds permissions from routes.
  */
 class AddRoutePermissions
 {
@@ -30,7 +29,7 @@ class AddRoutePermissions
     }
 
     /**
-     * Event listener callback for adding permissions to the tree
+     * Event listener callback for adding permissions to the tree.
      *
      * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
      */

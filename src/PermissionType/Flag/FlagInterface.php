@@ -9,12 +9,11 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
  */
 interface FlagInterface
 {
-
-  /**
-   * Gets the name of the flag.
-   *
-   * @return string The flag name
-   */
+    /**
+     * Gets the name of the flag.
+     *
+     * @return string The flag name
+     */
     public function getName(): string;
 
     /**

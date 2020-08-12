@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 
 /**
  * {@inheritdoc}
@@ -65,9 +63,9 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
                 . ' line '
                 . $e->getLine(),
                 [
-                    'exception' => $class,
+                    'exception'   => $class,
                     'permissions' => $permissions,
-                    'context' => $context,
+                    'context'     => $context,
                 ]
             );
         }

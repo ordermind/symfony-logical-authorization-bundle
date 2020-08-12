@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Command;
 
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 
 /**
  * {@inheritdoc}

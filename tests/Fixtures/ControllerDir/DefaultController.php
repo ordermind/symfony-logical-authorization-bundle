@@ -4,26 +4,24 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ControllerDir;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 
 class DefaultController extends AbstractController
 {
-
-  /**
-    * @Route("/route-has-account", name="route_user_has_account")
-    *
-    * @Method({"GET"})
-    *
-    * @Permissions({
-    *   "flag": "user_has_account"
-    * })
-    */
+    /**
+     * @Route("/route-has-account", name="route_user_has_account")
+     *
+     * @Method({"GET"})
+     *
+     * @Permissions({
+     *   "flag": "user_has_account"
+     * })
+     */
     public function routeHasAccountAction(Request $request)
     {
         return new Response('');
@@ -96,10 +94,10 @@ class DefaultController extends AbstractController
     }
 
     /**
-      * @Route("/count-available-routes", name="count_available_routes")
-      *
-      * @Method({"GET"})
-      */
+     * @Route("/count-available-routes", name="count_available_routes")
+     *
+     * @Method({"GET"})
+     */
     public function countAvailableRoutesAction(Request $request)
     {
         $laRoute = $this->get('test.logauth.service.logauth_route');
@@ -112,10 +110,10 @@ class DefaultController extends AbstractController
     }
 
     /**
-      * @Route("/count-available-route-patterns", name="count_available_route_patterns")
-      *
-      * @Method({"GET"})
-      */
+     * @Route("/count-available-route-patterns", name="count_available_route_patterns")
+     *
+     * @Method({"GET"})
+     */
     public function countAvailableRoutePatternsAction(Request $request)
     {
         $laRoute = $this->get('test.logauth.service.logauth_route');
@@ -128,10 +126,10 @@ class DefaultController extends AbstractController
     }
 
     /**
-      * @Route("/get-current-username", name="get_current_username")
-      *
-      * @Method({"GET"})
-      */
+     * @Route("/get-current-username", name="get_current_username")
+     *
+     * @Method({"GET"})
+     */
     public function getCurrentUsernameAction(Request $request)
     {
         $user = $this->get('test.logauth.service.helper')->getCurrentUser();
@@ -146,10 +144,10 @@ class DefaultController extends AbstractController
     }
 
     /**
-      * @Route("/count-forbidden-entities-lazy", name="test_count_forbidden_entities_lazy")
-      *
-      * @Method({"GET"})
-      */
+     * @Route("/count-forbidden-entities-lazy", name="test_count_forbidden_entities_lazy")
+     *
+     * @Method({"GET"})
+     */
     public function countForbiddenEntitiesLazyLoadAction(Request $request)
     {
         $operations = $this->get('test_model_operations');
