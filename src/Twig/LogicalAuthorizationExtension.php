@@ -15,20 +15,20 @@ use Twig\TwigFunction;
 class LogicalAuthorizationExtension extends AbstractExtension
 {
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface
+     * @var LogicalAuthorizationRouteInterface
      */
     protected $laRoute;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface
+     * @var LogicalAuthorizationModelInterface
      */
     protected $laModel;
 
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface $laRoute
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface $laModel
+     * @param LogicalAuthorizationRouteInterface $laRoute
+     * @param LogicalAuthorizationModelInterface $laModel
      */
     public function __construct(
         LogicalAuthorizationRouteInterface $laRoute,

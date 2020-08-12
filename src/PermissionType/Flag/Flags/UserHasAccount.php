@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags;
 
+use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
 
 /**
@@ -31,7 +32,7 @@ class UserHasAccount implements FlagInterface
     public function checkFlag(array $context): bool
     {
         if (!isset($context['user'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'The context parameter must contain a "user" key to be able to evaluate the %s flag.',
                     $this->getName()

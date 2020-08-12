@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
 /**
  * Internal proxy service for checking permissions.
@@ -14,9 +15,9 @@ interface LogicalPermissionsProxyInterface
     /**
      * @internal Add a permission type
      *
-     * @param Ordermind\LogicalPermissions\PermissionTypeInterface $type The permission type to add
+     * @param PermissionTypeInterface $type The permission type to add
      */
-    public function addType(\Ordermind\LogicalPermissions\PermissionTypeInterface $type);
+    public function addType(PermissionTypeInterface $type);
 
     /**
      * @internal Removes a permission type

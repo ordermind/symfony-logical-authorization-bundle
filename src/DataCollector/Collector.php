@@ -17,12 +17,12 @@ use Symfony\Component\VarDumper\Cloner\Data;
 class Collector extends DataCollector implements CollectorInterface
 {
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
+     * @var PermissionTreeBuilderInterface
      */
     protected $treeBuilder;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface
+     * @var LogicalPermissionsProxyInterface
      */
     protected $lpProxy;
 
@@ -39,8 +39,8 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface   $treeBuilder
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
+     * @param PermissionTreeBuilderInterface   $treeBuilder
+     * @param LogicalPermissionsProxyInterface $lpProxy
      */
     public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy)
     {

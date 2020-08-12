@@ -14,14 +14,14 @@ use Symfony\Component\Routing\RouterInterface;
 class AddRoutePermissions
 {
     /**
-     * @var Symfony\Component\Routing\RouterInterface
+     * @var RouterInterface
      */
     protected $router;
 
     /**
      * @internal
      *
-     * @param Symfony\Component\Routing\RouterInterface $router
+     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
@@ -31,7 +31,7 @@ class AddRoutePermissions
     /**
      * Event listener callback for adding permissions to the tree.
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
+     * @param AddPermissionsEventInterface $event
      */
     public function onAddPermissions(AddPermissionsEventInterface $event)
     {

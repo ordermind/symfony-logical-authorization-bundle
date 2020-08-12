@@ -19,21 +19,21 @@ class Helper implements HelperInterface
     protected $environment;
 
     /**
-     * @var Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     * @var TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
 
     /**
      * @internal
      *
-     * @param string                                                                             $environment
-     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage
-     * @param Psr\Log\LoggerInterface                                                            $logger
+     * @param string                $environment
+     * @param TokenStorageInterface $tokenStorage
+     * @param LoggerInterface       $logger
      */
     public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {

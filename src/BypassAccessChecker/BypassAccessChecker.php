@@ -13,14 +13,14 @@ use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 class BypassAccessChecker implements BypassAccessCheckerInterface
 {
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface
+     * @var LogicalPermissionsProxyInterface
      */
     protected $lpProxy;
 
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
+     * @param LogicalPermissionsProxyInterface $lpProxy
      */
     public function __construct(LogicalPermissionsProxyInterface $lpProxy)
     {

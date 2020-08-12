@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Method;
 
+use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use TypeError;
 
 /**
  * Permission type for checking http method.
@@ -17,7 +19,7 @@ class Method implements PermissionTypeInterface
     /**
      * @internal
      *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack
+     * @param RequestStack $requestStack RequestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -45,10 +47,10 @@ class Method implements PermissionTypeInterface
     public function checkPermission($method, $context)
     {
         if (!is_string($method)) {
-            throw new \TypeError('The method parameter must be a string.');
+            throw new TypeError('The method parameter must be a string.');
         }
         if (!$method) {
-            throw new \InvalidArgumentException('The method parameter cannot be empty.');
+            throw new InvalidArgumentException('The method parameter cannot be empty.');
         }
 
         $currentRequest = $this->requestStack->getCurrentRequest();

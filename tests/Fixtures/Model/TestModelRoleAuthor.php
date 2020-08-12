@@ -104,7 +104,7 @@ class TestModelRoleAuthor implements ModelInterface
     /**
      * Set author.
      *
-     * @param \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
+     * @param UserInterface $author
      *
      * @return entity implementing ModelInterface
      */
@@ -118,7 +118,7 @@ class TestModelRoleAuthor implements ModelInterface
     /**
      * Get authorId.
      *
-     * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+     * @return UserInterface|null
      */
     public function getAuthor(): ?UserInterface
     {

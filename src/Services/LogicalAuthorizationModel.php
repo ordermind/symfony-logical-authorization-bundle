@@ -13,32 +13,32 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
 {
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface
+     * @var LogicalAuthorizationInterface
      */
     protected $logicalAuthorization;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
+     * @var PermissionTreeBuilderInterface
      */
     protected $treeBuilder;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\HelperInterface
+     * @var HelperInterface
      */
     protected $helper;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface
+     * @var CollectorInterface
      */
     protected $debugCollector;
 
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $logicalAuthorization
-     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
-     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper
-     * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector
+     * @param LogicalAuthorizationInterface  $logicalAuthorization
+     * @param PermissionTreeBuilderInterface $treeBuilder
+     * @param HelperInterface                $helper
+     * @param CollectorInterface             $debugCollector
      */
     public function __construct(
         LogicalAuthorizationInterface $logicalAuthorization,

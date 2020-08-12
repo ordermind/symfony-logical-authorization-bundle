@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags;
 
+use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
@@ -36,7 +37,7 @@ class UserIsAuthor implements FlagInterface
     public function checkFlag(array $context): bool
     {
         if (!isset($context['user'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'The context parameter must contain a "user" key to be able to evaluate the %s flag.',
                     $this->getName()
@@ -50,7 +51,7 @@ class UserIsAuthor implements FlagInterface
         }
 
         if (!($user instanceof UserInterface)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'The user class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be '
                     . 'able to evaluate the %s flag.',
@@ -59,7 +60,7 @@ class UserIsAuthor implements FlagInterface
             );
         }
         if (!isset($context['model'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Missing key "model" in context parameter. We cannot evaluate the %s flag without a model.',
                     $this->getName()
@@ -90,7 +91,7 @@ class UserIsAuthor implements FlagInterface
                 return true;
             }
             if (!($author instanceof UserInterface)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     sprintf(
                         'The author of the model must implement '
                         . 'Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the %s '
@@ -103,7 +104,7 @@ class UserIsAuthor implements FlagInterface
             return $user->getId() === $author->getId();
         }
 
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
             sprintf(
                 'The model class must implement either Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface '
                 . 'or Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the %s '

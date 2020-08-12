@@ -103,7 +103,7 @@ class TestModelHasAccountNoInterface
     /**
      * Set author.
      *
-     * @param \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
+     * @param UserInterface $author
      *
      * @return TestModelHasAccountNoInterface
      */
@@ -117,7 +117,7 @@ class TestModelHasAccountNoInterface
     /**
      * Get authorId.
      *
-     * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
+     * @return UserInterface|null
      */
     public function getAuthor(): ?UserInterface
     {

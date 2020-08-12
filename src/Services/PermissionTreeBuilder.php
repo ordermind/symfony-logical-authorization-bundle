@@ -21,9 +21,9 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
-     * @param Symfony\Component\EventDispatcher\EventDispatcherInterface                     $dispatcher
-     * @param Psr\Cache\CacheItemPoolInterface                                               $cache
+     * @param LogicalPermissionsProxyInterface $lpProxy
+     * @param EventDispatcherInterface         $dispatcher
+     * @param CacheItemPoolInterface           $cache
      */
     public function __construct(
         LogicalPermissionsProxyInterface $lpProxy,

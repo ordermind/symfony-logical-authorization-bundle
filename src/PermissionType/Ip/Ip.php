@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Ip;
 
+use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
+use TypeError;
 
 /**
  * Permission type for checking ipaddress.
@@ -14,14 +16,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class Ip implements PermissionTypeInterface
 {
     /**
-     * @var Symfony\Component\HttpFoundation\RequestStack
+     * @var RequestStack
      */
     protected $requestStack;
 
     /**
      * @internal
      *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+     * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -49,10 +51,10 @@ class Ip implements PermissionTypeInterface
     public function checkPermission($ipAddress, $context)
     {
         if (!is_string($ipAddress)) {
-            throw new \TypeError('The ipAddress parameter must be a string.');
+            throw new TypeError('The ipAddress parameter must be a string.');
         }
         if (!$ipAddress) {
-            throw new \InvalidArgumentException('The ipAddress parameter cannot be empty.');
+            throw new InvalidArgumentException('The ipAddress parameter cannot be empty.');
         }
 
         $currentRequest = $this->requestStack->getCurrentRequest();

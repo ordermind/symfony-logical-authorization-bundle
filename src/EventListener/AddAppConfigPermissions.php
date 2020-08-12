@@ -29,7 +29,7 @@ class AddAppConfigPermissions
     /**
      * Event listener callback for adding permissions to the tree.
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface $event
+     * @param AddPermissionsEventInterface $event
      */
     public function onAddPermissions(AddPermissionsEventInterface $event)
     {

@@ -12,7 +12,7 @@ interface ModelDecoratorInterface
     /**
      * Gets the model for this decorator.
      *
-     * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface The model
+     * @return ModelInterface
      */
     public function getModel();
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Host;
 
+use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use TypeError;
 
 /**
  * Permission type for checking host.
@@ -17,7 +19,7 @@ class Host implements PermissionTypeInterface
     /**
      * @internal
      *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+     * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -45,10 +47,10 @@ class Host implements PermissionTypeInterface
     public function checkPermission($host, $context)
     {
         if (!is_string($host)) {
-            throw new \TypeError('The host parameter must be a string.');
+            throw new TypeError('The host parameter must be a string.');
         }
         if (!$host) {
-            throw new \InvalidArgumentException('The host parameter cannot be empty.');
+            throw new InvalidArgumentException('The host parameter cannot be empty.');
         }
 
         $currentRequest = $this->requestStack->getCurrentRequest();

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Role;
 
+use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
+use TypeError;
 
 /**
  * Permission type for checking a role on a user.
@@ -14,14 +16,14 @@ use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 class Role implements PermissionTypeInterface
 {
     /**
-     * @var Symfony\Component\Security\Core\Role\RoleHierarchyInterface
+     * @var SecurityRoleHierarchyInterface
      */
     protected $roleHierarchy;
 
     /**
      * @internal
      *
-     * @param \Symfony\Component\Security\Core\Role\RoleHierarchyInterface $roleHierarchy RoleHiearchy service
+     * @param SecurityRoleHierarchyInterface $roleHierarchy RoleHiearchy service
      */
     public function __construct(SecurityRoleHierarchyInterface $roleHierarchy)
     {
@@ -50,16 +52,16 @@ class Role implements PermissionTypeInterface
     public function checkPermission($role, $context)
     {
         if (!is_string($role)) {
-            throw new \TypeError('The role parameter must be a string.');
+            throw new TypeError('The role parameter must be a string.');
         }
         if (!$role) {
-            throw new \InvalidArgumentException('The role parameter cannot be empty.');
+            throw new InvalidArgumentException('The role parameter cannot be empty.');
         }
         if (!is_array($context)) {
-            throw new \TypeError('The context parameter must be an array.');
+            throw new TypeError('The context parameter must be an array.');
         }
         if (!isset($context['user'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'The context parameter must contain a "user" key to be able to evaluate the %s flag.',
                     $this->getName()
@@ -73,7 +75,7 @@ class Role implements PermissionTypeInterface
         }
 
         if (!($user instanceof SecurityUserInterface)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'The user class must implement Symfony\Component\Security\Core\User\UserInterface to be able to '
                 . 'evaluate the user role.'
             );

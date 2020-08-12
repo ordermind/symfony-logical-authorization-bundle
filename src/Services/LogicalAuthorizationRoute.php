@@ -14,38 +14,38 @@ use Symfony\Component\Routing\RouterInterface;
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 {
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface
+     * @var LogicalAuthorizationInterface
      */
     protected $logicalAuthorization;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
+     * @var PermissionTreeBuilderInterface
      */
     protected $treeBuilder;
 
     /**
-     * @var Symfony\Component\Routing\RouterInterface
+     * @var SRouterInterface
      */
     protected $router;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\HelperInterface
+     * @var HelperInterface
      */
     protected $helper;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface
+     * @var CollectorInterface
      */
     protected $debugCollector;
 
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $logicalAuthorization
-     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
-     * @param Symfony\Component\Routing\RouterInterface                                    $router
-     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper
-     * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector
+     * @param LogicalAuthorizationInterface  $logicalAuthorization
+     * @param PermissionTreeBuilderInterface $treeBuilder
+     * @param RouterInterface                $router
+     * @param HelperInterface                $helper
+     * @param CollectorInterface             $debugCollector
      */
     public function __construct(
         LogicalAuthorizationInterface $logicalAuthorization,

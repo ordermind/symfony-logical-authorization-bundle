@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
 
+use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Exceptions\FlagNotRegisteredException;
 
 /**
@@ -28,13 +29,13 @@ class FlagManager implements FlagManagerInterface
     {
         $name = $flag->getName();
         if (!is_string($name)) {
-            throw new \InvalidArgumentException('The name of a flag must be a string.');
+            throw new InvalidArgumentException('The name of a flag must be a string.');
         }
         if (!$name) {
-            throw new \InvalidArgumentException('The name of a flag cannot be empty.');
+            throw new InvalidArgumentException('The name of a flag cannot be empty.');
         }
         if ($this->flagExists($name)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "The flag \"$name\" already exists! If you want to change the class that handles a flag, you may do so "
                 . 'by overriding the service definition for that flag.'
             );
@@ -51,7 +52,7 @@ class FlagManager implements FlagManagerInterface
     public function removeFlag(string $name)
     {
         if (!$name) {
-            throw new \InvalidArgumentException('The name parameter cannot be empty.');
+            throw new InvalidArgumentException('The name parameter cannot be empty.');
         }
         if (!$this->flagExists($name)) {
             throw new FlagNotRegisteredException(
@@ -79,7 +80,7 @@ class FlagManager implements FlagManagerInterface
     public function checkPermission($name, $context)
     {
         if (!$name) {
-            throw new \InvalidArgumentException('The name parameter cannot be empty.');
+            throw new InvalidArgumentException('The name parameter cannot be empty.');
         }
         if (!$this->flagExists($name)) {
             throw new FlagNotRegisteredException(

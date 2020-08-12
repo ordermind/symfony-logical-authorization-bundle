@@ -17,7 +17,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
     protected $lpProxy;
 
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\HelperInterface
+     * @var HelperInterface
      */
     protected $helper;
 

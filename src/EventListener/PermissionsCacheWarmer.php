@@ -13,14 +13,14 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 class PermissionsCacheWarmer implements CacheWarmerInterface
 {
     /**
-     * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
+     * @var PermissionTreeBuilderInterface
      */
     protected $treeBuilder;
 
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
+     * @param PermissionTreeBuilderInterface $treeBuilder
      */
     public function __construct(PermissionTreeBuilderInterface $treeBuilder)
     {

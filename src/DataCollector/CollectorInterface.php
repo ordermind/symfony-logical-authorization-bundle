@@ -15,7 +15,7 @@ interface CollectorInterface extends LateDataCollectorInterface
     /**
      * Gets the full permission tree.
      *
-     * @return Symfony\Component\VarDumper\Cloner\Data The permission tree
+     * @return Data The permission tree
      */
     public function getPermissionTree(): Data;
 
