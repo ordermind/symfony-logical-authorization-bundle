@@ -108,7 +108,7 @@ class DefaultController extends AbstractController
             return new Response(0);
         }
 
-        return new Response(count($result['routes']));
+        return new Response((string) count($result['routes']));
     }
 
     /**
@@ -124,7 +124,7 @@ class DefaultController extends AbstractController
             return new Response(0);
         }
 
-        return new Response(count($result['route_patterns']));
+        return new Response((string) count($result['route_patterns']));
     }
 
     /**
@@ -156,6 +156,6 @@ class DefaultController extends AbstractController
         $operations->setRepositoryDecorator($this->get('repository_decorator.forbidden_entity'));
         $collection = $operations->getLazyLoadedModelResult();
 
-        return new Response(count($collection));
+        return new Response((string) count($collection));
     }
 }
