@@ -9,20 +9,35 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class ErroneousModel implements ModelInterface
 {
+    /**
+     * @var int|null
+     */
     private $id;
 
+    /**
+     * @var string|null
+     */
     private $field1 = '';
 
+    /**
+     * @var string|null
+     */
     private $field2 = '';
 
+    /**
+     * @var string|null
+     */
     private $field3 = '';
 
+    /**
+     * @var UserInterface|null
+     */
     protected $author;
 
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId()
     {
@@ -46,7 +61,7 @@ class ErroneousModel implements ModelInterface
     /**
      * Get field1.
      *
-     * @return string
+     * @return string|null
      */
     public function getField1()
     {
@@ -70,7 +85,7 @@ class ErroneousModel implements ModelInterface
     /**
      * Get field2.
      *
-     * @return string
+     * @return string|null
      */
     public function getField2()
     {
@@ -94,7 +109,7 @@ class ErroneousModel implements ModelInterface
     /**
      * Get field3.
      *
-     * @return string
+     * @return string|null
      */
     public function getField3()
     {

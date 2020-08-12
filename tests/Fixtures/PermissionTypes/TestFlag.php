@@ -8,6 +8,9 @@ use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
 
 class TestFlag implements FlagInterface
 {
+    /**
+     * @var string|null
+     */
     protected $name;
 
     public function getName(): string

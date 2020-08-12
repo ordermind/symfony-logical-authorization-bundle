@@ -12,6 +12,9 @@ use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Exceptions\FlagNotR
  */
 class FlagManager implements FlagManagerInterface
 {
+    /**
+     * @var array
+     */
     protected $flags = [];
 
     /**

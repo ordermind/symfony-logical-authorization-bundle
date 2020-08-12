@@ -5,22 +5,43 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
+use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
+class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Serializable
 {
+    /**
+     * @var int|null
+     */
     private $id;
 
+    /**
+     * @var string
+     */
     private $username;
 
+    /**
+     * @var string
+     */
     private $password;
-
+    /**
+     * @var string|null
+     */
     private $oldPassword;
 
+    /**
+     * @var array
+     */
     private $roles;
 
+    /**
+     * @var string
+     */
     private $email;
 
+    /**
+     * @var bool
+     */
     private $bypassAccess;
 
     public function __construct($username = '', $password = '', $roles = [], $email = '', $bypassAccess = false)

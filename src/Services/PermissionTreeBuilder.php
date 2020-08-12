@@ -13,9 +13,24 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 {
+    /**
+     * @var string[]
+     */
     protected $permissionKeys;
+
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $dispatcher;
+
+    /**
+     * CacheItemPoolInterface.
+     */
     protected $cache;
+
+    /**
+     * @var array|null
+     */
     protected $tree;
 
     /**

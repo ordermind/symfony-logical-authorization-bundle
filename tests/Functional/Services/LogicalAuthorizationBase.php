@@ -4,25 +4,64 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
+use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
 use Ordermind\LogicalAuthorizationBundle\Test\AppKernel;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
+use Twig\Environment as TwigEnvironment;
 
 abstract class LogicalAuthorizationBase extends WebTestCase
 {
+    /**
+     * @var TestUser
+     */
     protected static $userSuperadmin;
+
+    /**
+     * @var TestUser
+     */
     protected static $userAdmin;
+
+    /**
+     * @var TestUser
+     */
     protected static $userAuthenticated;
+
+    /**
+     * @var string[string]
+     */
     protected $userCredentials = [
         'authenticated_user' => 'userpass',
         'admin_user'         => 'adminpass',
         'superadmin_user'    => 'superadminpass',
     ];
+
+    /**
+     * @var array
+     */
     protected $loadServices = [];
+
+    /**
+     * @var KernelBrowser
+     */
     protected $client;
+
+    /**
+     * @var LogicalAuthorizationInterface
+     */
     protected $logicalAuthorization;
+
+    /**
+     * @var HelperInterface
+     */
     protected $helper;
+
+    /**
+     * @var TwigEnvironment
+     */
     protected $twig;
 
     /**

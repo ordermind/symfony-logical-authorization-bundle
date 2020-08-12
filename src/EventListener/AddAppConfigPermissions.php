@@ -19,7 +19,7 @@ class AddAppConfigPermissions
     /**
      * @internal
      *
-     * @param array $config The logauth.config parameter
+     * @param array $config
      */
     public function __construct(array $config)
     {

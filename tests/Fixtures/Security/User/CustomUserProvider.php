@@ -12,6 +12,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class CustomUserProvider implements UserProviderInterface
 {
+    /**
+     * @var array
+     */
     protected $users = [
       'authenticated_user' => [
         'password' => 'userpass',

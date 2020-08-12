@@ -9,18 +9,38 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
 {
+    /**
+     * @var int|null
+     */
     private $id;
 
+    /**
+     * @var string
+     */
     private $username;
 
+    /**
+     * @var string
+     */
     private $password;
-
+    /**
+     * @var string|null
+     */
     private $oldPassword;
 
+    /**
+     * @var array
+     */
     private $roles;
 
+    /**
+     * @var string
+     */
     private $email;
 
+    /**
+     * @var bool
+     */
     private $bypassAccess;
 
     public function __construct($username = '', $password = '', $roles = [], $email = '', $bypassAccess = false)
@@ -41,7 +61,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId()
     {

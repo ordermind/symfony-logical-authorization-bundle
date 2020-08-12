@@ -38,7 +38,7 @@ interface LogicalPermissionsProxyInterface
     /**
      * @internal Gets all registered permission types
      *
-     * @return array
+     * @return string[]
      */
     public function getTypes(): array;
 
@@ -60,7 +60,7 @@ interface LogicalPermissionsProxyInterface
     /**
      * @internal Gets all currently valid permission keys
      *
-     * @return array Valid permission keys
+     * @return string[] Valid permission keys
      */
     public function getValidPermissionKeys(): array;
 

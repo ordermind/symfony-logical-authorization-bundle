@@ -20,7 +20,7 @@ interface ModelInterface
     /**
      * Gets the author of the model.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getAuthor(): ?UserInterface;
 }

@@ -11,15 +11,22 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class AddPermissionsEvent extends Event implements AddPermissionsEventInterface
 {
+    /**
+     * @var array
+     */
     protected $tree = [];
+
+    /**
+     * @var string[]
+     */
     protected $permissionKeys;
 
     /**
      * @internal
      *
-     * @param array $permissionKeys array of valid permission keys
+     * @param string[] $permissionKeys array of valid permission keys
      */
-    public function __construct($permissionKeys)
+    public function __construct(array $permissionKeys)
     {
         $this->permissionKeys = $permissionKeys;
     }
