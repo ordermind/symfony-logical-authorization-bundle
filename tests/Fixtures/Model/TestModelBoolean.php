@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
-use Doctrine\ORM\Mapping as ORM;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelBoolean implements ModelInterface
 {
-
     private $id;
 
     private $field1 = '';
@@ -22,7 +20,7 @@ class TestModelBoolean implements ModelInterface
     protected $author;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -32,7 +30,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Set field1
+     * Set field1.
      *
      * @param string $field1
      *
@@ -46,7 +44,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Get field1
+     * Get field1.
      *
      * @return string
      */
@@ -56,7 +54,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Set field2
+     * Set field2.
      *
      * @param string $field2
      *
@@ -70,7 +68,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Get field2
+     * Get field2.
      *
      * @return string
      */
@@ -80,7 +78,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Set field3
+     * Set field3.
      *
      * @param string $field3
      *
@@ -94,7 +92,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Get field3
+     * Get field3.
      *
      * @return string
      */
@@ -104,7 +102,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
      *
@@ -118,7 +116,7 @@ class TestModelBoolean implements ModelInterface
     }
 
     /**
-     * Get authorId
+     * Get authorId.
      *
      * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      */

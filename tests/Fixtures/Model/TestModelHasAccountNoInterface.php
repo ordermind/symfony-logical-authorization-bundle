@@ -8,7 +8,6 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelHasAccountNoInterface
 {
-
     private $id;
 
     private $field1 = '';
@@ -20,7 +19,7 @@ class TestModelHasAccountNoInterface
     protected $author;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -30,7 +29,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Set field1
+     * Set field1.
      *
      * @param string $field1
      *
@@ -44,7 +43,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Get field1
+     * Get field1.
      *
      * @return string
      */
@@ -54,7 +53,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Set field2
+     * Set field2.
      *
      * @param string $field2
      *
@@ -68,7 +67,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Get field2
+     * Get field2.
      *
      * @return string
      */
@@ -78,7 +77,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Set field3
+     * Set field3.
      *
      * @param string $field3
      *
@@ -92,7 +91,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Get field3
+     * Get field3.
      *
      * @return string
      */
@@ -102,7 +101,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface $author
      *
@@ -116,7 +115,7 @@ class TestModelHasAccountNoInterface
     }
 
     /**
-     * Get authorId
+     * Get authorId.
      *
      * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      */

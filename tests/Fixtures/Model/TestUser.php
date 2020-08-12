@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
 {
@@ -44,7 +44,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -54,7 +54,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
      *
@@ -68,7 +68,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Get username
+     * Get username.
      *
      * @return string
      */
@@ -78,7 +78,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
      *
@@ -92,7 +92,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -102,7 +102,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Set old password
+     * Set old password.
      *
      * @param string $oldPassword
      *
@@ -117,7 +117,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Get old password
+     * Get old password.
      *
      * @return string
      */
@@ -127,7 +127,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Set roles
+     * Set roles.
      *
      * @return array
      */
@@ -165,7 +165,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
      *
@@ -179,7 +179,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -189,9 +189,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Set bypassAccess
+     * Set bypassAccess.
      *
-     * @param boolean $bypassAccess
+     * @param bool $bypassAccess
      *
      * @return TestUser
      */
@@ -203,7 +203,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     }
 
     /**
-     * Get bypassAccess
+     * Get bypassAccess.
      *
      * @return bool
      */
@@ -223,11 +223,11 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
 
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->username,
             $this->password,
-        ));
+        ]);
     }
 
     public function unserialize($serialized)
@@ -235,7 +235,6 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
         list(
         $this->id,
         $this->username,
-        $this->password,
-        ) = unserialize($serialized);
+        $this->password) = unserialize($serialized);
     }
 }

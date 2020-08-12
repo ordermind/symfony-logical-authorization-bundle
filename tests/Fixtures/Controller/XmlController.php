@@ -7,7 +7,6 @@ namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class XmlController extends AbstractController
 {
@@ -15,10 +14,12 @@ class XmlController extends AbstractController
     {
         return new Response('');
     }
+
     public function routeXmlAllowedAction(Request $request)
     {
         return new Response('');
     }
+
     public function routeXmlDeniedAction(Request $request)
     {
         return new Response('');

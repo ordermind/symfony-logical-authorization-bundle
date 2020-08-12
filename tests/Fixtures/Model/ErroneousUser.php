@@ -4,28 +4,22 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface as LogicalAuthorizationUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface, \Serializable
 {
     private $id;
 
-
     private $username;
-
 
     private $password;
 
-
     private $oldPassword;
-
 
     private $roles;
 
-
     private $email;
-
 
     private $bypassAccess;
 
@@ -44,9 +38,8 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         $this->setBypassAccess($bypassAccess);
     }
 
-
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -56,7 +49,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param string $username
      *
@@ -70,7 +63,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Get username
+     * Get username.
      *
      * @return string
      */
@@ -80,7 +73,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
      *
@@ -94,7 +87,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -104,7 +97,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Set old password
+     * Set old password.
      *
      * @param string $oldPassword
      *
@@ -119,7 +112,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Get old password
+     * Get old password.
      *
      * @return string
      */
@@ -129,7 +122,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Set roles
+     * Set roles.
      *
      * @return array
      */
@@ -167,7 +160,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
      *
@@ -181,7 +174,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -191,7 +184,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Set bypassAccess
+     * Set bypassAccess.
      *
      * @param bool $bypassAccess
      *
@@ -205,7 +198,7 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
     }
 
     /**
-     * Get bypassAccess
+     * Get bypassAccess.
      *
      * @return bool
      */
@@ -225,11 +218,11 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
 
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->username,
             $this->password,
-        ));
+        ]);
     }
 
     public function unserialize($serialized)
@@ -237,7 +230,6 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         list(
         $this->id,
         $this->username,
-        $this->password,
-        ) = unserialize($serialized);
+        $this->password) = unserialize($serialized);
     }
 }
