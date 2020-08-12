@@ -222,18 +222,18 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, \Ser
     public function serialize()
     {
         return serialize(array(
-      $this->id,
-      $this->username,
-      $this->password,
-    ));
+        $this->id,
+        $this->username,
+        $this->password,
+        ));
     }
 
     public function unserialize($serialized)
     {
         list(
-      $this->id,
-      $this->username,
-      $this->password,
-    ) = unserialize($serialized);
+        $this->id,
+        $this->username,
+        $this->password,
+        ) = unserialize($serialized);
     }
 }

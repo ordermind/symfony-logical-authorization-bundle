@@ -271,7 +271,8 @@ class Collector extends DataCollector implements CollectorInterface
      *
      * @return array
      */
-    protected function getPermissionChecksRecursive($permissions, array $context, array $typeKeys, string $type = null): array {
+    protected function getPermissionChecksRecursive($permissions, array $context, array $typeKeys, string $type = null): array
+    {
         if (!is_array($permissions)) {
             $resolvePermissions = $permissions;
             if ($type) {

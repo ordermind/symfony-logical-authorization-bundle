@@ -120,9 +120,8 @@ class TestModelRoleAuthor implements ModelInterface
      *
      * @return \Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface
      */
-    public function getAuthor(): ?UserInterface {
+    public function getAuthor(): ?UserInterface
+    {
         return $this->author;
     }
-
 }
-

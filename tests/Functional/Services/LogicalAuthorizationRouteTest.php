@@ -43,9 +43,9 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['HTTP_HOST' => 'test.com']);
         $headers = [
-      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
-    ];
+        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        ];
         $this->client->request('GET', '/test/route-host', [], [], $headers);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
@@ -55,9 +55,9 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['HTTP_HOST' => 'test.se']);
         $headers = [
-      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
-    ];
+        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        ];
         $this->client->request('GET', '/test/route-host', [], [], $headers);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
@@ -88,9 +88,9 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['REMOTE_ADDR' => '127.0.0.1']);
         $headers = [
-      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
-    ];
+        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        ];
         $this->client->request('GET', '/test/route-ip', [], [], $headers);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
@@ -100,9 +100,9 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['REMOTE_ADDR' => '127.0.0.55']);
         $headers = [
-      'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-      'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
-    ];
+        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
+        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        ];
         $this->client->request('GET', '/test/route-ip', [], [], $headers);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
