@@ -8,35 +8,35 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 {
     public function testRouteRoleAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-role', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-role', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testRouteRoleMultipleAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-role-multiple', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-role-multiple', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testRouteRoleDisallow()
     {
-        $this->sendRequestAs('GET', '/test/route-role', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/route-role', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testRouteBypassActionAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-role', [], static::$superadmin_user);
+        $this->sendRequestAs('GET', '/test/route-role', [], static::$userSuperadmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testRouteBypassActionDisallow()
     {
-        $this->sendRequestAs('GET', '/test/route-no-bypass', [], static::$superadmin_user);
+        $this->sendRequestAs('GET', '/test/route-no-bypass', [], static::$userSuperadmin);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -45,8 +45,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['HTTP_HOST' => 'test.com']);
         $headers = [
-        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-host', [], [], $headers);
         $response = $this->client->getResponse();
@@ -57,8 +57,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['HTTP_HOST' => 'test.se']);
         $headers = [
-        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-host', [], [], $headers);
         $response = $this->client->getResponse();
@@ -67,21 +67,21 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testRouteMethodAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-method', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-method', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testRouteMethodLowercaseAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-method-lowercase', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-method-lowercase', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testRouteMethodDisallow()
     {
-        $this->sendRequestAs('PUSH', '/test/route-method', [], static::$authenticated_user);
+        $this->sendRequestAs('PUSH', '/test/route-method', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -90,8 +90,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['REMOTE_ADDR' => '127.0.0.1']);
         $headers = [
-        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-ip', [], [], $headers);
         $response = $this->client->getResponse();
@@ -102,8 +102,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['REMOTE_ADDR' => '127.0.0.55']);
         $headers = [
-        'PHP_AUTH_USER' => static::$authenticated_user->getUsername(),
-        'PHP_AUTH_PW'   => $this->user_credentials[static::$authenticated_user->getUsername()],
+        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-ip', [], [], $headers);
         $response = $this->client->getResponse();
@@ -112,7 +112,7 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testRouteHasAccountAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-has-account', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/route-has-account', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -126,42 +126,42 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testMultipleRoute1Allow()
     {
-        $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testMultipleRoute2Allow()
     {
-        $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testMultipleRoute1Disallow()
     {
-        $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/multiple-route-1', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testMultipleRoute2Disallow()
     {
-        $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/multiple-route-2', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testYmlRouteAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-yml', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-yml', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testYmlRouteDisallow()
     {
-        $this->sendRequestAs('GET', '/test/route-yml', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/route-yml', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -175,21 +175,21 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testYmlRouteBoolDisallow()
     {
-        $this->sendRequestAs('GET', '/test/route-yml-denied', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-yml-denied', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testXmlRouteAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-xml', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-xml', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testXmlRouteDisallow()
     {
-        $this->sendRequestAs('GET', '/test/route-xml', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/route-xml', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -203,7 +203,7 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testXmlRouteBoolDisallow()
     {
-        $this->sendRequestAs('GET', '/test/route-xml-denied', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-xml-denied', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -217,28 +217,28 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testRouteBoolDeny()
     {
-        $this->sendRequestAs('GET', '/test/route-denied', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-denied', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testRouteComplexAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-complex', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/route-complex', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testRouteComplexDeny()
     {
-        $this->sendRequestAs('GET', '/test/route-complex', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/route-complex', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testRoutePatternDenyAll()
     {
-        $this->sendRequestAs('GET', '/test/route-forbidden', [], static::$superadmin_user);
+        $this->sendRequestAs('GET', '/test/route-forbidden', [], static::$userSuperadmin);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -252,7 +252,7 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 
     public function testRoutePatternOverriddenDeny()
     {
-        $this->sendRequestAs('GET', '/test/pattern-forbidden', [], static::$superadmin_user);
+        $this->sendRequestAs('GET', '/test/pattern-forbidden', [], static::$userSuperadmin);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -262,35 +262,35 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
         $this->sendRequestAs('GET', '/test/count-available-routes', []);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertGreaterThan(3, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertGreaterThan(3, $routeCount);
     }
 
     public function testAvailableRoutesAuthenticated()
     {
-        $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertGreaterThan(4, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertGreaterThan(4, $routeCount);
     }
 
     public function testAvailableRoutesAdmin()
     {
-        $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertGreaterThan(5, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertGreaterThan(5, $routeCount);
     }
 
     public function testAvailableRoutesSuperadmin()
     {
-        $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$superadmin_user);
+        $this->sendRequestAs('GET', '/test/count-available-routes', [], static::$userSuperadmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertGreaterThan(5, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertGreaterThan(5, $routeCount);
     }
 
     public function testAvailableRoutePatternsAnonymous()
@@ -298,34 +298,34 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
         $this->sendRequestAs('GET', '/test/count-available-route-patterns', []);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertEquals(1, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertEquals(1, $routeCount);
     }
 
     public function testAvailableRoutePatternsAuthenticated()
     {
-        $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertEquals(1, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertEquals(1, $routeCount);
     }
 
     public function testAvailableRoutePatternsAdmin()
     {
-        $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$admin_user);
+        $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$userAdmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertEquals(1, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertEquals(1, $routeCount);
     }
 
     public function testAvailableRoutePatternsSuperadmin()
     {
-        $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$superadmin_user);
+        $this->sendRequestAs('GET', '/test/count-available-route-patterns', [], static::$userSuperadmin);
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $routes_count = $response->getContent();
-        $this->assertEquals(1, $routes_count);
+        $routeCount = $response->getContent();
+        $this->assertEquals(1, $routeCount);
     }
 }

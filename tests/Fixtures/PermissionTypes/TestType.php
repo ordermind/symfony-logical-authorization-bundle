@@ -13,6 +13,9 @@ class TestType implements PermissionTypeInterface
         return 'test';
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function checkPermission($value, $context)
     {
         return $value === 'yes' ? true : false;

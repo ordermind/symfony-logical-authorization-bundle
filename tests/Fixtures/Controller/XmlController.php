@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class XmlController extends AbstractController
 {
-    public function routeXmlAction(Request $request)
+    public function routeXmlAction()
     {
         return new Response('');
     }
 
-    public function routeXmlAllowedAction(Request $request)
+    public function routeXmlAllowedAction()
     {
         return new Response('');
     }
 
-    public function routeXmlDeniedAction(Request $request)
+    public function routeXmlDeniedAction()
     {
         return new Response('');
     }

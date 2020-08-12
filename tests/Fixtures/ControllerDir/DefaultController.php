@@ -8,7 +8,6 @@ use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends AbstractController
@@ -22,7 +21,7 @@ class DefaultController extends AbstractController
      *   "flag": "user_has_account"
      * })
      */
-    public function routeHasAccountAction(Request $request)
+    public function routeHasAccountAction()
     {
         return new Response('');
     }
@@ -35,7 +34,7 @@ class DefaultController extends AbstractController
      *  "role": "ROLE_ADMIN"
      * })
      */
-    public function multipleRouteAction(Request $request)
+    public function multipleRouteAction()
     {
         return new Response('');
     }
@@ -43,7 +42,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/pattern-allowed", name="pattern_allowed")
      */
-    public function patternAllowedAction(Request $request)
+    public function patternAllowedAction()
     {
         return new Response('');
     }
@@ -56,7 +55,7 @@ class DefaultController extends AbstractController
      *   FALSE
      * })
      */
-    public function patternForbiddenAction(Request $request)
+    public function patternForbiddenAction()
     {
         return new Response('');
     }
@@ -68,7 +67,7 @@ class DefaultController extends AbstractController
      *   TRUE
      * })
      */
-    public function routeAllowedAction(Request $request)
+    public function routeAllowedAction()
     {
         return new Response('');
     }
@@ -80,7 +79,7 @@ class DefaultController extends AbstractController
      *   FALSE
      * })
      */
-    public function routeDeniedAction(Request $request)
+    public function routeDeniedAction()
     {
         return new Response('');
     }
@@ -88,7 +87,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/route-forbidden", name="route_forbidden")
      */
-    public function routeForbiddenAction(Request $request)
+    public function routeForbiddenAction()
     {
         return new Response('');
     }
@@ -98,7 +97,7 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function countAvailableRoutesAction(Request $request)
+    public function countAvailableRoutesAction()
     {
         $laRoute = $this->get('test.logauth.service.logauth_route');
         $result = $laRoute->getAvailableRoutes();
@@ -114,7 +113,7 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function countAvailableRoutePatternsAction(Request $request)
+    public function countAvailableRoutePatternsAction()
     {
         $laRoute = $this->get('test.logauth.service.logauth_route');
         $result = $laRoute->getAvailableRoutes();
@@ -130,7 +129,7 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function getCurrentUsernameAction(Request $request)
+    public function getCurrentUsernameAction()
     {
         $user = $this->get('test.logauth.service.helper')->getCurrentUser();
         if (is_null($user)) {
@@ -148,7 +147,7 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function countForbiddenEntitiesLazyLoadAction(Request $request)
+    public function countForbiddenEntitiesLazyLoadAction()
     {
         $operations = $this->get('test_model_operations');
         $operations->setRepositoryDecorator($this->get('repository_decorator.forbidden_entity'));

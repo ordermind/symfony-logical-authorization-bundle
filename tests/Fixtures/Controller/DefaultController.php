@@ -8,7 +8,6 @@ use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends AbstractController
@@ -22,7 +21,7 @@ class DefaultController extends AbstractController
      *   "role": "ROLE_ADMIN"
      * })
      */
-    public function routeRoleAction(Request $request)
+    public function routeRoleAction()
     {
         return new Response('');
     }
@@ -36,7 +35,7 @@ class DefaultController extends AbstractController
      *   "role": {"ROLE_SALES", "ROLE_ADMIN"}
      * })
      */
-    public function routeRoleMultipleAction(Request $request)
+    public function routeRoleMultipleAction()
     {
         return new Response('');
     }
@@ -51,7 +50,7 @@ class DefaultController extends AbstractController
      *   FALSE
      * })
      */
-    public function routeNoBypassAction(Request $request)
+    public function routeNoBypassAction()
     {
         return new Response('');
     }
@@ -65,7 +64,7 @@ class DefaultController extends AbstractController
      *   "host": "test.com"
      * })
      */
-    public function routeHostAction(Request $request)
+    public function routeHostAction()
     {
         return new Response('');
     }
@@ -77,7 +76,7 @@ class DefaultController extends AbstractController
      *   "method": "GET"
      * })
      */
-    public function routeMethodAction(Request $request)
+    public function routeMethodAction()
     {
         return new Response('');
     }
@@ -89,7 +88,7 @@ class DefaultController extends AbstractController
      *   "method": "get"
      * })
      */
-    public function routeMethodLowercaseAction(Request $request)
+    public function routeMethodLowercaseAction()
     {
         return new Response('');
     }
@@ -103,7 +102,7 @@ class DefaultController extends AbstractController
      *   "ip": "127.0.0.1"
      * })
      */
-    public function routeIpAction(Request $request)
+    public function routeIpAction()
     {
         return new Response('');
     }
@@ -120,7 +119,7 @@ class DefaultController extends AbstractController
      *   }
      * })
      */
-    public function routeComplexAction(Request $request)
+    public function routeComplexAction()
     {
         return new Response('');
     }

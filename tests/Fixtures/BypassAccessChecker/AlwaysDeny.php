@@ -8,6 +8,9 @@ use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 
 class AlwaysDeny implements BypassAccessCheckerInterface
 {
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function checkBypassAccess($context)
     {
         return false;

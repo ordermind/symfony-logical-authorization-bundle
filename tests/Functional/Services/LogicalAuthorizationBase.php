@@ -11,17 +11,17 @@ use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 abstract class LogicalAuthorizationBase extends WebTestCase
 {
-    protected static $superadmin_user;
-    protected static $admin_user;
-    protected static $authenticated_user;
-    protected $user_credentials = [
+    protected static $userSuperadmin;
+    protected static $userAdmin;
+    protected static $userAuthenticated;
+    protected $userCredentials = [
         'authenticated_user' => 'userpass',
         'admin_user'         => 'adminpass',
         'superadmin_user'    => 'superadminpass',
     ];
-    protected $load_services = [];
+    protected $loadServices = [];
     protected $client;
-    protected $la;
+    protected $logicalAuthorization;
     protected $helper;
     protected $twig;
 
@@ -44,7 +44,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
         // $this->client->catchExceptions(false);
         $container = static::$kernel->getContainer();
 
-        $this->la = $container->get('test.logauth.service.logauth');
+        $this->logicalAuthorization = $container->get('test.logauth.service.logauth');
         $this->lpProxy = $container->get('test.logauth.service.logical_permissions_proxy');
         $this->laModel = $container->get('test.logauth.service.logauth_model');
         $this->laRoute = $container->get('test.logauth.service.logauth_route');
@@ -72,29 +72,29 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     protected function addUsers()
     {
         //Create new normal user
-        if (!static::$authenticated_user) {
-            static::$authenticated_user = new TestUser();
-            static::$authenticated_user->setUsername('authenticated_user');
-            static::$authenticated_user->setPassword($this->user_credentials['authenticated_user']);
-            static::$authenticated_user->setEmail('user@email.com');
+        if (!static::$userAuthenticated) {
+            static::$userAuthenticated = new TestUser();
+            static::$userAuthenticated->setUsername('authenticated_user');
+            static::$userAuthenticated->setPassword($this->userCredentials['authenticated_user']);
+            static::$userAuthenticated->setEmail('user@email.com');
         }
 
         //Create new admin user
-        if (!static::$admin_user) {
-            static::$admin_user = new TestUser();
-            static::$admin_user->setUsername('admin_user');
-            static::$admin_user->setPassword($this->user_credentials['admin_user']);
-            static::$admin_user->setEmail('admin@email.com');
-            static::$admin_user->setRoles(['ROLE_ADMIN']);
+        if (!static::$userAdmin) {
+            static::$userAdmin = new TestUser();
+            static::$userAdmin->setUsername('admin_user');
+            static::$userAdmin->setPassword($this->userCredentials['admin_user']);
+            static::$userAdmin->setEmail('admin@email.com');
+            static::$userAdmin->setRoles(['ROLE_ADMIN']);
         }
 
         //Create superadmin user
-        if (!static::$superadmin_user) {
-            static::$superadmin_user = new TestUser();
-            static::$superadmin_user->setUsername('superadmin_user');
-            static::$superadmin_user->setPassword($this->user_credentials['superadmin_user']);
-            static::$superadmin_user->setEmail('superadmin@email.com');
-            static::$superadmin_user->setBypassAccess(true);
+        if (!static::$userSuperadmin) {
+            static::$userSuperadmin = new TestUser();
+            static::$userSuperadmin->setUsername('superadmin_user');
+            static::$userSuperadmin->setPassword($this->userCredentials['superadmin_user']);
+            static::$userSuperadmin->setEmail('superadmin@email.com');
+            static::$userSuperadmin->setBypassAccess(true);
         }
     }
 
@@ -104,7 +104,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
         if ($user) {
             $headers = [
                 'PHP_AUTH_USER' => $user->getUsername(),
-                'PHP_AUTH_PW'   => $this->user_credentials[$user->getUsername()],
+                'PHP_AUTH_PW'   => $this->userCredentials[$user->getUsername()],
             ];
         }
         $this->client->request($method, $slug, $params, [], $headers);

@@ -13,46 +13,46 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
     public function testModelRoleAllow()
     {
         $model = new TestModelRoleAuthor();
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$admin_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'read', static::$admin_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'update', static::$admin_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$admin_user));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$userAdmin));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'read', static::$userAdmin));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'update', static::$userAdmin));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userAdmin));
     }
 
     public function testModelRoleDisallow()
     {
         $model = new TestModelRoleAuthor();
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'create', static::$authenticated_user));
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'read', static::$authenticated_user));
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'update', static::$authenticated_user));
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', static::$authenticated_user));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'create', static::$userAuthenticated));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'read', static::$userAuthenticated));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'update', static::$userAuthenticated));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userAuthenticated));
     }
 
     public function testModelFlagBypassAccessAllow()
     {
         $model = new TestModelRoleAuthor();
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$superadmin_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'read', static::$superadmin_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'update', static::$superadmin_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$superadmin_user));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$userSuperadmin));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'read', static::$userSuperadmin));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'update', static::$userSuperadmin));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userSuperadmin));
     }
 
     public function testModelFlagBypassAccessDisallow()
     {
         $model = new TestModelNoBypass();
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'create', static::$superadmin_user));
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'read', static::$superadmin_user));
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'update', static::$superadmin_user));
-        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', static::$superadmin_user));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'create', static::$userSuperadmin));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'read', static::$userSuperadmin));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'update', static::$userSuperadmin));
+        $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userSuperadmin));
     }
 
     public function testModelFlagHasAccountAllow()
     {
         $model = new TestModelHasAccountNoInterface();
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$authenticated_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'read', static::$authenticated_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'update', static::$authenticated_user));
-        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$authenticated_user));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$userAuthenticated));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'read', static::$userAuthenticated));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'update', static::$userAuthenticated));
+        $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userAuthenticated));
     }
 
     public function testModelFlagHasAccountDisallow()
@@ -66,56 +66,56 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
 
     public function testModelFlagIsAuthorAllow()
     {
-        static::$authenticated_user->setId(1);
+        static::$userAuthenticated->setId(1);
         $model = new TestModelRoleAuthor();
-        $model->setAuthor(static::$authenticated_user);
-        $this->assertTrue($this->laModel->checkModelAccess($model, 'read', static::$authenticated_user));
-        $this->assertTrue($this->laModel->checkModelAccess($model, 'update', static::$authenticated_user));
-        $this->assertTrue($this->laModel->checkModelAccess($model, 'delete', static::$authenticated_user));
+        $model->setAuthor(static::$userAuthenticated);
+        $this->assertTrue($this->laModel->checkModelAccess($model, 'read', static::$userAuthenticated));
+        $this->assertTrue($this->laModel->checkModelAccess($model, 'update', static::$userAuthenticated));
+        $this->assertTrue($this->laModel->checkModelAccess($model, 'delete', static::$userAuthenticated));
     }
 
     public function testModelFlagIsAuthorDisallow()
     {
-        static::$authenticated_user->setId(1);
-        static::$admin_user->setId(2);
+        static::$userAuthenticated->setId(1);
+        static::$userAdmin->setId(2);
         $model = new TestModelRoleAuthor();
-        $model->setAuthor(static::$admin_user);
-        $this->assertFalse($this->laModel->checkModelAccess($model, 'read', static::$authenticated_user));
-        $this->assertFalse($this->laModel->checkModelAccess($model, 'update', static::$authenticated_user));
-        $this->assertFalse($this->laModel->checkModelAccess($model, 'delete', static::$authenticated_user));
+        $model->setAuthor(static::$userAdmin);
+        $this->assertFalse($this->laModel->checkModelAccess($model, 'read', static::$userAuthenticated));
+        $this->assertFalse($this->laModel->checkModelAccess($model, 'update', static::$userAuthenticated));
+        $this->assertFalse($this->laModel->checkModelAccess($model, 'delete', static::$userAuthenticated));
     }
 
     public function testUserFlagIsAuthor()
     {
         $this->assertTrue(
-            $this->laModel->checkModelAccess(static::$authenticated_user, 'read', static::$authenticated_user)
+            $this->laModel->checkModelAccess(static::$userAuthenticated, 'read', static::$userAuthenticated)
         );
         $this->assertTrue(
-            $this->laModel->checkModelAccess(static::$authenticated_user, 'update', static::$authenticated_user)
+            $this->laModel->checkModelAccess(static::$userAuthenticated, 'update', static::$userAuthenticated)
         );
-        static::$authenticated_user->setBypassAccess(true);
+        static::$userAuthenticated->setBypassAccess(true);
         $this->assertFalse(
-            $this->laModel->checkModelAccess(static::$authenticated_user, 'delete', static::$authenticated_user)
+            $this->laModel->checkModelAccess(static::$userAuthenticated, 'delete', static::$userAuthenticated)
         );
-        $this->assertTrue($this->laModel->checkModelAccess(static::$authenticated_user, 'delete', static::$admin_user));
-        static::$authenticated_user->setBypassAccess(false);
+        $this->assertTrue($this->laModel->checkModelAccess(static::$userAuthenticated, 'delete', static::$userAdmin));
+        static::$userAuthenticated->setBypassAccess(false);
     }
 
     public function testFieldRoleAllow()
     {
         $model = new TestModelRoleAuthor();
-        $this->assertTrue($this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$admin_user));
-        $this->assertTrue($this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$admin_user));
+        $this->assertTrue($this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$userAdmin));
+        $this->assertTrue($this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$userAdmin));
     }
 
     public function testFieldRoleDisallow()
     {
         $model = new TestModelRoleAuthor();
         $this->assertFalse(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$authenticated_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$userAuthenticated)
         );
         $this->assertFalse(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$authenticated_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$userAuthenticated)
         );
     }
 
@@ -123,10 +123,10 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
     {
         $model = new TestModelRoleAuthor();
         $this->assertTrue(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$superadmin_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$userSuperadmin)
         );
         $this->assertTrue(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$superadmin_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$userSuperadmin)
         );
     }
 
@@ -134,10 +134,10 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
     {
         $model = new TestModelNoBypass();
         $this->assertFalse(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$superadmin_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$userSuperadmin)
         );
         $this->assertFalse(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$superadmin_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$userSuperadmin)
         );
     }
 
@@ -145,10 +145,10 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
     {
         $model = new TestModelHasAccountNoInterface();
         $this->assertTrue(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$authenticated_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', static::$userAuthenticated)
         );
         $this->assertTrue(
-            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$authenticated_user)
+            $this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', static::$userAuthenticated)
         );
     }
 
@@ -161,20 +161,20 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
 
     public function testFieldFlagIsAuthorAllow()
     {
-        static::$authenticated_user->setId(1);
+        static::$userAuthenticated->setId(1);
         $model = new TestModelRoleAuthor();
-        $model->setAuthor(static::$authenticated_user);
-        $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'set', static::$authenticated_user));
-        $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', static::$authenticated_user));
+        $model->setAuthor(static::$userAuthenticated);
+        $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'set', static::$userAuthenticated));
+        $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', static::$userAuthenticated));
     }
 
     public function testFieldFlagIsAuthorDisallow()
     {
-        static::$authenticated_user->setId(1);
-        static::$admin_user->setId(2);
+        static::$userAuthenticated->setId(1);
+        static::$userAdmin->setId(2);
         $model = new TestModelRoleAuthor();
-        $model->setAuthor(static::$admin_user);
-        $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'set', static::$authenticated_user));
-        $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'get', static::$authenticated_user));
+        $model->setAuthor(static::$userAdmin);
+        $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'set', static::$userAuthenticated));
+        $this->assertFalse($this->laModel->checkFieldAccess($model, 'field1', 'get', static::$userAuthenticated));
     }
 }

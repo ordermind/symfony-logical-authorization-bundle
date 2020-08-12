@@ -457,16 +457,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
-        $ip = new Ip($requestStack);
-        $ip->checkPermission(1, []);
+        $ipPermission = new Ip($requestStack);
+        $ipPermission->checkPermission(1, []);
     }
 
     public function testIpEmptyIp()
     {
         $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
-        $ip = new Ip($requestStack);
-        $ip->checkPermission('', []);
+        $ipPermission = new Ip($requestStack);
+        $ipPermission->checkPermission('', []);
     }
 
     public function testIpDisallow()
@@ -474,8 +474,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $ip = new Ip($requestStack);
-        $this->assertFalse($ip->checkPermission('127.0.0.1', []));
+        $ipPermission = new Ip($requestStack);
+        $this->assertFalse($ipPermission->checkPermission('127.0.0.1', []));
     }
 
     public function testIpAllow()
@@ -483,17 +483,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $ip = new Ip($requestStack);
-        $this->assertTrue($ip->checkPermission('127.0.0.55', []));
+        $ipPermission = new Ip($requestStack);
+        $this->assertTrue($ipPermission->checkPermission('127.0.0.55', []));
     }
 
     // ------------ Services -------------
 
     public function testHelperCurrentUser()
     {
-        $this->sendRequestAs('GET', '/test/get-current-username', [], static::$authenticated_user);
+        $this->sendRequestAs('GET', '/test/get-current-username', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
-        $this->assertEquals(static::$authenticated_user->getUsername(), $response->getContent());
+        $this->assertEquals(static::$userAuthenticated->getUsername(), $response->getContent());
     }
 
     public function testHelperCurrentUserAnonymous()
@@ -507,14 +507,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(LogicalAuthorizationException::class);
         $this->expectExceptionMessageMatches('/service tag to register a permission type/');
-        $this->la->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
+        $this->logicalAuthorization->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
     }
 
     public function testCheckAccessOtherExceptions()
     {
         $this->expectException(LogicalAuthorizationException::class);
         $this->expectExceptionMessageMatches('/^An exception was caught while checking access: /');
-        $this->la->checkAccess(['test' => 'hej'], []);
+        $this->logicalAuthorization->checkAccess(['test' => 'hej'], []);
     }
 
     public function testCheckAccessDisallow()
@@ -522,8 +522,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $lpProxy = new LogicalPermissionsProxy();
         $type = new TestType();
         $lpProxy->addType($type);
-        $la = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
-        $this->assertFalse($la->checkAccess(['test' => 'no'], []));
+        $logicalAuthorization = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
+        $this->assertFalse($logicalAuthorization->checkAccess(['test' => 'no'], []));
     }
 
     public function testCheckAccessAllow()
@@ -531,28 +531,28 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $lpProxy = new LogicalPermissionsProxy();
         $type = new TestType();
         $lpProxy->addType($type);
-        $la = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
-        $this->assertTrue($la->checkAccess(['test' => 'yes'], []));
+        $logicalAuthorization = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
+        $this->assertTrue($logicalAuthorization->checkAccess(['test' => 'yes'], []));
     }
 
     public function testGetAvailableActionsModelClass()
     {
         $model = new TestModelBoolean();
-        $available_actions = $this->laModel->getAvailableActions(
+        $availableActions = $this->laModel->getAvailableActions(
             get_class($model),
             ['create', 'read', 'update', 'delete'],
             ['get', 'set'],
             'anon.'
         );
-        foreach ($available_actions as $key => $value) {
+        foreach ($availableActions as $key => $value) {
             if ($key !== 'fields') {
                 $this->assertSame($key, $value);
                 continue;
             }
-            foreach ($value as $field_name => $field_actions) {
-                $this->assertTrue(property_exists($model, $field_name));
-                foreach ($field_actions as $field_action_key => $field_action_value) {
-                    $this->assertSame($field_action_key, $field_action_value);
+            foreach ($value as $fieldName => $fieldActions) {
+                $this->assertTrue(property_exists($model, $fieldName));
+                foreach ($fieldActions as $fieldActionKey => $fieldActionValue) {
+                    $this->assertSame($fieldActionKey, $fieldActionValue);
                 }
             }
         }
@@ -561,38 +561,38 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testGetAvailableActionsModelObject()
     {
         $model = new TestModelBoolean();
-        $available_actions_model = $this->laModel->getAvailableActions(
+        $modelActions = $this->laModel->getAvailableActions(
             $model,
             ['create', 'read', 'update', 'delete'],
             ['get', 'set'],
             'anon.'
         );
-        $available_actions_class = $this->laModel->getAvailableActions(
+        $classActions = $this->laModel->getAvailableActions(
             get_class($model),
             ['create', 'read', 'update', 'delete'],
             ['get', 'set'],
             'anon.'
         );
-        $this->assertSame($available_actions_model, $available_actions_class);
+        $this->assertSame($modelActions, $classActions);
     }
 
     public function testGetAvailableActionsModelDecorator()
     {
         $model = new TestModelBoolean();
         $modelDecorator = new ModelDecorator($model);
-        $available_actions_model_decorator = $this->laModel->getAvailableActions(
+        $decoratorActions = $this->laModel->getAvailableActions(
             $modelDecorator,
             ['create', 'read', 'update', 'delete'],
             ['get', 'set'],
             'anon.'
         );
-        $available_actions_class = $this->laModel->getAvailableActions(
+        $classActions = $this->laModel->getAvailableActions(
             get_class($model),
             ['create', 'read', 'update', 'delete'],
             ['get', 'set'],
             'anon.'
         );
-        $this->assertSame($available_actions_model_decorator, $available_actions_class);
+        $this->assertSame($decoratorActions, $classActions);
     }
 
     public function testCheckModelAccessWrongModelType()
@@ -815,21 +815,21 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testGetAvailableRoutes()
     {
-        $available_routes = $this->laRoute->getAvailableRoutes('anon.');
+        $availableRoutes = $this->laRoute->getAvailableRoutes('anon.');
         $this->assertTrue(
-            isset($available_routes['routes'])
-            && is_array($available_routes['routes'])
-            && !empty($available_routes['routes'])
+            isset($availableRoutes['routes'])
+            && is_array($availableRoutes['routes'])
+            && !empty($availableRoutes['routes'])
         );
-        foreach ($available_routes['routes'] as $key => $value) {
+        foreach ($availableRoutes['routes'] as $key => $value) {
             $this->assertSame($key, $value);
         }
         $this->assertTrue(
-            isset($available_routes['route_patterns'])
-            && is_array($available_routes['route_patterns'])
-            && !empty($available_routes['route_patterns'])
+            isset($availableRoutes['route_patterns'])
+            && is_array($availableRoutes['route_patterns'])
+            && !empty($availableRoutes['route_patterns'])
         );
-        foreach ($available_routes['route_patterns'] as $key => $value) {
+        foreach ($availableRoutes['route_patterns'] as $key => $value) {
             $this->assertSame($key, $value);
         }
     }
@@ -1033,14 +1033,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
 
-        $first_item = array_shift($log);
-        $this->assertSame('route', $first_item['type']);
-        $this->assertSame('route_role', $first_item['item_name']);
-        $this->assertArrayNotHasKey('item', $first_item);
-        $this->assertArrayNotHasKey('action', $first_item);
-        $this->assertSame($user, $first_item['user']);
-        $this->assertSame([], $first_item['permissions']);
-        $this->assertArrayNotHasKey('context', $first_item);
+        $firstItem = array_shift($log);
+        $this->assertSame('route', $firstItem['type']);
+        $this->assertSame('route_role', $firstItem['item_name']);
+        $this->assertArrayNotHasKey('item', $firstItem);
+        $this->assertArrayNotHasKey('action', $firstItem);
+        $this->assertSame($user, $firstItem['user']);
+        $this->assertSame([], $firstItem['permissions']);
+        $this->assertArrayNotHasKey('context', $firstItem);
     }
 
     public function testDebugCollectorModelLogFormat()
@@ -1062,14 +1062,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
 
-        $first_item = array_shift($log);
-        $this->assertSame('model', $first_item['type']);
-        $this->assertSame(get_class($model), $first_item['item_name']);
-        $this->assertSame($model, $first_item['item']);
-        $this->assertSame('read', $first_item['action']);
-        $this->assertSame($user, $first_item['user']);
-        $this->assertSame([], $first_item['permissions']);
-        $this->assertArrayNotHasKey('context', $first_item);
+        $firstItem = array_shift($log);
+        $this->assertSame('model', $firstItem['type']);
+        $this->assertSame(get_class($model), $firstItem['item_name']);
+        $this->assertSame($model, $firstItem['item']);
+        $this->assertSame('read', $firstItem['action']);
+        $this->assertSame($user, $firstItem['user']);
+        $this->assertSame([], $firstItem['permissions']);
+        $this->assertArrayNotHasKey('context', $firstItem);
     }
 
     public function testDebugCollectorFieldLogFormat()
@@ -1091,14 +1091,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
 
-        $first_item = array_shift($log);
-        $this->assertSame('field', $first_item['type']);
-        $this->assertSame(get_class($model) . ':field1', $first_item['item_name']);
-        $this->assertSame($model, $first_item['item']);
-        $this->assertSame('get', $first_item['action']);
-        $this->assertSame($user, $first_item['user']);
-        $this->assertSame([], $first_item['permissions']);
-        $this->assertArrayNotHasKey('context', $first_item);
+        $firstItem = array_shift($log);
+        $this->assertSame('field', $firstItem['type']);
+        $this->assertSame(get_class($model) . ':field1', $firstItem['item_name']);
+        $this->assertSame($model, $firstItem['item']);
+        $this->assertSame('get', $firstItem['action']);
+        $this->assertSame($user, $firstItem['user']);
+        $this->assertSame([], $firstItem['permissions']);
+        $this->assertArrayNotHasKey('context', $firstItem);
     }
 
     public function testDebugCollectorPermissionFormatBoolean()
@@ -1115,14 +1115,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             true,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
-            static::$superadmin_user,
+            static::$userSuperadmin,
             $permissions,
-            ['model' => $model, 'user' => static::$superadmin_user]
+            ['model' => $model, 'user' => static::$userSuperadmin]
         );
         $result = [
             'type'                        => 'field',
             'field'                       => 'field1',
-            'user'                        => static::$superadmin_user,
+            'user'                        => static::$userSuperadmin,
             'permissions'                 => $permissions,
             'action'                      => 'get',
             'item_name'                   => TestModelBoolean::class . ':field1',
@@ -1427,8 +1427,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
-        $first_item = array_shift($log);
-        $this->assertArrayHasKey('message', $first_item);
+        $firstItem = array_shift($log);
+        $this->assertArrayHasKey('message', $firstItem);
     }
 
     public function testDebugCollectorExceptionHandlingNoDebug()
@@ -1450,7 +1450,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
-        $first_item = array_shift($log);
-        $this->assertArrayHasKey('message', $first_item);
+        $firstItem = array_shift($log);
+        $this->assertArrayHasKey('message', $firstItem);
     }
 }

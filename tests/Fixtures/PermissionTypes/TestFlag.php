@@ -20,6 +20,9 @@ class TestFlag implements FlagInterface
         $this->name = $name;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function checkFlag(array $context): bool
     {
         return true;
