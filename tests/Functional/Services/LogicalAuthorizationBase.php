@@ -38,6 +38,7 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+        // $this->client->catchExceptions(false);
         $container = static::$kernel->getContainer();
 
         $this->la = $container->get('test.logauth.service.logauth');

@@ -1,15 +1,15 @@
 test_routes:
-    resource: "@OrdermindLogicalAuthorizationBundle/Tests/Fixtures/Controller/DefaultController.php"
+    resource: "../Fixtures/Controller/DefaultController.php"
     type:     logauth_annotation
     prefix:   /test
 
 test_routes_dir:
-    resource: "@OrdermindLogicalAuthorizationBundle/Tests/Fixtures/ControllerDir/"
+    resource: "../Fixtures/ControllerDir/"
     type:     logauth_annotation
     prefix:   /test
 
 xml_routes:
-    resource: "@OrdermindLogicalAuthorizationBundle/Tests/config/routing.xml"
+    resource: "../config/routing.xml"
     type: logauth_xml
     prefix: /test
 
