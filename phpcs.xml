@@ -18,4 +18,5 @@
     </rule>
 
     <rule ref="PSR2" />
+    <rule ref="Symfony2" />
 </ruleset>
