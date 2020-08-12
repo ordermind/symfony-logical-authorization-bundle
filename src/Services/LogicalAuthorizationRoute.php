@@ -16,7 +16,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     /**
      * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface
      */
-    protected $la;
+    protected $logicalAuthorization;
 
     /**
      * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
@@ -41,20 +41,20 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $logicalAuthorization
      * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
      * @param Symfony\Component\Routing\RouterInterface                                    $router
      * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper
      * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector
      */
     public function __construct(
-        LogicalAuthorizationInterface $la,
+        LogicalAuthorizationInterface $logicalAuthorization,
         PermissionTreeBuilderInterface $treeBuilder,
         RouterInterface $router,
         HelperInterface $helper,
         CollectorInterface $debugCollector = null
     ) {
-        $this->la = $la;
+        $this->logicalAuthorization = $logicalAuthorization;
         $this->treeBuilder = $treeBuilder;
         $this->router = $router;
         $this->helper = $helper;
@@ -90,7 +90,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
         $tree = $this->treeBuilder->getTree();
         if (!empty($tree['route_patterns'])) {
             foreach ($tree['route_patterns'] as $pattern => $permissions) {
-                if (!$this->la->checkAccess($permissions, ['user' => $user])) {
+                if (!$this->logicalAuthorization->checkAccess($permissions, ['user' => $user])) {
                     continue;
                 }
 
@@ -199,7 +199,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 
         $permissions = $this->getRoutePermissions($routeName);
         $context = ['route' => $routeName, 'user' => $user];
-        $access = $this->la->checkAccess($permissions, $context);
+        $access = $this->logicalAuthorization->checkAccess($permissions, $context);
 
         if (!is_null($this->debugCollector)) {
             $this->debugCollector->addPermissionCheck($access, 'route', $routeName, $user, $permissions, $context);

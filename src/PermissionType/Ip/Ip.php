@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Permission type for checking ip address.
+ * Permission type for checking ipaddress.
  */
 class Ip implements PermissionTypeInterface
 {
@@ -39,20 +39,20 @@ class Ip implements PermissionTypeInterface
     /**
      * Checks if the current request comes from an approved ip address.
      *
-     * @param string $ip
+     * @param string $ipAddress
      * @param array  $context
      *
-     * @return bool TRUE if the ip is allowed or FALSE if it is not allowed
+     * @return bool TRUE if the ip address is allowed or FALSE if it is not allowed
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($ip, $context)
+    public function checkPermission($ipAddress, $context)
     {
-        if (!is_string($ip)) {
-            throw new \TypeError('The ip parameter must be a string.');
+        if (!is_string($ipAddress)) {
+            throw new \TypeError('The ipAddress parameter must be a string.');
         }
-        if (!$ip) {
-            throw new \InvalidArgumentException('The ip parameter cannot be empty.');
+        if (!$ipAddress) {
+            throw new \InvalidArgumentException('The ipAddress parameter cannot be empty.');
         }
 
         $currentRequest = $this->requestStack->getCurrentRequest();
@@ -61,6 +61,6 @@ class Ip implements PermissionTypeInterface
             return false;
         }
 
-        return IpUtils::checkIp($currentRequest->getClientIp(), $ip);
+        return IpUtils::checkIp($currentRequest->getClientIp(), $ipAddress);
     }
 }

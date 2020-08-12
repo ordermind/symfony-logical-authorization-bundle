@@ -15,7 +15,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     /**
      * @var Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface
      */
-    protected $la;
+    protected $logicalAuthorization;
 
     /**
      * @var Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface
@@ -35,18 +35,18 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $logicalAuthorization
      * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
      * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper
      * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector
      */
     public function __construct(
-        LogicalAuthorizationInterface $la,
+        LogicalAuthorizationInterface $logicalAuthorization,
         PermissionTreeBuilderInterface $treeBuilder,
         HelperInterface $helper,
         CollectorInterface $debugCollector = null
     ) {
-        $this->la = $la;
+        $this->logicalAuthorization = $logicalAuthorization;
         $this->treeBuilder = $treeBuilder;
         $this->helper = $helper;
         $this->debugCollector = $debugCollector;
@@ -220,7 +220,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         $permissions = $this->getModelPermissions($model);
         if (array_key_exists($action, $permissions)) {
             $context = ['model' => $model, 'user' => $user];
-            $access = $this->la->checkAccess($permissions[$action], $context);
+            $access = $this->logicalAuthorization->checkAccess($permissions[$action], $context);
 
             if (!is_null($this->debugCollector)) {
                 $this->debugCollector->addPermissionCheck(
@@ -421,7 +421,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
             && array_key_exists($action, $permissions['fields'][$fieldName])
         ) {
             $context = ['model' => $model, 'user' => $user];
-            $access = $this->la->checkAccess($permissions['fields'][$fieldName][$action], $context);
+            $access = $this->logicalAuthorization->checkAccess($permissions['fields'][$fieldName][$action], $context);
 
             if (!is_null($this->debugCollector)) {
                 $this->debugCollector->addPermissionCheck(

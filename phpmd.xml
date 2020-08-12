@@ -33,10 +33,16 @@
 
     <rule ref="rulesets/naming.xml">
         <exclude name="ShortMethodName" />
+        <exclude name="ShortVariable" />
     </rule>
     <rule ref="rulesets/naming.xml/ShortMethodName">
         <properties>
             <property name="exceptions" value="up" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortVariable">
+        <properties>
+            <property name="exceptions" value="id" />
         </properties>
     </rule>
 

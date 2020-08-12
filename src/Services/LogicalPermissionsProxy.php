@@ -16,7 +16,7 @@ use Ordermind\LogicalPermissions\PermissionTypeInterface;
 class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
 {
     protected $accessChecker;
-    protected $permissionTypeCollection;
+    protected $permissionTypes;
 
     /**
      * @internal
@@ -24,7 +24,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
     public function __construct()
     {
         $this->accessChecker = new AccessChecker();
-        $this->permissionTypeCollection = $this->accessChecker->getPermissionTypeCollection();
+        $this->permissionTypes = $this->accessChecker->getPermissionTypeCollection();
     }
 
     /**
@@ -33,7 +33,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
     public function addType(PermissionTypeInterface $type)
     {
         try {
-            $this->permissionTypeCollection->add($type);
+            $this->permissionTypes->add($type);
         } catch (PermissionTypeAlreadyExistsException $e) {
             $class = get_class($e);
             $message = $e->getMessage();
@@ -49,7 +49,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function removeType(string $name)
     {
-        $this->permissionTypeCollection->remove($name);
+        $this->permissionTypes->remove($name);
     }
 
     /**
@@ -57,7 +57,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function typeExists(string $name): bool
     {
-        return $this->permissionTypeCollection->has($name);
+        return $this->permissionTypes->has($name);
     }
 
     /**
@@ -65,7 +65,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function getTypes(): array
     {
-        return $this->permissionTypeCollection->toArray();
+        return $this->permissionTypes->toArray();
     }
 
     /**
