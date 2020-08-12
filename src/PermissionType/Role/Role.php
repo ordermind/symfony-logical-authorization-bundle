@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Role;
 
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;

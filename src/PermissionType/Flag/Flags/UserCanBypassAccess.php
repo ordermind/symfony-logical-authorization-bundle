@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
 
 /**
  * Flag for checking if a user can bypass access

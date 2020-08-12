@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Ip;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\IpUtils;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Method;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 

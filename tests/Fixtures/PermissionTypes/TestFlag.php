@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
 
 class TestFlag implements FlagInterface
 {

@@ -107,52 +107,52 @@ services:
     # Permission type handlers
 
     logauth.permission_type.flag:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagManager
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagManager
         tags:
             - {name: logauth.tag.permission_type}
         public: false
 
     logauth.permission_type.flag.user_can_bypass_access:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserCanBypassAccess
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserCanBypassAccess
         tags:
             - {name: logauth.tag.permission_type.flag}
         public: false
 
     logauth.permission_type.flag.user_has_account:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserHasAccount
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserHasAccount
         tags:
             - {name: logauth.tag.permission_type.flag}
         public: false
 
     logauth.permission_type.flag.user_is_author:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Flags\UserIsAuthor
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserIsAuthor
         tags:
             - {name: logauth.tag.permission_type.flag}
         public: false
 
     logauth.permission_type.role:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Role\Role
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Role\Role
         arguments: ['@security.role_hierarchy']
         tags:
             - {name: logauth.tag.permission_type}
         public: false
 
     logauth.permission_type.host:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Host\Host
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Host\Host
         arguments: ['@request_stack']
         tags:
             - {name: logauth.tag.permission_type}
         public: false
 
     logauth.permission_type.method:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Method\Method
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Method\Method
         arguments: ['@request_stack']
         tags:
             - {name: logauth.tag.permission_type}
         public: false
 
     logauth.permission_type.ip:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionTypes\Ip\Ip
+        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Ip\Ip
         arguments: ['@request_stack']
         tags:
             - {name: logauth.tag.permission_type}

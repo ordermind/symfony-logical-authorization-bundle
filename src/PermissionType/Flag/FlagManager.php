@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\Exceptions\FlagNotRegisteredException;
+use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Exceptions\FlagNotRegisteredException;
 
 /**
  * {@inheritdoc}

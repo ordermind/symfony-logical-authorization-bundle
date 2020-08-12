@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
 
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
-use Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
 
 /**
  * Permission type for checking a flag.

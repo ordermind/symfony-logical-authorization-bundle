@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionTypes\Flag;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
 
 /**
  * Flag permission type.
