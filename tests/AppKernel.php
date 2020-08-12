@@ -28,11 +28,11 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return $this->getProjectdir() . '/Tests/cache/' . $this->environment;
+        return $this->getProjectdir() . '/cache/' . $this->environment;
     }
 
     public function getLogDir()
     {
-        return $this->getProjectdir() . '/Tests/logs';
+        return $this->getProjectdir() . '/logs';
     }
 }

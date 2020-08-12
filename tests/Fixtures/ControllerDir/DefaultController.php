@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\ControllerDir;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ControllerDir;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

@@ -1,9 +1,8 @@
 .php_cs.cache
 .phpunit.result.cache
-/app
 /vendor
 /composer*
 !/composer.json
 /*.sh
-/Tests/cache
-/Tests/logs
+/cache
+/logs

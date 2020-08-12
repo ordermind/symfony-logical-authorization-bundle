@@ -1,23 +1,23 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\Controller;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class XmlController extends AbstractController
+class YmlController extends AbstractController
 {
-    public function routeXmlAction(Request $request)
+    public function routeYmlAction(Request $request)
     {
         return new Response('');
     }
-    public function routeXmlAllowedAction(Request $request)
+    public function routeYmlAllowedAction(Request $request)
     {
         return new Response('');
     }
-    public function routeXmlDeniedAction(Request $request)
+    public function routeYmlDeniedAction(Request $request)
     {
         return new Response('');
     }

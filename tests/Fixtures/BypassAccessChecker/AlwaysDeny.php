@@ -1,6 +1,6 @@
 <?php
 
-namespace Ordermind\LogicalAuthorizationBundle\Tests\Fixtures\BypassAccessChecker;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\BypassAccessChecker;
 
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 

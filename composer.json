@@ -15,7 +15,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Ordermind\\LogicalAuthorizationBundle\\": ""
+            "Ordermind\\LogicalAuthorizationBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ordermind\\LogicalAuthorizationBundle\\Test\\": "tests"
         }
     },
     "require": {

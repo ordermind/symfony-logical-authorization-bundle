@@ -8,26 +8,15 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         bootstrap="./Tests/bootstrap.php"
+         bootstrap="./tests/bootstrap.php"
 >
     <php>
-        <server name="KERNEL_DIR" value="./Tests/" />
+        <server name="KERNEL_DIR" value="./tests/" />
         <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
     <testsuites>
         <testsuite name="LogicalAuthorizationBundle Test Suite">
-            <directory>./Tests/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
 </phpunit>
