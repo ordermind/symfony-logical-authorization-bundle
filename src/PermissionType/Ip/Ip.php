@@ -1,15 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Ip;
 
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\IpUtils;
-
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
+use Symfony\Component\HttpFoundation\IpUtils;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Permission type for checking ip address
+ * Permission type for checking ip address.
  */
 class Ip implements PermissionTypeInterface
 {
@@ -21,7 +21,7 @@ class Ip implements PermissionTypeInterface
     /**
      * @internal
      *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -37,10 +37,10 @@ class Ip implements PermissionTypeInterface
     }
 
     /**
-     * Checks if the current request comes from an approved ip address
+     * Checks if the current request comes from an approved ip address.
      *
-     * @param string $ip      The ip to evaluate
-     * @param array  $context The context for evaluating the ip
+     * @param string $ip
+     * @param array  $context
      *
      * @return bool TRUE if the ip is allowed or FALSE if it is not allowed
      */

@@ -1,10 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 
 /**
@@ -25,12 +24,15 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy             The logical permissions proxy to use
-     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                  $helper              LogicalAuthorization helper service
-     * @param Ordermind\LogicalPermissions\BypassAccessCheckerInterface                      $bypassAccessChecker The bypass access checker to use
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
+     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                  $helper
+     * @param Ordermind\LogicalPermissions\BypassAccessCheckerInterface                      $bypassAccessChecker
      */
-    public function __construct(LogicalPermissionsProxyInterface $lpProxy, HelperInterface $helper, BypassAccessCheckerInterface $bypassAccessChecker)
-    {
+    public function __construct(
+        LogicalPermissionsProxyInterface $lpProxy,
+        HelperInterface $helper,
+        BypassAccessCheckerInterface $bypassAccessChecker
+    ) {
         $this->lpProxy = $lpProxy;
         if (!$this->lpProxy->getBypassAccessChecker()) {
             $this->lpProxy->setBypassAccessChecker($bypassAccessChecker);
@@ -48,7 +50,13 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
         } catch (\Exception $e) {
             $class = get_class($e);
             $message = $e->getMessage();
-            $this->helper->handleError("An exception was caught while checking access: \"$message\" at ".$e->getFile()." line ".$e->getLine(), array('exception' => $class, 'permissions' => $permissions, 'context' => $context));
+            $this->helper->handleError(
+                "An exception was caught while checking access: \"$message\" at "
+                . $e->getFile()
+                . ' line '
+                . $e->getLine(),
+                ['exception' => $class, 'permissions' => $permissions, 'context' => $context]
+            );
         }
 
         return false;

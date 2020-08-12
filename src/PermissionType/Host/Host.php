@@ -1,14 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Host;
 
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
-
 /**
- * Permission type for checking host
+ * Permission type for checking host.
  */
 class Host implements PermissionTypeInterface
 {
@@ -17,7 +17,7 @@ class Host implements PermissionTypeInterface
     /**
      * @internal
      *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -33,7 +33,7 @@ class Host implements PermissionTypeInterface
     }
 
     /**
-     * Checks if the current request is sent to an approved host
+     * Checks if the current request is sent to an approved host.
      *
      * @param string $host    The host to evaluate
      * @param array  $context The context for evaluating the host
@@ -55,6 +55,6 @@ class Host implements PermissionTypeInterface
             return false;
         }
 
-        return !!preg_match('{'.$host.'}i', $currentRequest->getHost());
+        return (bool) preg_match('{' . $host . '}i', $currentRequest->getHost());
     }
 }

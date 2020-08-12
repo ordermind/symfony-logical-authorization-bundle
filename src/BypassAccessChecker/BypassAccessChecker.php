@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\BypassAccessChecker;
@@ -7,7 +8,7 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterfa
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 
 /**
- * Default bypass access checker
+ * Default bypass access checker.
  */
 class BypassAccessChecker implements BypassAccessCheckerInterface
 {
@@ -19,7 +20,7 @@ class BypassAccessChecker implements BypassAccessCheckerInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy The logical permissions proxy to use
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
      */
     public function __construct(LogicalPermissionsProxyInterface $lpProxy)
     {

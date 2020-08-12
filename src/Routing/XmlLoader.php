@@ -1,14 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Util\XmlUtils;
-
-use Ordermind\LogicalAuthorizationBundle\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * {@inheritdoc}
@@ -26,8 +25,8 @@ class XmlLoader extends FileLoader
      *
      * @return RouteCollection A RouteCollection instance
      *
-     * @throws \InvalidArgumentException When the file cannot be loaded or when the XML cannot be
-     *                                   parsed because it does not validate against the scheme.
+     * @throws \InvalidArgumentException when the file cannot be loaded or when the XML cannot be
+     *                                   parsed because it does not validate against the scheme
      */
     public function load($file, $type = null): RouteCollection
     {
@@ -82,7 +81,13 @@ class XmlLoader extends FileLoader
                 $this->parseImport($collection, $node, $path, $file);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "route" or "import".', $node->localName, $path));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Unknown tag "%s" used in file "%s". Expected "route" or "import".',
+                        $node->localName,
+                        $path
+                    )
+                );
         }
     }
 
@@ -98,7 +103,9 @@ class XmlLoader extends FileLoader
     protected function parseRoute(RouteCollection $collection, \DOMElement $node, string $path)
     {
         if ('' === ($id = $node->getAttribute('id')) || !$node->hasAttribute('path')) {
-            throw new \InvalidArgumentException(sprintf('The <route> element in file "%s" must have an "id" and a "path" attribute.', $path));
+            throw new \InvalidArgumentException(
+                sprintf('The <route> element in file "%s" must have an "id" and a "path" attribute.', $path)
+            );
         }
 
         $schemes = preg_split('/[\s,\|]++/', $node->getAttribute('schemes'), -1, PREG_SPLIT_NO_EMPTY);
@@ -106,7 +113,17 @@ class XmlLoader extends FileLoader
 
         list($defaults, $requirements, $options, $condition, $permissions) = $this->parseConfigs($node, $path);
 
-        $route = new Route($node->getAttribute('path'), $defaults, $requirements, $options, $node->getAttribute('host'), $schemes, $methods, $condition, $permissions);
+        $route = new Route(
+            $node->getAttribute('path'),
+            $defaults,
+            $requirements,
+            $options,
+            $node->getAttribute('host'),
+            $schemes,
+            $methods,
+            $condition,
+            $permissions
+        );
         $collection->add($id, $route);
     }
 
@@ -123,21 +140,29 @@ class XmlLoader extends FileLoader
     protected function parseImport(RouteCollection $collection, \DOMElement $node, string $path, string $file)
     {
         if ('' === $resource = $node->getAttribute('resource')) {
-            throw new \InvalidArgumentException(sprintf('The <import> element in file "%s" must have a "resource" attribute.', $path));
+            throw new \InvalidArgumentException(
+                sprintf('The <import> element in file "%s" must have a "resource" attribute.', $path)
+            );
         }
 
         $type = $node->getAttribute('type');
         $prefix = $node->getAttribute('prefix');
         $host = $node->hasAttribute('host') ? $node->getAttribute('host') : null;
-        $schemes = $node->hasAttribute('schemes') ? preg_split('/[\s,\|]++/', $node->getAttribute('schemes'), -1, PREG_SPLIT_NO_EMPTY) : null;
-        $methods = $node->hasAttribute('methods') ? preg_split('/[\s,\|]++/', $node->getAttribute('methods'), -1, PREG_SPLIT_NO_EMPTY) : null;
+        $schemes =
+            $node->hasAttribute('schemes')
+            ? preg_split('/[\s,\|]++/', $node->getAttribute('schemes'), -1, PREG_SPLIT_NO_EMPTY)
+            : null;
+        $methods =
+            $node->hasAttribute('methods')
+            ? preg_split('/[\s,\|]++/', $node->getAttribute('methods'), -1, PREG_SPLIT_NO_EMPTY)
+            : null;
 
         list($defaults, $requirements, $options, $condition) = $this->parseConfigs($node, $path);
 
         $this->setCurrentDir(dirname($path));
 
         $subCollection = $this->import($resource, ('' !== $type ? $type : null), false, $file);
-        /* @var $subCollection RouteCollection */
+        // @var $subCollection RouteCollection
         $subCollection->addPrefix($prefix);
         if (null !== $host) {
             $subCollection->setHost($host);
@@ -171,7 +196,7 @@ class XmlLoader extends FileLoader
      */
     protected function loadFile(string $file): \DOMDocument
     {
-        return XmlUtils::loadFile($file, __DIR__.static::SCHEME_PATH);
+        return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
     }
 
     /**
@@ -186,9 +211,9 @@ class XmlLoader extends FileLoader
      */
     private function parseConfigs(\DOMElement $node, string $path): array
     {
-        $defaults = array();
-        $requirements = array();
-        $options = array();
+        $defaults = [];
+        $requirements = [];
+        $options = [];
         $condition = null;
         $permissions = null;
 
@@ -220,11 +245,17 @@ class XmlLoader extends FileLoader
                     $permissions = json_decode(json_encode($simplexml), true);
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "default", "requirement" or "option".', $n->localName, $path));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Unknown tag "%s" used in file "%s". Expected "default", "requirement" or "option".',
+                            $n->localName,
+                            $path
+                        )
+                    );
             }
         }
 
-        return array($defaults, $requirements, $options, $condition, $permissions);
+        return [$defaults, $requirements, $options, $condition, $permissions];
     }
 
     /**
@@ -288,7 +319,7 @@ class XmlLoader extends FileLoader
             case 'string':
                 return trim($node->nodeValue);
             case 'list':
-                $list = array();
+                $list = [];
 
                 foreach ($node->childNodes as $element) {
                     if (!$element instanceof \DOMElement) {
@@ -304,7 +335,7 @@ class XmlLoader extends FileLoader
 
                 return $list;
             case 'map':
-                $map = array();
+                $map = [];
 
                 foreach ($node->childNodes as $element) {
                     if (!$element instanceof \DOMElement) {
@@ -320,7 +351,14 @@ class XmlLoader extends FileLoader
 
                 return $map;
             default:
-                throw new \InvalidArgumentException(sprintf('Unknown tag "%s" used in file "%s". Expected "bool", "int", "float", "string", "list", or "map".', $node->localName, $path));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Unknown tag "%s" used in file "%s". Expected "bool", "int", "float", "string", "list", or '
+                        . '"map".',
+                        $node->localName,
+                        $path
+                    )
+                );
         }
     }
 
@@ -339,6 +377,8 @@ class XmlLoader extends FileLoader
             return false;
         }
 
-        return 'true' === $element->getAttributeNS($namespaceUri, 'nil') || '1' === $element->getAttributeNS($namespaceUri, 'nil');
+        return
+            'true' === $element->getAttributeNS($namespaceUri, 'nil')
+            || '1' === $element->getAttributeNS($namespaceUri, 'nil');
     }
 }

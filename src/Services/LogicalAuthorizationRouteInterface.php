@@ -1,34 +1,50 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 /**
- * Service for checking route access
+ * Service for checking route access.
  */
 interface LogicalAuthorizationRouteInterface
 {
-
-  /**
-   * Gets a map of all available route paths and route patterns for a given user.
-   *
-   * This method is primarily meant to facilitate client-side authorization by providing a map of all the possible routes and patterns that the user is allowed to visit. The map has the structure ['routes' => ['route-path-1' => 'route-path-1', ...], route_patterns => ['^route-pattern-1' => '^route-pattern-1', ...]].
-   *
-   * @param object|string $user (optional) Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
-   *
-   * @return array A map of available routes and patterns.
-   */
+    /**
+     * Gets a map of all available route paths and route patterns for a given user.
+     *
+     * This method is primarily meant to facilitate client-side authorization by providing a map of all the possible
+     * routes and patterns that the user is allowed to visit.
+     *
+     * The map has the following structure:
+     * [
+     *     'routes' => [
+     *         'route-path-1' => 'route-path-1',
+     *          ...,
+     *     ],
+     *     route_patterns => [
+     *         '^route-pattern-1' => '^route-pattern-1',
+     *         ...,
+     *     ],
+     * ]
+     *
+     * @param object|string $user (optional) Either a user object or a string to signify an anonymous user. If no user
+     *                            is supplied, the current user will be used.
+     *
+     * @return array a map of available routes and patterns
+     */
     public function getAvailableRoutes($user = null): array;
 
     /**
      * Checks route access for a given user.
      *
-     * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined for the provided route it will return TRUE.
+     * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined
+     * for the provided route it will return TRUE.
      *
      * @param string        $routeName The name of the route
-     * @param object|string $user      (optional)  Either a user object or a string to signify an anonymous user. If no user is supplied, the current user will be used.
+     * @param object|string $user      (optional)  Either a user object or a string to signify an anonymous user. If no
+     *                                 user is supplied, the current user will be used.
      *
-     * @return bool TRUE if access is granted or FALSE if access is denied.
+     * @return bool TRUE if access is granted or FALSE if access is denied
      */
     public function checkRouteAccess(string $routeName, $user = null): bool;
 }

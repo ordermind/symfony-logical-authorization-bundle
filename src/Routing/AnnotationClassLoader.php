@@ -1,13 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
-use Symfony\Component\Routing\Route as RouteBase;
-use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
-
-use Ordermind\LogicalAuthorizationBundle\Routing\Route;
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
+use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
+use Symfony\Component\Routing\Route as RouteBase;
 
 /**
  * {@inheritdoc}
@@ -30,8 +29,16 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
     /**
      * {@inheritdoc}
      */
-    protected function createRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition): Route
-    {
+    protected function createRoute(
+        $path,
+        $defaults,
+        $requirements,
+        $options,
+        $host,
+        $schemes,
+        $methods,
+        $condition
+    ): Route {
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
     }
 }

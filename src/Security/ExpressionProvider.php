@@ -1,16 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Security;
 
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
-
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
 
 /**
- * Expression Function Provider for integration with access control
+ * Expression Function Provider for integration with access control.
  */
 class ExpressionProvider implements ExpressionFunctionProviderInterface
 {
@@ -19,7 +18,7 @@ class ExpressionProvider implements ExpressionFunctionProviderInterface
     /**
      * @internal
      *
-     * @param \Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface $laRoute LogicalAuthorizationRoute service for checking route access
+     * @param LogicalAuthorizationRouteInterface $laRoute
      */
     public function __construct(LogicalAuthorizationRouteInterface $laRoute)
     {
@@ -35,7 +34,9 @@ class ExpressionProvider implements ExpressionFunctionProviderInterface
             new ExpressionFunction(
                 'logauth_route',
                 function () {
-                    return '$routeName = $request->get(\'_route\'); return $routeName ? $this->get(\'logauth.service.logauth_route\')->checkRouteAccess($routeName) : true;';
+                    return
+                        '$routeName = $request->get(\'_route\'); return $routeName ? '
+                        . '$this->get(\'logauth.service.logauth_route\')->checkRouteAccess($routeName) : true;';
                 },
                 function (array $arguments) {
                     $request = $arguments['request'];

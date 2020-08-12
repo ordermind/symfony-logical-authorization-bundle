@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
 use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Exceptions\FlagNotRegisteredException;
 
 /**
@@ -34,7 +34,10 @@ class FlagManager implements FlagManagerInterface
             throw new \InvalidArgumentException('The name of a flag cannot be empty.');
         }
         if ($this->flagExists($name)) {
-            throw new \InvalidArgumentException("The flag \"$name\" already exists! If you want to change the class that handles a flag, you may do so by overriding the service definition for that flag.");
+            throw new \InvalidArgumentException(
+                "The flag \"$name\" already exists! If you want to change the class that handles a flag, you may do so "
+                . 'by overriding the service definition for that flag.'
+            );
         }
 
         $flags = $this->getFlags();
@@ -51,7 +54,10 @@ class FlagManager implements FlagManagerInterface
             throw new \InvalidArgumentException('The name parameter cannot be empty.');
         }
         if (!$this->flagExists($name)) {
-            throw new FlagNotRegisteredException("The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service tag to register a flag.");
+            throw new FlagNotRegisteredException(
+                "The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service "
+                . 'tag to register a flag.'
+            );
         }
 
         $flags = $this->getFlags();
@@ -76,7 +82,10 @@ class FlagManager implements FlagManagerInterface
             throw new \InvalidArgumentException('The name parameter cannot be empty.');
         }
         if (!$this->flagExists($name)) {
-            throw new FlagNotRegisteredException("The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service tag to register a flag.");
+            throw new FlagNotRegisteredException(
+                "The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service "
+                . 'tag to register a flag.'
+            );
         }
 
         $flags = $this->getFlags();

@@ -1,5 +1,7 @@
 <?php
 
+namespace Ordermind\LogicalAuthorizationBundle\Test;
+
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 

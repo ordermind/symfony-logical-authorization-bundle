@@ -1,17 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Psr\Cache\CacheItemPoolInterface;
-
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
-
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * {@inheritdoc}
@@ -23,23 +18,26 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     protected $cache;
     protected $tree;
 
-  /**
-   * @internal
-   *
-   * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy    LogicalPermissionsProxy service
-   * @param Symfony\Component\EventDispatcher\EventDispatcherInterface                     $dispatcher Event dispatcher service
-   * @param Psr\Cache\CacheItemPoolInterface                                               $cache      Caching service
-   */
-    public function __construct(LogicalPermissionsProxyInterface $lpProxy, EventDispatcherInterface $dispatcher, CacheItemPoolInterface $cache)
-    {
+    /**
+     * @internal
+     *
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
+     * @param Symfony\Component\EventDispatcher\EventDispatcherInterface                     $dispatcher
+     * @param Psr\Cache\CacheItemPoolInterface                                               $cache
+     */
+    public function __construct(
+        LogicalPermissionsProxyInterface $lpProxy,
+        EventDispatcherInterface $dispatcher,
+        CacheItemPoolInterface $cache
+    ) {
         $this->dispatcher = $dispatcher;
         $this->permissionKeys = $lpProxy->getValidPermissionKeys();
         $this->cache = $cache;
     }
 
-  /**
-   * {@inheritdoc}
-   */
+    /**
+     * {@inheritdoc}
+     */
     public function getTree(bool $reset = false, bool $debug = false): array
     {
         if (!$reset && !is_null($this->tree)) {
@@ -72,11 +70,11 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         return $tree;
     }
 
-  /**
-   * @internal
-   *
-   * @return ?array
-   */
+    /**
+     * @internal
+     *
+     * @return ?array
+     */
     protected function loadTreeFromCache(): ?array
     {
         $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
@@ -87,11 +85,11 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         return null;
     }
 
-  /**
-   * @internal
-   *
-   * @param array $tree
-   */
+    /**
+     * @internal
+     *
+     * @param array $tree
+     */
     protected function saveTreeToCache(array $tree)
     {
         $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
@@ -99,11 +97,11 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         $this->cache->save($cachedTree);
     }
 
-  /**
-   * @internal
-   *
-   * @return array
-   */
+    /**
+     * @internal
+     *
+     * @return array
+     */
     protected function loadTreeFromEvent(): array
     {
         $event = new AddPermissionsEvent($this->permissionKeys);

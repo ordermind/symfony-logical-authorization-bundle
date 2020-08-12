@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
@@ -11,48 +12,48 @@ use Symfony\Component\Routing\Route as RouteBase;
 class Route extends RouteBase implements RouteInterface
 {
     /**
-      * @var string
-      */
+     * @var string
+     */
     private $path = '/';
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     private $host = '';
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     private $schemes = [];
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     private $methods = [];
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     private $defaults = [];
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     private $requirements = [];
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     private $options = [];
 
     /**
-      * @var null|CompiledRoute
-      */
+     * @var null|CompiledRoute
+     */
     private $compiled;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     private $condition = '';
 
     /**
@@ -73,8 +74,17 @@ class Route extends RouteBase implements RouteInterface
      * @param string            $condition    (optional)
      * @param array|string|bool $permissions  (optional)
      */
-    public function __construct($path, array $defaults = [], array $requirements = [], array $options = [], $host = '', $schemes = [], $methods = [], $condition = '', $permissions = null)
-    {
+    public function __construct(
+        $path,
+        array $defaults = [],
+        array $requirements = [],
+        array $options = [],
+        $host = '',
+        $schemes = [],
+        $methods = [],
+        $condition = '',
+        $permissions = null
+    ) {
         $this->setPath($path);
         $this->setDefaults($defaults);
         $this->setRequirements($requirements);
@@ -92,16 +102,16 @@ class Route extends RouteBase implements RouteInterface
     public function __serialize(): array
     {
         return [
-            'path' => $this->path,
-            'host' => $this->host,
-            'defaults' => $this->defaults,
+            'path'         => $this->path,
+            'host'         => $this->host,
+            'defaults'     => $this->defaults,
             'requirements' => $this->requirements,
-            'options' => $this->options,
-            'schemes' => $this->schemes,
-            'methods' => $this->methods,
-            'condition' => $this->condition,
-            'compiled' => $this->compiled,
-            'permissions' => $this->permissions,
+            'options'      => $this->options,
+            'schemes'      => $this->schemes,
+            'methods'      => $this->methods,
+            'condition'    => $this->condition,
+            'compiled'     => $this->compiled,
+            'permissions'  => $this->permissions,
         ];
     }
 

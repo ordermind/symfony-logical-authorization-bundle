@@ -1,15 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\VarDumper\Cloner\Data;
-
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface;
 
 /**
  * {@inheritdoc}
@@ -39,8 +39,8 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface   $treeBuilder A tree builder for fetching the full permission tree
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy     A proxy for checking permissions
+     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface   $treeBuilder
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxyInterface $lpProxy
      */
     public function __construct(PermissionTreeBuilderInterface $treeBuilder, LogicalPermissionsProxyInterface $lpProxy)
     {
@@ -66,7 +66,7 @@ class Collector extends DataCollector implements CollectorInterface
         $log = $this->formatLog($this->permissionLog);
         $this->data = [
         'tree' => $this->treeBuilder->getTree(),
-        'log' => $log,
+        'log'  => $log,
         ];
     }
 
@@ -117,11 +117,29 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function addPermissionCheck(bool $access, string $type, $item, $user, $permissions, array $context, string $message = '')
-    {
+    public function addPermissionCheck(
+        bool $access,
+        string $type,
+        $item,
+        $user,
+        $permissions,
+        array $context,
+        string $message = ''
+    ) {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
         array_shift($backtrace);
-        $this->addPermissionLogItem(['access' => $access, 'type' => $type, 'item' => $item, 'user' => $user, 'permissions' => $permissions, 'context' => $context, 'message' => $message, 'backtrace' => $backtrace]);
+        $this->addPermissionLogItem(
+            [
+                'access'      => $access,
+                'type'        => $type,
+                'item'        => $item,
+                'user'        => $user,
+                'permissions' => $permissions,
+                'context'     => $context,
+                'message'     => $message,
+                'backtrace'   => $backtrace,
+            ]
+        );
     }
 
     /**
@@ -167,8 +185,12 @@ class Collector extends DataCollector implements CollectorInterface
 
             $typeKeys = array_keys($this->lpProxy->getTypes());
 
-            $logItem['permission_no_bypass_checks'] = array_reverse($this->getPermissionNoBypassChecks($logItem['permissions'], $logItem['context'], $typeKeys));
-            if (count($logItem['permission_no_bypass_checks']) == 1 && !empty($logItem['permission_no_bypass_checks'][0]['error'])) {
+            $logItem['permission_no_bypass_checks'] = array_reverse(
+                $this->getPermissionNoBypassChecks($logItem['permissions'], $logItem['context'], $typeKeys)
+            );
+            if (count($logItem['permission_no_bypass_checks']) == 1
+                && !empty($logItem['permission_no_bypass_checks'][0]['error'])
+            ) {
                 $logItem['message'] = $logItem['permission_no_bypass_checks'][0]['error'];
             }
 
@@ -177,7 +199,9 @@ class Collector extends DataCollector implements CollectorInterface
             $purePermissions = $logItem['permissions'];
             unset($purePermissions['NO_BYPASS']);
 
-            $logItem['permission_checks'] = array_reverse($this->getPermissionChecks($purePermissions, $logItem['context'], $typeKeys));
+            $logItem['permission_checks'] = array_reverse(
+                $this->getPermissionChecks($purePermissions, $logItem['context'], $typeKeys)
+            );
             if (count($logItem['permission_checks']) == 1 && !empty($logItem['permission_checks'][0]['error'])) {
                 $logItem['message'] = $logItem['permission_checks'][0]['error'];
             }
@@ -237,8 +261,8 @@ class Collector extends DataCollector implements CollectorInterface
         } catch (\Exception $e) {
             return [[
             'permissions' => $permissions,
-            'resolve' => false,
-            'error' => $e->getMessage(),
+            'resolve'     => false,
+            'error'       => $e->getMessage(),
             ], ];
         }
 
@@ -246,12 +270,15 @@ class Collector extends DataCollector implements CollectorInterface
 
         if (is_array($permissions)) {
             foreach ($permissions as $key => $value) {
-                $checks = array_merge($checks, $this->getPermissionChecksRecursive([$key => $value], $context, $typeKeys));
+                $checks = array_merge(
+                    $checks,
+                    $this->getPermissionChecksRecursive([$key => $value], $context, $typeKeys)
+                );
             }
             if (count($permissions) > 1) {
                 $checks[] = [
                 'permissions' => $permissions,
-                'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
+                'resolve'     => $this->lpProxy->checkAccess($permissions, $context, false),
                 ];
             }
         } else {
@@ -271,8 +298,12 @@ class Collector extends DataCollector implements CollectorInterface
      *
      * @return array
      */
-    protected function getPermissionChecksRecursive($permissions, array $context, array $typeKeys, string $type = null): array
-    {
+    protected function getPermissionChecksRecursive(
+        $permissions,
+        array $context,
+        array $typeKeys,
+        string $type = null
+    ): array {
         if (!is_array($permissions)) {
             $resolvePermissions = $permissions;
             if ($type) {
@@ -282,7 +313,7 @@ class Collector extends DataCollector implements CollectorInterface
             return [
                 [
                     'permissions' => $permissions,
-                    'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
+                    'resolve'     => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
                 ],
             ];
         }
@@ -302,7 +333,10 @@ class Collector extends DataCollector implements CollectorInterface
         if (is_array($value)) {
             $checks = [];
             foreach ($value as $key2 => $value2) {
-                $checks = array_merge($checks, $this->getPermissionChecksRecursive([$key2 => $value2], $context, $typeKeys, $type));
+                $checks = array_merge(
+                    $checks,
+                    $this->getPermissionChecksRecursive([$key2 => $value2], $context, $typeKeys, $type)
+                );
             }
             $resolvePermissions = $permissions;
             if ($type && $key !== $type) {
@@ -310,7 +344,7 @@ class Collector extends DataCollector implements CollectorInterface
             }
             $checks[] = [
             'permissions' => $permissions,
-            'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
+            'resolve'     => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
             ];
 
             return $checks;
@@ -319,7 +353,7 @@ class Collector extends DataCollector implements CollectorInterface
         if ($key === $type) {
             return [[
             'permissions' => $permissions,
-            'resolve' => $this->lpProxy->checkAccess($permissions, $context, false),
+            'resolve'     => $this->lpProxy->checkAccess($permissions, $context, false),
             ], ];
         }
 
@@ -330,7 +364,7 @@ class Collector extends DataCollector implements CollectorInterface
         }
         $checks[] = [
         'permissions' => $value,
-        'resolve' => $this->lpProxy->checkAccess($resolveValue, $context, false),
+        'resolve'     => $this->lpProxy->checkAccess($resolveValue, $context, false),
         ];
 
         $resolvePermissions = $permissions;
@@ -339,7 +373,7 @@ class Collector extends DataCollector implements CollectorInterface
         }
         $checks[] = [
         'permissions' => $permissions,
-        'resolve' => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
+        'resolve'     => $this->lpProxy->checkAccess($resolvePermissions, $context, false),
         ];
 
         return $checks;

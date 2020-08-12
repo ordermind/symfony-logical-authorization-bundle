@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
@@ -15,6 +16,9 @@ class AnnotationFileLoader extends AnnotationFileLoaderBase
      */
     public function supports($resource, $type = null): bool
     {
-        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && 'logauth_annotation' === $type;
+        return
+            is_string($resource)
+            && 'php' === pathinfo($resource, PATHINFO_EXTENSION)
+            && 'logauth_annotation' === $type;
     }
 }

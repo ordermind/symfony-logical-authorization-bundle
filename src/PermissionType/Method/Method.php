@@ -1,14 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Method;
 
+use Ordermind\LogicalPermissions\PermissionTypeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
-
 /**
- * Permission type for checking http method
+ * Permission type for checking http method.
  */
 class Method implements PermissionTypeInterface
 {
@@ -17,7 +17,7 @@ class Method implements PermissionTypeInterface
     /**
      * @internal
      *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack service for fetching the current request
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack RequestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -33,7 +33,7 @@ class Method implements PermissionTypeInterface
     }
 
     /**
-     * Checks if the current request uses an allowed method
+     * Checks if the current request uses an allowed method.
      *
      * @param string $method  The method to evaluate
      * @param array  $context The context for evaluating the method

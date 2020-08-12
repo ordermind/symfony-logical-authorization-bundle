@@ -1,15 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Symfony\Component\Routing\RouterInterface;
-
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
-use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * {@inheritdoc}
@@ -44,14 +41,19 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     /**
      * @internal
      *
-     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la             LogicalAuthorization service
-     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder    Permission tree builder service
-     * @param Symfony\Component\Routing\RouterInterface                                    $router         Router service
-     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper         LogicalAuthorization helper service
-     * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector (optional) Collector service
+     * @param Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface  $la
+     * @param Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface $treeBuilder
+     * @param Symfony\Component\Routing\RouterInterface                                    $router
+     * @param Ordermind\LogicalAuthorizationBundle\Services\HelperInterface                $helper
+     * @param Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface        $debugCollector
      */
-    public function __construct(LogicalAuthorizationInterface $la, PermissionTreeBuilderInterface $treeBuilder, RouterInterface $router, HelperInterface $helper, CollectorInterface $debugCollector = null)
-    {
+    public function __construct(
+        LogicalAuthorizationInterface $la,
+        PermissionTreeBuilderInterface $treeBuilder,
+        RouterInterface $router,
+        HelperInterface $helper,
+        CollectorInterface $debugCollector = null
+    ) {
         $this->la = $la;
         $this->treeBuilder = $treeBuilder;
         $this->router = $router;
@@ -116,7 +118,16 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
             $user = $this->helper->getCurrentUser();
             if (is_null($user)) {
                 if (!is_null($this->debugCollector)) {
-                    $this->debugCollector->addPermissionCheck(true, 'route', $routeName, $user, [], [], 'No user was available during this permission check (not even an anonymous user). This usually happens during unit testing. Access was therefore automatically granted.');
+                    $this->debugCollector->addPermissionCheck(
+                        true,
+                        'route',
+                        $routeName,
+                        $user,
+                        [],
+                        [],
+                        'No user was available during this permission check (not even an anonymous user). This usually '
+                        . 'happens during unit testing. Access was therefore automatically granted.'
+                    );
                 }
 
                 return true;
@@ -124,17 +135,41 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
         }
 
         if (!$routeName) {
-            $this->helper->handleError('Error checking route access: the route_name parameter cannot be empty.', ['route' => $routeName, 'user' => $user]);
+            $this->helper->handleError(
+                'Error checking route access: the route_name parameter cannot be empty.',
+                ['route' => $routeName, 'user' => $user]
+            );
             if (!is_null($this->debugCollector)) {
-                $this->debugCollector->addPermissionCheck(false, 'route', $routeName, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+                $this->debugCollector->addPermissionCheck(
+                    false,
+                    'route',
+                    $routeName,
+                    $user,
+                    [],
+                    [],
+                    'There was an error checking the route access and access was therefore automatically denied. '
+                    . 'Please refer to the error log for more information.'
+                );
             }
 
             return false;
         }
         if (!is_string($user) && !is_object($user)) {
-            $this->helper->handleError('Error checking route access: the user parameter must be either a string or an object.', ['route' => $routeName, 'user' => $user]);
+            $this->helper->handleError(
+                'Error checking route access: the user parameter must be either a string or an object.',
+                ['route' => $routeName, 'user' => $user]
+            );
             if (!is_null($this->debugCollector)) {
-                $this->debugCollector->addPermissionCheck(false, 'route', $routeName, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+                $this->debugCollector->addPermissionCheck(
+                    false,
+                    'route',
+                    $routeName,
+                    $user,
+                    [],
+                    [],
+                    'There was an error checking the route access and access was therefore automatically denied. '
+                    . 'Please refer to the error log for more information.'
+                );
             }
 
             return false;
@@ -142,9 +177,21 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 
         $route = $this->router->getRouteCollection()->get($routeName);
         if (is_null($route)) {
-            $this->helper->handleError('Error checking route access: the route could not be found.', ['route' => $routeName, 'user' => $user]);
+            $this->helper->handleError(
+                'Error checking route access: the route could not be found.',
+                ['route' => $routeName, 'user' => $user]
+            );
             if (!is_null($this->debugCollector)) {
-                $this->debugCollector->addPermissionCheck(false, 'route', $routeName, $user, [], [], 'There was an error checking the route access and access was therefore automatically denied. Please refer to the error log for more information.');
+                $this->debugCollector->addPermissionCheck(
+                    false,
+                    'route',
+                    $routeName,
+                    $user,
+                    [],
+                    [],
+                    'There was an error checking the route access and access was therefore automatically denied. '
+                    . 'Please refer to the error log for more information.'
+                );
             }
 
             return false;

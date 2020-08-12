@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
+use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
-use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 
 /**
  * {@inheritdoc}
@@ -31,9 +31,9 @@ class Helper implements HelperInterface
     /**
      * @internal
      *
-     * @param string                                                                             $environment  The current Symfony environment
-     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Token storage service
-     * @param Psr\Log\LoggerInterface                                                            $logger       (optional) A service for logging errors
+     * @param string                                                                             $environment
+     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage
+     * @param Psr\Log\LoggerInterface                                                            $logger
      */
     public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
@@ -65,7 +65,7 @@ class Helper implements HelperInterface
         } else {
             $message .= "\nContext:\n";
             foreach ($context as $key => $value) {
-                $message .= "$key => ".print_r($value, true)."\n";
+                $message .= "$key => " . print_r($value, true) . "\n";
             }
             throw new LogicalAuthorizationException($message);
         }
