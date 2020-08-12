@@ -188,7 +188,8 @@ class Collector extends DataCollector implements CollectorInterface
             $logItem['permission_no_bypass_checks'] = array_reverse(
                 $this->getPermissionNoBypassChecks($logItem['permissions'], $logItem['context'], $typeKeys)
             );
-            if (count($logItem['permission_no_bypass_checks']) == 1
+            if (
+                count($logItem['permission_no_bypass_checks']) == 1
                 && !empty($logItem['permission_no_bypass_checks'][0]['error'])
             ) {
                 $logItem['message'] = $logItem['permission_no_bypass_checks'][0]['error'];

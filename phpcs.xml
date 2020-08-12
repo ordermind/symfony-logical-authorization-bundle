@@ -18,8 +18,4 @@
     </rule>
 
     <rule ref="PSR12" />
-    <rule ref="Symfony">
-        <exclude name="Symfony.Commenting.FunctionComment.Missing"/>
-        <exclude name="Symfony.Commenting.ClassComment.Missing"/>
-    </rule>
 </ruleset>

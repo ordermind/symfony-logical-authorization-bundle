@@ -416,7 +416,8 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         }
 
         $permissions = $this->getModelPermissions($model);
-        if (!empty($permissions['fields'][$fieldName])
+        if (
+            !empty($permissions['fields'][$fieldName])
             && array_key_exists($action, $permissions['fields'][$fieldName])
         ) {
             $context = ['model' => $model, 'user' => $user];
