@@ -48,7 +48,7 @@ class Ip implements PermissionTypeInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($ipAddress, $context)
+    public function checkPermission($ipAddress, $context): bool
     {
         if (!is_string($ipAddress)) {
             throw new TypeError('The ipAddress parameter must be a string.');

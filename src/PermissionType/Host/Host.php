@@ -44,7 +44,7 @@ class Host implements PermissionTypeInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($host, $context)
+    public function checkPermission($host, $context): bool
     {
         if (!is_string($host)) {
             throw new TypeError('The host parameter must be a string.');

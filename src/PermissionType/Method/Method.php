@@ -44,7 +44,7 @@ class Method implements PermissionTypeInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($method, $context)
+    public function checkPermission($method, $context): bool
     {
         if (!is_string($method)) {
             throw new TypeError('The method parameter must be a string.');

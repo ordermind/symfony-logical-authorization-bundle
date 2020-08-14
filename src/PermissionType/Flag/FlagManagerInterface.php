@@ -41,5 +41,5 @@ interface FlagManagerInterface extends PermissionTypeInterface
      *
      * @return bool TRUE if the flag is switched on or FALSE if the flag is switched off
      */
-    public function checkPermission($name, $context);
+    public function checkPermission($name, $context): bool;
 }

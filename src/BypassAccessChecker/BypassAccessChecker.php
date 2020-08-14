@@ -30,7 +30,7 @@ class BypassAccessChecker implements BypassAccessCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkBypassAccess($context)
+    public function checkBypassAccess($context): bool
     {
         return $this->lpProxy->checkAccess(['flag' => 'user_can_bypass_access'], $context, false);
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalPermissions\AccessChecker;
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
+use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 use Ordermind\LogicalPermissions\PermissionTypeInterface;
 
 /**
@@ -15,7 +15,11 @@ use Ordermind\LogicalPermissions\PermissionTypeInterface;
  */
 class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
 {
-    protected $accessChecker;
+    /**
+     * @var LogicalPermissionsFacade
+     */
+    protected $lpFacade;
+
     protected $permissionTypes;
 
     /**
@@ -23,8 +27,8 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function __construct()
     {
-        $this->accessChecker = new AccessChecker();
-        $this->permissionTypes = $this->accessChecker->getPermissionTypeCollection();
+        $this->lpFacade = new LogicalPermissionsFacade();
+        $this->permissionTypes = $this->lpFacade->getPermissionTypeCollection();
     }
 
     /**
@@ -73,7 +77,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function setBypassAccessChecker(BypassAccessCheckerInterface $bypassAccessChecker)
     {
-        $this->accessChecker->setBypassAccessChecker($bypassAccessChecker);
+        $this->lpFacade->setBypassAccessChecker($bypassAccessChecker);
     }
 
     /**
@@ -81,7 +85,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function getBypassAccessChecker(): ?BypassAccessCheckerInterface
     {
-        return $this->accessChecker->getBypassAccessChecker();
+        return $this->lpFacade->getBypassAccessChecker();
     }
 
     /**
@@ -89,7 +93,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
      */
     public function getValidPermissionKeys(): array
     {
-        return $this->accessChecker->getValidPermissionKeys();
+        return $this->lpFacade->getValidPermissionKeys();
     }
 
     /**
@@ -98,7 +102,7 @@ class LogicalPermissionsProxy implements LogicalPermissionsProxyInterface
     public function checkAccess($permissions, array $context, bool $allowBypass = true): bool
     {
         try {
-            return $this->accessChecker->checkAccess($permissions, $context, $allowBypass);
+            return $this->lpFacade->checkAccess($permissions, $context, $allowBypass);
         } catch (PermissionTypeNotRegisteredException $e) {
             $class = get_class($e);
             $message = $e->getMessage();

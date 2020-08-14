@@ -40,7 +40,7 @@ class FlagManager implements FlagManagerInterface
         if ($this->flagExists($name)) {
             throw new InvalidArgumentException(
                 "The flag \"$name\" already exists! If you want to change the class that handles a flag, you may do so "
-                . 'by overriding the service definition for that flag.'
+                    . 'by overriding the service definition for that flag.'
             );
         }
 
@@ -60,7 +60,7 @@ class FlagManager implements FlagManagerInterface
         if (!$this->flagExists($name)) {
             throw new FlagNotRegisteredException(
                 "The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service "
-                . 'tag to register a flag.'
+                    . 'tag to register a flag.'
             );
         }
 
@@ -80,7 +80,7 @@ class FlagManager implements FlagManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkPermission($name, $context)
+    public function checkPermission($name, $context): bool
     {
         if (!$name) {
             throw new InvalidArgumentException('The name parameter cannot be empty.');
@@ -88,7 +88,7 @@ class FlagManager implements FlagManagerInterface
         if (!$this->flagExists($name)) {
             throw new FlagNotRegisteredException(
                 "The flag \"$name\" has not been registered. Please use the 'logauth.tag.permission_type.flag' service "
-                . 'tag to register a flag.'
+                    . 'tag to register a flag.'
             );
         }
 

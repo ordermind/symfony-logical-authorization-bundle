@@ -49,7 +49,7 @@ class Role implements PermissionTypeInterface
      *
      * @return bool TRUE if the role is present on the user or FALSE if it is not present
      */
-    public function checkPermission($role, $context)
+    public function checkPermission($role, $context): bool
     {
         if (!is_string($role)) {
             throw new TypeError('The role parameter must be a string.');
@@ -77,7 +77,7 @@ class Role implements PermissionTypeInterface
         if (!($user instanceof SecurityUserInterface)) {
             throw new InvalidArgumentException(
                 'The user class must implement Symfony\Component\Security\Core\User\UserInterface to be able to '
-                . 'evaluate the user role.'
+                    . 'evaluate the user role.'
             );
         }
 
