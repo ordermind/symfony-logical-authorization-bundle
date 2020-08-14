@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Host;
 
 use InvalidArgumentException;
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use TypeError;
 
 /**
  * Permission type for checking host.
  */
-class Host implements PermissionTypeInterface
+class Host implements PermissionCheckerInterface
 {
     protected $requestStack;
 

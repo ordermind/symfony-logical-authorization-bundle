@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Method;
 
 use InvalidArgumentException;
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use TypeError;
 
 /**
  * Permission type for checking http method.
  */
-class Method implements PermissionTypeInterface
+class Method implements PermissionCheckerInterface
 {
     protected $requestStack;
 

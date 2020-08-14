@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag;
 
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 
 /**
  * Permission type for checking a flag.
  */
-interface FlagManagerInterface extends PermissionTypeInterface
+interface FlagManagerInterface extends PermissionCheckerInterface
 {
     /**
      * Adds a flag to the collection of registered flags.

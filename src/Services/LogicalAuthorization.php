@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
+use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
+use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 
 /**
  * {@inheritdoc}
@@ -12,9 +13,9 @@ use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 class LogicalAuthorization implements LogicalAuthorizationInterface
 {
     /**
-     * @var LogicalPermissionsProxyInterface
+     * @var LogicalPermissionsFacade
      */
-    protected $lpProxy;
+    protected $lpFacade;
 
     /**
      * @var HelperInterface
@@ -24,19 +25,14 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
     /**
      * @internal
      *
-     * @param LogicalPermissionsProxyInterface $lpProxy
-     * @param HelperInterface                  $helper
-     * @param BypassAccessCheckerInterface     $bypassAccessChecker
+     * @param LogicalPermissionsFacade $lpFacade
+     * @param HelperInterface          $helper
      */
     public function __construct(
-        LogicalPermissionsProxyInterface $lpProxy,
-        HelperInterface $helper,
-        BypassAccessCheckerInterface $bypassAccessChecker
+        LogicalPermissionsFacade $lpFacade,
+        HelperInterface $helper
     ) {
-        $this->lpProxy = $lpProxy;
-        if (!$this->lpProxy->getBypassAccessChecker()) {
-            $this->lpProxy->setBypassAccessChecker($bypassAccessChecker);
-        }
+        $this->lpFacade = $lpFacade;
         $this->helper = $helper;
     }
 
@@ -49,7 +45,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
         bool $allowBypass = true
     ): bool {
         try {
-            return $this->lpProxy->checkAccess(
+            return $this->lpFacade->checkAccess(
                 $permissions,
                 $context,
                 $allowBypass
@@ -57,11 +53,16 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
         } catch (\Exception $e) {
             $class = get_class($e);
             $message = $e->getMessage();
+            if ($class === PermissionTypeNotRegisteredException::class) {
+                $message .= ' Please use the \'logauth.tag.permission_checker\' service tag to register a permission '
+                    . 'checker';
+            }
+
             $this->helper->handleError(
                 "An exception was caught while checking access: \"$message\" "
-                . 'at ' . $e->getFile()
-                . ' line '
-                . $e->getLine(),
+                    . 'at ' . $e->getFile()
+                    . ' line '
+                    . $e->getLine(),
                 [
                     'exception'   => $class,
                     'permissions' => $permissions,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
+use Ordermind\LogicalPermissions\PermissionCheckerLocatorInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -36,17 +37,17 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     /**
      * @internal
      *
-     * @param LogicalPermissionsProxyInterface $lpProxy
-     * @param EventDispatcherInterface         $dispatcher
-     * @param CacheItemPoolInterface           $cache
+     * @param PermissionCheckerLocatorInterface $locator
+     * @param EventDispatcherInterface          $dispatcher
+     * @param CacheItemPoolInterface            $cache
      */
     public function __construct(
-        LogicalPermissionsProxyInterface $lpProxy,
+        PermissionCheckerLocatorInterface $locator,
         EventDispatcherInterface $dispatcher,
         CacheItemPoolInterface $cache
     ) {
         $this->dispatcher = $dispatcher;
-        $this->permissionKeys = $lpProxy->getValidPermissionKeys();
+        $this->permissionKeys = $locator->getValidPermissionTreeKeys();
         $this->cache = $cache;
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Role;
 
 use InvalidArgumentException;
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 use TypeError;
@@ -13,7 +13,7 @@ use TypeError;
 /**
  * Permission type for checking a role on a user.
  */
-class Role implements PermissionTypeInterface
+class Role implements PermissionCheckerInterface
 {
     /**
      * @var SecurityRoleHierarchyInterface

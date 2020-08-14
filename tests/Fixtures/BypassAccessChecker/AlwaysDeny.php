@@ -11,7 +11,7 @@ class AlwaysDeny implements BypassAccessCheckerInterface
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkBypassAccess($context)
+    public function checkBypassAccess($context): bool
     {
         return false;
     }

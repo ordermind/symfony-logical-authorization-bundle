@@ -11,10 +11,6 @@ services:
 
     # Service definition overrides
 
-    test.logauth.service.logical_permissions_proxy:
-        alias: logauth.service.logical_permissions_proxy
-        public: true
-
     test.logauth.service.helper:
         alias: logauth.service.helper
         public: true
@@ -33,6 +29,14 @@ services:
 
     test.logauth.service.logauth:
         alias: logauth.service.logauth
+        public: true
+
+    test.logical_permissions.permission_checker_locator:
+        alias: logical_permissions.permission_checker_locator
+        public: true
+    
+    test.logical_permissions.facade:
+        alias: logical_permissions.facade
         public: true
 
     # Controllers

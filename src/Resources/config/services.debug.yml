@@ -7,7 +7,10 @@ services:
 
     logauth.debug.collector:
         class: Ordermind\LogicalAuthorizationBundle\DataCollector\Collector
-        arguments: ['@logauth.service.permission_tree_builder', '@logauth.service.logical_permissions_proxy']
+        arguments: 
+            - '@logauth.service.permission_tree_builder'
+            - '@logical_permissions.facade'
+            - '@logical_permissions.permission_checker_locator'
         tags:
             - {name: data_collector, template: '@OrdermindLogicalAuthorization/DataCollector/collector.html.twig', id: logauth.collector}
         public: false

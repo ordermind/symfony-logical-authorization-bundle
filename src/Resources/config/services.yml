@@ -1,5 +1,4 @@
 services:
-
     # Core services
 
     logauth.cache_warmer.permissions:
@@ -37,10 +36,6 @@ services:
             - {name: twig.extension}
         public: false
 
-    logauth.service.logical_permissions_proxy:
-        class: Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy
-        public: false
-
     logauth.service.helper:
         class: Ordermind\LogicalAuthorizationBundle\Services\Helper
         arguments: ['%kernel.environment%', '@security.token_storage', '@?logger']
@@ -48,12 +43,12 @@ services:
 
     logauth.service.permission_tree_builder:
         class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
-        arguments: ['@logauth.service.logical_permissions_proxy', '@event_dispatcher', '@cache.app']
+        arguments: ['@logical_permissions.permission_checker_locator', '@event_dispatcher', '@cache.app']
         public: false
 
     logauth.bypass_access_checker:
         class: Ordermind\LogicalAuthorizationBundle\BypassAccessChecker\BypassAccessChecker
-        arguments: ['@logauth.service.logical_permissions_proxy']
+        arguments: ['@logauth.permission_checker.flag.user_can_bypass_access']
         public: false
 
     logauth.service.logauth_route:
@@ -68,7 +63,7 @@ services:
 
     logauth.service.logauth:
         class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
-        arguments: ['@logauth.service.logical_permissions_proxy', '@logauth.service.helper', '@logauth.bypass_access_checker']
+        arguments: ['@logical_permissions.facade', '@logauth.service.helper']
         public: false
 
     logauth.routing.yml_file_loader:
@@ -106,54 +101,67 @@ services:
 
     # Permission type handlers
 
-    logauth.permission_type.flag:
+    logauth.permission_checker.flag:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagManager
+        arguments: [!tagged logauth.tag.permission_checker.flag]
         tags:
-            - {name: logauth.tag.permission_type}
+            - {name: logauth.tag.permission_checker}
         public: false
 
-    logauth.permission_type.flag.user_can_bypass_access:
+    logauth.permission_checker.flag.user_can_bypass_access:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserCanBypassAccess
         tags:
-            - {name: logauth.tag.permission_type.flag}
+            - {name: logauth.tag.permission_checker.flag}
         public: false
 
-    logauth.permission_type.flag.user_has_account:
+    logauth.permission_checker.flag.user_has_account:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserHasAccount
         tags:
-            - {name: logauth.tag.permission_type.flag}
+            - {name: logauth.tag.permission_checker.flag}
         public: false
 
-    logauth.permission_type.flag.user_is_author:
+    logauth.permission_checker.flag.user_is_author:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserIsAuthor
         tags:
-            - {name: logauth.tag.permission_type.flag}
+            - {name: logauth.tag.permission_checker.flag}
         public: false
 
-    logauth.permission_type.role:
+    logauth.permission_checker.role:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Role\Role
         arguments: ['@security.role_hierarchy']
         tags:
-            - {name: logauth.tag.permission_type}
+            - {name: logauth.tag.permission_checker}
         public: false
 
-    logauth.permission_type.host:
+    logauth.permission_checker.host:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Host\Host
         arguments: ['@request_stack']
         tags:
-            - {name: logauth.tag.permission_type}
+            - {name: logauth.tag.permission_checker}
         public: false
 
-    logauth.permission_type.method:
+    logauth.permission_checker.method:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Method\Method
         arguments: ['@request_stack']
         tags:
-            - {name: logauth.tag.permission_type}
+            - {name: logauth.tag.permission_checker}
         public: false
 
-    logauth.permission_type.ip:
+    logauth.permission_checker.ip:
         class: Ordermind\LogicalAuthorizationBundle\PermissionType\Ip\Ip
         arguments: ['@request_stack']
         tags:
-            - {name: logauth.tag.permission_type}
+            - {name: logauth.tag.permission_checker}
+        public: false
+
+
+    # Register classes from the Logical Permission library as services
+    logical_permissions.permission_checker_locator:
+        class: Ordermind\LogicalPermissions\PermissionCheckerLocator
+        arguments: [!tagged logauth.tag.permission_checker]
+        public: false
+
+    logical_permissions.facade:
+        class: Ordermind\LogicalPermissions\LogicalPermissionsFacade
+        arguments: ['@logical_permissions.permission_checker_locator', '@logauth.bypass_access_checker']
         public: false

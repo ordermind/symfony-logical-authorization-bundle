@@ -13,7 +13,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Exceptions\FlagNotR
 class FlagManager implements FlagManagerInterface
 {
     /**
-     * @var array
+     * @var FlagInterface[]
      */
     protected $flags = [];
 
@@ -23,6 +23,18 @@ class FlagManager implements FlagManagerInterface
     public static function getName(): string
     {
         return 'flag';
+    }
+
+    /**
+     * FlagManager constructor.
+     *
+     * @param iterable|FlagInterface[] $flags
+     */
+    public function __construct(iterable $flags = [])
+    {
+        foreach ($flags as $flag) {
+            $this->addFlag($flag);
+        }
     }
 
     /**

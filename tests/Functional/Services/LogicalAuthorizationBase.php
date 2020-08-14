@@ -6,8 +6,13 @@ namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Services\HelperInterface;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModelInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInterface;
+use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Test\AppKernel;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
+use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
+use Ordermind\LogicalPermissions\PermissionCheckerLocatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
@@ -55,9 +60,34 @@ abstract class LogicalAuthorizationBase extends WebTestCase
     protected $logicalAuthorization;
 
     /**
+     * @var LogicalAuthorizationModelInterface
+     */
+    protected $laModel;
+
+    /**
+     * @var LogicalAuthorizationRouteInterface
+     */
+    protected $laRoute;
+
+    /**
      * @var HelperInterface
      */
     protected $helper;
+
+    /**
+     * @var PermissionTreeBuilderInterface
+     */
+    protected $treeBuilder;
+
+    /**
+     * @var PermissionCheckerLocatorInterface
+     */
+    protected $lpLocator;
+
+    /**
+     * @var LogicalPermissionsFacade
+     */
+    protected $lpFacade;
 
     /**
      * @var TwigEnvironment
@@ -84,11 +114,12 @@ abstract class LogicalAuthorizationBase extends WebTestCase
         $container = static::$kernel->getContainer();
 
         $this->logicalAuthorization = $container->get('test.logauth.service.logauth');
-        $this->lpProxy = $container->get('test.logauth.service.logical_permissions_proxy');
         $this->laModel = $container->get('test.logauth.service.logauth_model');
         $this->laRoute = $container->get('test.logauth.service.logauth_route');
         $this->helper = $container->get('test.logauth.service.helper');
         $this->treeBuilder = $container->get('test.logauth.service.permission_tree_builder');
+        $this->lpLocator = $container->get('test.logical_permissions.permission_checker_locator');
+        $this->lpFacade = $container->get('test.logical_permissions.facade');
         $this->twig = $container->get('twig');
         $roleHierarchy = $container->getParameter('security.role_hierarchy.roles');
         $this->roleHierarchy = new RoleHierarchy($roleHierarchy);

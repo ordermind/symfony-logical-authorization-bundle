@@ -17,7 +17,6 @@ use Ordermind\LogicalAuthorizationBundle\PermissionType\Ip\Ip;
 use Ordermind\LogicalAuthorizationBundle\PermissionType\Method\Method;
 use Ordermind\LogicalAuthorizationBundle\PermissionType\Role\Role;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
-use Ordermind\LogicalAuthorizationBundle\Services\LogicalPermissionsProxy;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\BypassAccessChecker\AlwaysDeny;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\ErroneousModel;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\ErroneousUser;
@@ -26,8 +25,10 @@ use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ModelDecorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes\TestFlag;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes\TestType;
-use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyExistsException;
+use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyRegisteredException;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
+use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
+use Ordermind\LogicalPermissions\PermissionCheckerLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -506,7 +507,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testCheckAccessPermissionTypeNotRegistered()
     {
         $this->expectException(LogicalAuthorizationException::class);
-        $this->expectExceptionMessageMatches('/service tag to register a permission type/');
+        $this->expectExceptionMessageMatches('/service tag to register a permission checker/');
         $this->logicalAuthorization->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
     }
 
@@ -519,19 +520,19 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testCheckAccessDisallow()
     {
-        $lpProxy = new LogicalPermissionsProxy();
-        $type = new TestType();
-        $lpProxy->addType($type);
-        $logicalAuthorization = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
+        $lpLocator = new PermissionCheckerLocator();
+        $lpLocator->add(new TestType());
+        $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
+        $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
         $this->assertFalse($logicalAuthorization->checkAccess(['test' => 'no'], []));
     }
 
     public function testCheckAccessAllow()
     {
-        $lpProxy = new LogicalPermissionsProxy();
-        $type = new TestType();
-        $lpProxy->addType($type);
-        $logicalAuthorization = new LogicalAuthorization($lpProxy, $this->helper, new AlwaysDeny());
+        $lpLocator = new PermissionCheckerLocator();
+        $lpLocator->add(new TestType());
+        $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
+        $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
         $this->assertTrue($logicalAuthorization->checkAccess(['test' => 'yes'], []));
     }
 
@@ -818,16 +819,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $availableRoutes = $this->laRoute->getAvailableRoutes('anon.');
         $this->assertTrue(
             isset($availableRoutes['routes'])
-            && is_array($availableRoutes['routes'])
-            && !empty($availableRoutes['routes'])
+                && is_array($availableRoutes['routes'])
+                && !empty($availableRoutes['routes'])
         );
         foreach ($availableRoutes['routes'] as $key => $value) {
             $this->assertSame($key, $value);
         }
         $this->assertTrue(
             isset($availableRoutes['route_patterns'])
-            && is_array($availableRoutes['route_patterns'])
-            && !empty($availableRoutes['route_patterns'])
+                && is_array($availableRoutes['route_patterns'])
+                && !empty($availableRoutes['route_patterns'])
         );
         foreach ($availableRoutes['route_patterns'] as $key => $value) {
             $this->assertSame($key, $value);
@@ -876,28 +877,28 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laRoute->checkRouteAccess('route_allowed', 'anon.'));
     }
 
-    public function testLogicalPermissionsProxyAddTypeAlreadyExists()
+    public function testLogicalPermissionsLocatorAddTypeAlreadyExists()
     {
-        $this->expectException(PermissionTypeAlreadyExistsException::class);
-        $laProxy = new LogicalPermissionsProxy();
+        $this->expectException(PermissionTypeAlreadyRegisteredException::class);
+        $lpLocator = new PermissionCheckerLocator();
         $type = new TestType();
-        $laProxy->addType($type);
-        $laProxy->addType($type);
+        $lpLocator->add($type);
+        $lpLocator->add($type);
     }
 
-    public function testLogicalPermissionsProxyAddType()
+    public function testLogicalPermissionsLocatorAddType()
     {
-        $laProxy = new LogicalPermissionsProxy();
+        $lpLocator = new PermissionCheckerLocator();
         $type = new TestType();
-        $laProxy->addType($type);
-        $this->assertTrue($laProxy->typeExists('test'));
+        $lpLocator->add($type);
+        $this->assertTrue($lpLocator->has('test'));
     }
 
-    public function testLogicalPermissionsProxyCheckAccessTypeDoesntExist()
+    public function testLogicalPermissionsFacadeCheckAccessTypeDoesntExist()
     {
         $this->expectException(PermissionTypeNotRegisteredException::class);
-        $laProxy = new LogicalPermissionsProxy();
-        $laProxy->checkAccess(['test' => 'hej'], []);
+        $lpFacade = new LogicalPermissionsFacade();
+        $lpFacade->checkAccess(['test' => 'hej'], []);
     }
 
     public function testGetTree()
@@ -919,103 +920,103 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testEventInsertTreeWrongTreeType()
     {
         $this->expectException(TypeError::class);
-        $laProxy = new LogicalPermissionsProxy();
-        $event = new AddPermissionsEvent($laProxy->getValidPermissionKeys());
+        $lpLocator = new PermissionCheckerLocator();
+        $event = new AddPermissionsEvent($lpLocator->getValidPermissionTreeKeys());
         $event->insertTree('key');
     }
 
     public function testEventInsertTreeGetTree()
     {
-        $laProxy = new LogicalPermissionsProxy();
+        $lpLocator = new PermissionCheckerLocator();
         $role = new Role($this->roleHierarchy);
-        $laProxy->addType($role);
+        $lpLocator->add($role);
         $flagManager = new FlagManager();
-        $laProxy->addType($flagManager);
-        $event = new AddPermissionsEvent($laProxy->getValidPermissionKeys());
+        $lpLocator->add($flagManager);
+        $event = new AddPermissionsEvent($lpLocator->getValidPermissionTreeKeys());
         $tree1 = [
-        'models' => [
-        'testmodel' => [
-          'create' => [
-            'role' => 'role1',
-          ],
-          'read' => [
-            'flag' => [
-              'flag1',
-              'flag2',
+            'models' => [
+                'testmodel' => [
+                    'create' => [
+                        'role' => 'role1',
+                    ],
+                    'read' => [
+                        'flag' => [
+                            'flag1',
+                            'flag2',
+                        ],
+                    ],
+                    'update' => [
+                        'flag' => 'flag1',
+                    ],
+                    'fields' => [
+                        'field1' => [
+                            'get' => [
+                                'role' => 'role1',
+                            ],
+                            'set' => [
+                                'flag' => 'flag1',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-          ],
-          'update' => [
-            'flag' => 'flag1',
-          ],
-          'fields' => [
-            'field1' => [
-              'get' => [
-                'role' => 'role1',
-              ],
-              'set' => [
-                'flag' => 'flag1',
-              ],
-            ],
-          ],
-        ],
-        ],
         ];
         $tree2 = [
-        'models' => [
-        'testmodel' => [
-          'create' => [
-            'role' => [
-              'newrole1',
-              'newrole2',
-            ],
-          ],
-          'read' => [
-            'flag' => 'newflag1',
-          ],
-          'fields' => [
-            'field1' => [
-              'get' => [
-                'OR' => [
-                  'role' => 'newrole1',
-                  'flag' => 'newflag1',
+            'models' => [
+                'testmodel' => [
+                    'create' => [
+                        'role' => [
+                            'newrole1',
+                            'newrole2',
+                        ],
+                    ],
+                    'read' => [
+                        'flag' => 'newflag1',
+                    ],
+                    'fields' => [
+                        'field1' => [
+                            'get' => [
+                                'OR' => [
+                                    'role' => 'newrole1',
+                                    'flag' => 'newflag1',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
-              ],
             ],
-          ],
-        ],
-        ],
         ];
 
         $result = [
-        'models' => [
-        'testmodel' => [
-          'create' => [
-            'role' => [
-              'newrole1',
-              'newrole2',
-            ],
-          ],
-          'read' => [
-            'flag' => 'newflag1',
-          ],
-          'update' => [
-            'flag' => 'flag1',
-          ],
-          'fields' => [
-            'field1' => [
-              'get' => [
-                'OR' => [
-                  'role' => 'newrole1',
-                  'flag' => 'newflag1',
+            'models' => [
+                'testmodel' => [
+                    'create' => [
+                        'role' => [
+                            'newrole1',
+                            'newrole2',
+                        ],
+                    ],
+                    'read' => [
+                        'flag' => 'newflag1',
+                    ],
+                    'update' => [
+                        'flag' => 'flag1',
+                    ],
+                    'fields' => [
+                        'field1' => [
+                            'get' => [
+                                'OR' => [
+                                    'role' => 'newrole1',
+                                    'flag' => 'newflag1',
+                                ],
+                            ],
+                            'set' => [
+                                'flag' => 'flag1',
+                            ],
+                        ],
+                    ],
                 ],
-              ],
-              'set' => [
-                'flag' => 'flag1',
-              ],
             ],
-          ],
-        ],
-        ],
         ];
 
         $event->insertTree($tree1);
@@ -1028,7 +1029,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $request = new Request();
         $response = new Response();
         $user = new TestUser();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $debugCollector->addPermissionCheck(true, 'route', 'route_role', $user, [], ['user' => $user]);
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
@@ -1050,7 +1051,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $debugCollector->addPermissionCheck(
             true,
             'model',
@@ -1079,7 +1080,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $debugCollector->addPermissionCheck(
             true,
             'field',
@@ -1105,7 +1106,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $request = new Request();
         $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1151,7 +1152,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $request = new Request();
         $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1204,42 +1205,42 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $request = new Request();
         $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
 
         $permissions = [
-        'flag' => [
-        'NOT' => 'user_has_account',
-        ],
+            'flag' => [
+                'NOT' => 'user_has_account',
+            ],
         ];
         $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
         $result = [
-        'type'                        => 'route',
-        'user'                        => 'anon.',
-        'item_name'                   => 'testroute',
-        'permission_no_bypass_checks' => [],
-        'bypassed_access'             => false,
-        'permissions'                 => $permissions,
-        'access'                      => true,
-        'permission_checks'           => [
-            [
-                'permissions' => [
-                    'flag' => ['NOT' => 'user_has_account'],
+            'type'                        => 'route',
+            'user'                        => 'anon.',
+            'item_name'                   => 'testroute',
+            'permission_no_bypass_checks' => [],
+            'bypassed_access'             => false,
+            'permissions'                 => $permissions,
+            'access'                      => true,
+            'permission_checks'           => [
+                [
+                    'permissions' => [
+                        'flag' => ['NOT' => 'user_has_account'],
+                    ],
+                    'resolve' => true,
                 ],
-                'resolve' => true,
+                [
+                    'permissions' => ['NOT' => 'user_has_account'],
+                    'resolve'     => true,
+                ],
+                [
+                    'permissions' => 'user_has_account',
+                    'resolve'     => false,
+                ],
             ],
-            [
-                'permissions' => ['NOT' => 'user_has_account'],
-                'resolve'     => true,
-            ],
-            [
-                'permissions' => 'user_has_account',
-                'resolve'     => false,
-            ],
-        ],
-        'message'                     => '',
+            'message'                     => '',
         ];
 
         $debugCollector->collect($request, $response);
@@ -1259,7 +1260,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $request = new Request();
         $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1286,8 +1287,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 'flag' => [
                     'NOT' => [
                         'OR' => [
-                        ['NOT' => 'user_has_account'],
-                        ['NOT' => 'user_is_author'],
+                            ['NOT' => 'user_has_account'],
+                            ['NOT' => 'user_is_author'],
                         ],
                     ],
                 ],
@@ -1304,89 +1305,89 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             ['model' => $model, 'user' => $user]
         );
         $result = [
-        'type'                        => 'field',
-        'field'                       => 'field1',
-        'user'                        => $user,
-        'permissions'                 => $permissions,
-        'action'                      => 'get',
-        'item_name'                   => TestModelBoolean::class . ':field1',
-        'item'                        => $model,
-        'permission_no_bypass_checks' => array_reverse(
-            [
+            'type'                        => 'field',
+            'field'                       => 'field1',
+            'user'                        => $user,
+            'permissions'                 => $permissions,
+            'action'                      => 'get',
+            'item_name'                   => TestModelBoolean::class . ':field1',
+            'item'                        => $model,
+            'permission_no_bypass_checks' => array_reverse(
                 [
-                    'permissions' => ['flag' => 'user_has_account'],
-                    'resolve'     => true,
-                ],
-                [
-                    'permissions' => ['NOT' => ['flag' => 'user_has_account']],
-                    'resolve'     => false,
-                ],
-            ]
-        ),
-        'bypassed_access'             => false,
-        'permission_checks'           => [],
-        'permission_checks'           => array_reverse(
-            [
-                0  => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
-                1  => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
-                2  => ['permissions' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']], 'resolve' => false],
-                3  => ['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]], 'resolve' => true],
-                4  => [
-                    'permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                    'resolve'     => true,
-                ],
-                5  => [
-                    'permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]]],
-                    'resolve'     => true,
-                ],
-                6  => ['permissions' => true, 'resolve' => true],
-                7  => ['permissions' => 'TRUE', 'resolve' => true],
-                8  => ['permissions' => 'user_has_account', 'resolve' => true],
-                9  => ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => false],
-                10 => ['permissions' => 'user_is_author', 'resolve' => true],
-                11 => ['permissions' => ['NOT' => 'user_is_author'], 'resolve' => false],
-                12 => [
-                    'permissions' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]],
-                    'resolve'     => false,
-                ],
-                13 => [
-                    'permissions' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
-                    'resolve'     => true,
-                ],
-                14 => [
-                    'permissions' => [
-                        'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                    [
+                        'permissions' => ['flag' => 'user_has_account'],
+                        'resolve'     => true,
                     ],
-                    'resolve' => true,
-                ],
-                15 => [
-                    'permissions' => [
-                        'AND' => [
-                            'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                            '0'    => true,
-                            '1'    => 'TRUE',
+                    [
+                        'permissions' => ['NOT' => ['flag' => 'user_has_account']],
+                        'resolve'     => false,
+                    ],
+                ]
+            ),
+            'bypassed_access'             => false,
+            'permission_checks'           => [],
+            'permission_checks'           => array_reverse(
+                [
+                    0  => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
+                    1  => ['permissions' => 'ROLE_ADMIN', 'resolve' => false],
+                    2  => ['permissions' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']], 'resolve' => false],
+                    3  => ['permissions' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]], 'resolve' => true],
+                    4  => [
+                        'permissions' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
+                        'resolve'     => true,
+                    ],
+                    5  => [
+                        'permissions' => ['role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]]],
+                        'resolve'     => true,
+                    ],
+                    6  => ['permissions' => true, 'resolve' => true],
+                    7  => ['permissions' => 'TRUE', 'resolve' => true],
+                    8  => ['permissions' => 'user_has_account', 'resolve' => true],
+                    9  => ['permissions' => ['NOT' => 'user_has_account'], 'resolve' => false],
+                    10 => ['permissions' => 'user_is_author', 'resolve' => true],
+                    11 => ['permissions' => ['NOT' => 'user_is_author'], 'resolve' => false],
+                    12 => [
+                        'permissions' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]],
+                        'resolve'     => false,
+                    ],
+                    13 => [
+                        'permissions' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                        'resolve'     => true,
+                    ],
+                    14 => [
+                        'permissions' => [
                             'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
                         ],
+                        'resolve' => true,
                     ],
-                    'resolve' => true,
-                ],
-                16 => ['permissions' => ['flag' => 'user_has_account'], 'resolve' => true],
-                17 => [
-                    'permissions' => [
-                        'AND' => [
-                            'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                            '0'    => true,
-                            '1'    => 'TRUE',
-                            'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                    15 => [
+                        'permissions' => [
+                            'AND' => [
+                                'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
+                                '0'    => true,
+                                '1'    => 'TRUE',
+                                'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                            ],
                         ],
-                        'flag' => 'user_has_account',
+                        'resolve' => true,
                     ],
-                    'resolve' => true,
-                ],
-            ]
-        ),
-        'access'  => true,
-        'message' => '',
+                    16 => ['permissions' => ['flag' => 'user_has_account'], 'resolve' => true],
+                    17 => [
+                        'permissions' => [
+                            'AND' => [
+                                'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
+                                '0'    => true,
+                                '1'    => 'TRUE',
+                                'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                            ],
+                            'flag' => 'user_has_account',
+                        ],
+                        'resolve' => true,
+                    ],
+                ]
+            ),
+            'access'  => true,
+            'message' => '',
         ];
 
         $debugCollector->collect($request, $response);
@@ -1412,7 +1413,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $request = new Request();
         $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1435,7 +1436,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $request = new Request();
         $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpProxy, $this->twig);
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);

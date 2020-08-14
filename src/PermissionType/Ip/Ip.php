@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Ip;
 
 use InvalidArgumentException;
-use Ordermind\LogicalPermissions\PermissionTypeInterface;
+use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
 use TypeError;
 
 /**
- * Permission type for checking ipaddress.
+ * Permission type for checking ip address.
  */
-class Ip implements PermissionTypeInterface
+class Ip implements PermissionCheckerInterface
 {
     /**
      * @var RequestStack
