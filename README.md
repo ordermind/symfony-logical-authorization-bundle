@@ -15,8 +15,6 @@ This Symfony bundle provides a unifying solution for authorization that aims to 
 
 ## Installation
 
-Requirements: Symfony 4.1 or higher.
-
 **Main bundle**
 
 ```
