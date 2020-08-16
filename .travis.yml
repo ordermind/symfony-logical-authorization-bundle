@@ -6,6 +6,6 @@ php:
   - '7.2'
   - '7.3'
   - '7.4'
-install: composer install --no-dev --ignore-platform-reqs
+install: composer install
 notifications:
   email: false
