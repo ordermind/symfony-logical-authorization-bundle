@@ -6,11 +6,6 @@ php:
   - '7.2'
   - '7.3'
   - '7.4'
-cache:
-  directories:
-    - cached
-install: composer install
-before_script: "[ -e cached/phpunit.phar ] || wget -O cached/phpunit.phar https://phar.phpunit.de/phpunit-7.phar && chmod u+x cached/phpunit.phar"
-script: cached/phpunit.phar -c ./phpunit.xml.dist
+install: composer install --no-dev --ignore-platform-reqs
 notifications:
   email: false
