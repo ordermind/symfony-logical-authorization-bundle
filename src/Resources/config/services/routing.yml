@@ -1,0 +1,35 @@
+# Routing-related services
+
+services:
+    logauth.routing.yml_file_loader:
+        class: Ordermind\LogicalAuthorizationBundle\Routing\YamlLoader
+        arguments: ['@file_locator']
+        tags:
+            - {name: routing.loader}
+        public: false
+
+    logauth.routing.xml_file_loader:
+        class: Ordermind\LogicalAuthorizationBundle\Routing\XmlLoader
+        arguments: ['@file_locator']
+        tags:
+            - {name: routing.loader}
+        public: false
+
+    logauth.routing.annotation_file_loader:
+        class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationFileLoader
+        arguments: ['@file_locator', '@logauth.routing.annotation_class_loader']
+        tags:
+            - {name: routing.loader}
+        public: false
+
+    logauth.routing.annotation_dir_loader:
+        class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationDirectoryLoader
+        arguments: ['@file_locator', '@logauth.routing.annotation_class_loader']
+        tags:
+            - {name: routing.loader}
+        public: false
+
+    logauth.routing.annotation_class_loader:
+        class: Ordermind\LogicalAuthorizationBundle\Routing\AnnotationClassLoader
+        arguments: ['@annotation_reader']
+        public: false

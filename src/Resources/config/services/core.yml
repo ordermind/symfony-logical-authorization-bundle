@@ -1,0 +1,67 @@
+# Core services
+
+services:
+    logauth.cache_warmer.permissions:
+        class: Ordermind\LogicalAuthorizationBundle\EventListener\PermissionsCacheWarmer
+        arguments: ['@logauth.service.permission_tree_builder']
+        tags:
+            - {name: kernel.cache_warmer}
+        public: false
+
+    logauth.security.expression_provider:
+        class: Ordermind\LogicalAuthorizationBundle\Security\ExpressionProvider
+        arguments: ['@logauth.service.logauth_route']
+        tags:
+            - {name: security.expression_language_provider}
+        public: false
+
+    logauth.event_listener.add_route_permissions:
+        class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
+        arguments: ['@router']
+        tags:
+            - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions}
+        public: false
+
+    logauth.event_listener.add_app_config_permissions:
+        class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
+        arguments: ['%logauth.config%']
+        tags:
+            - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions, priority: -250}
+        public: false
+
+    logauth.twig.extension:
+        class: Ordermind\LogicalAuthorizationBundle\Twig\LogicalAuthorizationExtension
+        arguments: ['@logauth.service.logauth_route', '@logauth.service.logauth_model']
+        tags:
+            - {name: twig.extension}
+        public: false
+
+    logauth.service.helper:
+        class: Ordermind\LogicalAuthorizationBundle\Services\Helper
+        arguments: ['%kernel.environment%', '@security.token_storage', '@?logger']
+        public: false
+
+    logauth.service.permission_tree_builder:
+        class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
+        arguments: ['@logical_permissions.permission_checker_locator', '@event_dispatcher', '@cache.app']
+        public: false
+
+    logauth.bypass_access_checker:
+        class: Ordermind\LogicalAuthorizationBundle\BypassAccessChecker\BypassAccessChecker
+        arguments: ['@logauth.permission_checker.flag.user_can_bypass_access']
+        public: false
+
+    logauth.service.logauth_route:
+        class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
+        arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper', '@?logauth.debug.collector']
+        public: false
+
+    logauth.service.logauth_model:
+        class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
+        arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper', '@?logauth.debug.collector']
+        public: false
+
+    logauth.service.logauth:
+        class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
+        arguments: ['@logical_permissions.facade', '@logauth.service.helper']
+        public: false
