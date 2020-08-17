@@ -2,17 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers;
 
 use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerInterface;
 use UnexpectedValueException;
 
-/**
- * Flag for checking if a user can bypass access.
- */
-class UserCanBypassAccess implements FlagInterface
+class UserCanBypassAccessChecker implements SimpleConditionCheckerInterface
 {
     /**
      * {@inheritdoc}
@@ -25,14 +22,14 @@ class UserCanBypassAccess implements FlagInterface
     /**
      * Checks if access can be bypassed in a given context.
      *
-     * @param array $context The context for evaluating the flag. The context must contain a 'user' key which
+     * @param array $context The context for evaluating the condition. The context must contain a 'user' key which
      *                       references either a user string (to signify an anonymous user) or an object implementing
      *                       Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface. You can get the current
      *                       user by calling getCurrentUser() from the service 'logauth.service.helper'.
      *
      * @return bool TRUE if access can be bypassed or FALSE if access can't be bypassed
      */
-    public function checkFlag(array $context): bool
+    public function checkCondition(array $context): bool
     {
         if (!isset($context['user'])) {
             throw new InvalidArgumentException(
@@ -51,7 +48,7 @@ class UserCanBypassAccess implements FlagInterface
             throw new InvalidArgumentException(
                 sprintf(
                     'The user class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be '
-                    . 'able to evaluate the %s flag.',
+                        . 'able to evaluate the %s flag.',
                     $this->getName()
                 )
             );

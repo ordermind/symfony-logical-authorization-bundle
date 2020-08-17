@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\BypassAccessChecker;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserCanBypassAccess;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserCanBypassAccessChecker;
 use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 
 /**
@@ -13,16 +13,16 @@ use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
 class BypassAccessChecker implements BypassAccessCheckerInterface
 {
     /**
-     * @var UserCanBypassAccess
+     * @var UserCanBypassAccessChecker
      */
     protected $flagChecker;
 
     /**
      * @internal
      *
-     * @param UserCanBypassAccess $flagChecker
+     * @param UserCanBypassAccessChecker $flagChecker
      */
-    public function __construct(UserCanBypassAccess $flagChecker)
+    public function __construct(UserCanBypassAccessChecker $flagChecker)
     {
         $this->flagChecker = $flagChecker;
     }
@@ -32,6 +32,6 @@ class BypassAccessChecker implements BypassAccessCheckerInterface
      */
     public function checkBypassAccess($context): bool
     {
-        return $this->flagChecker->checkFlag($context);
+        return $this->flagChecker->checkCondition($context);
     }
 }

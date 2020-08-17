@@ -2,53 +2,53 @@
 
 services:
     logauth.permission_checker.flag:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagManager
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerManager
         arguments: [!tagged logauth.tag.permission_checker.flag]
         tags:
             - {name: logauth.tag.permission_checker}
         public: false
 
     logauth.permission_checker.flag.user_can_bypass_access:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserCanBypassAccess
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserCanBypassAccessChecker
         tags:
             - {name: logauth.tag.permission_checker.flag}
         public: false
 
     logauth.permission_checker.flag.user_has_account:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserHasAccount
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserHasAccountChecker
         tags:
             - {name: logauth.tag.permission_checker.flag}
         public: false
 
     logauth.permission_checker.flag.user_is_author:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserIsAuthor
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserIsAuthorChecker
         tags:
             - {name: logauth.tag.permission_checker.flag}
         public: false
 
     logauth.permission_checker.role:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Role\Role
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\RoleChecker
         arguments: ['@security.role_hierarchy']
         tags:
             - {name: logauth.tag.permission_checker}
         public: false
 
     logauth.permission_checker.host:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Host\Host
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\HostChecker
         arguments: ['@request_stack']
         tags:
             - {name: logauth.tag.permission_checker}
         public: false
 
     logauth.permission_checker.method:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Method\Method
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\MethodChecker
         arguments: ['@request_stack']
         tags:
             - {name: logauth.tag.permission_checker}
         public: false
 
     logauth.permission_checker.ip:
-        class: Ordermind\LogicalAuthorizationBundle\PermissionType\Ip\Ip
+        class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\IpChecker
         arguments: ['@request_stack']
         tags:
             - {name: logauth.tag.permission_checker}

@@ -18,7 +18,7 @@ class DefaultController extends AbstractController
      * @Method({"GET"})
      *
      * @Permissions({
-     *   "flag": "user_has_account"
+     *   "condition": "user_has_account"
      * })
      */
     public function routeHasAccountAction()

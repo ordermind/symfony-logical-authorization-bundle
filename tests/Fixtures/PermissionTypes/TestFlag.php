@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes;
 
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagInterface;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerInterface;
 
-class TestFlag implements FlagInterface
+class TestFlag implements SimpleConditionCheckerInterface
 {
     /**
      * @var string|null
@@ -26,7 +26,7 @@ class TestFlag implements FlagInterface
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkFlag(array $context): bool
+    public function checkCondition(array $context): bool
     {
         return true;
     }

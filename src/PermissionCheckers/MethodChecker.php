@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\PermissionType\Host;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionCheckers;
 
 use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionCheckerInterface;
@@ -10,16 +10,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use TypeError;
 
 /**
- * Permission type for checking host.
+ * Checks http method permissions.
  */
-class Host implements PermissionCheckerInterface
+class MethodChecker implements PermissionCheckerInterface
 {
     protected $requestStack;
 
     /**
      * @internal
      *
-     * @param RequestStack $requestStack
+     * @param RequestStack $requestStack RequestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -31,26 +31,26 @@ class Host implements PermissionCheckerInterface
      */
     public static function getName(): string
     {
-        return 'host';
+        return 'method';
     }
 
     /**
-     * Checks if the current request is sent to an approved host.
+     * Checks if the current request uses an allowed method.
      *
-     * @param string $host
+     * @param string $method
      * @param array  $context
      *
-     * @return bool TRUE if the host is allowed or FALSE if it is not allowed
+     * @return bool TRUE if the method is allowed or FALSE if it is not allowed
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($host, $context): bool
+    public function checkPermission($method, $context): bool
     {
-        if (!is_string($host)) {
-            throw new TypeError('The host parameter must be a string.');
+        if (!is_string($method)) {
+            throw new TypeError('The method parameter must be a string.');
         }
-        if (!$host) {
-            throw new InvalidArgumentException('The host parameter cannot be empty.');
+        if (!$method) {
+            throw new InvalidArgumentException('The method parameter cannot be empty.');
         }
 
         $currentRequest = $this->requestStack->getCurrentRequest();
@@ -59,6 +59,6 @@ class Host implements PermissionCheckerInterface
             return false;
         }
 
-        return (bool) preg_match('{' . $host . '}i', $currentRequest->getHost());
+        return strcasecmp($currentRequest->getMethod(), $method) == 0;
     }
 }

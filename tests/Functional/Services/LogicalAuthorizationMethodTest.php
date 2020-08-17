@@ -8,14 +8,14 @@ use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\FlagManager;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserCanBypassAccess as BypassAccessFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserHasAccount as HasAccountFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Flag\Flags\UserIsAuthor as IsAuthorFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Host\Host;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Ip\Ip;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Method\Method;
-use Ordermind\LogicalAuthorizationBundle\PermissionType\Role\Role;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\HostChecker;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\IpChecker;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\MethodChecker;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\RoleChecker;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserCanBypassAccessChecker as BypassAccessFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserHasAccountChecker as HasAccountFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserIsAuthorChecker as IsAuthorFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerManager;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\BypassAccessChecker\AlwaysDeny;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\ErroneousModel;
@@ -43,115 +43,115 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testFlagBypassAccessWrongContextType()
     {
         $this->expectException(TypeError::class);
-        $flag = new BypassAccessFlag();
-        $flag->checkFlag(null);
+        $condition = new BypassAccessFlag();
+        $condition->checkCondition(null);
     }
 
     public function testFlagBypassAccessMissingUser()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flag = new BypassAccessFlag();
-        $flag->checkFlag([]);
+        $condition = new BypassAccessFlag();
+        $condition->checkCondition([]);
     }
 
     public function testFlagBypassAccessWrongUserType()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flag = new BypassAccessFlag();
-        $flag->checkFlag(['user' => []]);
+        $condition = new BypassAccessFlag();
+        $condition->checkCondition(['user' => []]);
     }
 
     public function testFlagBypassAccessWrongReturnType()
     {
         $this->expectException(TypeError::class);
         $user = new ErroneousUser();
-        $flag = new BypassAccessFlag();
-        $flag->checkFlag(['user' => $user]);
+        $condition = new BypassAccessFlag();
+        $condition->checkCondition(['user' => $user]);
     }
 
     public function testFlagBypassAccessAnonymousUserDisallow()
     {
-        $flag = new BypassAccessFlag();
-        $this->assertFalse($flag->checkFlag(['user' => 'anon.']));
+        $condition = new BypassAccessFlag();
+        $this->assertFalse($condition->checkCondition(['user' => 'anon.']));
     }
 
     public function testFlagBypassAccessDisallow()
     {
         $user = new TestUser();
-        $flag = new BypassAccessFlag();
-        $this->assertFalse($flag->checkFlag(['user' => $user]));
+        $condition = new BypassAccessFlag();
+        $this->assertFalse($condition->checkCondition(['user' => $user]));
     }
 
     public function testFlagBypassAccessAllow()
     {
         $user = new TestUser();
         $user->setBypassAccess(true);
-        $flag = new BypassAccessFlag();
-        $this->assertTrue($flag->checkFlag(['user' => $user]));
+        $condition = new BypassAccessFlag();
+        $this->assertTrue($condition->checkCondition(['user' => $user]));
     }
 
     public function testFlagHasAccountWrongContextType()
     {
         $this->expectException(TypeError::class);
-        $flag = new HasAccountFlag();
-        $flag->checkFlag(null);
+        $condition = new HasAccountFlag();
+        $condition->checkCondition(null);
     }
 
     public function testFlagHasAccountMissingUser()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flag = new HasAccountFlag();
-        $flag->checkFlag([]);
+        $condition = new HasAccountFlag();
+        $condition->checkCondition([]);
     }
 
     public function testFlagHasAccountDisallow()
     {
-        $flag = new HasAccountFlag();
-        $this->assertFalse($flag->checkFlag(['user' => 'anon.']));
+        $condition = new HasAccountFlag();
+        $this->assertFalse($condition->checkCondition(['user' => 'anon.']));
     }
 
     public function testFlagHasAccountAllow()
     {
         $user = new TestUser();
-        $flag = new HasAccountFlag();
-        $this->assertTrue($flag->checkFlag(['user' => $user]));
+        $condition = new HasAccountFlag();
+        $this->assertTrue($condition->checkCondition(['user' => $user]));
     }
 
     public function testFlagIsAuthorWrongContextType()
     {
         $this->expectException(TypeError::class);
-        $flag = new IsAuthorFlag();
-        $flag->checkFlag(null);
+        $condition = new IsAuthorFlag();
+        $condition->checkCondition(null);
     }
 
     public function testFlagIsAuthorMissingUser()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flag = new IsAuthorFlag();
-        $flag->checkFlag([]);
+        $condition = new IsAuthorFlag();
+        $condition->checkCondition([]);
     }
 
     public function testFlagIsAuthorWrongUserType()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flag = new IsAuthorFlag();
-        $flag->checkFlag(['user' => []]);
+        $condition = new IsAuthorFlag();
+        $condition->checkCondition(['user' => []]);
     }
 
     public function testFlagIsAuthorMissingModel()
     {
         $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
-        $flag = new IsAuthorFlag();
-        $flag->checkFlag(['user' => $user]);
+        $condition = new IsAuthorFlag();
+        $condition->checkCondition(['user' => $user]);
     }
 
     public function testFlagIsAuthorModelClassString()
     {
         $user = new TestUser();
-        $flag = new IsAuthorFlag();
+        $condition = new IsAuthorFlag();
         $this->assertFalse(
-            $flag->checkFlag(['user' => $user, 'model' => TestUser::class])
+            $condition->checkCondition(['user' => $user, 'model' => TestUser::class])
         );
     }
 
@@ -159,8 +159,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
-        $flag = new IsAuthorFlag();
-        $flag->checkFlag(['user' => $user, 'model' => []]);
+        $condition = new IsAuthorFlag();
+        $condition->checkCondition(['user' => $user, 'model' => []]);
     }
 
     public function testFlagIsAuthorModelWrongAuthorType()
@@ -168,23 +168,23 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new ErroneousModel();
-        $flag = new IsAuthorFlag();
-        $flag->checkFlag(['user' => $user, 'model' => $model]);
+        $condition = new IsAuthorFlag();
+        $condition->checkCondition(['user' => $user, 'model' => $model]);
     }
 
     public function testFlagIsAuthorModelAnonymousUserDisallow()
     {
         $model = new TestModelBoolean();
-        $flag = new IsAuthorFlag();
-        $this->assertFalse($flag->checkFlag(['user' => 'anon.', 'model' => $model]));
+        $condition = new IsAuthorFlag();
+        $this->assertFalse($condition->checkCondition(['user' => 'anon.', 'model' => $model]));
     }
 
     public function testFlagIsAuthorModelAnonymousAuthorAllow()
     {
         $user = new TestUser();
         $model = new TestModelBoolean();
-        $flag = new IsAuthorFlag();
-        $this->assertTrue($flag->checkFlag(['user' => $user, 'model' => $model]));
+        $condition = new IsAuthorFlag();
+        $this->assertTrue($condition->checkCondition(['user' => $user, 'model' => $model]));
     }
 
     public function testFlagIsAuthorModelAllow()
@@ -192,173 +192,173 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $flag = new IsAuthorFlag();
-        $this->assertTrue($flag->checkFlag(['user' => $user, 'model' => $model]));
+        $condition = new IsAuthorFlag();
+        $this->assertTrue($condition->checkCondition(['user' => $user, 'model' => $model]));
     }
 
-    public function testFlagManagerAddFlagWrongNameType()
+    public function testSimpleConditionCheckerManagerAddFlagWrongNameType()
     {
         $this->expectException(TypeError::class);
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName(true);
-        $flagManager->addFlag($flag);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName(true);
+        $conditionManager->addCondition($condition);
     }
 
-    public function testFlagManagerAddFlagEmptyName()
+    public function testSimpleConditionCheckerManagerAddFlagEmptyName()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('');
-        $flagManager->addFlag($flag);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('');
+        $conditionManager->addCondition($condition);
     }
 
-    public function testFlagManagerAddFlagAlreadyRegistered()
+    public function testSimpleConditionCheckerManagerAddFlagAlreadyRegistered()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('test');
-        $flagManager->addFlag($flag);
-        $flagManager->addFlag($flag);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('test');
+        $conditionManager->addCondition($condition);
+        $conditionManager->addCondition($condition);
     }
 
-    public function testFlagManagerAddFlag()
+    public function testSimpleConditionCheckerManagerAddFlag()
     {
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('test');
-        $flagManager->addFlag($flag);
-        $flags = $flagManager->getFlags();
-        $this->assertTrue(isset($flags['test']));
-        $this->assertSame($flag, $flags['test']);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('test');
+        $conditionManager->addCondition($condition);
+        $conditions = $conditionManager->getConditions();
+        $this->assertTrue(isset($conditions['test']));
+        $this->assertSame($condition, $conditions['test']);
     }
 
-    public function testFlagManagerRemoveFlagWrongNameType()
+    public function testSimpleConditionCheckerManagerRemoveFlagWrongNameType()
     {
         $this->expectException(TypeError::class);
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('test');
-        $flagManager->addFlag($flag);
-        $flagManager->removeFlag(true);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('test');
+        $conditionManager->addCondition($condition);
+        $conditionManager->removeCondition(true);
     }
 
-    public function testFlagManagerRemoveFlagEmptyName()
+    public function testSimpleConditionCheckerManagerRemoveFlagEmptyName()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('test');
-        $flagManager->addFlag($flag);
-        $flagManager->removeFlag('');
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('test');
+        $conditionManager->addCondition($condition);
+        $conditionManager->removeCondition('');
     }
 
-    public function testFlagManagerRemoveFlagNotRegistered()
+    public function testSimpleConditionCheckerManagerRemoveFlagNotRegistered()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flagManager = new FlagManager();
-        $flagManager->removeFlag('test');
+        $conditionManager = new SimpleConditionCheckerManager();
+        $conditionManager->removeCondition('test');
     }
 
-    public function testFlagManagerRemoveFlag()
+    public function testSimpleConditionCheckerManagerRemoveFlag()
     {
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('test');
-        $flagManager->addFlag($flag);
-        $flags = $flagManager->getFlags();
-        $this->assertTrue(isset($flags['test']));
-        $flagManager->removeFlag('test');
-        $flags = $flagManager->getFlags();
-        $this->assertFalse(isset($flags['test']));
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('test');
+        $conditionManager->addCondition($condition);
+        $conditions = $conditionManager->getConditions();
+        $this->assertTrue(isset($conditions['test']));
+        $conditionManager->removeCondition('test');
+        $conditions = $conditionManager->getConditions();
+        $this->assertFalse(isset($conditions['test']));
     }
 
-    public function testFlagManagerCheckPermissionWrongNameType()
+    public function testSimpleConditionCheckerManagerCheckPermissionWrongNameType()
     {
         $this->expectException(TypeError::class);
-        $flagManager = new FlagManager();
-        $flagManager->checkPermission(true, []);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $conditionManager->checkPermission(true, []);
     }
 
-    public function testFlagManagerCheckPermissionEmptyName()
+    public function testSimpleConditionCheckerManagerCheckPermissionEmptyName()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flagManager = new FlagManager();
-        $flagManager->checkPermission('', []);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $conditionManager->checkPermission('', []);
     }
 
-    public function testFlagManagerCheckPermissionNotRegistered()
+    public function testSimpleConditionCheckerManagerCheckPermissionNotRegistered()
     {
         $this->expectException(InvalidArgumentException::class);
-        $flagManager = new FlagManager();
-        $flagManager->checkPermission('test', []);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $conditionManager->checkPermission('test', []);
     }
 
-    public function testFlagManagerCheckPermission()
+    public function testSimpleConditionCheckerManagerCheckPermission()
     {
-        $flagManager = new FlagManager();
-        $flag = new TestFlag();
-        $flag->setName('test');
-        $flagManager->addFlag($flag);
-        $this->assertTrue($flagManager->checkPermission('test', []));
+        $conditionManager = new SimpleConditionCheckerManager();
+        $condition = new TestFlag();
+        $condition->setName('test');
+        $conditionManager->addCondition($condition);
+        $this->assertTrue($conditionManager->checkPermission('test', []));
     }
 
-    // --- Role --- //
+    // --- RoleChecker --- //
 
     public function testRoleWrongRoleType()
     {
         $this->expectException(TypeError::class);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $role->checkPermission(true, []);
     }
 
     public function testRoleEmptyRole()
     {
         $this->expectException(InvalidArgumentException::class);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $role->checkPermission('', []);
     }
 
     public function testRoleWrongContextType()
     {
         $this->expectException(TypeError::class);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $role->checkPermission('ROLE_USER', null);
     }
 
     public function testRoleMissingUser()
     {
         $this->expectException(InvalidArgumentException::class);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $role->checkPermission('ROLE_USER', []);
     }
 
     public function testRoleWrongUserType()
     {
         $this->expectException(InvalidArgumentException::class);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $role->checkPermission('ROLE_USER', ['user' => []]);
     }
 
     public function testRoleAnonymousUserDisallow()
     {
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $this->assertFalse($role->checkPermission('ROLE_USER', ['user' => 'anon.']));
     }
 
     public function testRoleDisallow()
     {
         $user = new TestUser();
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $this->assertFalse($role->checkPermission('ROLE_ADMIN', ['user' => $user]));
     }
 
     public function testRoleAllow()
     {
         $user = new TestUser();
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $this->assertTrue($role->checkPermission('ROLE_USER', ['user' => $user]));
         $user->setRoles(['ROLE_ADMIN']);
         $this->assertTrue($role->checkPermission('ROLE_ADMIN', ['user' => $user]));
@@ -368,7 +368,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $user = new TestUser();
         $user->setRoles(['ROLE_ADMIN']);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $this->assertFalse($role->checkPermission('ROLE_CHILD', ['user' => $user]));
     }
 
@@ -376,17 +376,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $user = new TestUser();
         $user->setRoles(['ROLE_PARENT']);
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $this->assertTrue($role->checkPermission('ROLE_CHILD', ['user' => $user]));
     }
 
-    // --- Host --- //
+    // --- HostChecker --- //
 
     public function testHostWrongHostType()
     {
         $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
-        $host = new Host($requestStack);
+        $host = new HostChecker($requestStack);
         $host->checkPermission(1, []);
     }
 
@@ -394,7 +394,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
-        $host = new Host($requestStack);
+        $host = new HostChecker($requestStack);
         $host->checkPermission('', []);
     }
 
@@ -403,7 +403,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $host = new Host($requestStack);
+        $host = new HostChecker($requestStack);
         $this->assertFalse($host->checkPermission('test.se', []));
     }
 
@@ -412,17 +412,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $host = new Host($requestStack);
+        $host = new HostChecker($requestStack);
         $this->assertTrue($host->checkPermission('test.com', []));
     }
 
-    // --- Method --- //
+    // --- MethodChecker --- //
 
     public function testMethodWrongMethodType()
     {
         $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
-        $method = new Method($requestStack);
+        $method = new MethodChecker($requestStack);
         $method->checkPermission(1, []);
     }
 
@@ -430,7 +430,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
-        $method = new Method($requestStack);
+        $method = new MethodChecker($requestStack);
         $method->checkPermission('', []);
     }
 
@@ -439,7 +439,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $method = new Method($requestStack);
+        $method = new MethodChecker($requestStack);
         $this->assertFalse($method->checkPermission('PUSH', []));
     }
 
@@ -448,17 +448,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $method = new Method($requestStack);
+        $method = new MethodChecker($requestStack);
         $this->assertTrue($method->checkPermission('GET', []));
     }
 
-    // --- Ip --- //
+    // --- IpChecker --- //
 
     public function testIpWrongIpType()
     {
         $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
-        $ipPermission = new Ip($requestStack);
+        $ipPermission = new IpChecker($requestStack);
         $ipPermission->checkPermission(1, []);
     }
 
@@ -466,7 +466,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
-        $ipPermission = new Ip($requestStack);
+        $ipPermission = new IpChecker($requestStack);
         $ipPermission->checkPermission('', []);
     }
 
@@ -475,7 +475,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $ipPermission = new Ip($requestStack);
+        $ipPermission = new IpChecker($requestStack);
         $this->assertFalse($ipPermission->checkPermission('127.0.0.1', []));
     }
 
@@ -484,7 +484,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $requestStack = new RequestStack();
         $request = Request::create('https://test.com/test', 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.55']);
         $requestStack->push($request);
-        $ipPermission = new Ip($requestStack);
+        $ipPermission = new IpChecker($requestStack);
         $this->assertTrue($ipPermission->checkPermission('127.0.0.55', []));
     }
 
@@ -928,10 +928,10 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testEventInsertTreeGetTree()
     {
         $lpLocator = new PermissionCheckerLocator();
-        $role = new Role($this->roleHierarchy);
+        $role = new RoleChecker($this->roleHierarchy);
         $lpLocator->add($role);
-        $flagManager = new FlagManager();
-        $lpLocator->add($flagManager);
+        $conditionManager = new SimpleConditionCheckerManager();
+        $lpLocator->add($conditionManager);
         $event = new AddPermissionsEvent($lpLocator->getValidPermissionTreeKeys());
         $tree1 = [
             'models' => [
@@ -940,13 +940,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                         'role' => 'role1',
                     ],
                     'read' => [
-                        'flag' => [
-                            'flag1',
-                            'flag2',
+                        'condition' => [
+                            'condition1',
+                            'condition2',
                         ],
                     ],
                     'update' => [
-                        'flag' => 'flag1',
+                        'condition' => 'condition1',
                     ],
                     'fields' => [
                         'field1' => [
@@ -954,7 +954,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                                 'role' => 'role1',
                             ],
                             'set' => [
-                                'flag' => 'flag1',
+                                'condition' => 'condition1',
                             ],
                         ],
                     ],
@@ -971,14 +971,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                         ],
                     ],
                     'read' => [
-                        'flag' => 'newflag1',
+                        'condition' => 'newcondition1',
                     ],
                     'fields' => [
                         'field1' => [
                             'get' => [
                                 'OR' => [
-                                    'role' => 'newrole1',
-                                    'flag' => 'newflag1',
+                                    'role'      => 'newrole1',
+                                    'condition' => 'newcondition1',
                                 ],
                             ],
                         ],
@@ -997,21 +997,21 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                         ],
                     ],
                     'read' => [
-                        'flag' => 'newflag1',
+                        'condition' => 'newcondition1',
                     ],
                     'update' => [
-                        'flag' => 'flag1',
+                        'condition' => 'condition1',
                     ],
                     'fields' => [
                         'field1' => [
                             'get' => [
                                 'OR' => [
-                                    'role' => 'newrole1',
-                                    'flag' => 'newflag1',
+                                    'role'      => 'newrole1',
+                                    'condition' => 'newcondition1',
                                 ],
                             ],
                             'set' => [
-                                'flag' => 'flag1',
+                                'condition' => 'condition1',
                             ],
                         ],
                     ],
@@ -1159,7 +1159,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
         $permissions = [
             'NOT' => [
-                'flag' => 'user_has_account',
+                'condition' => 'user_has_account',
             ],
         ];
         $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
@@ -1174,13 +1174,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'permission_checks'           => [
                 [
                     'permissions' => [
-                        'NOT' => ['flag' => 'user_has_account'],
+                        'NOT' => ['condition' => 'user_has_account'],
                     ],
                     'resolve' => true,
                 ],
                 [
                     'permissions' => [
-                        'flag' => 'user_has_account',
+                        'condition' => 'user_has_account',
                     ],
                     'resolve' => false,
                 ],
@@ -1211,7 +1211,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model->setAuthor($user);
 
         $permissions = [
-            'flag' => [
+            'condition' => [
                 'NOT' => 'user_has_account',
             ],
         ];
@@ -1227,7 +1227,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'permission_checks'           => [
                 [
                     'permissions' => [
-                        'flag' => ['NOT' => 'user_has_account'],
+                        'condition' => ['NOT' => 'user_has_account'],
                     ],
                     'resolve' => true,
                 ],
@@ -1268,7 +1268,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $permissions = [
             'NO_BYPASS' => [
                 'NOT' => [
-                    'flag' => 'user_has_account',
+                    'condition' => 'user_has_account',
                 ],
             ],
             'AND' => [
@@ -1284,7 +1284,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 ],
                 true,
                 'TRUE',
-                'flag' => [
+                'condition' => [
                     'NOT' => [
                         'OR' => [
                             ['NOT' => 'user_has_account'],
@@ -1293,7 +1293,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                     ],
                 ],
             ],
-            'flag' => 'user_has_account',
+            'condition' => 'user_has_account',
         ];
 
         $debugCollector->addPermissionCheck(
@@ -1315,11 +1315,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'permission_no_bypass_checks' => array_reverse(
                 [
                     [
-                        'permissions' => ['flag' => 'user_has_account'],
+                        'permissions' => ['condition' => 'user_has_account'],
                         'resolve'     => true,
                     ],
                     [
-                        'permissions' => ['NOT' => ['flag' => 'user_has_account']],
+                        'permissions' => ['NOT' => ['condition' => 'user_has_account']],
                         'resolve'     => false,
                     ],
                 ]
@@ -1356,31 +1356,31 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                     ],
                     14 => [
                         'permissions' => [
-                            'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                            'condition' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
                         ],
                         'resolve' => true,
                     ],
                     15 => [
                         'permissions' => [
                             'AND' => [
-                                'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                                '0'    => true,
-                                '1'    => 'TRUE',
-                                'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                                'role'      => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
+                                '0'         => true,
+                                '1'         => 'TRUE',
+                                'condition' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
                             ],
                         ],
                         'resolve' => true,
                     ],
-                    16 => ['permissions' => ['flag' => 'user_has_account'], 'resolve' => true],
+                    16 => ['permissions' => ['condition' => 'user_has_account'], 'resolve' => true],
                     17 => [
                         'permissions' => [
                             'AND' => [
-                                'role' => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
-                                '0'    => true,
-                                '1'    => 'TRUE',
-                                'flag' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
+                                'role'      => ['OR' => ['NOT' => ['AND' => ['ROLE_ADMIN', 'ROLE_ADMIN']]]],
+                                '0'         => true,
+                                '1'         => 'TRUE',
+                                'condition' => ['NOT' => ['OR' => [['NOT' => 'user_has_account'], ['NOT' => 'user_is_author']]]],
                             ],
-                            'flag' => 'user_has_account',
+                            'condition' => 'user_has_account',
                         ],
                         'resolve' => true,
                     ],
@@ -1417,7 +1417,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $permissions = ['no_bypass' => true, 'flag' => ['flag' => 'user_has_account']];
+        $permissions = ['no_bypass' => true, 'condition' => ['condition' => 'user_has_account']];
         $debugCollector->addPermissionCheck(
             false,
             'field',
@@ -1440,7 +1440,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $permissions = ['no_bypass' => ['flag' => ['flag' => 'user_has_account']], true];
+        $permissions = ['no_bypass' => ['condition' => ['condition' => 'user_has_account']], true];
         $debugCollector->addPermissionCheck(
             false,
             'field',

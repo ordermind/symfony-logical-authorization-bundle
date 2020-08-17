@@ -49,19 +49,19 @@ logauth:
                         set: false
             Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelHasAccountNoInterface:
                 create:
-                    flag: user_has_account
+                    condition: user_has_account
                 read:
-                    flag: user_has_account
+                    condition: user_has_account
                 update:
-                    flag: user_has_account
+                    condition: user_has_account
                 delete:
-                    flag: user_has_account
+                    condition: user_has_account
                 fields:
                     field1:
                         get:
-                            flag: user_has_account
+                            condition: user_has_account
                         set:
-                            flag: user_has_account
+                            condition: user_has_account
             Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelNoBypass:
                 create:
                     no_bypass: true
@@ -90,38 +90,38 @@ logauth:
                 read:
                     OR:
                         role: ROLE_ADMIN
-                        flag: user_is_author
+                        condition: user_is_author
                 update:
                     OR:
                         role: ROLE_ADMIN
-                        flag: user_is_author
+                        condition: user_is_author
                 delete:
                     OR:
                         role: ROLE_ADMIN
-                        flag: user_is_author
+                        condition: user_is_author
                 fields:
                     field1:
                         get:
                             role: ROLE_ADMIN
-                            flag: user_is_author
+                            condition: user_is_author
                         set:
                             role: ROLE_ADMIN
-                            flag: user_is_author
+                            condition: user_is_author
             Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser:
                 create:
                     role: ROLE_ADMIN
                 read:
                     OR:
                         role: ROLE_ADMIN
-                        flag: user_is_author
+                        condition: user_is_author
                 update:
                     OR:
                         role: ROLE_ADMIN
-                        flag: user_is_author
+                        condition: user_is_author
                 delete:
                     no_bypass:
-                        flag: user_is_author
+                        condition: user_is_author
                     AND:
                         role: ROLE_ADMIN
-                        flag:
+                        condition:
                             NOT: user_is_author
