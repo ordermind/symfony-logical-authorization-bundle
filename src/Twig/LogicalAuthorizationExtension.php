@@ -24,12 +24,6 @@ class LogicalAuthorizationExtension extends AbstractExtension
      */
     protected $laModel;
 
-    /**
-     * @internal
-     *
-     * @param LogicalAuthorizationRouteInterface $laRoute
-     * @param LogicalAuthorizationModelInterface $laModel
-     */
     public function __construct(
         LogicalAuthorizationRouteInterface $laRoute,
         LogicalAuthorizationModelInterface $laModel

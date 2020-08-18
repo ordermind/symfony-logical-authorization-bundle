@@ -18,11 +18,6 @@ class ExpressionProvider implements ExpressionFunctionProviderInterface
      */
     protected $laRoute;
 
-    /**
-     * @internal
-     *
-     * @param LogicalAuthorizationRouteInterface $laRoute
-     */
     public function __construct(LogicalAuthorizationRouteInterface $laRoute)
     {
         $this->laRoute = $laRoute;
@@ -31,7 +26,7 @@ class ExpressionProvider implements ExpressionFunctionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new ExpressionFunction(

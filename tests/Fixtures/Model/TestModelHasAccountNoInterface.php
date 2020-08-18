@@ -14,17 +14,17 @@ class TestModelHasAccountNoInterface
     private $id;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $field1 = '';
 
     /**
-     * @var string|null
+     * @var string
      */
     private $field2 = '';
 
     /**
-     * @var string|null
+     * @var string
      */
     private $field3 = '';
 
@@ -36,9 +36,9 @@ class TestModelHasAccountNoInterface
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -48,9 +48,9 @@ class TestModelHasAccountNoInterface
      *
      * @param string $field1
      *
-     * @return TestModelHasAccountNoInterface
+     * @return self
      */
-    public function setField1($field1)
+    public function setField1(string $field1): self
     {
         $this->field1 = $field1;
 
@@ -62,7 +62,7 @@ class TestModelHasAccountNoInterface
      *
      * @return string
      */
-    public function getField1()
+    public function getField1(): string
     {
         return $this->field1;
     }
@@ -72,9 +72,9 @@ class TestModelHasAccountNoInterface
      *
      * @param string $field2
      *
-     * @return TestModelHasAccountNoInterface
+     * @return self
      */
-    public function setField2($field2)
+    public function setField2(string $field2): self
     {
         $this->field2 = $field2;
 
@@ -86,7 +86,7 @@ class TestModelHasAccountNoInterface
      *
      * @return string
      */
-    public function getField2()
+    public function getField2(): string
     {
         return $this->field2;
     }
@@ -96,9 +96,9 @@ class TestModelHasAccountNoInterface
      *
      * @param string $field3
      *
-     * @return TestModelHasAccountNoInterface
+     * @return self
      */
-    public function setField3($field3)
+    public function setField3(string $field3): self
     {
         $this->field3 = $field3;
 
@@ -110,7 +110,7 @@ class TestModelHasAccountNoInterface
      *
      * @return string
      */
-    public function getField3()
+    public function getField3(): string
     {
         return $this->field3;
     }
@@ -120,9 +120,9 @@ class TestModelHasAccountNoInterface
      *
      * @param UserInterface $author
      *
-     * @return TestModelHasAccountNoInterface
+     * @return self
      */
-    public function setAuthor(UserInterface $author)
+    public function setAuthor(UserInterface $author): self
     {
         $this->author = $author;
 

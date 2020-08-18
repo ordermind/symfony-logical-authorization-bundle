@@ -23,8 +23,8 @@ use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\ErroneousUser;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestModelBoolean;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ModelDecorator\ModelDecorator;
-use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes\TestFlag;
-use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes\TestType;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestConditionChecker;
+use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestPermissionChecker;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyRegisteredException;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
@@ -196,30 +196,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($condition->checkCondition(['user' => $user, 'model' => $model]));
     }
 
-    public function testSimpleConditionCheckerManagerAddFlagWrongNameType()
-    {
-        $this->expectException(TypeError::class);
-        $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName(true);
-        $conditionManager->addCondition($condition);
-    }
-
-    public function testSimpleConditionCheckerManagerAddFlagEmptyName()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('');
-        $conditionManager->addCondition($condition);
-    }
-
     public function testSimpleConditionCheckerManagerAddFlagAlreadyRegistered()
     {
         $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('test');
+        $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
         $conditionManager->addCondition($condition);
     }
@@ -227,20 +208,18 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testSimpleConditionCheckerManagerAddFlag()
     {
         $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('test');
+        $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
         $conditions = $conditionManager->getConditions();
-        $this->assertTrue(isset($conditions['test']));
-        $this->assertSame($condition, $conditions['test']);
+        $this->assertTrue(isset($conditions['always_true']));
+        $this->assertSame($condition, $conditions['always_true']);
     }
 
     public function testSimpleConditionCheckerManagerRemoveFlagWrongNameType()
     {
         $this->expectException(TypeError::class);
         $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('test');
+        $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
         $conditionManager->removeCondition(true);
     }
@@ -249,8 +228,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('test');
+        $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
         $conditionManager->removeCondition('');
     }
@@ -265,14 +243,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testSimpleConditionCheckerManagerRemoveFlag()
     {
         $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('test');
+        $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
         $conditions = $conditionManager->getConditions();
-        $this->assertTrue(isset($conditions['test']));
-        $conditionManager->removeCondition('test');
+        $this->assertTrue(isset($conditions['always_true']));
+        $conditionManager->removeCondition('always_true');
         $conditions = $conditionManager->getConditions();
-        $this->assertFalse(isset($conditions['test']));
+        $this->assertFalse(isset($conditions['always_true']));
     }
 
     public function testSimpleConditionCheckerManagerCheckPermissionWrongNameType()
@@ -293,16 +270,15 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
-        $conditionManager->checkPermission('test', []);
+        $conditionManager->checkPermission('always_true', []);
     }
 
     public function testSimpleConditionCheckerManagerCheckPermission()
     {
         $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestFlag();
-        $condition->setName('test');
+        $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
-        $this->assertTrue($conditionManager->checkPermission('test', []));
+        $this->assertTrue($conditionManager->checkPermission('always_true', []));
     }
 
     // --- RoleChecker --- //
@@ -521,7 +497,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testCheckAccessDisallow()
     {
         $lpLocator = new PermissionCheckerLocator();
-        $lpLocator->add(new TestType());
+        $lpLocator->add(new TestPermissionChecker());
         $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
         $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
         $this->assertFalse($logicalAuthorization->checkAccess(['test' => 'no'], []));
@@ -530,7 +506,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testCheckAccessAllow()
     {
         $lpLocator = new PermissionCheckerLocator();
-        $lpLocator->add(new TestType());
+        $lpLocator->add(new TestPermissionChecker());
         $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
         $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
         $this->assertTrue($logicalAuthorization->checkAccess(['test' => 'yes'], []));
@@ -881,7 +857,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $this->expectException(PermissionTypeAlreadyRegisteredException::class);
         $lpLocator = new PermissionCheckerLocator();
-        $type = new TestType();
+        $type = new TestPermissionChecker();
         $lpLocator->add($type);
         $lpLocator->add($type);
     }
@@ -889,7 +865,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testLogicalPermissionsLocatorAddType()
     {
         $lpLocator = new PermissionCheckerLocator();
-        $type = new TestType();
+        $type = new TestPermissionChecker();
         $lpLocator->add($type);
         $this->assertTrue($lpLocator->has('test'));
     }

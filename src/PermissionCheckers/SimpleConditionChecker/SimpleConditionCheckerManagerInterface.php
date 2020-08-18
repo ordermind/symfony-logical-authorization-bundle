@@ -38,5 +38,5 @@ interface SimpleConditionCheckerManagerInterface extends PermissionCheckerInterf
      *
      * @return bool
      */
-    public function checkPermission($name, $context): bool;
+    public function checkPermission(string $name, $context): bool;
 }

@@ -9,17 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class YmlController extends AbstractController
 {
-    public function routeYmlAction()
+    public function routeYmlAction(): Response
     {
         return new Response('');
     }
 
-    public function routeYmlAllowedAction()
+    public function routeYmlAllowedAction(): Response
     {
         return new Response('');
     }
 
-    public function routeYmlDeniedAction()
+    public function routeYmlDeniedAction(): Response
     {
         return new Response('');
     }

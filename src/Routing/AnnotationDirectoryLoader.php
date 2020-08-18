@@ -14,9 +14,9 @@ class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
-        if (!is_string($resource) || !is_string($type)) {
+        if (!is_string($resource)) {
             return false;
         }
 

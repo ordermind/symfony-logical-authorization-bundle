@@ -30,9 +30,11 @@ class PermissionsCacheWarmer implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir): array
     {
         $this->treeBuilder->getTree(true);
+
+        return [];
     }
 
     /**

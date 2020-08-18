@@ -21,7 +21,7 @@ class DefaultController extends AbstractController
      *   "role": "ROLE_ADMIN"
      * })
      */
-    public function routeRoleAction()
+    public function routeRoleAction(): Response
     {
         return new Response('');
     }
@@ -35,7 +35,7 @@ class DefaultController extends AbstractController
      *   "role": {"ROLE_SALES", "ROLE_ADMIN"}
      * })
      */
-    public function routeRoleMultipleAction()
+    public function routeRoleMultipleAction(): Response
     {
         return new Response('');
     }
@@ -50,7 +50,7 @@ class DefaultController extends AbstractController
      *   FALSE
      * })
      */
-    public function routeNoBypassAction()
+    public function routeNoBypassAction(): Response
     {
         return new Response('');
     }
@@ -64,7 +64,7 @@ class DefaultController extends AbstractController
      *   "host": "test.com"
      * })
      */
-    public function routeHostAction()
+    public function routeHostAction(): Response
     {
         return new Response('');
     }
@@ -76,7 +76,7 @@ class DefaultController extends AbstractController
      *   "method": "GET"
      * })
      */
-    public function routeMethodAction()
+    public function routeMethodAction(): Response
     {
         return new Response('');
     }
@@ -88,7 +88,7 @@ class DefaultController extends AbstractController
      *   "method": "get"
      * })
      */
-    public function routeMethodLowercaseAction()
+    public function routeMethodLowercaseAction(): Response
     {
         return new Response('');
     }
@@ -102,7 +102,7 @@ class DefaultController extends AbstractController
      *   "ip": "127.0.0.1"
      * })
      */
-    public function routeIpAction()
+    public function routeIpAction(): Response
     {
         return new Response('');
     }
@@ -119,7 +119,7 @@ class DefaultController extends AbstractController
      *   }
      * })
      */
-    public function routeComplexAction()
+    public function routeComplexAction(): Response
     {
         return new Response('');
     }

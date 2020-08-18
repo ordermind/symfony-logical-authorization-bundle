@@ -9,17 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class XmlController extends AbstractController
 {
-    public function routeXmlAction()
+    public function routeXmlAction(): Response
     {
         return new Response('');
     }
 
-    public function routeXmlAllowedAction()
+    public function routeXmlAllowedAction(): Response
     {
         return new Response('');
     }
 
-    public function routeXmlDeniedAction()
+    public function routeXmlDeniedAction(): Response
     {
         return new Response('');
     }

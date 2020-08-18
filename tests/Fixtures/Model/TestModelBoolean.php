@@ -15,17 +15,17 @@ class TestModelBoolean implements ModelInterface
     private $id;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $field1 = '';
 
     /**
-     * @var string|null
+     * @var string
      */
     private $field2 = '';
 
     /**
-     * @var string|null
+     * @var string
      */
     private $field3 = '';
 
@@ -37,9 +37,9 @@ class TestModelBoolean implements ModelInterface
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -49,9 +49,9 @@ class TestModelBoolean implements ModelInterface
      *
      * @param string $field1
      *
-     * @return TestModelBoolean
+     * @return self
      */
-    public function setField1($field1)
+    public function setField1(string $field1): self
     {
         $this->field1 = $field1;
 
@@ -63,7 +63,7 @@ class TestModelBoolean implements ModelInterface
      *
      * @return string
      */
-    public function getField1()
+    public function getField1(): string
     {
         return $this->field1;
     }
@@ -73,9 +73,9 @@ class TestModelBoolean implements ModelInterface
      *
      * @param string $field2
      *
-     * @return TestModelBoolean
+     * @return self
      */
-    public function setField2($field2)
+    public function setField2(string $field2): self
     {
         $this->field2 = $field2;
 
@@ -87,7 +87,7 @@ class TestModelBoolean implements ModelInterface
      *
      * @return string
      */
-    public function getField2()
+    public function getField2(): string
     {
         return $this->field2;
     }
@@ -97,9 +97,9 @@ class TestModelBoolean implements ModelInterface
      *
      * @param string $field3
      *
-     * @return TestModelBoolean
+     * @return self
      */
-    public function setField3($field3)
+    public function setField3(string $field3): self
     {
         $this->field3 = $field3;
 
@@ -111,7 +111,7 @@ class TestModelBoolean implements ModelInterface
      *
      * @return string
      */
-    public function getField3()
+    public function getField3(): string
     {
         return $this->field3;
     }
@@ -121,9 +121,9 @@ class TestModelBoolean implements ModelInterface
      *
      * @param UserInterface $author
      *
-     * @return entity implementing ModelInterface
+     * @return ModelInterface
      */
-    public function setAuthor(UserInterface $author)
+    public function setAuthor(UserInterface $author): ModelInterface
     {
         $this->author = $author;
 

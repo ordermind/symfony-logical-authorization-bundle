@@ -25,7 +25,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     protected $dispatcher;
 
     /**
-     * CacheItemPoolInterface.
+     * @var CacheItemPoolInterface
      */
     protected $cache;
 
@@ -34,13 +34,6 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
      */
     protected $tree;
 
-    /**
-     * @internal
-     *
-     * @param PermissionCheckerLocatorInterface $locator
-     * @param EventDispatcherInterface          $dispatcher
-     * @param CacheItemPoolInterface            $cache
-     */
     public function __construct(
         PermissionCheckerLocatorInterface $locator,
         EventDispatcherInterface $dispatcher,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -19,13 +20,17 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('logauth');
+        $treeBuilder = new TreeBuilder('logauth', 'array');
 
-        $treeBuilder
-            ->getRootNode()
-            ->children()
-                ->variableNode('permissions')->end()
-            ->end();
+        /**
+         * @var ArrayNodeDefinition $rootNode
+         */
+        $rootNode = $treeBuilder->getRootNode();
+
+        $children = $rootNode->children();
+        $children->variableNode('permissions')->end();
+
+        $rootNode->end();
 
         return $treeBuilder;
     }

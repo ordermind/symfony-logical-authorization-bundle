@@ -40,9 +40,6 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     public function addCondition(SimpleConditionCheckerInterface $condition)
     {
         $name = $condition->getName();
-        if (!is_string($name)) {
-            throw new InvalidArgumentException('The name of a condition must be a string.');
-        }
         if (!$name) {
             throw new InvalidArgumentException('The name of a condition cannot be empty.');
         }
@@ -89,7 +86,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     /**
      * {@inheritdoc}
      */
-    public function checkPermission($name, $context): bool
+    public function checkPermission(string $name, $context): bool
     {
         if (!$name) {
             throw new InvalidArgumentException('The name parameter cannot be empty.');

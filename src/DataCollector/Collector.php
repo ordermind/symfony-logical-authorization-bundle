@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
 
+use Exception;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 use Ordermind\LogicalPermissions\PermissionCheckerLocatorInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\VarDumper\Cloner\Data;
+use Throwable;
 
 /**
  * {@inheritdoc}
@@ -35,12 +37,12 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * @var array
      */
-    protected $permissionLog;
+    protected $permissionLog = [];
 
     /**
      * @var array
      */
-    protected $data;
+    protected $data = [];
 
     /**
      * @internal
@@ -57,8 +59,6 @@ class Collector extends DataCollector implements CollectorInterface
         $this->treeBuilder = $treeBuilder;
         $this->lpFacade = $lpFacade;
         $this->locator = $locator;
-        $this->permissionLog = [];
-        $this->data = [];
     }
 
     /**
@@ -72,7 +72,7 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, Throwable $exception = null)
     {
         $log = $this->formatLog($this->permissionLog);
         $this->data = [
@@ -426,7 +426,7 @@ class Collector extends DataCollector implements CollectorInterface
 
         try {
             return $this->lpFacade->checkAccess($newPermissions, $context);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return false;

@@ -14,7 +14,7 @@ class UserCanBypassAccessChecker implements SimpleConditionCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'user_can_bypass_access';
     }
@@ -34,7 +34,7 @@ class UserCanBypassAccessChecker implements SimpleConditionCheckerInterface
         if (!isset($context['user'])) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'The context parameter must contain a "user" key to be able to evaluate the %s flag.',
+                    'The context parameter must contain a "user" key to be able to evaluate the %s condition.',
                     $this->getName()
                 )
             );
@@ -48,7 +48,7 @@ class UserCanBypassAccessChecker implements SimpleConditionCheckerInterface
             throw new InvalidArgumentException(
                 sprintf(
                     'The user class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be '
-                        . 'able to evaluate the %s flag.',
+                        . 'able to evaluate the %s condition.',
                     $this->getName()
                 )
             );

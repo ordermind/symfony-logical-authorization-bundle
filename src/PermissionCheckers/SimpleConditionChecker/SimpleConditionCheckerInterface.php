@@ -11,7 +11,7 @@ interface SimpleConditionCheckerInterface
      *
      * @return string
      */
-    public function getName(): string;
+    public static function getName(): string;
 
     /**
      * Checks the condition.

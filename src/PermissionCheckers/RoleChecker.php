@@ -20,11 +20,6 @@ class RoleChecker implements PermissionCheckerInterface
      */
     protected $roleHierarchy;
 
-    /**
-     * @internal
-     *
-     * @param SecurityRoleHierarchyInterface $roleHierarchy RoleHiearchy service
-     */
     public function __construct(SecurityRoleHierarchyInterface $roleHierarchy)
     {
         $this->roleHierarchy = $roleHierarchy;
@@ -49,11 +44,8 @@ class RoleChecker implements PermissionCheckerInterface
      *
      * @return bool TRUE if the role is present on the user or FALSE if it is not present
      */
-    public function checkPermission($role, $context): bool
+    public function checkPermission(string $role, $context): bool
     {
-        if (!is_string($role)) {
-            throw new TypeError('The role parameter must be a string.');
-        }
         if (!$role) {
             throw new InvalidArgumentException('The role parameter cannot be empty.');
         }

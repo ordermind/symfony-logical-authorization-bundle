@@ -7,7 +7,6 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionCheckers;
 use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use TypeError;
 
 /**
  * Checks host permissions.
@@ -16,11 +15,6 @@ class HostChecker implements PermissionCheckerInterface
 {
     protected $requestStack;
 
-    /**
-     * @internal
-     *
-     * @param RequestStack $requestStack
-     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
@@ -44,11 +38,8 @@ class HostChecker implements PermissionCheckerInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($host, $context): bool
+    public function checkPermission(string $host, $context): bool
     {
-        if (!is_string($host)) {
-            throw new TypeError('The host parameter must be a string.');
-        }
         if (!$host) {
             throw new InvalidArgumentException('The host parameter cannot be empty.');
         }

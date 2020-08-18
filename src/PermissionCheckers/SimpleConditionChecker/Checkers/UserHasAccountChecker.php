@@ -15,7 +15,7 @@ class UserHasAccountChecker implements SimpleConditionCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'user_has_account';
     }

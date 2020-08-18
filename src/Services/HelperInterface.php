@@ -18,7 +18,9 @@ interface HelperInterface
     public function getCurrentUser();
 
     /**
-     * @internal Logs an error if a logging service is available. Otherwise it outputs the error as a
+     * @internal
+     *
+     * Logs an error if a logging service is available. Otherwise it outputs the error as a
      * Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException.
      *
      * @param string $message

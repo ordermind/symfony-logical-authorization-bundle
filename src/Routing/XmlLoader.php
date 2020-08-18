@@ -11,6 +11,7 @@ use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Routing\RouteCollection;
+use TypeError;
 
 /**
  * {@inheritdoc}
@@ -28,13 +29,18 @@ class XmlLoader extends FileLoader
      *
      * @return RouteCollection A RouteCollection instance
      *
+     * @throws TypeError
      * @throws InvalidArgumentException when the file cannot be loaded or when the XML cannot be
      *                                  parsed because it does not validate against the scheme
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function load($file, $type = null): RouteCollection
+    public function load($file, ?string $type = null): RouteCollection
     {
+        if (!is_string($file)) {
+            throw new TypeError('The file parameter must be a string.');
+        }
+
         $path = $this->locator->locate($file);
 
         $xml = $this->loadFile($path);
@@ -57,9 +63,17 @@ class XmlLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
-        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION) && 'logauth_xml' === $type;
+        if (!is_string($resource)) {
+            return false;
+        }
+
+        if ('logauth_xml' !== $type) {
+            return false;
+        }
+
+        return 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
     /**
@@ -78,22 +92,25 @@ class XmlLoader extends FileLoader
             return;
         }
 
-        switch ($node->localName) {
-            case 'route':
-                $this->parseRoute($collection, $node, $path);
-                break;
-            case 'import':
-                $this->parseImport($collection, $node, $path, $file);
-                break;
-            default:
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Unknown tag "%s" used in file "%s". Expected "route" or "import".',
-                        $node->localName,
-                        $path
-                    )
-                );
+        if ('route' === $node->localName) {
+            $this->parseRoute($collection, $node, $path);
+
+            return;
         }
+
+        if ('import' === $node->localName) {
+            $this->parseImport($collection, $node, $path, $file);
+
+            return;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf(
+                'Unknown tag "%s" used in file "%s". Expected "route" or "import".',
+                $node->localName,
+                $path
+            )
+        );
     }
 
     /**
@@ -274,7 +291,7 @@ class XmlLoader extends FileLoader
     private function parseDefaultsConfig(DOMElement $element, string $path)
     {
         if ($this->isElementValueNull($element)) {
-            return;
+            return null;
         }
 
         // Check for existing element nodes in the default element. There can
@@ -304,14 +321,14 @@ class XmlLoader extends FileLoader
      * @param DOMElement $node The node value
      * @param string     $path Full path of the XML file being processed
      *
-     * @return array|bool|float|int|string The parsed value
+     * @return array|bool|float|int|string|null The parsed value
      *
      * @throws InvalidArgumentException when the XML is invalid
      */
     private function parseDefaultNode(DOMElement $node, string $path)
     {
         if ($this->isElementValueNull($node)) {
-            return;
+            return null;
         }
 
         switch ($node->localName) {
@@ -359,7 +376,7 @@ class XmlLoader extends FileLoader
                 throw new InvalidArgumentException(
                     sprintf(
                         'Unknown tag "%s" used in file "%s". Expected "bool", "int", "float", "string", "list", or '
-                        . '"map".',
+                            . '"map".',
                         $node->localName,
                         $path
                     )

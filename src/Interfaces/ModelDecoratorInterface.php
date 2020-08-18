@@ -14,5 +14,5 @@ interface ModelDecoratorInterface
      *
      * @return ModelInterface
      */
-    public function getModel();
+    public function getModel(): ModelInterface;
 }

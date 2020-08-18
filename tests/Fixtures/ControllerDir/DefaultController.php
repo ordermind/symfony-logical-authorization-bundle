@@ -21,7 +21,7 @@ class DefaultController extends AbstractController
      *   "condition": "user_has_account"
      * })
      */
-    public function routeHasAccountAction()
+    public function routeHasAccountAction(): Response
     {
         return new Response('');
     }
@@ -34,7 +34,7 @@ class DefaultController extends AbstractController
      *  "role": "ROLE_ADMIN"
      * })
      */
-    public function multipleRouteAction()
+    public function multipleRouteAction(): Response
     {
         return new Response('');
     }
@@ -42,7 +42,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/pattern-allowed", name="pattern_allowed")
      */
-    public function patternAllowedAction()
+    public function patternAllowedAction(): Response
     {
         return new Response('');
     }
@@ -55,7 +55,7 @@ class DefaultController extends AbstractController
      *   FALSE
      * })
      */
-    public function patternForbiddenAction()
+    public function patternForbiddenAction(): Response
     {
         return new Response('');
     }
@@ -67,7 +67,7 @@ class DefaultController extends AbstractController
      *   TRUE
      * })
      */
-    public function routeAllowedAction()
+    public function routeAllowedAction(): Response
     {
         return new Response('');
     }
@@ -79,7 +79,7 @@ class DefaultController extends AbstractController
      *   FALSE
      * })
      */
-    public function routeDeniedAction()
+    public function routeDeniedAction(): Response
     {
         return new Response('');
     }
@@ -87,7 +87,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/route-forbidden", name="route_forbidden")
      */
-    public function routeForbiddenAction()
+    public function routeForbiddenAction(): Response
     {
         return new Response('');
     }
@@ -97,12 +97,12 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function countAvailableRoutesAction()
+    public function countAvailableRoutesAction(): Response
     {
         $laRoute = $this->get('test.logauth.service.logauth_route');
         $result = $laRoute->getAvailableRoutes();
         if (empty($result['routes'])) {
-            return new Response(0);
+            return new Response('0');
         }
 
         return new Response((string) count($result['routes']));
@@ -113,12 +113,12 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function countAvailableRoutePatternsAction()
+    public function countAvailableRoutePatternsAction(): Response
     {
         $laRoute = $this->get('test.logauth.service.logauth_route');
         $result = $laRoute->getAvailableRoutes();
         if (empty($result['route_patterns'])) {
-            return new Response(0);
+            return new Response('0');
         }
 
         return new Response((string) count($result['route_patterns']));
@@ -129,7 +129,7 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function getCurrentUsernameAction()
+    public function getCurrentUsernameAction(): Response
     {
         $user = $this->get('test.logauth.service.helper')->getCurrentUser();
         if (is_null($user)) {
@@ -147,7 +147,7 @@ class DefaultController extends AbstractController
      *
      * @Method({"GET"})
      */
-    public function countForbiddenEntitiesLazyLoadAction()
+    public function countForbiddenEntitiesLazyLoadAction(): Response
     {
         $operations = $this->get('test_model_operations');
         $operations->setRepositoryDecorator($this->get('repository_decorator.forbidden_entity'));

@@ -17,7 +17,7 @@ class UserIsAuthorChecker implements SimpleConditionCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public static function getName(): string
     {
         return 'user_is_author';
     }
@@ -72,12 +72,12 @@ class UserIsAuthorChecker implements SimpleConditionCheckerInterface
 
         if (is_string($model) && class_exists($model)) {
             // A class string was passed which means that we don't have an actual object to evaluate. We interpret this
-            // as it not having an author which means that we return false.
+            // like the model does not have an author which means that we return false.
             return false;
         }
 
         if ($model instanceof UserInterface) {
-            return $user->getId() === $model->getId();
+            return $user->getIdentifier() === $model->getIdentifier();
         }
 
         if ($model instanceof ModelInterface) {
@@ -101,7 +101,7 @@ class UserIsAuthorChecker implements SimpleConditionCheckerInterface
                 );
             }
 
-            return $user->getId() === $author->getId();
+            return $user->getIdentifier() === $author->getIdentifier();
         }
 
         throw new InvalidArgumentException(

@@ -24,6 +24,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      * @var string
      */
     private $password;
+
     /**
      * @var string|null
      */
@@ -59,19 +60,36 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
         $this->setBypassAccess($bypassAccess);
     }
 
-    public function setId($id)
+    /**
+     * Set id.
+     *
+     * @param int $id
+     *
+     * @return self
+     */
+    public function setId(int $id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIdentifier()
+    {
+        return $this->getId();
     }
 
     /**
@@ -79,9 +97,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @param string $username
      *
-     * @return TestUser
+     * @return self
      */
-    public function setUsername($username)
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -93,7 +111,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -103,9 +121,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @param string $password
      *
-     * @return TestUser
+     * @return self
      */
-    public function setPassword($password)
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -117,7 +135,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -127,9 +145,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @param string $oldPassword
      *
-     * @return TestUser
+     * @return self
      */
-    public function setOldPassword($password)
+    public function setOldPassword(string $password): self
     {
         $encoder = new BCryptPasswordEncoder(static::bcryptStrength);
         $this->oldPassword = $encoder->encodePassword($password, $this->getSalt());
@@ -140,9 +158,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
     /**
      * Get old password.
      *
-     * @return string
+     * @return string|null
      */
-    public function getOldPassword()
+    public function getOldPassword(): ?string
     {
         return $this->oldPassword;
     }
@@ -150,14 +168,16 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
     /**
      * Set roles.
      *
-     * @return array
+     * @return self
      */
-    public function setRoles($roles)
+    public function setRoles(array $roles): self
     {
         if (array_search('ROLE_USER', $roles) === false) {
             array_unshift($roles, 'ROLE_USER');
         }
         $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -165,7 +185,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
@@ -175,7 +195,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @return array
      */
-    public function getFilteredRoles()
+    public function getFilteredRoles(): array
     {
         $roles = $this->roles;
         if (($key = array_search('ROLE_USER', $roles)) !== false) {
@@ -190,9 +210,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @param string $email
      *
-     * @return TestUser
+     * @return self
      */
-    public function setEmail($email)
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -204,7 +224,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -214,9 +234,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
      *
      * @param bool $bypassAccess
      *
-     * @return TestUser
+     * @return LogicalAuthorizationUserInterface
      */
-    public function setBypassAccess(bool $bypassAccess)
+    public function setBypassAccess(bool $bypassAccess): LogicalAuthorizationUserInterface
     {
         $this->bypassAccess = $bypassAccess;
 
@@ -233,7 +253,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
         return $this->bypassAccess;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null; //bcrypt doesn't require a salt.
     }
@@ -242,7 +262,7 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
     {
     }
 
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([
             $this->id,
@@ -254,8 +274,9 @@ class TestUser implements UserInterface, LogicalAuthorizationUserInterface, Seri
     public function unserialize($serialized)
     {
         list(
-        $this->id,
-        $this->username,
-        $this->password) = unserialize($serialized);
+            $this->id,
+            $this->username,
+            $this->password
+        ) = unserialize($serialized);
     }
 }

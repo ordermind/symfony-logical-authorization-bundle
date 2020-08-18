@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionTypes;
+namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers;
 
 use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 
-class TestType implements PermissionCheckerInterface
+class TestPermissionChecker implements PermissionCheckerInterface
 {
     public static function getName(): string
     {
@@ -16,7 +16,7 @@ class TestType implements PermissionCheckerInterface
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($value, $context): bool
+    public function checkPermission(string $value, $context): bool
     {
         return $value === 'yes' ? true : false;
     }

@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\RequestStack;
-use TypeError;
 
 /**
  * Checks ip address permissions.
@@ -20,11 +19,6 @@ class IpChecker implements PermissionCheckerInterface
      */
     protected $requestStack;
 
-    /**
-     * @internal
-     *
-     * @param RequestStack $requestStack
-     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
@@ -48,11 +42,8 @@ class IpChecker implements PermissionCheckerInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($ipAddress, $context): bool
+    public function checkPermission(string $ipAddress, $context): bool
     {
-        if (!is_string($ipAddress)) {
-            throw new TypeError('The ipAddress parameter must be a string.');
-        }
         if (!$ipAddress) {
             throw new InvalidArgumentException('The ipAddress parameter cannot be empty.');
         }

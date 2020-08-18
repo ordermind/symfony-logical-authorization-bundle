@@ -12,35 +12,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class CustomUserProvider implements UserProviderInterface
 {
-    /**
-     * @var array
-     */
-    protected $users = [
-      'authenticated_user' => [
-        'password' => 'userpass',
-        'roles'    => ['ROLE_USER'],
-        'email'    => 'user@email.com',
-      ],
-      'admin_user' => [
-        'password' => 'adminpass',
-        'roles'    => [
-          'ROLE_USER',
-          'ROLE_ADMIN',
-        ],
-        'email' => 'admin@email.com',
-      ],
-      'superadmin_user' => [
-        'password'      => 'superadminpass',
-        'roles'         => ['ROLE_USER'],
-        'email'         => 'superadmin@email.com',
-        'bypass_access' => true,
-      ],
-    ];
-
-    public function loadUserByUsername($username)
+    public function loadUserByUsername(string $username): UserInterface
     {
-        if (!empty($this->users[$username])) {
-            $userData = $this->users[$username];
+        $userdata = $this->getUserData();
+
+        if (!empty($userdata[$username])) {
+            $userData = $userdata[$username];
 
             return new TestUser(
                 $username,
@@ -56,7 +33,7 @@ class CustomUserProvider implements UserProviderInterface
         );
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof TestUser) {
             throw new UnsupportedUserException(
@@ -70,5 +47,30 @@ class CustomUserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return TestUser::class === $class;
+    }
+
+    private function getUserData(): array
+    {
+        return [
+        'authenticated_user' => [
+        'password' => 'userpass',
+        'roles'    => ['ROLE_USER'],
+        'email'    => 'user@email.com',
+        ],
+        'admin_user' => [
+        'password' => 'adminpass',
+        'roles'    => [
+          'ROLE_USER',
+          'ROLE_ADMIN',
+        ],
+        'email' => 'admin@email.com',
+        ],
+        'superadmin_user' => [
+        'password'      => 'superadminpass',
+        'roles'         => ['ROLE_USER'],
+        'email'         => 'superadmin@email.com',
+        'bypass_access' => true,
+        ],
+        ];
     }
 }

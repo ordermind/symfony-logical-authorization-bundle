@@ -6,6 +6,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
+use TypeError;
 
 /**
  * {@inheritdoc}
@@ -15,27 +16,40 @@ class YamlLoader extends YamlFileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($file, $type = null): RouteCollection
+    public function load($file, ?string $type = null): RouteCollection
     {
+        if (!is_string($file)) {
+            throw new TypeError('The file parameter must be a string.');
+        }
+
         return parent::load($file, 'yaml');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
-        return
-            is_string($resource)
-            && in_array(pathinfo($resource, PATHINFO_EXTENSION), ['yml', 'yaml'], true)
-            && ('logauth_yml' === $type || 'logauth_yaml' === $type);
+        if (!is_string($resource)) {
+            return false;
+        }
+
+        if ('logauth_yml' !== $type && 'logauth_yaml' !== $type) {
+            return false;
+        }
+
+        return in_array(pathinfo($resource, PATHINFO_EXTENSION), ['yml', 'yaml'], true);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function validate($config, $name, $path)
+    protected function validate($config, string $name, string $path)
     {
+        if (!is_array($config)) {
+            throw new TypeError('The config parameter must be an array');
+        }
+
         unset($config['permissions']);
         parent::validate($config, $name, $path);
     }
@@ -43,7 +57,7 @@ class YamlLoader extends YamlFileLoader
     /**
      * {@inheritdoc}
      */
-    protected function parseRoute(RouteCollection $collection, $name, array $config, $path)
+    protected function parseRoute(RouteCollection $collection, string $name, array $config, string $path)
     {
         $defaults = isset($config['defaults']) ? $config['defaults'] : [];
         $requirements = isset($config['requirements']) ? $config['requirements'] : [];

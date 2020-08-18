@@ -7,7 +7,6 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionCheckers;
 use InvalidArgumentException;
 use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use TypeError;
 
 /**
  * Checks http method permissions.
@@ -16,11 +15,6 @@ class MethodChecker implements PermissionCheckerInterface
 {
     protected $requestStack;
 
-    /**
-     * @internal
-     *
-     * @param RequestStack $requestStack RequestStack
-     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
@@ -44,11 +38,8 @@ class MethodChecker implements PermissionCheckerInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkPermission($method, $context): bool
+    public function checkPermission(string $method, $context): bool
     {
-        if (!is_string($method)) {
-            throw new TypeError('The method parameter must be a string.');
-        }
         if (!$method) {
             throw new InvalidArgumentException('The method parameter cannot be empty.');
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
+use Exception;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 
@@ -22,12 +23,6 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
      */
     protected $helper;
 
-    /**
-     * @internal
-     *
-     * @param LogicalPermissionsFacade $lpFacade
-     * @param HelperInterface          $helper
-     */
     public function __construct(
         LogicalPermissionsFacade $lpFacade,
         HelperInterface $helper
@@ -50,7 +45,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
                 $context,
                 $allowBypass
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $class = get_class($e);
             $message = $e->getMessage();
             if ($class === PermissionTypeNotRegisteredException::class) {

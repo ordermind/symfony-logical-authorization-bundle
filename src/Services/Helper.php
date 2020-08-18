@@ -24,19 +24,15 @@ class Helper implements HelperInterface
     protected $tokenStorage;
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|null
      */
     protected $logger;
 
-    /**
-     * @internal
-     *
-     * @param string                $environment
-     * @param TokenStorageInterface $tokenStorage
-     * @param LoggerInterface       $logger
-     */
-    public function __construct($environment, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        string $environment,
+        TokenStorageInterface $tokenStorage,
+        ?LoggerInterface $logger = null
+    ) {
         $this->environment = $environment;
         $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
@@ -67,6 +63,7 @@ class Helper implements HelperInterface
             foreach ($context as $key => $value) {
                 $message .= "$key => " . print_r($value, true) . "\n";
             }
+
             throw new LogicalAuthorizationException($message);
         }
     }

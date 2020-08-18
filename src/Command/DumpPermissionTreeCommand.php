@@ -51,17 +51,25 @@ class DumpPermissionTreeCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tree = $this->treeBuilder->getTree();
         $format = $input->getOption('format');
 
         if ('yml' === $format) {
             $output->write(Yaml::dump($tree, 20));
-        } elseif ('json' === $format) {
-            $output->write(json_encode($tree));
-        } else {
-            $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');
+
+            return 0;
         }
+
+        if ('json' === $format) {
+            $output->write(json_encode($tree));
+
+            return 0;
+        }
+
+        $output->writeln('Error outputting permission tree: Unrecognized format. Available formats: yml, json');
+
+        return 1;
     }
 }

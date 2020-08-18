@@ -15,7 +15,7 @@ interface ModelInterface
      *
      * @param UserInterface $user
      */
-    public function setAuthor(UserInterface $user);
+    public function setAuthor(UserInterface $user): self;
 
     /**
      * Gets the author of the model.
