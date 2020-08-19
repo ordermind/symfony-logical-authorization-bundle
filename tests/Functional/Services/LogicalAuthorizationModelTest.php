@@ -28,7 +28,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userAuthenticated));
     }
 
-    public function testModelFlagBypassAccessAllow()
+    public function testModelConditionBypassAccessAllow()
     {
         $model = new TestModelRoleAuthor();
         $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$userSuperadmin));
@@ -37,7 +37,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userSuperadmin));
     }
 
-    public function testModelFlagBypassAccessDisallow()
+    public function testModelConditionBypassAccessDisallow()
     {
         $model = new TestModelNoBypass();
         $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'create', static::$userSuperadmin));
@@ -46,7 +46,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userSuperadmin));
     }
 
-    public function testModelFlagHasAccountAllow()
+    public function testModelConditionHasAccountAllow()
     {
         $model = new TestModelHasAccountNoInterface();
         $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'create', static::$userAuthenticated));
@@ -55,7 +55,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laModel->checkModelAccess(get_class($model), 'delete', static::$userAuthenticated));
     }
 
-    public function testModelFlagHasAccountDisallow()
+    public function testModelConditionHasAccountDisallow()
     {
         $model = new TestModelHasAccountNoInterface();
         $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'create', 'anon.'));
@@ -64,7 +64,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertFalse($this->laModel->checkModelAccess(get_class($model), 'delete', 'anon.'));
     }
 
-    public function testModelFlagIsAuthorAllow()
+    public function testModelConditionIsAuthorAllow()
     {
         static::$userAuthenticated->setId(1);
         $model = new TestModelRoleAuthor();
@@ -74,7 +74,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laModel->checkModelAccess($model, 'delete', static::$userAuthenticated));
     }
 
-    public function testModelFlagIsAuthorDisallow()
+    public function testModelConditionIsAuthorDisallow()
     {
         static::$userAuthenticated->setId(1);
         static::$userAdmin->setId(2);
@@ -103,7 +103,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         );
     }
 
-    public function testFieldFlagBypassAccessAllow()
+    public function testFieldConditionBypassAccessAllow()
     {
         $model = new TestModelRoleAuthor();
         $this->assertTrue(
@@ -114,7 +114,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         );
     }
 
-    public function testFieldFlagBypassAccessDisallow()
+    public function testFieldConditionBypassAccessDisallow()
     {
         $model = new TestModelNoBypass();
         $this->assertFalse(
@@ -125,7 +125,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         );
     }
 
-    public function testFieldFlagHasAccountAllow()
+    public function testFieldConditionHasAccountAllow()
     {
         $model = new TestModelHasAccountNoInterface();
         $this->assertTrue(
@@ -136,14 +136,14 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         );
     }
 
-    public function testFieldFlagHasAccountDisallow()
+    public function testFieldConditionHasAccountDisallow()
     {
         $model = new TestModelHasAccountNoInterface();
         $this->assertFalse($this->laModel->checkFieldAccess(get_class($model), 'field1', 'set', 'anon.'));
         $this->assertFalse($this->laModel->checkFieldAccess(get_class($model), 'field1', 'get', 'anon.'));
     }
 
-    public function testFieldFlagIsAuthorAllow()
+    public function testFieldConditionIsAuthorAllow()
     {
         static::$userAuthenticated->setId(1);
         $model = new TestModelRoleAuthor();
@@ -152,7 +152,7 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laModel->checkFieldAccess($model, 'field1', 'get', static::$userAuthenticated));
     }
 
-    public function testFieldFlagIsAuthorDisallow()
+    public function testFieldConditionIsAuthorDisallow()
     {
         static::$userAuthenticated->setId(1);
         static::$userAdmin->setId(2);

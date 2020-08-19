@@ -48,7 +48,7 @@ services:
 
     logauth.bypass_access_checker:
         class: Ordermind\LogicalAuthorizationBundle\BypassAccessChecker\BypassAccessChecker
-        arguments: ['@logauth.permission_checker.flag.user_can_bypass_access']
+        arguments: ['@logauth.permission_checker.simple_condition.user_can_bypass_access']
         public: false
 
     logauth.service.logauth_route:

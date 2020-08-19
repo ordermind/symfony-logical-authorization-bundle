@@ -1,29 +1,29 @@
 # Permission checkers
 
 services:
-    logauth.permission_checker.flag:
+    logauth.permission_checker.simple_condition:
         class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerManager
-        arguments: [!tagged logauth.tag.permission_checker.flag]
+        arguments: [!tagged logauth.tag.permission_checker.simple_condition]
         tags:
             - {name: logauth.tag.permission_checker}
         public: false
 
-    logauth.permission_checker.flag.user_can_bypass_access:
+    logauth.permission_checker.simple_condition.user_can_bypass_access:
         class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserCanBypassAccessChecker
         tags:
-            - {name: logauth.tag.permission_checker.flag}
+            - {name: logauth.tag.permission_checker.simple_condition}
         public: false
 
-    logauth.permission_checker.flag.user_has_account:
+    logauth.permission_checker.simple_condition.user_has_account:
         class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserHasAccountChecker
         tags:
-            - {name: logauth.tag.permission_checker.flag}
+            - {name: logauth.tag.permission_checker.simple_condition}
         public: false
 
-    logauth.permission_checker.flag.user_is_author:
+    logauth.permission_checker.simple_condition.user_is_author:
         class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserIsAuthorChecker
         tags:
-            - {name: logauth.tag.permission_checker.flag}
+            - {name: logauth.tag.permission_checker.simple_condition}
         public: false
 
     logauth.permission_checker.role:
