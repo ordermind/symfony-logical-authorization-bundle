@@ -8,13 +8,15 @@ use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
 use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\HostChecker;
 use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\IpChecker;
 use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\MethodChecker;
 use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\RoleChecker;
-use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserCanBypassAccessChecker as BypassAccessFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserHasAccountChecker as HasAccountFlag;
-use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserIsAuthorChecker as IsAuthorFlag;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserCanBypassAccessChecker as BypassAccessConditionChecker;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserHasAccountChecker as HasAccountConditionChecker;
+use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\Checkers\UserIsAuthorChecker as IsAuthorConditionChecker;
 use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerManager;
 use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\BypassAccessChecker\AlwaysDeny;
@@ -25,8 +27,6 @@ use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ModelDecorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestConditionChecker;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestPermissionChecker;
-use Ordermind\LogicalPermissions\Exceptions\PermissionTypeAlreadyRegisteredException;
-use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 use Ordermind\LogicalPermissions\PermissionCheckerLocator;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,187 +38,228 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 {
     // ------------ Permission types ---------------
 
-    // --- Flag --- //
+    // --- Simple conditions --- //
 
-    public function testFlagBypassAccessWrongContextType()
+    public function testConditionCheckerBypassAccessMissingUser()
     {
-        $condition = new BypassAccessFlag();
-
-        $this->expectException(TypeError::class);
-        $condition->checkCondition(null);
-    }
-
-    public function testFlagBypassAccessMissingUser()
-    {
-        $condition = new BypassAccessFlag();
+        $condition = new BypassAccessConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The context parameter must contain a "user" key to be able to evaluate the %s condition',
+                $condition->getName()
+            )
+        );
         $condition->checkCondition([]);
     }
 
-    public function testFlagBypassAccessWrongUserType()
+    public function testConditionCheckerBypassAccessWrongUserType()
     {
-        $condition = new BypassAccessFlag();
+        $condition = new BypassAccessConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The user class must implement %s to be able to evaluate the %s condition',
+                UserInterface::class,
+                $condition->getName()
+            )
+        );
         $condition->checkCondition(['user' => []]);
     }
 
-    public function testFlagBypassAccessWrongReturnType()
+    public function testConditionCheckerBypassAccessWrongReturnType()
     {
         $user = new ErroneousUser();
-        $condition = new BypassAccessFlag();
+        $condition = new BypassAccessConditionChecker();
 
         $this->expectException(TypeError::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Return value of %s must be of the type boolean, string returned',
+                ErroneousUser::class . '::getBypassAccess()'
+            )
+        );
         $condition->checkCondition(['user' => $user]);
     }
 
-    public function testFlagBypassAccessAnonymousUserDisallow()
+    public function testConditionCheckerBypassAccessAnonymousUserDisallow()
     {
-        $condition = new BypassAccessFlag();
+        $condition = new BypassAccessConditionChecker();
         $this->assertFalse($condition->checkCondition(['user' => 'anon.']));
     }
 
-    public function testFlagBypassAccessDisallow()
+    public function testConditionCheckerBypassAccessDisallow()
     {
         $user = new TestUser();
-        $condition = new BypassAccessFlag();
+        $condition = new BypassAccessConditionChecker();
         $this->assertFalse($condition->checkCondition(['user' => $user]));
     }
 
-    public function testFlagBypassAccessAllow()
+    public function testConditionCheckerBypassAccessAllow()
     {
         $user = new TestUser();
         $user->setBypassAccess(true);
-        $condition = new BypassAccessFlag();
+        $condition = new BypassAccessConditionChecker();
         $this->assertTrue($condition->checkCondition(['user' => $user]));
     }
 
-    public function testFlagHasAccountWrongContextType()
+    public function testConditionCheckerHasAccountMissingUser()
     {
-        $condition = new HasAccountFlag();
-
-        $this->expectException(TypeError::class);
-        $condition->checkCondition(null);
-    }
-
-    public function testFlagHasAccountMissingUser()
-    {
-        $condition = new HasAccountFlag();
+        $condition = new HasAccountConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The context parameter must contain a "user" key to be able to evaluate the %s condition',
+                $condition->getName()
+            )
+        );
         $condition->checkCondition([]);
     }
 
-    public function testFlagHasAccountDisallow()
+    public function testConditionCheckerHasAccountDisallow()
     {
-        $condition = new HasAccountFlag();
+        $condition = new HasAccountConditionChecker();
         $this->assertFalse($condition->checkCondition(['user' => 'anon.']));
     }
 
-    public function testFlagHasAccountAllow()
+    public function testConditionCheckerHasAccountAllow()
     {
         $user = new TestUser();
-        $condition = new HasAccountFlag();
+        $condition = new HasAccountConditionChecker();
         $this->assertTrue($condition->checkCondition(['user' => $user]));
     }
 
-    public function testFlagIsAuthorWrongContextType()
+    public function testConditionCheckerIsAuthorMissingUser()
     {
-        $condition = new IsAuthorFlag();
-
-        $this->expectException(TypeError::class);
-        $condition->checkCondition(null);
-    }
-
-    public function testFlagIsAuthorMissingUser()
-    {
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The context parameter must contain a "user" key to be able to evaluate the %s condition',
+                $condition->getName()
+            )
+        );
         $condition->checkCondition([]);
     }
 
-    public function testFlagIsAuthorWrongUserType()
+    public function testConditionCheckerIsAuthorWrongUserType()
     {
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The user class must implement %s to be able to evaluate the %s condition',
+                UserInterface::class,
+                $condition->getName()
+            )
+        );
         $condition->checkCondition(['user' => []]);
     }
 
-    public function testFlagIsAuthorMissingModel()
+    public function testConditionCheckerIsAuthorMissingModel()
     {
         $user = new TestUser();
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The context parameter must contain a "model" key to be able to evaluate the %s condition',
+                $condition->getName()
+            )
+        );
         $condition->checkCondition(['user' => $user]);
     }
 
-    public function testFlagIsAuthorModelClassString()
+    public function testConditionCheckerIsAuthorModelClassString()
     {
         $user = new TestUser();
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
         $this->assertFalse(
             $condition->checkCondition(['user' => $user, 'model' => TestUser::class])
         );
     }
 
-    public function testFlagIsAuthorWrongModelType()
+    public function testConditionCheckerIsAuthorWrongModelType()
     {
         $user = new TestUser();
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The model class must implement %s to be able to evaluate the %s condition',
+                ModelInterface::class,
+                $condition->getName()
+            )
+        );
         $condition->checkCondition(['user' => $user, 'model' => []]);
     }
 
-    public function testFlagIsAuthorModelWrongAuthorType()
+    public function testConditionCheckerIsAuthorModelWrongAuthorType()
     {
         $user = new TestUser();
         $model = new ErroneousModel();
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
 
         $this->expectException(TypeError::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Return value of %s must implement interface %s or be null, string returned',
+                ErroneousModel::class . '::getAuthor()',
+                UserInterface::class
+            )
+        );
         $condition->checkCondition(['user' => $user, 'model' => $model]);
     }
 
-    public function testFlagIsAuthorModelAnonymousUserDisallow()
+    public function testConditionCheckerIsAuthorModelAnonymousUserDisallow()
     {
         $model = new TestModelBoolean();
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
         $this->assertFalse($condition->checkCondition(['user' => 'anon.', 'model' => $model]));
     }
 
-    public function testFlagIsAuthorModelAnonymousAuthorAllow()
+    public function testConditionCheckerIsAuthorModelAnonymousAuthorAllow()
     {
         $user = new TestUser();
         $model = new TestModelBoolean();
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
         $this->assertTrue($condition->checkCondition(['user' => $user, 'model' => $model]));
     }
 
-    public function testFlagIsAuthorModelAllow()
+    public function testConditionCheckerIsAuthorModelAllow()
     {
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $condition = new IsAuthorFlag();
+        $condition = new IsAuthorConditionChecker();
         $this->assertTrue($condition->checkCondition(['user' => $user, 'model' => $model]));
     }
 
-    public function testSimpleConditionCheckerManagerAddFlagAlreadyRegistered()
+    public function testSimpleConditionCheckerManagerAddConditionCheckerAlreadyRegistered()
     {
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The condition "%s" already exists! If you want to change the class that handles a condition, you may '
+                    . 'do so by overriding the service definition for that condition',
+                $condition->getName()
+            )
+        );
         $conditionManager->addCondition($condition);
     }
 
-    public function testSimpleConditionCheckerManagerAddFlag()
+    public function testSimpleConditionCheckerManagerAddConditionChecker()
     {
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
@@ -228,35 +269,30 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertSame($condition, $conditions['always_true']);
     }
 
-    public function testSimpleConditionCheckerManagerRemoveFlagWrongNameType()
-    {
-        $conditionManager = new SimpleConditionCheckerManager();
-        $condition = new TestConditionChecker();
-        $conditionManager->addCondition($condition);
-
-        $this->expectException(TypeError::class);
-        $conditionManager->removeCondition(true);
-    }
-
-    public function testSimpleConditionCheckerManagerRemoveFlagEmptyName()
+    public function testSimpleConditionCheckerManagerRemoveConditionCheckerEmptyName()
     {
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The name parameter cannot be empty');
         $conditionManager->removeCondition('');
     }
 
-    public function testSimpleConditionCheckerManagerRemoveFlagNotRegistered()
+    public function testSimpleConditionCheckerManagerRemoveConditionCheckerNotRegistered()
     {
         $conditionManager = new SimpleConditionCheckerManager();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'The condition "test" has not been registered. Please use the '
+                . '"logauth.tag.permission_type.condition" service tag to register a condition'
+        );
         $conditionManager->removeCondition('test');
     }
 
-    public function testSimpleConditionCheckerManagerRemoveFlag()
+    public function testSimpleConditionCheckerManagerRemoveConditionChecker()
     {
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
@@ -268,19 +304,12 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertFalse(isset($conditions['always_true']));
     }
 
-    public function testSimpleConditionCheckerManagerCheckPermissionWrongNameType()
-    {
-        $conditionManager = new SimpleConditionCheckerManager();
-
-        $this->expectException(TypeError::class);
-        $conditionManager->checkPermission(true, []);
-    }
-
     public function testSimpleConditionCheckerManagerCheckPermissionEmptyName()
     {
         $conditionManager = new SimpleConditionCheckerManager();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The name parameter cannot be empty');
         $conditionManager->checkPermission('', []);
     }
 
@@ -289,7 +318,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $conditionManager = new SimpleConditionCheckerManager();
 
         $this->expectException(InvalidArgumentException::class);
-        $conditionManager->checkPermission('always_true', []);
+        $this->expectExceptionMessage(
+            'The condition "test" has not been registered. Please use the '
+                . '"logauth.tag.permission_type.condition" service tag to register a condition'
+        );
+        $conditionManager->checkPermission('test', []);
     }
 
     public function testSimpleConditionCheckerManagerCheckPermission()
@@ -302,19 +335,12 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- RoleChecker --- //
 
-    public function testRoleWrongRoleType()
-    {
-        $role = new RoleChecker($this->roleHierarchy);
-
-        $this->expectException(TypeError::class);
-        $role->checkPermission(true, []);
-    }
-
     public function testRoleEmptyRole()
     {
         $role = new RoleChecker($this->roleHierarchy);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The role parameter cannot be empty');
         $role->checkPermission('', []);
     }
 
@@ -323,6 +349,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $role = new RoleChecker($this->roleHierarchy);
 
         $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('The context parameter must be an array');
         $role->checkPermission('ROLE_USER', null);
     }
 
@@ -331,6 +358,12 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $role = new RoleChecker($this->roleHierarchy);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The context parameter must contain a "user" key to be able to evaluate the %s permission',
+                $role->getName()
+            )
+        );
         $role->checkPermission('ROLE_USER', []);
     }
 
@@ -339,6 +372,12 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $role = new RoleChecker($this->roleHierarchy);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The user class must implement %s to be able to evaluate the user role.',
+                UserInterface::class
+            )
+        );
         $role->checkPermission('ROLE_USER', ['user' => []]);
     }
 
@@ -382,21 +421,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- HostChecker --- //
 
-    public function testHostWrongHostType()
-    {
-        $requestStack = new RequestStack();
-        $host = new HostChecker($requestStack);
-
-        $this->expectException(TypeError::class);
-        $host->checkPermission(1, []);
-    }
-
     public function testHostEmptyHost()
     {
         $requestStack = new RequestStack();
         $host = new HostChecker($requestStack);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The host parameter cannot be empty');
         $host->checkPermission('', []);
     }
 
@@ -420,21 +451,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- MethodChecker --- //
 
-    public function testMethodWrongMethodType()
-    {
-        $requestStack = new RequestStack();
-        $method = new MethodChecker($requestStack);
-
-        $this->expectException(TypeError::class);
-        $method->checkPermission(1, []);
-    }
-
     public function testMethodEmptyMethod()
     {
         $requestStack = new RequestStack();
         $method = new MethodChecker($requestStack);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The method parameter cannot be empty');
         $method->checkPermission('', []);
     }
 
@@ -458,21 +481,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     // --- IpChecker --- //
 
-    public function testIpWrongIpType()
-    {
-        $requestStack = new RequestStack();
-        $ipPermission = new IpChecker($requestStack);
-
-        $this->expectException(TypeError::class);
-        $ipPermission->checkPermission(1, []);
-    }
-
     public function testIpEmptyIp()
     {
         $requestStack = new RequestStack();
         $ipPermission = new IpChecker($requestStack);
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The ipAddress parameter cannot be empty');
         $ipPermission->checkPermission('', []);
     }
 
@@ -513,14 +528,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testCheckAccessPermissionTypeNotRegistered()
     {
         $this->expectException(LogicalAuthorizationException::class);
-        $this->expectExceptionMessageMatches('/service tag to register a permission checker/');
+        $this->expectExceptionMessage('service tag to register a permission checker');
         $this->logicalAuthorization->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
     }
 
     public function testCheckAccessOtherExceptions()
     {
         $this->expectException(LogicalAuthorizationException::class);
-        $this->expectExceptionMessageMatches('/^An exception was caught while checking access: /');
+        $this->expectExceptionMessage('An exception was caught while checking access: ');
         $this->logicalAuthorization->checkAccess(['test' => 'hej'], []);
     }
 
@@ -607,6 +622,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking model access: the model parameter must be either a class string or an object.'
+        );
         $this->laModel->checkModelAccess(null, 'read', $user);
     }
 
@@ -615,16 +633,10 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking model access: the model parameter is a class string but the class could not be found.'
+        );
         $this->laModel->checkModelAccess('TestModelBoolean', 'read', $user);
-    }
-
-    public function testCheckModelAccessWrongActionType()
-    {
-        $user = new TestUser();
-        $model = new TestModelBoolean();
-
-        $this->expectException(TypeError::class);
-        $this->laModel->checkModelAccess($model, null, $user);
     }
 
     public function testCheckModelAccessEmptyAction()
@@ -633,6 +645,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage('Error checking model access: the action parameter cannot be empty.');
         $this->laModel->checkModelAccess($model, '', $user);
     }
 
@@ -641,6 +654,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking model access: the user parameter must be either a string or an object.'
+        );
         $this->laModel->checkModelAccess($model, 'read', []);
     }
 
@@ -706,6 +722,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking field access: the model parameter must be either a class string or an object.'
+        );
         $this->laModel->checkFieldAccess(null, 'field', 'action', $user);
     }
 
@@ -714,16 +733,10 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking field access: the model parameter is a class string but the class could not be found.'
+        );
         $this->laModel->checkFieldAccess('TestModelBoolean', 'field', 'action', $user);
-    }
-
-    public function testCheckFieldAccessWrongFieldType()
-    {
-        $user = new TestUser();
-        $model = new TestModelBoolean();
-
-        $this->expectException(TypeError::class);
-        $this->laModel->checkFieldAccess($model, null, 'action', $user);
     }
 
     public function testCheckFieldAccessEmptyField()
@@ -732,16 +745,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage('Error checking field access: the fieldName parameter cannot be empty.');
         $this->laModel->checkFieldAccess($model, '', 'action', $user);
-    }
-
-    public function testCheckFieldAccessWrongActionType()
-    {
-        $user = new TestUser();
-        $model = new TestModelBoolean();
-
-        $this->expectException(TypeError::class);
-        $this->laModel->checkFieldAccess($model, 'field1', null, $user);
     }
 
     public function testCheckFieldAccessEmptyAction()
@@ -750,6 +755,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage('Error checking field access: the action parameter cannot be empty.');
         $this->laModel->checkFieldAccess($model, 'field1', '', $user);
     }
 
@@ -758,6 +764,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking field access: the user parameter must be either a string or an object.'
+        );
         $this->laModel->checkFieldAccess($model, 'field1', 'get', []);
     }
 
@@ -853,25 +862,21 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         }
     }
 
-    public function testCheckRouteAccessWrongRouteType()
-    {
-        $user = new TestUser();
-
-        $this->expectException(TypeError::class);
-        $this->laRoute->checkRouteAccess(null, $user);
-    }
-
     public function testCheckRouteAccessEmptyRoute()
     {
         $user = new TestUser();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage('Error checking route access: the routeName parameter cannot be empty.');
         $this->laRoute->checkRouteAccess('', $user);
     }
 
     public function testCheckRouteAccessWrongUserType()
     {
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage(
+            'Error checking route access: the user parameter must be either a string or an object.'
+        );
         $this->laRoute->checkRouteAccess('route_allowed', []);
     }
 
@@ -880,6 +885,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $user = new TestUser();
 
         $this->expectException(LogicalAuthorizationException::class);
+        $this->expectExceptionMessage('Error checking route access: the route could not be found');
         $this->laRoute->checkRouteAccess('hej', $user);
     }
 
@@ -898,32 +904,6 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->assertTrue($this->laRoute->checkRouteAccess('route_allowed', 'anon.'));
     }
 
-    public function testLogicalPermissionsLocatorAddTypeAlreadyExists()
-    {
-        $lpLocator = new PermissionCheckerLocator();
-        $type = new TestPermissionChecker();
-        $lpLocator->add($type);
-
-        $this->expectException(PermissionTypeAlreadyRegisteredException::class);
-        $lpLocator->add($type);
-    }
-
-    public function testLogicalPermissionsLocatorAddType()
-    {
-        $lpLocator = new PermissionCheckerLocator();
-        $type = new TestPermissionChecker();
-        $lpLocator->add($type);
-        $this->assertTrue($lpLocator->has('test'));
-    }
-
-    public function testLogicalPermissionsFacadeCheckAccessTypeDoesntExist()
-    {
-        $lpFacade = new LogicalPermissionsFacade();
-
-        $this->expectException(PermissionTypeNotRegisteredException::class);
-        $lpFacade->checkAccess(['test' => 'hej'], []);
-    }
-
     public function testGetTree()
     {
         $tree = $this->treeBuilder->getTree();
@@ -938,15 +918,6 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $tree = $this->treeBuilder->getTree(false, true);
         $this->assertSame('cache', $tree['fetch']);
-    }
-
-    public function testEventInsertTreeWrongTreeType()
-    {
-        $lpLocator = new PermissionCheckerLocator();
-        $event = new AddPermissionsEvent($lpLocator->getValidPermissionTreeKeys());
-
-        $this->expectException(TypeError::class);
-        $event->insertTree('key');
     }
 
     public function testEventInsertTreeGetTree()

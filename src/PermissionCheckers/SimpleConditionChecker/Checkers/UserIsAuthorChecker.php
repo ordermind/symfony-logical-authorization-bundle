@@ -53,16 +53,17 @@ class UserIsAuthorChecker implements SimpleConditionCheckerInterface
         if (!($user instanceof UserInterface)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'The user class must implement Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be '
-                        . 'able to evaluate the %s condition.',
+                    'The user class must implement %s to be able to evaluate the %s condition.',
+                    UserInterface::class,
                     $this->getName()
                 )
             );
         }
+
         if (!isset($context['model'])) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Missing key "model" in context parameter. We cannot evaluate the %s condition without a model.',
+                    'The context parameter must contain a "model" key to be able to evaluate the %s condition.',
                     $this->getName()
                 )
             );
@@ -76,41 +77,37 @@ class UserIsAuthorChecker implements SimpleConditionCheckerInterface
             return false;
         }
 
-        if ($model instanceof UserInterface) {
-            return $user->getIdentifier() === $model->getIdentifier();
+        if (!$model instanceof ModelInterface) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The model class must implement %s to be able to evaluate the %s condition.',
+                    ModelInterface::class,
+                    $this->getName()
+                )
+            );
         }
 
-        if ($model instanceof ModelInterface) {
-            $author = $model->getAuthor();
-            // If there is no author it probably means that the entity is not yet persisted. In that case it's
-            // reasonable to assume that the current user is the author.
-            // If the lack of author is due to some other reason it's also reasonable to fall back to granting
-            // permission because the reason for this condition is to protect models that do have an author against
-            // other users.
-            if (!$author) {
-                return true;
-            }
-            if (!($author instanceof UserInterface)) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'The author of the model must implement '
-                            . 'Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate '
-                            . 'the %s condition.',
-                        $this->getName()
-                    )
-                );
-            }
+        $author = $model->getAuthor();
 
-            return $user->getIdentifier() === $author->getIdentifier();
+        // If there is no author it probably means that the entity is not yet persisted. In that case it's
+        // reasonable to assume that the current user is the author.
+        // If the lack of author is due to some other reason it's also reasonable to fall back to granting
+        // permission because the reason for this condition is to protect models that do have an author against
+        // other users.
+        if (!$author) {
+            return true;
         }
 
-        throw new InvalidArgumentException(
-            sprintf(
-                'The model class must implement either Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface '
-                    . 'or Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface to be able to evaluate the %s '
-                    . 'condition.',
-                $this->getName()
-            )
-        );
+        if (!($author instanceof UserInterface)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The author of the model must implement %s to be able to evaluate the %s condition.',
+                    UserInterface::class,
+                    $this->getName()
+                )
+            );
+        }
+
+        return $user->getIdentifier() === $author->getIdentifier();
     }
 }

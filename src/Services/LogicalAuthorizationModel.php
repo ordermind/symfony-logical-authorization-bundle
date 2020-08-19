@@ -116,7 +116,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         [],
                         [],
                         'No user was available during this permission check (not even an anonymous user). This usually '
-                        . 'happens during unit testing. Access was therefore automatically granted.'
+                            . 'happens during unit testing. Access was therefore automatically granted.'
                     );
                 }
 
@@ -141,7 +141,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -164,7 +164,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -187,7 +187,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -210,7 +210,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -251,7 +251,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 [],
                 [],
                 "No permissions were found for the action \"$action\" on this model. Access was therefore "
-                . 'automatically granted.'
+                    . 'automatically granted.'
             );
         }
 
@@ -286,7 +286,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         [],
                         [],
                         'No user was available during this permission check (not even an anonymous user). This usually '
-                        . 'happens during unit testing. Access was therefore automatically granted.'
+                            . 'happens during unit testing. Access was therefore automatically granted.'
                     );
                 }
 
@@ -312,7 +312,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -336,7 +336,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -344,7 +344,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         }
         if (!$fieldName) {
             $this->helper->handleError(
-                'Error checking field access: the field_name parameter cannot be empty.',
+                'Error checking field access: the fieldName parameter cannot be empty.',
                 ['model' => $model, 'field name' => $fieldName, 'action' => $action, 'user' => $user]
             );
             if (!is_null($this->debugCollector)) {
@@ -360,7 +360,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -384,7 +384,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -408,7 +408,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     [],
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -454,7 +454,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 [],
                 [],
                 "No permissions were found for the action \"$action\" on this model and field. Access was therefore "
-                . 'automatically granted.'
+                    . 'automatically granted.'
             );
         }
 

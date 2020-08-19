@@ -126,7 +126,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                         [],
                         [],
                         'No user was available during this permission check (not even an anonymous user). This usually '
-                        . 'happens during unit testing. Access was therefore automatically granted.'
+                            . 'happens during unit testing. Access was therefore automatically granted.'
                     );
                 }
 
@@ -136,7 +136,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 
         if (!$routeName) {
             $this->helper->handleError(
-                'Error checking route access: the route_name parameter cannot be empty.',
+                'Error checking route access: the routeName parameter cannot be empty.',
                 ['route' => $routeName, 'user' => $user]
             );
             if (!is_null($this->debugCollector)) {
@@ -148,7 +148,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                     [],
                     [],
                     'There was an error checking the route access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -168,7 +168,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                     [],
                     [],
                     'There was an error checking the route access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 
@@ -190,7 +190,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                     [],
                     [],
                     'There was an error checking the route access and access was therefore automatically denied. '
-                    . 'Please refer to the error log for more information.'
+                        . 'Please refer to the error log for more information.'
                 );
             }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\PermissionCheckers;
 
 use InvalidArgumentException;
+use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface as SecurityRoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
@@ -55,7 +56,7 @@ class RoleChecker implements PermissionCheckerInterface
         if (!isset($context['user'])) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'The context parameter must contain a "user" key to be able to evaluate the %s flag.',
+                    'The context parameter must contain a "user" key to be able to evaluate the %s permission.',
                     $this->getName()
                 )
             );
@@ -68,8 +69,10 @@ class RoleChecker implements PermissionCheckerInterface
 
         if (!($user instanceof SecurityUserInterface)) {
             throw new InvalidArgumentException(
-                'The user class must implement Symfony\Component\Security\Core\User\UserInterface to be able to '
-                    . 'evaluate the user role.'
+                sprintf(
+                    'The user class must implement %s to be able to evaluate the user role.',
+                    UserInterface::class
+                )
             );
         }
 

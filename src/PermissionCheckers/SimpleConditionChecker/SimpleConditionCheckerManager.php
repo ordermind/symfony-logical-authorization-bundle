@@ -65,8 +65,12 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
         }
         if (!$this->conditionExists($name)) {
             throw new SimpleConditionCheckerNotRegisteredException(
-                "The condition \"$name\" has not been registered. Please use the "
-                    . "'logauth.tag.permission_type.condition' service tag to register a condition."
+                sprintf(
+                    'The condition "%s" has not been registered. Please use the "%s" service tag to register a '
+                        . 'condition.',
+                    $name,
+                    'logauth.tag.permission_type.condition'
+                )
             );
         }
 
@@ -93,8 +97,12 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
         }
         if (!$this->conditionExists($name)) {
             throw new SimpleConditionCheckerNotRegisteredException(
-                "The condition \"$name\" has not been registered. Please use the "
-                    . "'logauth.tag.permission_type.condition' service tag to register a condition."
+                sprintf(
+                    'The condition "%s" has not been registered. Please use the "%s" service tag to register a '
+                        . 'condition.',
+                    $name,
+                    'logauth.tag.permission_type.condition'
+                )
             );
         }
 

@@ -85,22 +85,6 @@ class LogicalAuthorizationModelTest extends LogicalAuthorizationBase
         $this->assertFalse($this->laModel->checkModelAccess($model, 'delete', static::$userAuthenticated));
     }
 
-    public function testUserFlagIsAuthor()
-    {
-        $this->assertTrue(
-            $this->laModel->checkModelAccess(static::$userAuthenticated, 'read', static::$userAuthenticated)
-        );
-        $this->assertTrue(
-            $this->laModel->checkModelAccess(static::$userAuthenticated, 'update', static::$userAuthenticated)
-        );
-        static::$userAuthenticated->setBypassAccess(true);
-        $this->assertFalse(
-            $this->laModel->checkModelAccess(static::$userAuthenticated, 'delete', static::$userAuthenticated)
-        );
-        $this->assertTrue($this->laModel->checkModelAccess(static::$userAuthenticated, 'delete', static::$userAdmin));
-        static::$userAuthenticated->setBypassAccess(false);
-    }
-
     public function testFieldRoleAllow()
     {
         $model = new TestModelRoleAuthor();
