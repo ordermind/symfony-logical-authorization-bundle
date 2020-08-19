@@ -24,7 +24,7 @@ class ExpressionProvider implements ExpressionFunctionProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFunctions(): array
     {

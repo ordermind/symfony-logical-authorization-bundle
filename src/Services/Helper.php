@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class Helper implements HelperInterface
 {
@@ -39,7 +39,7 @@ class Helper implements HelperInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getCurrentUser()
     {
@@ -52,7 +52,7 @@ class Helper implements HelperInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handleError(string $message, array $context)
     {

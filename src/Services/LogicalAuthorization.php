@@ -9,7 +9,7 @@ use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class LogicalAuthorization implements LogicalAuthorizationInterface
 {
@@ -32,7 +32,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function checkAccess(
         $permissions,

@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class LogAuthExtension extends Extension
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -34,7 +34,7 @@ class LogAuthExtension extends Extension
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getAlias(): string
     {

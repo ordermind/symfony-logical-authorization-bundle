@@ -6,9 +6,10 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
+use ReflectionClass;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
 {
@@ -28,23 +29,15 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     protected $helper;
 
     /**
-     * @var CollectorInterface
+     * @var CollectorInterface|null
      */
     protected $debugCollector;
 
-    /**
-     * @internal
-     *
-     * @param LogicalAuthorizationInterface  $logicalAuthorization
-     * @param PermissionTreeBuilderInterface $treeBuilder
-     * @param HelperInterface                $helper
-     * @param CollectorInterface             $debugCollector
-     */
     public function __construct(
         LogicalAuthorizationInterface $logicalAuthorization,
         PermissionTreeBuilderInterface $treeBuilder,
         HelperInterface $helper,
-        CollectorInterface $debugCollector = null
+        ?CollectorInterface $debugCollector = null
     ) {
         $this->logicalAuthorization = $logicalAuthorization;
         $this->treeBuilder = $treeBuilder;
@@ -53,7 +46,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getAvailableActions($model, array $modelActions, array $fieldActions, $user = null): array
     {
@@ -70,7 +63,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 $availableActions[$action] = $action;
             }
         }
-        $reflectionClass = new \ReflectionClass($model);
+        $reflectionClass = new ReflectionClass($model);
         foreach ($reflectionClass->getProperties() as $property) {
             $fieldName = $property->getName();
             foreach ($fieldActions as $action) {
@@ -90,7 +83,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function checkModelAccess($model, string $action, $user = null): bool
     {
@@ -262,7 +255,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function checkFieldAccess($model, string $fieldName, string $action, $user = null): bool
     {
@@ -470,7 +463,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
     /**
      * @internal
      *
-     * @param object $model
+     * @param object|string $model
      *
      * @return array|string|bool
      */

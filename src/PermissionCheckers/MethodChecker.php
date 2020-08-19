@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class MethodChecker implements PermissionCheckerInterface
 {
+    /**
+     * @var RequestStack
+     */
     protected $requestStack;
 
     public function __construct(RequestStack $requestStack)
@@ -21,7 +24,7 @@ class MethodChecker implements PermissionCheckerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {

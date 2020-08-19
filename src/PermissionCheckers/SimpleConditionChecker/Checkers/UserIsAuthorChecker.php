@@ -15,7 +15,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionCheck
 class UserIsAuthorChecker implements SimpleConditionCheckerInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {

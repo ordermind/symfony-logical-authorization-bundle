@@ -15,7 +15,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
 use Throwable;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class Collector extends DataCollector implements CollectorInterface
 {
@@ -44,13 +44,6 @@ class Collector extends DataCollector implements CollectorInterface
      */
     protected $data = [];
 
-    /**
-     * @internal
-     *
-     * @param PermissionTreeBuilderInterface    $treeBuilder
-     * @param LogicalPermissionsFacade          $lpFacade
-     * @param PermissionCheckerLocatorInterface $locator
-     */
     public function __construct(
         PermissionTreeBuilderInterface $treeBuilder,
         LogicalPermissionsFacade $lpFacade,
@@ -62,7 +55,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getName(): string
     {
@@ -70,7 +63,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function collect(Request $request, Response $response, Throwable $exception = null)
     {
@@ -82,7 +75,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function lateCollect()
     {
@@ -102,7 +95,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function reset()
     {
@@ -110,7 +103,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getPermissionTree(): Data
     {
@@ -118,7 +111,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getLog(): array
     {
@@ -126,7 +119,7 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function addPermissionCheck(
         bool $access,

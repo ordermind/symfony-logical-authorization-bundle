@@ -9,12 +9,12 @@ use Symfony\Component\Routing\RouteCollection;
 use TypeError;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class YamlLoader extends YamlFileLoader
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function load($file, ?string $type = null): RouteCollection
     {
@@ -26,7 +26,7 @@ class YamlLoader extends YamlFileLoader
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function supports($resource, ?string $type = null): bool
     {
@@ -42,7 +42,7 @@ class YamlLoader extends YamlFileLoader
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function validate($config, string $name, string $path)
     {
@@ -55,7 +55,7 @@ class YamlLoader extends YamlFileLoader
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function parseRoute(RouteCollection $collection, string $name, array $config, string $path)
     {

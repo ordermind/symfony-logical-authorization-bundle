@@ -14,7 +14,7 @@ use Symfony\Component\Routing\RouteCollection;
 use TypeError;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class XmlLoader extends FileLoader
 {
@@ -61,7 +61,7 @@ class XmlLoader extends FileLoader
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function supports($resource, ?string $type = null): bool
     {

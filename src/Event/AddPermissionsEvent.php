@@ -7,7 +7,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Event;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class AddPermissionsEvent extends Event implements AddPermissionsEventInterface
 {
@@ -32,7 +32,7 @@ class AddPermissionsEvent extends Event implements AddPermissionsEventInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTree(): array
     {
@@ -40,7 +40,7 @@ class AddPermissionsEvent extends Event implements AddPermissionsEventInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function insertTree(array $tree)
     {

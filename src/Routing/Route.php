@@ -97,7 +97,7 @@ class Route extends RouteBase implements RouteInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function __serialize(): array
     {
@@ -116,7 +116,7 @@ class Route extends RouteBase implements RouteInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function __unserialize(array $data): void
     {
@@ -140,7 +140,7 @@ class Route extends RouteBase implements RouteInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setPermissions($permissions)
     {
@@ -148,7 +148,7 @@ class Route extends RouteBase implements RouteInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getPermissions()
     {

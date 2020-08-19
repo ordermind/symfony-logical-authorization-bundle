@@ -17,18 +17,15 @@ class PermissionsCacheWarmer implements CacheWarmerInterface
      */
     protected $treeBuilder;
 
-    /**
-     * @internal
-     *
-     * @param PermissionTreeBuilderInterface $treeBuilder
-     */
     public function __construct(PermissionTreeBuilderInterface $treeBuilder)
     {
         $this->treeBuilder = $treeBuilder;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function warmUp(string $cacheDir): array
     {
@@ -38,7 +35,7 @@ class PermissionsCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isOptional(): bool
     {

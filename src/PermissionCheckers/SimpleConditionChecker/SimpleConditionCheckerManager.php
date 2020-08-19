@@ -10,12 +10,12 @@ use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionCheck
 class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInterface
 {
     /**
-     * @var SimpleConditionCheckerInterface[]
+     * @var array|SimpleConditionCheckerInterface[]
      */
     protected $conditions = [];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {
@@ -35,7 +35,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function addCondition(SimpleConditionCheckerInterface $condition)
     {
@@ -59,7 +59,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function removeCondition(string $name)
     {
@@ -83,7 +83,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getConditions(): array
     {
@@ -91,7 +91,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function checkPermission(string $name, $context): bool
     {

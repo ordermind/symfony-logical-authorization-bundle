@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class DumpPermissionTreeCommand extends Command
 {
@@ -21,19 +21,15 @@ class DumpPermissionTreeCommand extends Command
      */
     protected $treeBuilder;
 
-    /**
-     * @internal
-     *
-     * @param PermissionTreeBuilderInterface $treeBuilder
-     */
     public function __construct(PermissionTreeBuilderInterface $treeBuilder)
     {
-        $this->treeBuilder = $treeBuilder;
         parent::__construct();
+
+        $this->treeBuilder = $treeBuilder;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure()
     {
@@ -49,7 +45,7 @@ class DumpPermissionTreeCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

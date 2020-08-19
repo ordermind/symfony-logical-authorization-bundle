@@ -10,12 +10,12 @@ use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 {
     /**
-     * @var string[]
+     * @var array|string[]
      */
     protected $permissionKeys;
 
@@ -45,7 +45,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTree(bool $reset = false, bool $debug = false): array
     {

@@ -12,12 +12,12 @@ use Symfony\Component\Routing\Route as RouteBase;
 use TypeError;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configureRoute(RouteBase $route, ReflectionClass $class, ReflectionMethod $method, $annot)
     {
@@ -34,7 +34,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function createRoute(
         $path,

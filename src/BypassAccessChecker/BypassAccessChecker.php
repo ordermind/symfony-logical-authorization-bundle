@@ -15,23 +15,18 @@ class BypassAccessChecker implements BypassAccessCheckerInterface
     /**
      * @var UserCanBypassAccessChecker
      */
-    protected $flagChecker;
+    protected $conditionChecker;
 
-    /**
-     * @internal
-     *
-     * @param UserCanBypassAccessChecker $flagChecker
-     */
-    public function __construct(UserCanBypassAccessChecker $flagChecker)
+    public function __construct(UserCanBypassAccessChecker $conditionChecker)
     {
-        $this->flagChecker = $flagChecker;
+        $this->conditionChecker = $conditionChecker;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function checkBypassAccess($context): bool
     {
-        return $this->flagChecker->checkCondition($context);
+        return $this->conditionChecker->checkCondition($context);
     }
 }

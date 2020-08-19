@@ -25,7 +25,7 @@ class IpChecker implements PermissionCheckerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {

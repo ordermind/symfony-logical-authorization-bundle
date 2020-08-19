@@ -12,7 +12,7 @@ use UnexpectedValueException;
 class UserCanBypassAccessChecker implements SimpleConditionCheckerInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {

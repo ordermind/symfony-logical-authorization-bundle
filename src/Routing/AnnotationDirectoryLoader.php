@@ -7,12 +7,12 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader as AnnotationDirectoryLoaderBase;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class AnnotationDirectoryLoader extends AnnotationDirectoryLoaderBase
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function supports($resource, ?string $type = null): bool
     {

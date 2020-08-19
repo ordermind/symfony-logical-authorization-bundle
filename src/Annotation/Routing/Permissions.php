@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Annotation\Routing;
 
+use InvalidArgumentException;
+
 /**
  * @Annotation
  */
@@ -14,14 +16,18 @@ class Permissions
      */
     protected $permissions;
 
-    /**
-     * @internal
-     *
-     * @param array $data
-     */
     public function __construct(array $data)
     {
-        $this->permissions = $data['value'];
+        if (!array_key_exists('value', $data)) {
+            throw new InvalidArgumentException('The data parameter must have a "value" key');
+        }
+
+        $permissions = $data['value'];
+        if (!is_array($permissions) && !is_string($permissions) && !is_bool($permissions)) {
+            throw new InvalidArgumentException('Supported datatypes for permissions are array, string and bool');
+        }
+
+        $this->permissions = $permissions;
     }
 
     /**

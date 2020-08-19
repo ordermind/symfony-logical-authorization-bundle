@@ -10,7 +10,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class LogicalAuthorizationExtension extends AbstractExtension
 {
@@ -33,7 +33,7 @@ class LogicalAuthorizationExtension extends AbstractExtension
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getFunctions(): array
     {

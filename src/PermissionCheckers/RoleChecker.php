@@ -27,7 +27,7 @@ class RoleChecker implements PermissionCheckerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {

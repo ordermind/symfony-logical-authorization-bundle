@@ -13,7 +13,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionCheck
 class UserHasAccountChecker implements SimpleConditionCheckerInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getName(): string
     {

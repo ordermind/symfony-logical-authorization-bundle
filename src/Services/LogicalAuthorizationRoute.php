@@ -9,7 +9,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 {
@@ -24,7 +24,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     protected $treeBuilder;
 
     /**
-     * @var SRouterInterface
+     * @var RouterInterface
      */
     protected $router;
 
@@ -34,25 +34,16 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     protected $helper;
 
     /**
-     * @var CollectorInterface
+     * @var CollectorInterface|null
      */
     protected $debugCollector;
 
-    /**
-     * @internal
-     *
-     * @param LogicalAuthorizationInterface  $logicalAuthorization
-     * @param PermissionTreeBuilderInterface $treeBuilder
-     * @param RouterInterface                $router
-     * @param HelperInterface                $helper
-     * @param CollectorInterface             $debugCollector
-     */
     public function __construct(
         LogicalAuthorizationInterface $logicalAuthorization,
         PermissionTreeBuilderInterface $treeBuilder,
         RouterInterface $router,
         HelperInterface $helper,
-        CollectorInterface $debugCollector = null
+        ?CollectorInterface $debugCollector = null
     ) {
         $this->logicalAuthorization = $logicalAuthorization;
         $this->treeBuilder = $treeBuilder;
@@ -62,7 +53,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @return array
      */
@@ -105,7 +96,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @return bool
      */
