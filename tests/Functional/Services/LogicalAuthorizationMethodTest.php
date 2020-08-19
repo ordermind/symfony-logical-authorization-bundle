@@ -42,30 +42,34 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testFlagBypassAccessWrongContextType()
     {
-        $this->expectException(TypeError::class);
         $condition = new BypassAccessFlag();
+
+        $this->expectException(TypeError::class);
         $condition->checkCondition(null);
     }
 
     public function testFlagBypassAccessMissingUser()
     {
-        $this->expectException(InvalidArgumentException::class);
         $condition = new BypassAccessFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition([]);
     }
 
     public function testFlagBypassAccessWrongUserType()
     {
-        $this->expectException(InvalidArgumentException::class);
         $condition = new BypassAccessFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition(['user' => []]);
     }
 
     public function testFlagBypassAccessWrongReturnType()
     {
-        $this->expectException(TypeError::class);
         $user = new ErroneousUser();
         $condition = new BypassAccessFlag();
+
+        $this->expectException(TypeError::class);
         $condition->checkCondition(['user' => $user]);
     }
 
@@ -92,15 +96,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testFlagHasAccountWrongContextType()
     {
-        $this->expectException(TypeError::class);
         $condition = new HasAccountFlag();
+
+        $this->expectException(TypeError::class);
         $condition->checkCondition(null);
     }
 
     public function testFlagHasAccountMissingUser()
     {
-        $this->expectException(InvalidArgumentException::class);
         $condition = new HasAccountFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition([]);
     }
 
@@ -119,30 +125,34 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testFlagIsAuthorWrongContextType()
     {
-        $this->expectException(TypeError::class);
         $condition = new IsAuthorFlag();
+
+        $this->expectException(TypeError::class);
         $condition->checkCondition(null);
     }
 
     public function testFlagIsAuthorMissingUser()
     {
-        $this->expectException(InvalidArgumentException::class);
         $condition = new IsAuthorFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition([]);
     }
 
     public function testFlagIsAuthorWrongUserType()
     {
-        $this->expectException(InvalidArgumentException::class);
         $condition = new IsAuthorFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition(['user' => []]);
     }
 
     public function testFlagIsAuthorMissingModel()
     {
-        $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
         $condition = new IsAuthorFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition(['user' => $user]);
     }
 
@@ -157,18 +167,20 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testFlagIsAuthorWrongModelType()
     {
-        $this->expectException(InvalidArgumentException::class);
         $user = new TestUser();
         $condition = new IsAuthorFlag();
+
+        $this->expectException(InvalidArgumentException::class);
         $condition->checkCondition(['user' => $user, 'model' => []]);
     }
 
     public function testFlagIsAuthorModelWrongAuthorType()
     {
-        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new ErroneousModel();
         $condition = new IsAuthorFlag();
+
+        $this->expectException(TypeError::class);
         $condition->checkCondition(['user' => $user, 'model' => $model]);
     }
 
@@ -198,10 +210,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testSimpleConditionCheckerManagerAddFlagAlreadyRegistered()
     {
-        $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
+
+        $this->expectException(InvalidArgumentException::class);
         $conditionManager->addCondition($condition);
     }
 
@@ -217,26 +230,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testSimpleConditionCheckerManagerRemoveFlagWrongNameType()
     {
-        $this->expectException(TypeError::class);
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
+
+        $this->expectException(TypeError::class);
         $conditionManager->removeCondition(true);
     }
 
     public function testSimpleConditionCheckerManagerRemoveFlagEmptyName()
     {
-        $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
         $condition = new TestConditionChecker();
         $conditionManager->addCondition($condition);
+
+        $this->expectException(InvalidArgumentException::class);
         $conditionManager->removeCondition('');
     }
 
     public function testSimpleConditionCheckerManagerRemoveFlagNotRegistered()
     {
-        $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
+
+        $this->expectException(InvalidArgumentException::class);
         $conditionManager->removeCondition('test');
     }
 
@@ -254,22 +270,25 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testSimpleConditionCheckerManagerCheckPermissionWrongNameType()
     {
-        $this->expectException(TypeError::class);
         $conditionManager = new SimpleConditionCheckerManager();
+
+        $this->expectException(TypeError::class);
         $conditionManager->checkPermission(true, []);
     }
 
     public function testSimpleConditionCheckerManagerCheckPermissionEmptyName()
     {
-        $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
+
+        $this->expectException(InvalidArgumentException::class);
         $conditionManager->checkPermission('', []);
     }
 
     public function testSimpleConditionCheckerManagerCheckPermissionNotRegistered()
     {
-        $this->expectException(InvalidArgumentException::class);
         $conditionManager = new SimpleConditionCheckerManager();
+
+        $this->expectException(InvalidArgumentException::class);
         $conditionManager->checkPermission('always_true', []);
     }
 
@@ -285,36 +304,41 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testRoleWrongRoleType()
     {
-        $this->expectException(TypeError::class);
         $role = new RoleChecker($this->roleHierarchy);
+
+        $this->expectException(TypeError::class);
         $role->checkPermission(true, []);
     }
 
     public function testRoleEmptyRole()
     {
-        $this->expectException(InvalidArgumentException::class);
         $role = new RoleChecker($this->roleHierarchy);
+
+        $this->expectException(InvalidArgumentException::class);
         $role->checkPermission('', []);
     }
 
     public function testRoleWrongContextType()
     {
-        $this->expectException(TypeError::class);
         $role = new RoleChecker($this->roleHierarchy);
+
+        $this->expectException(TypeError::class);
         $role->checkPermission('ROLE_USER', null);
     }
 
     public function testRoleMissingUser()
     {
-        $this->expectException(InvalidArgumentException::class);
         $role = new RoleChecker($this->roleHierarchy);
+
+        $this->expectException(InvalidArgumentException::class);
         $role->checkPermission('ROLE_USER', []);
     }
 
     public function testRoleWrongUserType()
     {
-        $this->expectException(InvalidArgumentException::class);
         $role = new RoleChecker($this->roleHierarchy);
+
+        $this->expectException(InvalidArgumentException::class);
         $role->checkPermission('ROLE_USER', ['user' => []]);
     }
 
@@ -360,17 +384,19 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testHostWrongHostType()
     {
-        $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
         $host = new HostChecker($requestStack);
+
+        $this->expectException(TypeError::class);
         $host->checkPermission(1, []);
     }
 
     public function testHostEmptyHost()
     {
-        $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
         $host = new HostChecker($requestStack);
+
+        $this->expectException(InvalidArgumentException::class);
         $host->checkPermission('', []);
     }
 
@@ -396,17 +422,19 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testMethodWrongMethodType()
     {
-        $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
         $method = new MethodChecker($requestStack);
+
+        $this->expectException(TypeError::class);
         $method->checkPermission(1, []);
     }
 
     public function testMethodEmptyMethod()
     {
-        $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
         $method = new MethodChecker($requestStack);
+
+        $this->expectException(InvalidArgumentException::class);
         $method->checkPermission('', []);
     }
 
@@ -432,17 +460,19 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testIpWrongIpType()
     {
-        $this->expectException(TypeError::class);
         $requestStack = new RequestStack();
         $ipPermission = new IpChecker($requestStack);
+
+        $this->expectException(TypeError::class);
         $ipPermission->checkPermission(1, []);
     }
 
     public function testIpEmptyIp()
     {
-        $this->expectException(InvalidArgumentException::class);
         $requestStack = new RequestStack();
         $ipPermission = new IpChecker($requestStack);
+
+        $this->expectException(InvalidArgumentException::class);
         $ipPermission->checkPermission('', []);
     }
 
@@ -574,38 +604,43 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testCheckModelAccessWrongModelType()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkModelAccess(null, 'read', $user);
     }
 
     public function testCheckModelAccessModelClassDoesntExist()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkModelAccess('TestModelBoolean', 'read', $user);
     }
 
     public function testCheckModelAccessWrongActionType()
     {
-        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
+
+        $this->expectException(TypeError::class);
         $this->laModel->checkModelAccess($model, null, $user);
     }
 
     public function testCheckModelAccessEmptyAction()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkModelAccess($model, '', $user);
     }
 
     public function testCheckModelAccessWrongUserType()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $model = new TestModelBoolean();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkModelAccess($model, 'read', []);
     }
 
@@ -668,54 +703,61 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testCheckFieldAccessWrongModelType()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkFieldAccess(null, 'field', 'action', $user);
     }
 
     public function testCheckFieldAccessModelClassDoesntExist()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkFieldAccess('TestModelBoolean', 'field', 'action', $user);
     }
 
     public function testCheckFieldAccessWrongFieldType()
     {
-        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
+
+        $this->expectException(TypeError::class);
         $this->laModel->checkFieldAccess($model, null, 'action', $user);
     }
 
     public function testCheckFieldAccessEmptyField()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkFieldAccess($model, '', 'action', $user);
     }
 
     public function testCheckFieldAccessWrongActionType()
     {
-        $this->expectException(TypeError::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
+
+        $this->expectException(TypeError::class);
         $this->laModel->checkFieldAccess($model, 'field1', null, $user);
     }
 
     public function testCheckFieldAccessEmptyAction()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
         $model = new TestModelBoolean();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkFieldAccess($model, 'field1', '', $user);
     }
 
     public function testCheckFieldAccessWrongUserType()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $model = new TestModelBoolean();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laModel->checkFieldAccess($model, 'field1', 'get', []);
     }
 
@@ -813,15 +855,17 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testCheckRouteAccessWrongRouteType()
     {
-        $this->expectException(TypeError::class);
         $user = new TestUser();
+
+        $this->expectException(TypeError::class);
         $this->laRoute->checkRouteAccess(null, $user);
     }
 
     public function testCheckRouteAccessEmptyRoute()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laRoute->checkRouteAccess('', $user);
     }
 
@@ -833,8 +877,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testCheckRouteAccessRouteDoesntExist()
     {
-        $this->expectException(LogicalAuthorizationException::class);
         $user = new TestUser();
+
+        $this->expectException(LogicalAuthorizationException::class);
         $this->laRoute->checkRouteAccess('hej', $user);
     }
 
@@ -855,10 +900,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testLogicalPermissionsLocatorAddTypeAlreadyExists()
     {
-        $this->expectException(PermissionTypeAlreadyRegisteredException::class);
         $lpLocator = new PermissionCheckerLocator();
         $type = new TestPermissionChecker();
         $lpLocator->add($type);
+
+        $this->expectException(PermissionTypeAlreadyRegisteredException::class);
         $lpLocator->add($type);
     }
 
@@ -872,8 +918,9 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testLogicalPermissionsFacadeCheckAccessTypeDoesntExist()
     {
-        $this->expectException(PermissionTypeNotRegisteredException::class);
         $lpFacade = new LogicalPermissionsFacade();
+
+        $this->expectException(PermissionTypeNotRegisteredException::class);
         $lpFacade->checkAccess(['test' => 'hej'], []);
     }
 
@@ -895,9 +942,10 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testEventInsertTreeWrongTreeType()
     {
-        $this->expectException(TypeError::class);
         $lpLocator = new PermissionCheckerLocator();
         $event = new AddPermissionsEvent($lpLocator->getValidPermissionTreeKeys());
+
+        $this->expectException(TypeError::class);
         $event->insertTree('key');
     }
 
