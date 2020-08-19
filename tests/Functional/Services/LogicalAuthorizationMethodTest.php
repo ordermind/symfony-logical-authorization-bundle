@@ -77,7 +77,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $this->expectException(TypeError::class);
         $this->expectExceptionMessage(
             sprintf(
-                'Return value of %s must be of the type boolean, string returned',
+                'Return value of %s must be of the type bool',
                 ErroneousUser::class . '::getBypassAccess()'
             )
         );
