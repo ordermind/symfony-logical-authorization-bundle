@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller;
 
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
     /**
-     * @Route("/route-role", name="route_role")
-     *
-     * @Method({"GET"})
+     * @Route("/route-role", name="route_role", methods={"GET"}))
      *
      * @Permissions({
      *   "role": "ROLE_ADMIN"
@@ -27,9 +24,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/route-role-multiple", name="route_role_multiple")
-     *
-     * @Method({"GET"})
+     * @Route("/route-role-multiple", name="route_role_multiple", methods={"GET"}))
      *
      * @Permissions({
      *   "role": {"ROLE_SALES", "ROLE_ADMIN"}
@@ -41,9 +36,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/route-no-bypass", name="route_no_bypass")
-     *
-     * @Method({"GET"})
+     * @Route("/route-no-bypass", name="route_no_bypass", methods={"GET"}))
      *
      * @Permissions({
      *   "no_bypass": true,
@@ -56,9 +49,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/route-host", name="route_host")
-     *
-     * @Method({"GET"})
+     * @Route("/route-host", name="route_host", methods={"GET"}))
      *
      * @Permissions({
      *   "host": "test.com"
@@ -94,9 +85,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/route-ip", name="route_ip")
-     *
-     * @Method({"GET"})
+     * @Route("/route-ip", name="route_ip", methods={"GET"}))
      *
      * @Permissions({
      *   "ip": "127.0.0.1"
@@ -108,9 +97,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/route-complex", name="route_complex")
-     *
-     * @Method({"GET"})
+     * @Route("/route-complex", name="route_complex", methods={"GET"}))
      *
      * @Permissions({
      *   "AND": {

@@ -7,7 +7,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
 use ReflectionClass;
 use ReflectionMethod;
-use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
+use Symfony\Bundle\FrameworkBundle\Routing\AnnotatedRouteControllerLoader;
 use Symfony\Component\Routing\Route as RouteBase;
 use TypeError;
 

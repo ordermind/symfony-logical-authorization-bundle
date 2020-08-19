@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ControllerDir;
 
 use Ordermind\LogicalAuthorizationBundle\Annotation\Routing\Permissions;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
     /**
-     * @Route("/route-has-account", name="route_user_has_account")
-     *
-     * @Method({"GET"})
+     * @Route("/route-has-account", name="route_user_has_account", methods={"GET"}))
      *
      * @Permissions({
      *   "condition": "user_has_account"
@@ -93,9 +90,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/count-available-routes", name="count_available_routes")
-     *
-     * @Method({"GET"})
+     * @Route("/count-available-routes", name="count_available_routes", methods={"GET"}))
      */
     public function countAvailableRoutesAction(): Response
     {
@@ -109,9 +104,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/count-available-route-patterns", name="count_available_route_patterns")
-     *
-     * @Method({"GET"})
+     * @Route("/count-available-route-patterns", name="count_available_route_patterns", methods={"GET"}))
      */
     public function countAvailableRoutePatternsAction(): Response
     {
@@ -125,9 +118,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/get-current-username", name="get_current_username")
-     *
-     * @Method({"GET"})
+     * @Route("/get-current-username", name="get_current_username", methods={"GET"}))
      */
     public function getCurrentUsernameAction(): Response
     {
@@ -143,9 +134,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/count-forbidden-entities-lazy", name="test_count_forbidden_entities_lazy")
-     *
-     * @Method({"GET"})
+     * @Route("/count-forbidden-entities-lazy", name="test_count_forbidden_entities_lazy", methods={"GET"}))
      */
     public function countForbiddenEntitiesLazyLoadAction(): Response
     {

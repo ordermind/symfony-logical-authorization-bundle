@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Test;
 
 use Ordermind\LogicalAuthorizationBundle\OrdermindLogicalAuthorizationBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
@@ -24,7 +23,6 @@ class AppKernel extends Kernel
             $bundles[] = new MonologBundle();
             $bundles[] = new SecurityBundle();
             $bundles[] = new TwigBundle();
-            $bundles[] = new SensioFrameworkExtraBundle();
             $bundles[] = new OrdermindLogicalAuthorizationBundle();
         }
 
