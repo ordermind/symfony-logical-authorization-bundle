@@ -250,8 +250,11 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 $user,
                 [],
                 [],
-                "No permissions were found for the action \"$action\" on this model. Access was therefore "
-                    . 'automatically granted.'
+                sprintf(
+                    'No permissions were found for the action "%s" on this model. Access was therefore automatically '
+                        . 'granted.',
+                    $action
+                )
             );
         }
 
@@ -453,8 +456,11 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 $user,
                 [],
                 [],
-                "No permissions were found for the action \"$action\" on this model and field. Access was therefore "
-                    . 'automatically granted.'
+                sprintf(
+                    'No permissions were found for the action "%s" on this model and field. Access was therefore '
+                        . 'automatically granted.',
+                    $action
+                )
             );
         }
 

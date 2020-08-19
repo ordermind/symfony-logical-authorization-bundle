@@ -49,15 +49,17 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
             $class = get_class($e);
             $message = $e->getMessage();
             if ($class === PermissionTypeNotRegisteredException::class) {
-                $message .= ' Please use the \'logauth.tag.permission_checker\' service tag to register a permission '
+                $message .= ' Please use the "logauth.tag.permission_checker" service tag to register a permission '
                     . 'checker';
             }
 
             $this->helper->handleError(
-                "An exception was caught while checking access: \"$message\" "
-                    . 'at ' . $e->getFile()
-                    . ' line '
-                    . $e->getLine(),
+                sprintf(
+                    'An exception was caught while checking access: "%s" at %s line %s',
+                    $message,
+                    $e->getFile(),
+                    $e->getLine()
+                ),
                 [
                     'exception'   => $class,
                     'permissions' => $permissions,

@@ -528,7 +528,10 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     public function testCheckAccessPermissionTypeNotRegistered()
     {
         $this->expectException(LogicalAuthorizationException::class);
-        $this->expectExceptionMessage('service tag to register a permission checker');
+        $this->expectExceptionMessage(
+            'The permission type "test" could not be found. Please use the "logauth.tag.permission_checker" service '
+                . 'tag to register a permission checker'
+        );
         $this->logicalAuthorization->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
     }
 

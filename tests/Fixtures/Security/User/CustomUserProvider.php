@@ -52,25 +52,25 @@ class CustomUserProvider implements UserProviderInterface
     private function getUserData(): array
     {
         return [
-        'authenticated_user' => [
-        'password' => 'userpass',
-        'roles'    => ['ROLE_USER'],
-        'email'    => 'user@email.com',
-        ],
-        'admin_user' => [
-        'password' => 'adminpass',
-        'roles'    => [
-          'ROLE_USER',
-          'ROLE_ADMIN',
-        ],
-        'email' => 'admin@email.com',
-        ],
-        'superadmin_user' => [
-        'password'      => 'superadminpass',
-        'roles'         => ['ROLE_USER'],
-        'email'         => 'superadmin@email.com',
-        'bypass_access' => true,
-        ],
+            'authenticated_user' => [
+                'password' => 'userpass',
+                'roles'    => ['ROLE_USER'],
+                'email'    => 'user@email.com',
+            ],
+            'admin_user' => [
+                'password' => 'adminpass',
+                'roles'    => [
+                    'ROLE_USER',
+                    'ROLE_ADMIN',
+                ],
+                'email' => 'admin@email.com',
+            ],
+            'superadmin_user' => [
+                'password'      => 'superadminpass',
+                'roles'         => ['ROLE_USER'],
+                'email'         => 'superadmin@email.com',
+                'bypass_access' => true,
+            ],
         ];
     }
 }

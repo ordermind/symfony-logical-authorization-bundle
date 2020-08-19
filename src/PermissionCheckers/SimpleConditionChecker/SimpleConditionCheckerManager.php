@@ -45,8 +45,11 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
         }
         if ($this->conditionExists($name)) {
             throw new InvalidArgumentException(
-                "The condition \"$name\" already exists! If you want to change the class that handles a condition, you "
-                    . 'may do so by overriding the service definition for that condition.'
+                sprintf(
+                    'The condition "%s" already exists! If you want to change the class that handles a condition, you '
+                        . 'may do so by overriding the service definition for that condition.',
+                    $name
+                )
             );
         }
 
