@@ -6,6 +6,13 @@ namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
 {
+    public function testRouteNoPermissionsAllow()
+    {
+        $this->sendRequestAs('GET', '/test/no-permissions');
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testRouteRoleAllow()
     {
         $this->sendRequestAs('GET', '/test/route-role', [], static::$userAdmin);
@@ -45,8 +52,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['HTTP_HOST' => 'test.com']);
         $headers = [
-        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
-        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
+            'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+            'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-host', [], [], $headers);
         $response = $this->client->getResponse();
@@ -57,8 +64,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['HTTP_HOST' => 'test.se']);
         $headers = [
-        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
-        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
+            'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+            'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-host', [], [], $headers);
         $response = $this->client->getResponse();
@@ -90,8 +97,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['REMOTE_ADDR' => '127.0.0.1']);
         $headers = [
-        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
-        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
+            'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+            'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-ip', [], [], $headers);
         $response = $this->client->getResponse();
@@ -102,8 +109,8 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
     {
         $this->client->setServerParameters(['REMOTE_ADDR' => '127.0.0.55']);
         $headers = [
-        'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
-        'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
+            'PHP_AUTH_USER' => static::$userAuthenticated->getUsername(),
+            'PHP_AUTH_PW'   => $this->userCredentials[static::$userAuthenticated->getUsername()],
         ];
         $this->client->request('GET', '/test/route-ip', [], [], $headers);
         $response = $this->client->getResponse();
@@ -152,16 +159,23 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    public function testYmlRouteAllow()
+    public function testYmlRouteNoPermissionsAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-yml', [], static::$userAdmin);
+        $this->sendRequestAs('GET', '/test/yml-no-permissions');
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testYmlRouteDisallow()
+    public function testYmlRouteRoleAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-yml', [], static::$userAuthenticated);
+        $this->sendRequestAs('GET', '/test/route-yml-role', [], static::$userAdmin);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testYmlRouteRoleDisallow()
+    {
+        $this->sendRequestAs('GET', '/test/route-yml-role', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -180,16 +194,23 @@ class LogicalAuthorizationRouteTest extends LogicalAuthorizationBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    public function testXmlRouteAllow()
+    public function testXmlRouteNoPermissionsAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-xml', [], static::$userAdmin);
+        $this->sendRequestAs('GET', '/test/xml-no-permissions');
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testXmlRouteDisallow()
+    public function testXmlRouteRoleAllow()
     {
-        $this->sendRequestAs('GET', '/test/route-xml', [], static::$userAuthenticated);
+        $this->sendRequestAs('GET', '/test/route-xml-role', [], static::$userAdmin);
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testXmlRouteRoleDisallow()
+    {
+        $this->sendRequestAs('GET', '/test/route-xml-role', [], static::$userAuthenticated);
         $response = $this->client->getResponse();
         $this->assertEquals(403, $response->getStatusCode());
     }

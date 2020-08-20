@@ -28,7 +28,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
         parent::configureRoute($route, $class, $method, $annot);
         foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
             if ($configuration instanceof Permissions) {
-                $route->setPermissions($configuration->getPermissions());
+                $route->setRawPermissionTree($configuration->getRawPermissionTree());
             }
         }
     }
@@ -37,14 +37,14 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
      * {@inheritDoc}
      */
     protected function createRoute(
-        $path,
-        $defaults,
-        $requirements,
-        $options,
-        $host,
-        $schemes,
-        $methods,
-        $condition
+        string $path,
+        array $defaults,
+        array $requirements,
+        array $options,
+        ?string $host,
+        array $schemes,
+        array $methods,
+        ?string $condition
     ): Route {
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
     }

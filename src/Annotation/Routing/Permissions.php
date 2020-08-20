@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Annotation\Routing;
 
 use InvalidArgumentException;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 
 /**
  * @Annotation
@@ -12,9 +13,9 @@ use InvalidArgumentException;
 class Permissions
 {
     /**
-     * @var array|string|bool
+     * @var RawPermissionTree
      */
-    protected $permissions;
+    protected $rawPermissionTree;
 
     public function __construct(array $data)
     {
@@ -22,21 +23,16 @@ class Permissions
             throw new InvalidArgumentException('The data parameter must have a "value" key');
         }
 
-        $permissions = $data['value'];
-        if (!is_array($permissions) && !is_string($permissions) && !is_bool($permissions)) {
-            throw new InvalidArgumentException('Supported datatypes for permissions are array, string and bool');
-        }
-
-        $this->permissions = $permissions;
+        $this->rawPermissionTree = new RawPermissionTree($data['value']);
     }
 
     /**
-     * Gets the permission tree for this route.
+     * Gets the unvalidated permission tree for this route.
      *
-     * @return array|string|bool
+     * @return RawPermissionTree
      */
-    public function getPermissions()
+    public function getRawPermissionTree()
     {
-        return $this->permissions;
+        return $this->rawPermissionTree;
     }
 }

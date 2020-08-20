@@ -6,6 +6,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -81,7 +82,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
         $tree = $this->treeBuilder->getTree();
         if (!empty($tree['route_patterns'])) {
             foreach ($tree['route_patterns'] as $pattern => $permissions) {
-                if (!$this->logicalAuthorization->checkAccess($permissions, ['user' => $user])) {
+                if (!$this->logicalAuthorization->checkAccess(new RawPermissionTree($permissions), ['user' => $user])) {
                     continue;
                 }
 
@@ -114,7 +115,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                         'route',
                         $routeName,
                         $user,
-                        [],
+                        new RawPermissionTree([]),
                         [],
                         'No user was available during this permission check (not even an anonymous user). This usually '
                             . 'happens during unit testing. Access was therefore automatically granted.'
@@ -136,7 +137,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                     'route',
                     $routeName,
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the route access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -156,7 +157,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                     'route',
                     $routeName,
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the route access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -178,7 +179,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                     'route',
                     $routeName,
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the route access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -188,12 +189,19 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
             return false;
         }
 
-        $permissions = $this->getRoutePermissions($routeName);
+        $rawPermissionTree = $this->getRoutePermissions($routeName);
         $context = ['route' => $routeName, 'user' => $user];
-        $access = $this->logicalAuthorization->checkAccess($permissions, $context);
+        $access = $this->logicalAuthorization->checkAccess($rawPermissionTree, $context);
 
         if (!is_null($this->debugCollector)) {
-            $this->debugCollector->addPermissionCheck($access, 'route', $routeName, $user, $permissions, $context);
+            $this->debugCollector->addPermissionCheck(
+                $access,
+                'route',
+                $routeName,
+                $user,
+                $rawPermissionTree,
+                $context
+            );
         }
 
         return $access;
@@ -204,9 +212,9 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      *
      * @param string $routeName
      *
-     * @return array|string|bool
+     * @return RawPermissionTree
      */
-    protected function getRoutePermissions(string $routeName)
+    protected function getRoutePermissions(string $routeName): RawPermissionTree
     {
         //If permissions are defined for an individual route, pattern permissions are completely ignored for that route.
         $tree = $this->treeBuilder->getTree();
@@ -223,12 +231,12 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
                 $routePath = $route->getPath();
                 foreach ($tree['route_patterns'] as $pattern => $permissions) {
                     if (preg_match("@$pattern@", $routePath)) {
-                        return $permissions;
+                        return new RawPermissionTree($permissions);
                     }
                 }
             }
         }
 
-        return [];
+        return new RawPermissionTree([]);
     }
 }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Route as RouteBase;
 
 /**
- * Overridden route class that allows for having permissions in a route.
+ * Overridden route class that allows for having rawPermissionTree in a route.
  */
 class Route extends RouteBase implements RouteInterface
 {
@@ -17,9 +19,9 @@ class Route extends RouteBase implements RouteInterface
     private $path = '/';
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $host = '';
+    private $host;
 
     /**
      * @var array
@@ -47,43 +49,43 @@ class Route extends RouteBase implements RouteInterface
     private $options = [];
 
     /**
-     * @var null|CompiledRoute
+     * @var CompiledRoute|null
      */
     private $compiled;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $condition = '';
+    private $condition;
 
     /**
-     * @var mixed
+     * @var RawPermissionTree|null
      */
-    private $permissions;
+    private $rawPermissionTree;
 
     /**
      * @internal
      *
-     * @param string            $path
-     * @param array             $defaults     (optional)
-     * @param array             $requirements (optional)
-     * @param array             $options      (optional)
-     * @param string            $host         (optional)
-     * @param array             $schemes      (optional)
-     * @param array             $methods      (optional)
-     * @param string            $condition    (optional)
-     * @param array|string|bool $permissions  (optional)
+     * @param string                 $path
+     * @param array                  $defaults          (optional)
+     * @param array                  $requirements      (optional)
+     * @param array                  $options           (optional)
+     * @param string|null            $host              (optional)
+     * @param array                  $schemes           (optional)
+     * @param array                  $methods           (optional)
+     * @param string|null            $condition         (optional)
+     * @param RawPermissionTree|null $rawPermissionTree (optional)
      */
     public function __construct(
-        $path,
+        string $path,
         array $defaults = [],
         array $requirements = [],
         array $options = [],
-        $host = '',
-        $schemes = [],
-        $methods = [],
-        $condition = '',
-        $permissions = null
+        string $host = null,
+        array $schemes = [],
+        array $methods = [],
+        ?string $condition = null,
+        ?RawPermissionTree $rawPermissionTree = null
     ) {
         $this->setPath($path);
         $this->setDefaults($defaults);
@@ -93,7 +95,9 @@ class Route extends RouteBase implements RouteInterface
         $this->setSchemes($schemes);
         $this->setMethods($methods);
         $this->setCondition($condition);
-        $this->setPermissions($permissions);
+        if ($rawPermissionTree) {
+            $this->setRawPermissionTree($rawPermissionTree);
+        }
     }
 
     /**
@@ -102,16 +106,16 @@ class Route extends RouteBase implements RouteInterface
     public function __serialize(): array
     {
         return [
-            'path'         => $this->path,
-            'host'         => $this->host,
-            'defaults'     => $this->defaults,
-            'requirements' => $this->requirements,
-            'options'      => $this->options,
-            'schemes'      => $this->schemes,
-            'methods'      => $this->methods,
-            'condition'    => $this->condition,
-            'compiled'     => $this->compiled,
-            'permissions'  => $this->permissions,
+            'path'               => $this->path,
+            'host'               => $this->host,
+            'defaults'           => $this->defaults,
+            'requirements'       => $this->requirements,
+            'options'            => $this->options,
+            'schemes'            => $this->schemes,
+            'methods'            => $this->methods,
+            'condition'          => $this->condition,
+            'compiled'           => $this->compiled,
+            'permissions'        => $this->rawPermissionTree->getValue(),
         ];
     }
 
@@ -135,23 +139,23 @@ class Route extends RouteBase implements RouteInterface
             $this->compiled = $data['compiled'];
         }
         if (isset($data['permissions'])) {
-            $this->permissions = $data['permissions'];
+            $this->rawPermissionTree = new RawPermissionTree($data['permissions']);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setPermissions($permissions)
+    public function setRawPermissionTree(RawPermissionTree $rawPermissionTree)
     {
-        $this->permissions = $permissions;
+        $this->rawPermissionTree = $rawPermissionTree;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getPermissions()
+    public function getRawPermissionTree(): ?RawPermissionTree
     {
-        return $this->permissions;
+        return $this->rawPermissionTree;
     }
 }

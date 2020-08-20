@@ -7,6 +7,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 use DOMDocument;
 use DOMElement;
 use InvalidArgumentException;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -137,14 +138,14 @@ class XmlLoader extends FileLoader
 
         $route = new Route(
             $node->getAttribute('path'),
-            $defaults,
-            $requirements,
-            $options,
+            (array) $defaults,
+            (array) $requirements,
+            (array) $options,
             $node->getAttribute('host'),
-            $schemes,
-            $methods,
+            (array) $schemes,
+            (array) $methods,
             $condition,
-            $permissions
+            !is_null($permissions) ? new RawPermissionTree($permissions) : null
         );
         $collection->add($id, $route);
     }

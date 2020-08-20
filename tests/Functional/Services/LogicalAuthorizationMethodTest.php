@@ -29,6 +29,7 @@ use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestCo
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestPermissionChecker;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 use Ordermind\LogicalPermissions\PermissionCheckerLocator;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -532,14 +533,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'The permission type "test" could not be found. Please use the "logauth.tag.permission_checker" service '
                 . 'tag to register a permission checker'
         );
-        $this->logicalAuthorization->checkAccess(['test' => 'hej'], ['user' => 'anon.']);
+        $this->logicalAuthorization->checkAccess(new RawPermissionTree(['test' => 'hej']), ['user' => 'anon.']);
     }
 
     public function testCheckAccessOtherExceptions()
     {
         $this->expectException(LogicalAuthorizationException::class);
         $this->expectExceptionMessage('An exception was caught while checking access: ');
-        $this->logicalAuthorization->checkAccess(['test' => 'hej'], []);
+        $this->logicalAuthorization->checkAccess(new RawPermissionTree(['test' => 'hej']), []);
     }
 
     public function testCheckAccessDisallow()
@@ -548,7 +549,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $lpLocator->add(new TestPermissionChecker());
         $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
         $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
-        $this->assertFalse($logicalAuthorization->checkAccess(['test' => 'no'], []));
+        $this->assertFalse($logicalAuthorization->checkAccess(new RawPermissionTree(['test' => 'no']), []));
     }
 
     public function testCheckAccessAllow()
@@ -557,7 +558,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $lpLocator->add(new TestPermissionChecker());
         $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
         $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
-        $this->assertTrue($logicalAuthorization->checkAccess(['test' => 'yes'], []));
+        $this->assertTrue($logicalAuthorization->checkAccess(new RawPermissionTree(['test' => 'yes']), []));
     }
 
     public function testGetAvailableActionsModelClass()
@@ -1028,7 +1029,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $response = new Response();
         $user = new TestUser();
         $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
-        $debugCollector->addPermissionCheck(true, 'route', 'route_role', $user, [], ['user' => $user]);
+        $debugCollector->addPermissionCheck(
+            true,
+            'route',
+            'route_role',
+            $user,
+            new RawPermissionTree([]),
+            ['user' => $user]
+        );
         $debugCollector->collect($request, $response);
         $log = $debugCollector->getLog();
 
@@ -1055,7 +1063,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'model',
             ['model' => $model, 'action' => 'read'],
             $user,
-            [],
+            new RawPermissionTree([]),
             ['user' => $user]
         );
         $debugCollector->collect($request, $response);
@@ -1084,7 +1092,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
-            [],
+            new RawPermissionTree([]),
             ['user' => $user]
         );
         $debugCollector->collect($request, $response);
@@ -1109,20 +1117,19 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $model = new TestModelBoolean();
         $model->setAuthor($user);
 
-        $permissions = true;
         $debugCollector->addPermissionCheck(
             true,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             static::$userSuperadmin,
-            $permissions,
+            new RawPermissionTree(true),
             ['model' => $model, 'user' => static::$userSuperadmin]
         );
         $result = [
             'type'                        => 'field',
             'field'                       => 'field1',
             'user'                        => static::$userSuperadmin,
-            'permissions'                 => $permissions,
+            'permissions'                 => [true],
             'action'                      => 'get',
             'item_name'                   => TestModelBoolean::class . ':field1',
             'item'                        => $model,
@@ -1160,7 +1167,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 'condition' => 'user_has_account',
             ],
         ];
-        $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
+        $debugCollector->addPermissionCheck(
+            true,
+            'route',
+            'testroute',
+            'anon.',
+            new RawPermissionTree($permissions),
+            ['user' => 'anon.']
+        );
         $result = [
             'type'                        => 'route',
             'user'                        => 'anon.',
@@ -1213,7 +1227,14 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 'NOT' => 'user_has_account',
             ],
         ];
-        $debugCollector->addPermissionCheck(true, 'route', 'testroute', 'anon.', $permissions, ['user' => 'anon.']);
+        $debugCollector->addPermissionCheck(
+            true,
+            'route',
+            'testroute',
+            'anon.',
+            new RawPermissionTree($permissions),
+            ['user' => 'anon.']
+        );
         $result = [
             'type'                        => 'route',
             'user'                        => 'anon.',
@@ -1299,7 +1320,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
-            $permissions,
+            new RawPermissionTree($permissions),
             ['model' => $model, 'user' => $user]
         );
         $result = [
@@ -1421,7 +1442,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
-            $permissions,
+            new RawPermissionTree($permissions),
             ['model' => $model, 'user' => $user]
         );
         $debugCollector->collect($request, $response);
@@ -1444,7 +1465,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
-            $permissions,
+            new RawPermissionTree($permissions),
             ['model' => $model, 'user' => $user]
         );
         $debugCollector->collect($request, $response);

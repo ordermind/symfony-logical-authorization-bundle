@@ -7,6 +7,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 use Exception;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 
 /**
  * {@inheritDoc}
@@ -35,13 +36,13 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
      * {@inheritDoc}
      */
     public function checkAccess(
-        $permissions,
+        RawPermissionTree $rawPermissionTree,
         array $context,
         bool $allowBypass = true
     ): bool {
         try {
             return $this->lpFacade->checkAccess(
-                $permissions,
+                $rawPermissionTree,
                 $context,
                 $allowBypass
             );
@@ -62,7 +63,7 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
                 ),
                 [
                     'exception'   => $class,
-                    'permissions' => $permissions,
+                    'permissions' => $rawPermissionTree->getValue(),
                     'context'     => $context,
                 ]
             );

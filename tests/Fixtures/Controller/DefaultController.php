@@ -12,6 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
+     * @Route("/no-permissions", name="route_no_permissions", methods={"GET"}))
+     */
+    public function routeAction(): Response
+    {
+        return new Response('');
+    }
+
+    /**
      * @Route("/route-role", name="route_role", methods={"GET"}))
      *
      * @Permissions({

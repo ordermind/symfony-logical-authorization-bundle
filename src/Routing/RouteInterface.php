@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+
 /**
  * Custom route interface that allows for having permissions in a route.
  */
@@ -12,14 +14,14 @@ interface RouteInterface
     /**
      * Sets permissions for this route.
      *
-     * @param array|string|bool $permissions
+     * @param RawPermissionTree $rawPermissionTree
      */
-    public function setPermissions($permissions);
+    public function setRawPermissionTree(RawPermissionTree $rawPermissionTree);
 
     /**
      * Gets the permissions for this route.
      *
-     * @return array|string|bool
+     * @return RawPermissionTree|null
      */
-    public function getPermissions();
+    public function getRawPermissionTree(): ?RawPermissionTree;
 }

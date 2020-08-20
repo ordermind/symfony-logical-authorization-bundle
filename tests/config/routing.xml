@@ -4,8 +4,14 @@
     xsi:schemaLocation="http://symfony.com/schema/routing
         http://symfony.com/schema/routing/routing-1.0.xsd">
 
+    <route id="xml_route_no_permissions" path="/xml-no-permissions">
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\XmlController::routeXmlAction</default>
+    </route>
     <route id="xml_route" path="/route-xml">
         <default key="_controller">Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\XmlController::routeXmlAction</default>
+    </route>
+    <route id="xml_route_role" path="/route-xml-role">
+        <default key="_controller">Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\XmlController::routeXmlRoleAction</default>
         <permissions>
             <role>ROLE_ADMIN</role>
         </permissions>

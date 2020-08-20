@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use TypeError;
@@ -62,7 +63,7 @@ class YamlLoader extends YamlFileLoader
         $defaults = isset($config['defaults']) ? $config['defaults'] : [];
         $requirements = isset($config['requirements']) ? $config['requirements'] : [];
         $options = isset($config['options']) ? $config['options'] : [];
-        $host = isset($config['host']) ? $config['host'] : '';
+        $host = isset($config['host']) ? $config['host'] : null;
         $schemes = isset($config['schemes']) ? $config['schemes'] : [];
         $methods = isset($config['methods']) ? $config['methods'] : [];
         $condition = isset($config['condition']) ? $config['condition'] : null;
@@ -77,7 +78,7 @@ class YamlLoader extends YamlFileLoader
             $schemes,
             $methods,
             $condition,
-            $permissions
+            !is_null($permissions) ? new RawPermissionTree($permissions) : null
         );
 
         $collection->add($name, $route);

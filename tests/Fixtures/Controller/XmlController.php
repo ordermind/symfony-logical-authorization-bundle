@@ -14,6 +14,11 @@ class XmlController extends AbstractController
         return new Response('');
     }
 
+    public function routeXmlRoleAction(): Response
+    {
+        return new Response('');
+    }
+
     public function routeXmlAllowedAction(): Response
     {
         return new Response('');

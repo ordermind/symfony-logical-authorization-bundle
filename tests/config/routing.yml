@@ -13,9 +13,17 @@ xml_routes:
     type: logauth_xml
     prefix: /test
 
+yml_route_no_permissions:
+    path: /test/yml-no-permissions
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\YmlController::routeYmlAction }
+
 yml_route:
     path: /test/route-yml
     defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\YmlController::routeYmlAction }
+
+yml_route_role:
+    path: /test/route-yml-role
+    defaults: { _controller: Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Controller\YmlController::routeYmlRoleAction }
     permissions:
         role: ROLE_ADMIN
 

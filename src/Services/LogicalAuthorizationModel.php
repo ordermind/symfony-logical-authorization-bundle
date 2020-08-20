@@ -6,6 +6,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use ReflectionClass;
 
 /**
@@ -106,7 +107,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                             'action' => $action,
                         ],
                         $user,
-                        [],
+                        new RawPermissionTree([]),
                         [],
                         'No user was available during this permission check (not even an anonymous user). This usually '
                             . 'happens during unit testing. Access was therefore automatically granted.'
@@ -131,7 +132,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -154,7 +155,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -177,7 +178,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -200,7 +201,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the model access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -213,7 +214,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
         $permissions = $this->getModelPermissions($model);
         if (array_key_exists($action, $permissions)) {
             $context = ['model' => $model, 'user' => $user];
-            $access = $this->logicalAuthorization->checkAccess($permissions[$action], $context);
+            $access = $this->logicalAuthorization->checkAccess(new RawPermissionTree($permissions[$action]), $context);
 
             if (!is_null($this->debugCollector)) {
                 $this->debugCollector->addPermissionCheck(
@@ -224,7 +225,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    $permissions[$action],
+                    new RawPermissionTree($permissions[$action]),
                     $context
                 );
             }
@@ -241,7 +242,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     'action' => $action,
                 ],
                 $user,
-                [],
+                new RawPermissionTree([]),
                 [],
                 sprintf(
                     'No permissions were found for the action "%s" on this model. Access was therefore automatically '
@@ -279,7 +280,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                             'action' => $action,
                         ],
                         $user,
-                        [],
+                        new RawPermissionTree([]),
                         [],
                         'No user was available during this permission check (not even an anonymous user). This usually '
                             . 'happens during unit testing. Access was therefore automatically granted.'
@@ -305,7 +306,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -329,7 +330,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -353,7 +354,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -377,7 +378,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -401,7 +402,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    [],
+                    new RawPermissionTree([]),
                     [],
                     'There was an error checking the field access and access was therefore automatically denied. '
                         . 'Please refer to the error log for more information.'
@@ -417,7 +418,10 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
             && array_key_exists($action, $permissions['fields'][$fieldName])
         ) {
             $context = ['model' => $model, 'user' => $user];
-            $access = $this->logicalAuthorization->checkAccess($permissions['fields'][$fieldName][$action], $context);
+            $access = $this->logicalAuthorization->checkAccess(
+                new RawPermissionTree($permissions['fields'][$fieldName][$action]),
+                $context
+            );
 
             if (!is_null($this->debugCollector)) {
                 $this->debugCollector->addPermissionCheck(
@@ -429,7 +433,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                         'action' => $action,
                     ],
                     $user,
-                    $permissions['fields'][$fieldName][$action],
+                    new RawPermissionTree($permissions['fields'][$fieldName][$action]),
                     $context
                 );
             }
@@ -447,7 +451,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     'action' => $action,
                 ],
                 $user,
-                [],
+                new RawPermissionTree([]),
                 [],
                 sprintf(
                     'No permissions were found for the action "%s" on this model and field. Access was therefore '

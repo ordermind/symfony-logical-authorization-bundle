@@ -41,12 +41,15 @@ class AddRoutePermissions
                 continue;
             }
 
-            $permissions = $route->getPermissions();
-            if (is_null($permissions)) {
+            /**
+             * @var RouteInterface $route
+             */
+            $rawPermissionTree = $route->getRawPermissionTree();
+            if (is_null($rawPermissionTree)) {
                 continue;
             }
 
-            $permissionTree['routes'][$name] = $permissions;
+            $permissionTree['routes'][$name] = $rawPermissionTree;
         }
         $event->insertTree($permissionTree);
     }

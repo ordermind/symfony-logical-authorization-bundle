@@ -14,6 +14,11 @@ class YmlController extends AbstractController
         return new Response('');
     }
 
+    public function routeYmlRoleAction(): Response
+    {
+        return new Response('');
+    }
+
     public function routeYmlAllowedAction(): Response
     {
         return new Response('');

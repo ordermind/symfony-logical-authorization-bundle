@@ -8,6 +8,7 @@ use Exception;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
 use Ordermind\LogicalPermissions\PermissionCheckerLocatorInterface;
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -126,7 +127,7 @@ class Collector extends DataCollector implements CollectorInterface
         string $type,
         $item,
         $user,
-        $permissions,
+        RawPermissionTree $rawPermissionTree,
         array $context,
         string $message = ''
     ) {
@@ -138,7 +139,7 @@ class Collector extends DataCollector implements CollectorInterface
                 'type'        => $type,
                 'item'        => $item,
                 'user'        => $user,
-                'permissions' => $permissions,
+                'permissions' => $rawPermissionTree->getValue(),
                 'context'     => $context,
                 'message'     => $message,
                 'backtrace'   => $backtrace,
@@ -262,7 +263,7 @@ class Collector extends DataCollector implements CollectorInterface
     {
         // Extra permission check of the whole tree to catch errors
         try {
-            $this->lpFacade->checkAccess($permissions, $context, false);
+            $this->lpFacade->checkAccess(new RawPermissionTree($permissions), $context, false);
         } catch (\Exception $e) {
             return [[
                 'permissions' => $permissions,
@@ -283,7 +284,7 @@ class Collector extends DataCollector implements CollectorInterface
             if (count($permissions) > 1) {
                 $checks[] = [
                     'permissions' => $permissions,
-                    'resolve'     => $this->lpFacade->checkAccess($permissions, $context, false),
+                    'resolve'     => $this->lpFacade->checkAccess(new RawPermissionTree($permissions), $context, false),
                 ];
             }
         } else {
@@ -318,7 +319,11 @@ class Collector extends DataCollector implements CollectorInterface
             return [
                 [
                     'permissions' => $permissions,
-                    'resolve'     => $this->lpFacade->checkAccess($resolvePermissions, $context, false),
+                    'resolve'     => $this->lpFacade->checkAccess(
+                        new RawPermissionTree($resolvePermissions),
+                        $context,
+                        false
+                    ),
                 ],
             ];
         }
@@ -349,7 +354,7 @@ class Collector extends DataCollector implements CollectorInterface
             }
             $checks[] = [
                 'permissions' => $permissions,
-                'resolve'     => $this->lpFacade->checkAccess($resolvePermissions, $context, false),
+                'resolve'     => $this->lpFacade->checkAccess(new RawPermissionTree($resolvePermissions), $context, false),
             ];
 
             return $checks;
@@ -358,7 +363,7 @@ class Collector extends DataCollector implements CollectorInterface
         if ($key === $type) {
             return [[
                 'permissions' => $permissions,
-                'resolve'     => $this->lpFacade->checkAccess($permissions, $context, false),
+                'resolve'     => $this->lpFacade->checkAccess(new RawPermissionTree($permissions), $context, false),
             ], ];
         }
 
@@ -369,7 +374,7 @@ class Collector extends DataCollector implements CollectorInterface
         }
         $checks[] = [
             'permissions' => $value,
-            'resolve'     => $this->lpFacade->checkAccess($resolveValue, $context, false),
+            'resolve'     => $this->lpFacade->checkAccess(new RawPermissionTree($resolveValue), $context, false),
         ];
 
         $resolvePermissions = $permissions;
@@ -378,7 +383,7 @@ class Collector extends DataCollector implements CollectorInterface
         }
         $checks[] = [
             'permissions' => $permissions,
-            'resolve'     => $this->lpFacade->checkAccess($resolvePermissions, $context, false),
+            'resolve'     => $this->lpFacade->checkAccess(new RawPermissionTree($resolvePermissions), $context, false),
         ];
 
         return $checks;
@@ -418,7 +423,7 @@ class Collector extends DataCollector implements CollectorInterface
         }
 
         try {
-            return $this->lpFacade->checkAccess($newPermissions, $context);
+            return $this->lpFacade->checkAccess(new RawPermissionTree($newPermissions), $context);
         } catch (Exception $e) {
         }
 
