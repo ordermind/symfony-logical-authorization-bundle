@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\EventListener;
+namespace Ordermind\LogicalAuthorizationBundle\PermissionProviders;
 
-use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEventInterface;
 use Ordermind\LogicalAuthorizationBundle\Routing\RouteInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Adds permissions from routes.
+ * Provides permissions from route definitions.
  */
-class AddRoutePermissions
+class RoutePermissionProvider implements PermissionProviderInterface
 {
     /**
      * @var RouterInterface
@@ -20,8 +19,6 @@ class AddRoutePermissions
 
     /**
      * @internal
-     *
-     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
@@ -29,11 +26,9 @@ class AddRoutePermissions
     }
 
     /**
-     * Event listener callback for adding permissions to the tree.
-     *
-     * @param AddPermissionsEventInterface $event
+     * {@inheritDoc}
      */
-    public function onAddPermissions(AddPermissionsEventInterface $event)
+    public function getPermissionTree(): array
     {
         $permissionTree = ['routes' => []];
         foreach ($this->router->getRouteCollection()->getIterator() as $name => $route) {
@@ -51,6 +46,7 @@ class AddRoutePermissions
 
             $permissionTree['routes'][$name] = $rawPermissionTree;
         }
-        $event->insertTree($permissionTree);
+
+        return $permissionTree;
     }
 }

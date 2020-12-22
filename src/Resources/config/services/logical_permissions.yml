@@ -3,7 +3,7 @@
 services:
     logical_permissions.permission_checker_locator:
         class: Ordermind\LogicalPermissions\PermissionCheckerLocator
-        arguments: [!tagged logauth.tag.permission_checker]
+        arguments: [!tagged_iterator logauth.tag.permission_checker]
         public: false
 
     logical_permissions.facade:

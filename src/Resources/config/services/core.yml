@@ -15,18 +15,24 @@ services:
             - {name: security.expression_language_provider}
         public: false
 
-    logauth.event_listener.add_route_permissions:
-        class: Ordermind\LogicalAuthorizationBundle\EventListener\AddRoutePermissions
-        arguments: ['@router']
-        tags:
-            - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions}
-        public: false
+    logauth.permission_collector:
+        class: Ordermind\LogicalAuthorizationBundle\Services\PermissionCollector
+        arguments:
+            - !tagged_iterator logauth.permission_provider
+            - '@logical_permissions.permission_checker_locator'
 
-    logauth.event_listener.add_app_config_permissions:
-        class: Ordermind\LogicalAuthorizationBundle\EventListener\AddAppConfigPermissions
+    logauth.permission_provider.app_config:
+        class: Ordermind\LogicalAuthorizationBundle\PermissionProviders\AppConfigPermissionProvider
         arguments: ['%logauth.config%']
         tags:
-            - {name: kernel.event_listener, event: logauth.add_permissions, method: onAddPermissions, priority: -250}
+            - {name: logauth.permission_provider, priority: -250}
+        public: false
+
+    logauth.permission_provider.route:
+        class: Ordermind\LogicalAuthorizationBundle\PermissionProviders\RoutePermissionProvider
+        arguments: ['@router']
+        tags:
+            - {name: logauth.permission_provider}
         public: false
 
     logauth.twig.extension:
@@ -43,7 +49,7 @@ services:
 
     logauth.service.permission_tree_builder:
         class: Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilder
-        arguments: ['@logical_permissions.permission_checker_locator', '@event_dispatcher', '@cache.app']
+        arguments: ['@logauth.permission_collector', '@cache.app']
         public: false
 
     logauth.bypass_access_checker:
@@ -53,12 +59,21 @@ services:
 
     logauth.service.logauth_route:
         class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRoute
-        arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@router', '@logauth.service.helper', '@?logauth.debug.collector']
+        arguments: 
+            - '@logauth.service.logauth'
+            - '@logauth.service.permission_tree_builder'
+            - '@router'
+            - '@logauth.service.helper'
+            - '@?logauth.debug.collector'
         public: false
 
     logauth.service.logauth_model:
         class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationModel
-        arguments: ['@logauth.service.logauth', '@logauth.service.permission_tree_builder', '@logauth.service.helper', '@?logauth.debug.collector']
+        arguments: 
+            - '@logauth.service.logauth'
+            - '@logauth.service.permission_tree_builder'
+            - '@logauth.service.helper'
+            - '@?logauth.debug.collector'
         public: false
 
     logauth.service.logauth:

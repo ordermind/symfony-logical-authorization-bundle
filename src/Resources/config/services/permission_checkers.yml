@@ -3,7 +3,7 @@
 services:
     logauth.permission_checker.simple_condition:
         class: Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionChecker\SimpleConditionCheckerManager
-        arguments: [!tagged logauth.tag.permission_checker.simple_condition]
+        arguments: [!tagged_iterator logauth.tag.permission_checker.simple_condition]
         tags:
             - {name: logauth.tag.permission_checker}
         public: false

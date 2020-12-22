@@ -16,7 +16,10 @@
     "autoload": {
         "psr-4": {
             "Ordermind\\LogicalAuthorizationBundle\\": "src"
-        }
+        },
+        "files": [
+            "src/Helpers/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

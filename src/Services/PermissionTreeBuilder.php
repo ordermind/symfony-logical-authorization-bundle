@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
-use Ordermind\LogicalPermissions\PermissionCheckerLocatorInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * {@inheritDoc}
@@ -15,14 +12,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 {
     /**
-     * @var array|string[]
+     * @var PermissionCollector
      */
-    protected $permissionKeys;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
+    protected $permissionCollector;
 
     /**
      * @var CacheItemPoolInterface
@@ -35,12 +27,10 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
     protected $tree;
 
     public function __construct(
-        PermissionCheckerLocatorInterface $locator,
-        EventDispatcherInterface $dispatcher,
+        PermissionCollector $permissionCollector,
         CacheItemPoolInterface $cache
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->permissionKeys = $locator->getValidPermissionTreeKeys();
+        $this->permissionCollector = $permissionCollector;
         $this->cache = $cache;
     }
 
@@ -67,7 +57,7 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
             return $tree;
         }
 
-        $tree = $this->loadTreeFromEvent();
+        $tree = $this->permissionCollector->getPermissionTree();
         ksort($tree);
         $this->saveTreeToCache($tree);
         $this->tree = $tree;
@@ -104,18 +94,5 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
         $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
         $cachedTree->set($tree);
         $this->cache->save($cachedTree);
-    }
-
-    /**
-     * @internal
-     *
-     * @return array
-     */
-    protected function loadTreeFromEvent(): array
-    {
-        $event = new AddPermissionsEvent($this->permissionKeys);
-        $this->dispatcher->dispatch($event, 'logauth.add_permissions');
-
-        return $event->getTree();
     }
 }

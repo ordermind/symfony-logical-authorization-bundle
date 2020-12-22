@@ -6,7 +6,6 @@ namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
-use Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
@@ -922,105 +921,6 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
     {
         $tree = $this->treeBuilder->getTree(false, true);
         $this->assertSame('cache', $tree['fetch']);
-    }
-
-    public function testEventInsertTreeGetTree()
-    {
-        $lpLocator = new PermissionCheckerLocator();
-        $role = new RoleChecker($this->roleHierarchy);
-        $lpLocator->add($role);
-        $conditionManager = new SimpleConditionCheckerManager();
-        $lpLocator->add($conditionManager);
-        $event = new AddPermissionsEvent($lpLocator->getValidPermissionTreeKeys());
-        $tree1 = [
-            'models' => [
-                'testmodel' => [
-                    'create' => [
-                        'role' => 'role1',
-                    ],
-                    'read' => [
-                        'condition' => [
-                            'condition1',
-                            'condition2',
-                        ],
-                    ],
-                    'update' => [
-                        'condition' => 'condition1',
-                    ],
-                    'fields' => [
-                        'field1' => [
-                            'get' => [
-                                'role' => 'role1',
-                            ],
-                            'set' => [
-                                'condition' => 'condition1',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $tree2 = [
-            'models' => [
-                'testmodel' => [
-                    'create' => [
-                        'role' => [
-                            'newrole1',
-                            'newrole2',
-                        ],
-                    ],
-                    'read' => [
-                        'condition' => 'newcondition1',
-                    ],
-                    'fields' => [
-                        'field1' => [
-                            'get' => [
-                                'OR' => [
-                                    'role'      => 'newrole1',
-                                    'condition' => 'newcondition1',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $result = [
-            'models' => [
-                'testmodel' => [
-                    'create' => [
-                        'role' => [
-                            'newrole1',
-                            'newrole2',
-                        ],
-                    ],
-                    'read' => [
-                        'condition' => 'newcondition1',
-                    ],
-                    'update' => [
-                        'condition' => 'condition1',
-                    ],
-                    'fields' => [
-                        'field1' => [
-                            'get' => [
-                                'OR' => [
-                                    'role'      => 'newrole1',
-                                    'condition' => 'newcondition1',
-                                ],
-                            ],
-                            'set' => [
-                                'condition' => 'condition1',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $event->insertTree($tree1);
-        $event->insertTree($tree2);
-        $this->assertSame($result, $event->getTree());
     }
 
     public function testDebugCollectorRouteLogFormat()
