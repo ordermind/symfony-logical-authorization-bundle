@@ -110,4 +110,18 @@ class PermissionCheckLogItem
     {
         return $this->backTrace;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'access'      => $this->getAccess(),
+            'type'        => $this->getType(),
+            'item'        => $this->getItem(),
+            'user'        => $this->getUser(),
+            'permissions' => $this->getRawPermissionTree()->getValue(),
+            'context'     => $this->getContext(),
+            'message'     => $this->getMessage(),
+            'backtrace'   => $this->getBackTrace(),
+        ];
+    }
 }

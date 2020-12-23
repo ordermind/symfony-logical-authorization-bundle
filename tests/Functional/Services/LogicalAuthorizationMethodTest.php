@@ -1072,6 +1072,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'permission_checks'           => [['permissions' => true, 'resolve' => true]],
             'access'                      => true,
             'message'                     => '',
+            'backtrace'                   => [],
         ];
 
         $debugCollector->collect(new Request(), new Response());
@@ -1079,11 +1080,11 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
-            if ($key === 'backtrace') {
-                $this->assertLessThanOrEqual(11, count($value));
-                $this->assertSame('testDebugCollectorPermissionFormatBoolean', $value[0]['function']);
-                continue;
-            }
+            // if ($key === 'backtrace') {
+            //     $this->assertLessThanOrEqual(11, count($value));
+            //     $this->assertSame('testDebugCollectorPermissionFormatBoolean', $value[0]['function']);
+            //     continue;
+            // }
             $this->assertSame($expectedResult[$key], $value);
         }
     }
@@ -1141,17 +1142,18 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 ],
             ],
             'message'                     => '',
+            'backtrace'                   => [],
         ];
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
-            if ($key === 'backtrace') {
-                $this->assertLessThanOrEqual(11, count($value));
-                $this->assertSame('testDebugCollectorPermissionFormatTypeClose', $value[0]['function']);
-                continue;
-            }
+            // if ($key === 'backtrace') {
+            //     $this->assertLessThanOrEqual(11, count($value));
+            //     $this->assertSame('testDebugCollectorPermissionFormatTypeClose', $value[0]['function']);
+            //     continue;
+            // }
             $this->assertSame($expectedResult[$key], $value);
         }
     }
@@ -1211,17 +1213,18 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 ],
             ],
             'message'                     => '',
+            'backtrace'                   => [],
         ];
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
-            if ($key === 'backtrace') {
-                $this->assertLessThanOrEqual(11, count($value));
-                $this->assertSame('testDebugCollectorPermissionFormatTypeSeparate', $value[0]['function']);
-                continue;
-            }
+            // if ($key === 'backtrace') {
+            //     $this->assertLessThanOrEqual(11, count($value));
+            //     $this->assertSame('testDebugCollectorPermissionFormatTypeSeparate', $value[0]['function']);
+            //     continue;
+            // }
             $this->assertSame($expectedResult[$key], $value);
         }
     }
@@ -1363,19 +1366,20 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                     ],
                 ]
             ),
-            'access'  => true,
-            'message' => '',
+            'access'    => true,
+            'message'   => '',
+            'backtrace' => [],
         ];
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
-            if ($key === 'backtrace') {
-                $this->assertLessThanOrEqual(11, count($value));
-                $this->assertSame('testDebugCollectorPermissionFormatMixed', $value[0]['function']);
-                continue;
-            }
+            // if ($key === 'backtrace') {
+            //     $this->assertLessThanOrEqual(11, count($value));
+            //     $this->assertSame('testDebugCollectorPermissionFormatMixed', $value[0]['function']);
+            //     continue;
+            // }
             if ($key === 'permission_checks') {
                 foreach ($value as $i => $value2) {
                     $this->assertSame($expectedResult[$key][$i], $value2);

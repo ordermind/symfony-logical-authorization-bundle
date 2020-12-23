@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DebugDataCollector;
 
+use Doctrine\Common\Collections\Collection;
 use Exception;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
@@ -70,7 +71,7 @@ class Collector extends DataCollector implements CollectorInterface
      */
     public function collect(Request $request, Response $response, Throwable $exception = null)
     {
-        $log = $this->formatLog($this->logItemsReader->getLogItems()->toArray());
+        $log = $this->formatLog($this->logItemsReader->getLogItems());
         $this->data = [
             'tree' => $this->treeBuilder->getTree(),
             'log'  => $log,
@@ -124,13 +125,17 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * @internal
      *
-     * @param array $log
-     *
-     * @return array
+     * @param Collection<PermissionCheckLogItem> $log
      */
-    protected function formatLog(array $log): array
+    protected function formatLog(Collection $log): array
     {
-        foreach ($log as &$logItem) {
+        $formattedLog = $log
+            ->map(function (PermissionCheckLogItem $logItem) {
+                return $logItem->toArray();
+            })
+            ->toArray();
+
+        foreach ($formattedLog as &$logItem) {
             if ($logItem['type'] === 'model' || $logItem['type'] === 'field') {
                 $logItem['action'] = $logItem['item']['action'];
             }
@@ -180,7 +185,7 @@ class Collector extends DataCollector implements CollectorInterface
         }
         unset($logItem);
 
-        return $log;
+        return $formattedLog;
     }
 
     /**
