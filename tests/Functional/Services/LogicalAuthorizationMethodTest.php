@@ -6,6 +6,10 @@ namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 use InvalidArgumentException;
 use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\Collector;
+use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemCollectionRepository;
+use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemsReader;
+use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemsWriter;
+use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\PermissionCheckLogItem;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
@@ -925,19 +929,26 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testDebugCollectorRouteLogFormat()
     {
-        $request = new Request();
-        $response = new Response();
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
-        $debugCollector->addPermissionCheck(
+        $logItem = new PermissionCheckLogItem(
             true,
             'route',
             'route_role',
             $user,
             new RawPermissionTree([]),
-            ['user' => $user]
+            ['user' => $user],
+            '',
+            []
         );
-        $debugCollector->collect($request, $response);
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
 
         $firstItem = array_shift($log);
@@ -952,21 +963,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testDebugCollectorModelLogFormat()
     {
-        $request = new Request();
-        $response = new Response();
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
-        $debugCollector->addPermissionCheck(
+
+        $logItem = new PermissionCheckLogItem(
             true,
             'model',
             ['model' => $model, 'action' => 'read'],
             $user,
             new RawPermissionTree([]),
-            ['user' => $user]
+            ['user' => $user],
+            '',
+            []
         );
-        $debugCollector->collect($request, $response);
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
 
         $firstItem = array_shift($log);
@@ -981,21 +1000,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testDebugCollectorFieldLogFormat()
     {
-        $request = new Request();
-        $response = new Response();
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
-        $debugCollector->addPermissionCheck(
+
+        $logItem = new PermissionCheckLogItem(
             true,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
             new RawPermissionTree([]),
-            ['user' => $user]
+            ['user' => $user],
+            '',
+            []
         );
-        $debugCollector->collect($request, $response);
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
 
         $firstItem = array_shift($log);
@@ -1010,22 +1037,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testDebugCollectorPermissionFormatBoolean()
     {
-        $request = new Request();
-        $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
 
-        $debugCollector->addPermissionCheck(
+        $logItem = new PermissionCheckLogItem(
             true,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             static::$userSuperadmin,
             new RawPermissionTree(true),
-            ['model' => $model, 'user' => static::$userSuperadmin]
+            ['model' => $model, 'user' => static::$userSuperadmin],
+            '',
+            []
         );
-        $result = [
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $expectedResult = [
             'type'                        => 'field',
             'field'                       => 'field1',
             'user'                        => static::$userSuperadmin,
@@ -1040,7 +1074,8 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'message'                     => '',
         ];
 
-        $debugCollector->collect($request, $response);
+        $debugCollector->collect(new Request(), new Response());
+
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
@@ -1049,15 +1084,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 $this->assertSame('testDebugCollectorPermissionFormatBoolean', $value[0]['function']);
                 continue;
             }
-            $this->assertSame($result[$key], $value);
+            $this->assertSame($expectedResult[$key], $value);
         }
     }
 
     public function testDebugCollectorPermissionFormatTypeClose()
     {
-        $request = new Request();
-        $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1067,15 +1103,22 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 'condition' => 'user_has_account',
             ],
         ];
-        $debugCollector->addPermissionCheck(
+
+        $logItem = new PermissionCheckLogItem(
             true,
             'route',
             'testroute',
             'anon.',
             new RawPermissionTree($permissions),
-            ['user' => 'anon.']
+            ['user' => 'anon.'],
+            '',
+            []
         );
-        $result = [
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $expectedResult = [
             'type'                        => 'route',
             'user'                        => 'anon.',
             'item_name'                   => 'testroute',
@@ -1100,7 +1143,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'message'                     => '',
         ];
 
-        $debugCollector->collect($request, $response);
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
@@ -1109,15 +1152,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 $this->assertSame('testDebugCollectorPermissionFormatTypeClose', $value[0]['function']);
                 continue;
             }
-            $this->assertSame($result[$key], $value);
+            $this->assertSame($expectedResult[$key], $value);
         }
     }
 
     public function testDebugCollectorPermissionFormatTypeSeparate()
     {
-        $request = new Request();
-        $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1127,15 +1171,22 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 'NOT' => 'user_has_account',
             ],
         ];
-        $debugCollector->addPermissionCheck(
+
+        $logItem = new PermissionCheckLogItem(
             true,
             'route',
             'testroute',
             'anon.',
             new RawPermissionTree($permissions),
-            ['user' => 'anon.']
+            ['user' => 'anon.'],
+            '',
+            []
         );
-        $result = [
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $expectedResult = [
             'type'                        => 'route',
             'user'                        => 'anon.',
             'item_name'                   => 'testroute',
@@ -1162,7 +1213,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'message'                     => '',
         ];
 
-        $debugCollector->collect($request, $response);
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
@@ -1171,15 +1222,16 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
                 $this->assertSame('testDebugCollectorPermissionFormatTypeSeparate', $value[0]['function']);
                 continue;
             }
-            $this->assertSame($result[$key], $value);
+            $this->assertSame($expectedResult[$key], $value);
         }
     }
 
     public function testDebugCollectorPermissionFormatMixed()
     {
-        $request = new Request();
-        $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
@@ -1215,15 +1267,21 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'condition' => 'user_has_account',
         ];
 
-        $debugCollector->addPermissionCheck(
+        $logItem = new PermissionCheckLogItem(
             true,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
             new RawPermissionTree($permissions),
-            ['model' => $model, 'user' => $user]
+            ['model' => $model, 'user' => $user],
+            '',
+            []
         );
-        $result = [
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $expectedResult = [
             'type'                        => 'field',
             'field'                       => 'field1',
             'user'                        => $user,
@@ -1309,7 +1367,7 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             'message' => '',
         ];
 
-        $debugCollector->collect($request, $response);
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $item = array_shift($log);
         foreach ($item as $key => $value) {
@@ -1320,32 +1378,40 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
             }
             if ($key === 'permission_checks') {
                 foreach ($value as $i => $value2) {
-                    $this->assertSame($result[$key][$i], $value2);
+                    $this->assertSame($expectedResult[$key][$i], $value2);
                 }
                 continue;
             }
-            $this->assertSame($result[$key], $value);
+            $this->assertSame($expectedResult[$key], $value);
         }
     }
 
     public function testDebugCollectorExceptionHandling()
     {
-        $request = new Request();
-        $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
         $permissions = ['no_bypass' => true, 'condition' => ['condition' => 'user_has_account']];
-        $debugCollector->addPermissionCheck(
+
+        $logItem = new PermissionCheckLogItem(
             false,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
             new RawPermissionTree($permissions),
-            ['model' => $model, 'user' => $user]
+            ['model' => $model, 'user' => $user],
+            '',
+            []
         );
-        $debugCollector->collect($request, $response);
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $firstItem = array_shift($log);
         $this->assertArrayHasKey('message', $firstItem);
@@ -1353,22 +1419,29 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testDebugCollectorExceptionHandlingNoDebug()
     {
-        $request = new Request();
-        $response = new Response();
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator);
+        $logItemsRepo = new LogItemCollectionRepository();
+        $logItemsWriter = new LogItemsWriter($logItemsRepo);
+        $logItemsReader = new LogItemsReader($logItemsRepo);
+
         $user = new TestUser();
         $model = new TestModelBoolean();
         $model->setAuthor($user);
         $permissions = ['no_bypass' => ['condition' => ['condition' => 'user_has_account']], true];
-        $debugCollector->addPermissionCheck(
+
+        $logItem = new PermissionCheckLogItem(
             false,
             'field',
             ['model' => $model, 'field' => 'field1', 'action' => 'get'],
             $user,
             new RawPermissionTree($permissions),
-            ['model' => $model, 'user' => $user]
+            ['model' => $model, 'user' => $user],
+            '',
+            []
         );
-        $debugCollector->collect($request, $response);
+        $logItemsWriter->appendLogItem($logItem);
+
+        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $firstItem = array_shift($log);
         $this->assertArrayHasKey('message', $firstItem);

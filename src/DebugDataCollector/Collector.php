@@ -36,9 +36,9 @@ class Collector extends DataCollector implements CollectorInterface
     protected $locator;
 
     /**
-     * @var array
+     * @var LogItemsReader
      */
-    protected $permissionLog = [];
+    protected $logItemsReader;
 
     /**
      * @var array
@@ -48,11 +48,13 @@ class Collector extends DataCollector implements CollectorInterface
     public function __construct(
         PermissionTreeBuilderInterface $treeBuilder,
         LogicalPermissionsFacade $lpFacade,
-        PermissionCheckerLocatorInterface $locator
+        PermissionCheckerLocatorInterface $locator,
+        LogItemsReader $logItemsReader
     ) {
         $this->treeBuilder = $treeBuilder;
         $this->lpFacade = $lpFacade;
         $this->locator = $locator;
+        $this->logItemsReader = $logItemsReader;
     }
 
     /**
@@ -68,7 +70,7 @@ class Collector extends DataCollector implements CollectorInterface
      */
     public function collect(Request $request, Response $response, Throwable $exception = null)
     {
-        $log = $this->formatLog($this->permissionLog);
+        $log = $this->formatLog($this->logItemsReader->getLogItems()->toArray());
         $this->data = [
             'tree' => $this->treeBuilder->getTree(),
             'log'  => $log,

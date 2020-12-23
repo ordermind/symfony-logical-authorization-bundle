@@ -9,7 +9,7 @@ class LogItemsWriter
     /**
      * @var LogItemCollectionRepository
      */
-    private $repository;
+    protected $repository;
 
     public function __construct(LogItemCollectionRepository $repository)
     {

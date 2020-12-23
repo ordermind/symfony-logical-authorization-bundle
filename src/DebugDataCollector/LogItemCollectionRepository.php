@@ -12,7 +12,7 @@ class LogItemCollectionRepository
     /**
      * @var Collection<PermissionCheckLogItem>
      */
-    private $collection;
+    protected $collection;
 
     public function __construct()
     {

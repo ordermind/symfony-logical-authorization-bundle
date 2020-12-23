@@ -13,6 +13,7 @@ services:
             - '@logauth.service.permission_tree_builder'
             - '@logical_permissions.facade'
             - '@logical_permissions.permission_checker_locator'
+            - '@logauth.debug.log_items_reader'
         tags:
             -   
                 name: data_collector

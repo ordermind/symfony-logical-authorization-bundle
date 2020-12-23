@@ -11,42 +11,42 @@ class PermissionCheckLogItem
     /**
      * @var bool
      */
-    private $access;
+    protected $access;
 
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @var array|string
      */
-    private $item;
+    protected $item;
 
     /**
      * @var object|string|null
      */
-    private $user;
+    protected $user;
 
     /**
      * @var RawPermissionTree
      */
-    private $rawPermissionTree;
+    protected $rawPermissionTree;
 
     /**
      * @var array
      */
-    private $context;
+    protected $context;
 
     /**
      * @var string
      */
-    private $message;
+    protected $message;
 
     /**
      * @var array
      */
-    private $backTrace;
+    protected $backTrace;
 
     /**
      * @internal
