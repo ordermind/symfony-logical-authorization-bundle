@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
+namespace Ordermind\LogicalAuthorizationBundle\DebugDataCollector;
 
 use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;

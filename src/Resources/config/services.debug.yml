@@ -8,11 +8,14 @@ services:
             - {name: console.command}
 
     logauth.debug.collector:
-        class: Ordermind\LogicalAuthorizationBundle\DataCollector\Collector
+        class: Ordermind\LogicalAuthorizationBundle\DebugDataCollector\Collector
         arguments: 
             - '@logauth.service.permission_tree_builder'
             - '@logical_permissions.facade'
             - '@logical_permissions.permission_checker_locator'
         tags:
-            - {name: data_collector, template: '@OrdermindLogicalAuthorization/DataCollector/collector.html.twig', id: logauth.collector}
+            -   
+                name: data_collector
+                template: '@OrdermindLogicalAuthorization/DebugDataCollector/collector.html.twig'
+                id: logauth.collector
         public: false

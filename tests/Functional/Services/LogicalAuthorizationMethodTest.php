@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Test\Functional\Services;
 
 use InvalidArgumentException;
-use Ordermind\LogicalAuthorizationBundle\DataCollector\Collector;
+use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\Collector;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;

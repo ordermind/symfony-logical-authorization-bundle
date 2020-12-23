@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ordermind\LogicalAuthorizationBundle\DataCollector;
+namespace Ordermind\LogicalAuthorizationBundle\DebugDataCollector;
 
 use Exception;
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
-use Ordermind\LogicalAuthorizationBundle\DataCollector\CollectorInterface;
+use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\CollectorInterface;
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
 use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 use ReflectionClass;
