@@ -120,44 +120,6 @@ class Collector extends DataCollector implements CollectorInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function addPermissionCheck(
-        bool $access,
-        string $type,
-        $item,
-        $user,
-        RawPermissionTree $rawPermissionTree,
-        array $context,
-        string $message = ''
-    ) {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
-        array_shift($backtrace);
-        $this->addPermissionLogItem(
-            [
-                'access'      => $access,
-                'type'        => $type,
-                'item'        => $item,
-                'user'        => $user,
-                'permissions' => $rawPermissionTree->getValue(),
-                'context'     => $context,
-                'message'     => $message,
-                'backtrace'   => $backtrace,
-            ]
-        );
-    }
-
-    /**
-     * @internal
-     *
-     * @param array $logItem
-     */
-    protected function addPermissionLogItem(array $logItem)
-    {
-        $this->permissionLog[] = $logItem;
-    }
-
-    /**
      * @internal
      *
      * @param array $log

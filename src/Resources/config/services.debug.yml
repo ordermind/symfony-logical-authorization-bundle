@@ -19,3 +19,21 @@ services:
                 template: '@OrdermindLogicalAuthorization/DebugDataCollector/collector.html.twig'
                 id: logauth.collector
         public: false
+
+    logauth.debug.log_item_collection_repository:
+        class: Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemCollectionRepository
+        public: false
+
+    logauth.debug.log_items_reader:
+        class: Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemsReader
+        arguments: ['@logauth.debug.log_item_collection_repository']
+        public: false
+
+    logauth.debug.log_items_writer:
+        class: Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemsWriter
+        arguments: ['@logauth.debug.log_item_collection_repository']
+        public: false
+
+    logauth.debug.backtrace_factory:
+        class: Ordermind\LogicalAuthorizationBundle\DebugDataCollector\BackTraceFactory
+        public: false

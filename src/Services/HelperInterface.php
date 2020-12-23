@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
+use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+
 /**
  * Internal helper service for logauth.
  */
@@ -27,4 +29,27 @@ interface HelperInterface
      * @param array  $context
      */
     public function handleError(string $message, array $context);
+
+    /**
+     * @internal
+     *
+     * Logs a permission check for the debug collector, so that it can be viewed in the debug pages
+     *
+     * @param bool               $access
+     * @param string             $type
+     * @param array|string       $item
+     * @param object|string|null $user
+     * @param RawPermissionTree  $rawPermissionTree
+     * @param array              $context
+     * @param string             $message
+     */
+    public function logPermissionCheckForDebug(
+        bool $access,
+        string $type,
+        $item,
+        $user,
+        RawPermissionTree $rawPermissionTree,
+        array $context,
+        string $message = ''
+    );
 }
