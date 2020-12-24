@@ -12,10 +12,7 @@ use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
  */
 class Permissions
 {
-    /**
-     * @var RawPermissionTree
-     */
-    protected $rawPermissionTree;
+    protected RawPermissionTree $rawPermissionTree;
 
     public function __construct(array $data)
     {

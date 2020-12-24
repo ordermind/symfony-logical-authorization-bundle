@@ -17,30 +17,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class Helper implements HelperInterface
 {
-    /**
-     * @var string
-     */
-    protected $environment;
+    protected string $environment;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
+    protected TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger;
+    protected ?LoggerInterface $logger;
 
-    /**
-     * @var LogItemsWriter|null
-     */
-    protected $logItemsWriter;
+    protected ?LogItemsWriter $logItemsWriter;
 
-    /**
-     * @var BackTraceFactory|null
-     */
-    protected $backTraceFactory;
+    protected ?BackTraceFactory $backTraceFactory;
 
     public function __construct(
         string $environment,

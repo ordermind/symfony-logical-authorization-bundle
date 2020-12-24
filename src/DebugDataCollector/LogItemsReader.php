@@ -9,10 +9,7 @@ use Doctrine\Common\Collections\Collection;
 
 class LogItemsReader
 {
-    /**
-     * @var LogItemCollectionRepository
-     */
-    protected $repository;
+    protected LogItemCollectionRepository $repository;
 
     public function __construct(LogItemCollectionRepository $repository)
     {

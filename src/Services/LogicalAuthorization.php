@@ -14,15 +14,9 @@ use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
  */
 class LogicalAuthorization implements LogicalAuthorizationInterface
 {
-    /**
-     * @var LogicalPermissionsFacade
-     */
-    protected $lpFacade;
+    protected LogicalPermissionsFacade $lpFacade;
 
-    /**
-     * @var HelperInterface
-     */
-    protected $helper;
+    protected HelperInterface $helper;
 
     public function __construct(
         LogicalPermissionsFacade $lpFacade,

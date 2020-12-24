@@ -16,10 +16,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class DumpPermissionTreeCommand extends Command
 {
-    /**
-     * @var PermissionTreeBuilderInterface
-     */
-    protected $treeBuilder;
+    protected PermissionTreeBuilderInterface $treeBuilder;
 
     public function __construct(PermissionTreeBuilderInterface $treeBuilder)
     {

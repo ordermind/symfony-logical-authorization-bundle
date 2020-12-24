@@ -16,10 +16,7 @@ use TypeError;
  */
 class RoleChecker implements PermissionCheckerInterface
 {
-    /**
-     * @var SecurityRoleHierarchyInterface
-     */
-    protected $roleHierarchy;
+    protected SecurityRoleHierarchyInterface $roleHierarchy;
 
     public function __construct(SecurityRoleHierarchyInterface $roleHierarchy)
     {

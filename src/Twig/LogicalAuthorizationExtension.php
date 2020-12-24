@@ -14,15 +14,9 @@ use Twig\TwigFunction;
  */
 class LogicalAuthorizationExtension extends AbstractExtension
 {
-    /**
-     * @var LogicalAuthorizationRouteInterface
-     */
-    protected $laRoute;
+    protected LogicalAuthorizationRouteInterface $laRoute;
 
-    /**
-     * @var LogicalAuthorizationModelInterface
-     */
-    protected $laModel;
+    protected LogicalAuthorizationModelInterface $laModel;
 
     public function __construct(
         LogicalAuthorizationRouteInterface $laRoute,

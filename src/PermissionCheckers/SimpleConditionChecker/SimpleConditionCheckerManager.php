@@ -10,9 +10,9 @@ use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionCheck
 class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInterface
 {
     /**
-     * @var array|SimpleConditionCheckerInterface[]
+     * @var SimpleConditionCheckerInterface[]
      */
-    protected $conditions = [];
+    protected array $conditions = [];
 
     /**
      * {@inheritDoc}
@@ -25,7 +25,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     /**
      * SimpleConditionCheckerManager constructor.
      *
-     * @param iterable|SimpleConditionCheckerInterface[] $conditions
+     * @param iterable<SimpleConditionCheckerInterface> $conditions
      */
     public function __construct(iterable $conditions = [])
     {

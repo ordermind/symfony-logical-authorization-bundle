@@ -13,25 +13,13 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 {
-    /**
-     * @var LogicalAuthorizationInterface
-     */
-    protected $logicalAuthorization;
+    protected LogicalAuthorizationInterface $logicalAuthorization;
 
-    /**
-     * @var PermissionTreeBuilderInterface
-     */
-    protected $treeBuilder;
+    protected PermissionTreeBuilderInterface $treeBuilder;
 
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
+    protected RouterInterface $router;
 
-    /**
-     * @var HelperInterface
-     */
-    protected $helper;
+    protected HelperInterface $helper;
 
     public function __construct(
         LogicalAuthorizationInterface $logicalAuthorization,

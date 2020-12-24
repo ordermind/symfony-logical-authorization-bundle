@@ -13,20 +13,11 @@ use ReflectionClass;
  */
 class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
 {
-    /**
-     * @var LogicalAuthorizationInterface
-     */
-    protected $logicalAuthorization;
+    protected LogicalAuthorizationInterface $logicalAuthorization;
 
-    /**
-     * @var PermissionTreeBuilderInterface
-     */
-    protected $treeBuilder;
+    protected PermissionTreeBuilderInterface $treeBuilder;
 
-    /**
-     * @var HelperInterface
-     */
-    protected $helper;
+    protected HelperInterface $helper;
 
     public function __construct(
         LogicalAuthorizationInterface $logicalAuthorization,

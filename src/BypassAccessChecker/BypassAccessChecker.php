@@ -12,10 +12,7 @@ use Ordermind\LogicalPermissions\BypassAccessCheckerInterface;
  */
 class BypassAccessChecker implements BypassAccessCheckerInterface
 {
-    /**
-     * @var UserCanBypassAccessChecker
-     */
-    protected $conditionChecker;
+    protected UserCanBypassAccessChecker $conditionChecker;
 
     public function __construct(UserCanBypassAccessChecker $conditionChecker)
     {

@@ -12,10 +12,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class RoutePermissionProvider implements PermissionProviderInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
+    protected RouterInterface $router;
 
     /**
      * @internal

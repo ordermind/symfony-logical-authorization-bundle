@@ -13,55 +13,25 @@ use Symfony\Component\Routing\Route as RouteBase;
  */
 class Route extends RouteBase implements RouteInterface
 {
-    /**
-     * @var string
-     */
-    private $path = '/';
+    private string $path = '/';
 
-    /**
-     * @var string|null
-     */
-    private $host;
+    private ?string $host = null;
 
-    /**
-     * @var array
-     */
-    private $schemes = [];
+    private array $schemes = [];
 
-    /**
-     * @var array
-     */
-    private $methods = [];
+    private array $methods = [];
 
-    /**
-     * @var array
-     */
-    private $defaults = [];
+    private array $defaults = [];
 
-    /**
-     * @var array
-     */
-    private $requirements = [];
+    private array $requirements = [];
 
-    /**
-     * @var array
-     */
-    private $options = [];
+    private array $options = [];
 
-    /**
-     * @var CompiledRoute|null
-     */
-    private $compiled;
+    private ?CompiledRoute $compiled = null;
 
-    /**
-     * @var string|null
-     */
-    private $condition;
+    private ?string $condition = null;
 
-    /**
-     * @var RawPermissionTree|null
-     */
-    private $rawPermissionTree;
+    private ?RawPermissionTree $rawPermissionTree = null;
 
     /**
      * @internal
@@ -81,7 +51,7 @@ class Route extends RouteBase implements RouteInterface
         array $defaults = [],
         array $requirements = [],
         array $options = [],
-        string $host = null,
+        ?string $host = null,
         array $schemes = [],
         array $methods = [],
         ?string $condition = null,

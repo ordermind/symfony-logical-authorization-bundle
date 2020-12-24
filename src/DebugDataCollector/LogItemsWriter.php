@@ -6,10 +6,7 @@ namespace Ordermind\LogicalAuthorizationBundle\DebugDataCollector;
 
 class LogItemsWriter
 {
-    /**
-     * @var LogItemCollectionRepository
-     */
-    protected $repository;
+    protected LogItemCollectionRepository $repository;
 
     public function __construct(LogItemCollectionRepository $repository)
     {

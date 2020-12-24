@@ -17,12 +17,9 @@ class PermissionCollector
     /**
      * @var iterable<PermissionProviderInterface>
      */
-    private $permissionProviders;
+    private iterable $permissionProviders;
 
-    /**
-     * @var PermissionCheckerLocatorInterface
-     */
-    private $locator;
+    private PermissionCheckerLocatorInterface $locator;
 
     /**
      * @internal

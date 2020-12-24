@@ -13,10 +13,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
  */
 class ExpressionProvider implements ExpressionFunctionProviderInterface
 {
-    /**
-     * @var LogicalAuthorizationRouteInterface
-     */
-    protected $laRoute;
+    protected LogicalAuthorizationRouteInterface $laRoute;
 
     public function __construct(LogicalAuthorizationRouteInterface $laRoute)
     {

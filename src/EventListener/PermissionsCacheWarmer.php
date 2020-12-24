@@ -12,10 +12,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 class PermissionsCacheWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var PermissionTreeBuilderInterface
-     */
-    protected $treeBuilder;
+    protected PermissionTreeBuilderInterface $treeBuilder;
 
     public function __construct(PermissionTreeBuilderInterface $treeBuilder)
     {

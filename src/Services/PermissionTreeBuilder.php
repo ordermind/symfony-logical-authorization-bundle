@@ -11,20 +11,14 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 {
-    /**
-     * @var PermissionCollector
-     */
-    protected $permissionCollector;
+    protected PermissionCollector $permissionCollector;
 
-    /**
-     * @var CacheItemPoolInterface
-     */
-    protected $cache;
+    protected CacheItemPoolInterface $cache;
 
     /**
      * @var array|null
      */
-    protected $tree;
+    protected ?array $tree = null;
 
     public function __construct(
         PermissionCollector $permissionCollector,

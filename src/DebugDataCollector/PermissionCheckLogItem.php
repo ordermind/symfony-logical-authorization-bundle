@@ -8,15 +8,9 @@ use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
 
 class PermissionCheckLogItem
 {
-    /**
-     * @var bool
-     */
-    protected $access;
+    protected bool $access;
 
-    /**
-     * @var string
-     */
-    protected $type;
+    protected string $type;
 
     /**
      * @var array|string
@@ -28,25 +22,13 @@ class PermissionCheckLogItem
      */
     protected $user;
 
-    /**
-     * @var RawPermissionTree
-     */
-    protected $rawPermissionTree;
+    protected RawPermissionTree $rawPermissionTree;
 
-    /**
-     * @var array
-     */
-    protected $context;
+    protected array $context;
 
-    /**
-     * @var string
-     */
-    protected $message;
+    protected string $message;
 
-    /**
-     * @var array
-     */
-    protected $backTrace;
+    protected array $backTrace;
 
     /**
      * @internal

@@ -14,10 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class IpChecker implements PermissionCheckerInterface
 {
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    protected RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {

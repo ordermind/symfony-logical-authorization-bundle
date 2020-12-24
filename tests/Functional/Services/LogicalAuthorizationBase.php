@@ -20,79 +20,40 @@ use Twig\Environment as TwigEnvironment;
 
 abstract class LogicalAuthorizationBase extends WebTestCase
 {
-    /**
-     * @var TestUser
-     */
-    protected static $userSuperadmin;
+    protected static ?TestUser $userSuperadmin = null;
 
-    /**
-     * @var TestUser
-     */
-    protected static $userAdmin;
+    protected static ?TestUser $userAdmin = null;
 
-    /**
-     * @var TestUser
-     */
-    protected static $userAuthenticated;
+    protected static ?TestUser $userAuthenticated = null;
 
     /**
      * @var string[string]
      */
-    protected $userCredentials = [
+    protected array $userCredentials = [
         'authenticated_user' => 'userpass',
         'admin_user'         => 'adminpass',
         'superadmin_user'    => 'superadminpass',
     ];
 
-    /**
-     * @var array
-     */
-    protected $loadServices = [];
+    protected array $loadServices = [];
 
-    /**
-     * @var KernelBrowser
-     */
-    protected $client;
+    protected ?KernelBrowser $client = null;
 
-    /**
-     * @var LogicalAuthorizationInterface
-     */
-    protected $logicalAuthorization;
+    protected ?LogicalAuthorizationInterface $logicalAuthorization = null;
 
-    /**
-     * @var LogicalAuthorizationModelInterface
-     */
-    protected $laModel;
+    protected ?LogicalAuthorizationModelInterface $laModel = null;
 
-    /**
-     * @var LogicalAuthorizationRouteInterface
-     */
-    protected $laRoute;
+    protected ?LogicalAuthorizationRouteInterface $laRoute = null;
 
-    /**
-     * @var HelperInterface
-     */
-    protected $helper;
+    protected ?HelperInterface $helper = null;
 
-    /**
-     * @var PermissionTreeBuilderInterface
-     */
-    protected $treeBuilder;
+    protected ?PermissionTreeBuilderInterface $treeBuilder = null;
 
-    /**
-     * @var PermissionCheckerLocatorInterface
-     */
-    protected $lpLocator;
+    protected ?PermissionCheckerLocatorInterface $lpLocator = null;
 
-    /**
-     * @var LogicalPermissionsFacade
-     */
-    protected $lpFacade;
+    protected ?LogicalPermissionsFacade $lpFacade = null;
 
-    /**
-     * @var TwigEnvironment
-     */
-    protected $twig;
+    protected ?TwigEnvironment $twig = null;
 
     /**
      * {@inheritDoc}

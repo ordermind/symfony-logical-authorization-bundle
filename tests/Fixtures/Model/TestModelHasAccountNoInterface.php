@@ -8,30 +8,15 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\UserInterface;
 
 class TestModelHasAccountNoInterface
 {
-    /**
-     * @var int|null
-     */
-    private $id;
+    private ?int $id;
 
-    /**
-     * @var string
-     */
-    private $field1 = '';
+    private string $field1 = '';
 
-    /**
-     * @var string
-     */
-    private $field2 = '';
+    private string $field2 = '';
 
-    /**
-     * @var string
-     */
-    private $field3 = '';
+    private string $field3 = '';
 
-    /**
-     * @var UserInterface|null
-     */
-    protected $author;
+    protected ?UserInterface $author;
 
     /**
      * Get id.

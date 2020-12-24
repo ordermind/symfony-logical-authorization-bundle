@@ -9,10 +9,7 @@ namespace Ordermind\LogicalAuthorizationBundle\PermissionProviders;
  */
 class AppConfigPermissionProvider implements PermissionProviderInterface
 {
-    /**
-     * @var array
-     */
-    protected $config;
+    protected array $config;
 
     /**
      * @internal

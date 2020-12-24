@@ -9,10 +9,7 @@ use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelInterface;
 
 class ModelDecorator implements ModelDecoratorInterface
 {
-    /**
-     * @var ModelInterface
-     */
-    protected $model;
+    protected ModelInterface $model;
 
     public function __construct(ModelInterface $model)
     {

@@ -21,25 +21,13 @@ use Throwable;
  */
 class Collector extends DataCollector implements CollectorInterface
 {
-    /**
-     * @var PermissionTreeBuilderInterface
-     */
-    protected $treeBuilder;
+    protected PermissionTreeBuilderInterface $treeBuilder;
 
-    /**
-     * @var LogicalPermissionsFacade
-     */
-    protected $lpFacade;
+    protected LogicalPermissionsFacade $lpFacade;
 
-    /**
-     * @var PermissionCheckerLocatorInterface
-     */
-    protected $locator;
+    protected PermissionCheckerLocatorInterface $locator;
 
-    /**
-     * @var LogItemsReader
-     */
-    protected $logItemsReader;
+    protected LogItemsReader $logItemsReader;
 
     /**
      * @var array
