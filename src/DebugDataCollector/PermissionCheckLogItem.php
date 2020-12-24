@@ -32,6 +32,9 @@ class PermissionCheckLogItem
 
     /**
      * @internal
+     *
+     * @param array|string       $item
+     * @param object|string|null $user
      */
     public function __construct(
         bool $access,

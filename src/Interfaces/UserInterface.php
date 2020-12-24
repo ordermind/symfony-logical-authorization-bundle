@@ -12,9 +12,9 @@ use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 interface UserInterface extends SecurityUserInterface
 {
     /**
-     * Gets the identifier of this user.
+     * Gets the unique identifier value of this user.
      *
-     * @return mixed
+     * @return int|string
      */
     public function getIdentifier();
 
@@ -23,12 +23,10 @@ interface UserInterface extends SecurityUserInterface
      *
      * @param bool $bypassAccess TRUE if the user should be able to bypass access checks, or FALSE if not
      */
-    public function setBypassAccess(bool $bypassAccess): self;
+    public function setBypassAccess(bool $bypassAccess);
 
     /**
      * Gets the value of the bypass access flag for this user.
-     *
-     * @return bool
      */
     public function getBypassAccess(): bool;
 }

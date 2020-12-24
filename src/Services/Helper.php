@@ -57,7 +57,7 @@ class Helper implements HelperInterface
     /**
      * {@inheritDoc}
      */
-    public function handleError(string $message, array $context)
+    public function handleError(string $message, array $context): void
     {
         if ('prod' === $this->environment && !is_null($this->logger)) {
             $this->logger->error($message, $context);
@@ -82,7 +82,7 @@ class Helper implements HelperInterface
         RawPermissionTree $rawPermissionTree,
         array $context,
         string $message = ''
-    ) {
+    ): void {
         if (!$this->logItemsWriter || !$this->backTraceFactory) {
             return;
         }

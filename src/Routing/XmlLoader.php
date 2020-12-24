@@ -28,8 +28,6 @@ class XmlLoader extends FileLoader
      * @param string      $file An XML file path
      * @param string|null $type The resource type
      *
-     * @return RouteCollection A RouteCollection instance
-     *
      * @throws TypeError
      * @throws InvalidArgumentException when the file cannot be loaded or when the XML cannot be
      *                                  parsed because it does not validate against the scheme
@@ -79,11 +77,6 @@ class XmlLoader extends FileLoader
 
     /**
      * Parses a node from a loaded XML file.
-     *
-     * @param RouteCollection $collection Collection to associate with the node
-     * @param DOMElement      $node       Element to parse
-     * @param string          $path       Full path of the XML file being processed
-     * @param string          $file       Loaded file name
      *
      * @throws InvalidArgumentException When the XML is invalid
      */
@@ -387,10 +380,6 @@ class XmlLoader extends FileLoader
 
     /**
      * @internal
-     *
-     * @param DOMElement $element
-     *
-     * @return bool
      */
     private function isElementValueNull(DOMElement $element): bool
     {

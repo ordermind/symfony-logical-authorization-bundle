@@ -16,7 +16,7 @@ interface PermissionTreeBuilderInterface
      * Ordermind\LogicalAuthorizationBundle\Event\AddPermissionsEvent. It is then sorted by key in alphabetical order
      * and cached with Symfony's Cache Component.
      *
-     * @param bool $reset (optional) Set this to TRUE if you want to ignore cache
+     * @param bool $reset (optional) Set this to TRUE if you want to bypass caching
      * @param bool $debug (optional) If you set this to TRUE you will get an additional key in the tree called 'fetch',
      *                    which tells you how the tree was fetched
      *

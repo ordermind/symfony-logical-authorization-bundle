@@ -29,8 +29,6 @@ interface LogicalAuthorizationModelInterface
      * @param array         $fieldActions a list of field actions that should be evaluated
      * @param object|string $user         (optional) Either a user object or a string to signify an anonymous user. If
      *                                    no user is supplied, the current user will be used.
-     *
-     * @return array
      */
     public function getAvailableActions($model, array $modelActions, array $fieldActions, $user = null): array;
 

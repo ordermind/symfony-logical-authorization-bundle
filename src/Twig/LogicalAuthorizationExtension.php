@@ -44,9 +44,8 @@ class LogicalAuthorizationExtension extends AbstractExtension
      * If something goes wrong an error will be logged and the method will return FALSE. If no permissions are defined
      * for the provided route it will return TRUE.
      *
-     * @param string        $routeName
-     * @param object|string $user      (optional)  Either a user object or a string to signify an anonymous user. If no
-     *                                 user is supplied, the current user will be used.
+     * @param object|string $user (optional)  Either a user object or a string to signify an anonymous user. If no
+     *                            user is supplied, the current user will be used.
      *
      * @return bool TRUE if access is granted or FALSE if access is denied
      */

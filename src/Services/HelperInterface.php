@@ -24,24 +24,16 @@ interface HelperInterface
      *
      * Logs an error if a logging service is available. Otherwise it outputs the error as a
      * Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException.
-     *
-     * @param string $message
-     * @param array  $context
      */
-    public function handleError(string $message, array $context);
+    public function handleError(string $message, array $context): void;
 
     /**
      * @internal
      *
      * Logs a permission check for the debug collector, so that it can be viewed in the debug pages
      *
-     * @param bool               $access
-     * @param string             $type
      * @param array|string       $item
      * @param object|string|null $user
-     * @param RawPermissionTree  $rawPermissionTree
-     * @param array              $context
-     * @param string             $message
      */
     public function logPermissionCheckForDebug(
         bool $access,
@@ -51,5 +43,5 @@ interface HelperInterface
         RawPermissionTree $rawPermissionTree,
         array $context,
         string $message = ''
-    );
+    ): void;
 }

@@ -29,8 +29,6 @@ interface LogicalAuthorizationRouteInterface
      *
      * @param object|string $user (optional) Either a user object or a string to signify an anonymous user. If no user
      *                            is supplied, the current user will be used.
-     *
-     * @return array
      */
     public function getAvailableRoutes($user = null): array;
 

@@ -181,10 +181,6 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
 
     /**
      * @internal
-     *
-     * @param string $routeName
-     *
-     * @return RawPermissionTree
      */
     protected function getRoutePermissions(string $routeName): RawPermissionTree
     {

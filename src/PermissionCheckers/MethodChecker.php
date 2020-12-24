@@ -31,8 +31,7 @@ class MethodChecker implements PermissionCheckerInterface
     /**
      * Checks if the current request uses an allowed method.
      *
-     * @param string $method
-     * @param array  $context
+     * @param array $context
      *
      * @return bool TRUE if the method is allowed or FALSE if it is not allowed
      *

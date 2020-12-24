@@ -44,11 +44,6 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         $this->setBypassAccess($bypassAccess);
     }
 
-    /**
-     * Get id.
-     *
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
@@ -62,13 +57,6 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $this->getId();
     }
 
-    /**
-     * Set username.
-     *
-     * @param string $username
-     *
-     * @return self
-     */
     public function setUsername(string $username): self
     {
         $this->username = $username;
@@ -76,23 +64,11 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $this;
     }
 
-    /**
-     * Get username.
-     *
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * Set password.
-     *
-     * @param string $password
-     *
-     * @return self
-     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -100,23 +76,11 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $this;
     }
 
-    /**
-     * Get password.
-     *
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * Set old password.
-     *
-     * @param string $oldPassword
-     *
-     * @return self
-     */
     public function setOldPassword(string $password): self
     {
         $encoder = new BCryptPasswordEncoder(static::bcryptStrength);
@@ -125,23 +89,11 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $this;
     }
 
-    /**
-     * Get old password.
-     *
-     * @return string|null
-     */
     public function getOldPassword(): ?string
     {
         return $this->oldPassword;
     }
 
-    /**
-     * Set roles.
-     *
-     * @param array $roles
-     *
-     * @return self
-     */
     public function setRoles(array $roles): self
     {
         if (array_search('ROLE_USER', $roles) === false) {
@@ -154,19 +106,12 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
 
     /**
      * Get roles. Please use getFilteredRoles() instead.
-     *
-     * @return array
      */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    /**
-     * Get filtered roles.
-     *
-     * @return array
-     */
     public function getFilteredRoles(): array
     {
         $roles = $this->roles;
@@ -177,13 +122,6 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $roles;
     }
 
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return self
-     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -191,23 +129,11 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Set bypassAccess.
-     *
-     * @param bool $bypassAccess
-     *
-     * @return LogicalAuthorizationUserInterface
-     */
     public function setBypassAccess(bool $bypassAccess): LogicalAuthorizationUserInterface
     {
         $this->bypassAccess = $bypassAccess;
@@ -215,11 +141,6 @@ class ErroneousUser implements UserInterface, LogicalAuthorizationUserInterface,
         return $this;
     }
 
-    /**
-     * Get bypassAccess.
-     *
-     * @return bool
-     */
     public function getBypassAccess(): bool
     {
         return (string) $this->bypassAccess;

@@ -10,22 +10,16 @@ interface SimpleConditionCheckerManagerInterface extends PermissionCheckerInterf
 {
     /**
      * Registers a condition.
-     *
-     * @param SimpleConditionCheckerInterface $condition
      */
     public function addCondition(SimpleConditionCheckerInterface $condition);
 
     /**
      * Unregisters a condition.
-     *
-     * @param string $name
      */
     public function removeCondition(string $name);
 
     /**
      * Gets all registered conditions.
-     *
-     * @return array
      */
     public function getConditions(): array;
 
@@ -35,8 +29,6 @@ interface SimpleConditionCheckerManagerInterface extends PermissionCheckerInterf
      * @param string $name    The name of the condition to evaluate
      * @param array  $context The context for evaluating the condition. For more specific information, check the
      *                        documentation for the condition you want to evaluate.
-     *
-     * @return bool
      */
     public function checkPermission(string $name, $context): bool;
 }

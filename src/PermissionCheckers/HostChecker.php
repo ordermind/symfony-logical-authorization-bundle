@@ -31,8 +31,7 @@ class HostChecker implements PermissionCheckerInterface
     /**
      * Checks if the current request is sent to an approved host.
      *
-     * @param string $host
-     * @param array  $context
+     * @param array $context
      *
      * @return bool TRUE if the host is allowed or FALSE if it is not allowed
      *

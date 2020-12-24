@@ -179,10 +179,7 @@ class Collector extends DataCollector implements CollectorInterface
     /**
      * @internal
      *
-     * @param string       $type
      * @param string|array $item
-     *
-     * @return array
      */
     protected function formatItem(string $type, $item): array
     {
@@ -211,10 +208,6 @@ class Collector extends DataCollector implements CollectorInterface
      * @internal
      *
      * @param string|array|bool $permissions
-     * @param array             $context
-     * @param array             $typeKeys
-     *
-     * @return array
      */
     protected function getPermissionChecks($permissions, array $context, array $typeKeys): array
     {
@@ -255,17 +248,12 @@ class Collector extends DataCollector implements CollectorInterface
      * @internal
      *
      * @param string|array|bool $permissions
-     * @param array             $context
-     * @param array             $typeKeys
-     * @param string|null       $type
-     *
-     * @return array
      */
     protected function getPermissionChecksRecursive(
         $permissions,
         array $context,
         array $typeKeys,
-        string $type = null
+        ?string $type = null
     ): array {
         if (!is_array($permissions)) {
             $resolvePermissions = $permissions;
@@ -350,10 +338,6 @@ class Collector extends DataCollector implements CollectorInterface
      * @internal
      *
      * @param string|array|bool $permissions
-     * @param array             $context
-     * @param array             $typeKeys
-     *
-     * @return array
      */
     protected function getPermissionNoBypassChecks($permissions, array $context, array $typeKeys): array
     {
@@ -368,9 +352,6 @@ class Collector extends DataCollector implements CollectorInterface
      * @internal
      *
      * @param string|array|bool $permissions
-     * @param array             $context
-     *
-     * @return bool
      */
     protected function getBypassedAccess($permissions, array $context): bool
     {

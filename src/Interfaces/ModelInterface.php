@@ -12,15 +12,11 @@ interface ModelInterface
 {
     /**
      * Sets the author of the model.
-     *
-     * @param UserInterface $user
      */
-    public function setAuthor(UserInterface $user): self;
+    public function setAuthor(UserInterface $user);
 
     /**
      * Gets the author of the model.
-     *
-     * @return UserInterface|null
      */
     public function getAuthor(): ?UserInterface;
 }

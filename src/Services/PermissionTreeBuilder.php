@@ -15,9 +15,6 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 
     protected CacheItemPoolInterface $cache;
 
-    /**
-     * @var array|null
-     */
     protected ?array $tree = null;
 
     public function __construct(
@@ -65,8 +62,6 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 
     /**
      * @internal
-     *
-     * @return ?array
      */
     protected function loadTreeFromCache(): ?array
     {
@@ -80,10 +75,8 @@ class PermissionTreeBuilder implements PermissionTreeBuilderInterface
 
     /**
      * @internal
-     *
-     * @param array $tree
      */
-    protected function saveTreeToCache(array $tree)
+    protected function saveTreeToCache(array $tree): void
     {
         $cachedTree = $this->cache->getItem('ordermind.logauth.permissions');
         $cachedTree->set($tree);

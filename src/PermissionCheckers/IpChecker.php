@@ -32,8 +32,7 @@ class IpChecker implements PermissionCheckerInterface
     /**
      * Checks if the current request comes from an approved ip address.
      *
-     * @param string $ipAddress
-     * @param array  $context
+     * @param array $context
      *
      * @return bool TRUE if the ip address is allowed or FALSE if it is not allowed
      *

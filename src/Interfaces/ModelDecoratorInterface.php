@@ -11,8 +11,6 @@ interface ModelDecoratorInterface
 {
     /**
      * Gets the model for this decorator.
-     *
-     * @return ModelInterface
      */
     public function getModel(): ModelInterface;
 }

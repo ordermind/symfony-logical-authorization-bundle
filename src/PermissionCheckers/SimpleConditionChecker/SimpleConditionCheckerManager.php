@@ -116,8 +116,6 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
 
     /**
      * @internal
-     *
-     * @param array $conditions
      */
     protected function setConditions(array $conditions)
     {
@@ -126,10 +124,6 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
 
     /**
      * @internal
-     *
-     * @param string $name
-     *
-     * @return bool
      */
     protected function conditionExists(string $name): bool
     {
