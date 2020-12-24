@@ -27,6 +27,7 @@
         }
     },
     "require": {
+        "php": "^7.4",
         "doctrine/common": "^3.0",
         "symfony/cache": "^5.1",
         "symfony/config": "^5.1",
