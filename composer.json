@@ -40,7 +40,7 @@
         "symfony/routing": "^5.1",
         "symfony/security-bundle": "^5.1",
         "symfony/yaml": "^5.1",
-        "ordermind/logical-permissions": "3.0.0-alpha1"
+        "ordermind/logical-permissions": "3.0.0-alpha3"
     },
     "require-dev": {
         "phpspec/prophecy": "^1.11",
