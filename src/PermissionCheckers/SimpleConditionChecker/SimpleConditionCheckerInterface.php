@@ -9,7 +9,7 @@ interface SimpleConditionCheckerInterface
     /**
      * Gets the name of the condition that this class checks.
      */
-    public static function getName(): string;
+    public function getName(): string;
 
     /**
      * Checks the condition.

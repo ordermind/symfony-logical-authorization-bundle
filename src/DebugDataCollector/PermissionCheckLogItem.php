@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\DebugDataCollector;
 
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
 
 class PermissionCheckLogItem
 {

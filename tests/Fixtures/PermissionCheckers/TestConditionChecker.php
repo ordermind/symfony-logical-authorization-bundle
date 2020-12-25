@@ -8,7 +8,7 @@ use Ordermind\LogicalAuthorizationBundle\PermissionCheckers\SimpleConditionCheck
 
 class TestConditionChecker implements SimpleConditionCheckerInterface
 {
-    public static function getName(): string
+    public function getName(): string
     {
         return 'always_true';
     }

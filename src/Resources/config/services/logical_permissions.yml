@@ -3,10 +3,21 @@
 services:
     logical_permissions.permission_checker_locator:
         class: Ordermind\LogicalPermissions\PermissionCheckerLocator
+        factory: ['Ordermind\LogicalPermissions\PermissionCheckerLocator', 'fromIterable']
         arguments: [!tagged_iterator logauth.tag.permission_checker]
         public: false
 
-    logical_permissions.facade:
-        class: Ordermind\LogicalPermissions\LogicalPermissionsFacade
-        arguments: ['@logical_permissions.permission_checker_locator', '@logauth.bypass_access_checker']
+    logical_permissions.deserializer_factory:
+        class: Ordermind\LogicalPermissions\Factories\DefaultFullPermissionTreeDeserializerFactory
+        public: false
+
+    logical_permissions.deserializer:
+        class: Ordermind\LogicalPermissions\Serializers\RawPermissionTreeDeserializer
+        factory: ['@logical_permissions.deserializer_factory', 'createFromIterable']
+        arguments: [!tagged_iterator logauth.tag.permission_checker]
+        public: false
+
+    logical_permissions.access_checker:
+        class: Ordermind\LogicalPermissions\AccessChecker\AccessChecker
+        arguments: ['@logauth.bypass_access_checker']
         public: false

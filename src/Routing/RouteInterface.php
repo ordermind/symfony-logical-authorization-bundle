@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ordermind\LogicalAuthorizationBundle\Routing;
 
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
 
 /**
  * Custom route interface that allows for having permissions in a route.

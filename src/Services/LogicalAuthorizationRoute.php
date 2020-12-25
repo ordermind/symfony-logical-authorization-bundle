@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Ordermind\LogicalAuthorizationBundle\Interfaces\ModelDecoratorInterface;
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

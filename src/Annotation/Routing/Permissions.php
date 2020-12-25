@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Annotation\Routing;
 
 use InvalidArgumentException;
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
 
 /**
  * @Annotation

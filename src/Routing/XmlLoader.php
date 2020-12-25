@@ -7,7 +7,7 @@ namespace Ordermind\LogicalAuthorizationBundle\Routing;
 use DOMDocument;
 use DOMElement;
 use InvalidArgumentException;
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Util\XmlUtils;

@@ -5,24 +5,29 @@ declare(strict_types=1);
 namespace Ordermind\LogicalAuthorizationBundle\Services;
 
 use Exception;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
+use Ordermind\LogicalPermissions\AccessChecker\AccessCheckerInterface;
 use Ordermind\LogicalPermissions\Exceptions\PermissionTypeNotRegisteredException;
-use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalPermissions\Serializers\FullPermissionTreeDeserializer;
 
 /**
  * {@inheritDoc}
  */
 class LogicalAuthorization implements LogicalAuthorizationInterface
 {
-    protected LogicalPermissionsFacade $lpFacade;
+    protected FullPermissionTreeDeserializer $deserializer;
+
+    protected AccessCheckerInterface $accessChecker;
 
     protected HelperInterface $helper;
 
     public function __construct(
-        LogicalPermissionsFacade $lpFacade,
+        FullPermissionTreeDeserializer $deserializer,
+        AccessCheckerInterface $accessChecker,
         HelperInterface $helper
     ) {
-        $this->lpFacade = $lpFacade;
+        $this->deserializer = $deserializer;
+        $this->accessChecker = $accessChecker;
         $this->helper = $helper;
     }
 
@@ -35,8 +40,8 @@ class LogicalAuthorization implements LogicalAuthorizationInterface
         bool $allowBypass = true
     ): bool {
         try {
-            return $this->lpFacade->checkAccess(
-                $rawPermissionTree,
+            return $this->accessChecker->checkAccess(
+                $this->deserializer->deserialize($rawPermissionTree->getValue()),
                 $context,
                 $allowBypass
             );

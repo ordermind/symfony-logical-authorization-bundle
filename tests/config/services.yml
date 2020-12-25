@@ -31,12 +31,16 @@ services:
         alias: logauth.service.logauth
         public: true
 
+    test.logical_permissions.deserializer:
+        alias: logical_permissions.deserializer
+        public: true
+
+    test.logical_permissions.access_checker:
+        alias: logical_permissions.access_checker
+        public: true
+
     test.logical_permissions.permission_checker_locator:
         alias: logical_permissions.permission_checker_locator
-        public: true
-    
-    test.logical_permissions.facade:
-        alias: logical_permissions.facade
         public: true
 
     # Controllers

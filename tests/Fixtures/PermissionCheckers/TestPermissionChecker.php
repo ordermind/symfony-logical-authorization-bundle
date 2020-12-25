@@ -8,7 +8,7 @@ use Ordermind\LogicalPermissions\PermissionCheckerInterface;
 
 class TestPermissionChecker implements PermissionCheckerInterface
 {
-    public static function getName(): string
+    public function getName(): string
     {
         return 'test';
     }

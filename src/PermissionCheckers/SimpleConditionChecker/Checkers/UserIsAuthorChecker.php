@@ -17,7 +17,7 @@ class UserIsAuthorChecker implements SimpleConditionCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public static function getName(): string
+    public function getName(): string
     {
         return 'user_is_author';
     }

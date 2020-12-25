@@ -11,7 +11,8 @@ services:
         class: Ordermind\LogicalAuthorizationBundle\DebugDataCollector\Collector
         arguments: 
             - '@logauth.service.permission_tree_builder'
-            - '@logical_permissions.facade'
+            - '@logical_permissions.deserializer'
+            - '@logical_permissions.access_checker'
             - '@logical_permissions.permission_checker_locator'
             - '@logauth.debug.log_items_reader'
         tags:

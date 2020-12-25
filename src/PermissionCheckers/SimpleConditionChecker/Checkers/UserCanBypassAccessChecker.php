@@ -14,7 +14,7 @@ class UserCanBypassAccessChecker implements SimpleConditionCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public static function getName(): string
+    public function getName(): string
     {
         return 'user_can_bypass_access';
     }

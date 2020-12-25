@@ -8,7 +8,7 @@ use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\BackTraceFactory;
 use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\LogItemsWriter;
 use Ordermind\LogicalAuthorizationBundle\DebugDataCollector\PermissionCheckLogItem;
 use Ordermind\LogicalAuthorizationBundle\Exceptions\LogicalAuthorizationException;
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

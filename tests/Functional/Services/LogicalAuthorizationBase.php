@@ -11,8 +11,9 @@ use Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorizationRouteInter
 use Ordermind\LogicalAuthorizationBundle\Services\PermissionTreeBuilderInterface;
 use Ordermind\LogicalAuthorizationBundle\Test\AppKernel;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
-use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
+use Ordermind\LogicalPermissions\AccessChecker\AccessCheckerInterface;
 use Ordermind\LogicalPermissions\PermissionCheckerLocatorInterface;
+use Ordermind\LogicalPermissions\Serializers\FullPermissionTreeDeserializer;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
@@ -49,9 +50,11 @@ abstract class LogicalAuthorizationBase extends WebTestCase
 
     protected ?PermissionTreeBuilderInterface $treeBuilder = null;
 
-    protected ?PermissionCheckerLocatorInterface $lpLocator = null;
+    protected ?FullPermissionTreeDeserializer $lpDeserializer = null;
 
-    protected ?LogicalPermissionsFacade $lpFacade = null;
+    protected ?AccessCheckerInterface $lpAccessChecker = null;
+
+    protected ?PermissionCheckerLocatorInterface $lpLocator = null;
 
     protected ?TwigEnvironment $twig = null;
 
@@ -79,8 +82,10 @@ abstract class LogicalAuthorizationBase extends WebTestCase
         $this->laRoute = $container->get('test.logauth.service.logauth_route');
         $this->helper = $container->get('test.logauth.service.helper');
         $this->treeBuilder = $container->get('test.logauth.service.permission_tree_builder');
+        $this->lpDeserializer = $container->get('test.logical_permissions.deserializer');
+        $this->lpAccessChecker = $container->get('test.logical_permissions.access_checker');
         $this->lpLocator = $container->get('test.logical_permissions.permission_checker_locator');
-        $this->lpFacade = $container->get('test.logical_permissions.facade');
+
         $this->twig = $container->get('twig');
         $roleHierarchy = $container->getParameter('security.role_hierarchy.roles');
         $this->roleHierarchy = new RoleHierarchy($roleHierarchy);

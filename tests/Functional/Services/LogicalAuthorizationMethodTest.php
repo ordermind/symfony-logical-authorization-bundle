@@ -30,9 +30,9 @@ use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\Model\TestUser;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\ModelDecorator\ModelDecorator;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestConditionChecker;
 use Ordermind\LogicalAuthorizationBundle\Test\Fixtures\PermissionCheckers\TestPermissionChecker;
-use Ordermind\LogicalPermissions\LogicalPermissionsFacade;
-use Ordermind\LogicalPermissions\PermissionCheckerLocator;
-use Ordermind\LogicalPermissions\PermissionTree\RawPermissionTree;
+use Ordermind\LogicalAuthorizationBundle\ValueObjects\RawPermissionTree;
+use Ordermind\LogicalPermissions\AccessChecker\AccessChecker;
+use Ordermind\LogicalPermissions\Factories\DefaultFullPermissionTreeDeserializerFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -548,19 +548,19 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
 
     public function testCheckAccessDisallow()
     {
-        $lpLocator = new PermissionCheckerLocator();
-        $lpLocator->add(new TestPermissionChecker());
-        $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
-        $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
+        $deserializerFactory = new DefaultFullPermissionTreeDeserializerFactory();
+        $deserializer = $deserializerFactory->create(new TestPermissionChecker());
+        $accessChecker = new AccessChecker();
+        $logicalAuthorization = new LogicalAuthorization($deserializer, $accessChecker, $this->helper);
         $this->assertFalse($logicalAuthorization->checkAccess(new RawPermissionTree(['test' => 'no']), []));
     }
 
     public function testCheckAccessAllow()
     {
-        $lpLocator = new PermissionCheckerLocator();
-        $lpLocator->add(new TestPermissionChecker());
-        $lpFacade = new LogicalPermissionsFacade($lpLocator, new AlwaysDeny());
-        $logicalAuthorization = new LogicalAuthorization($lpFacade, $this->helper);
+        $deserializerFactory = new DefaultFullPermissionTreeDeserializerFactory();
+        $deserializer = $deserializerFactory->create(new TestPermissionChecker());
+        $accessChecker = new AccessChecker(new AlwaysDeny());
+        $logicalAuthorization = new LogicalAuthorization($deserializer, $accessChecker, $this->helper);
         $this->assertTrue($logicalAuthorization->checkAccess(new RawPermissionTree(['test' => 'yes']), []));
     }
 
@@ -946,7 +946,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
@@ -983,7 +989,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
@@ -1020,7 +1032,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
@@ -1057,7 +1075,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $expectedResult = [
             'type'                        => 'field',
@@ -1117,7 +1141,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $expectedResult = [
             'type'                        => 'route',
@@ -1186,7 +1216,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $expectedResult = [
             'type'                        => 'route',
@@ -1282,7 +1318,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $expectedResult = [
             'type'                        => 'field',
@@ -1413,7 +1455,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
 
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
@@ -1444,7 +1492,13 @@ class LogicalAuthorizationMethodTest extends LogicalAuthorizationBase
         );
         $logItemsWriter->appendLogItem($logItem);
 
-        $debugCollector = new Collector($this->treeBuilder, $this->lpFacade, $this->lpLocator, $logItemsReader);
+        $debugCollector = new Collector(
+            $this->treeBuilder,
+            $this->lpDeserializer,
+            $this->lpAccessChecker,
+            $this->lpLocator,
+            $logItemsReader
+        );
         $debugCollector->collect(new Request(), new Response());
         $log = $debugCollector->getLog();
         $firstItem = array_shift($log);

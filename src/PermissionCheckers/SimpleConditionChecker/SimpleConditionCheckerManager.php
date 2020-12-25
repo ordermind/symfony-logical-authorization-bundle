@@ -17,7 +17,7 @@ class SimpleConditionCheckerManager implements SimpleConditionCheckerManagerInte
     /**
      * {@inheritDoc}
      */
-    public static function getName(): string
+    public function getName(): string
     {
         return 'condition';
     }

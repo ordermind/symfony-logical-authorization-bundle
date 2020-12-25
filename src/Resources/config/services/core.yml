@@ -78,5 +78,8 @@ services:
 
     logauth.service.logauth:
         class: Ordermind\LogicalAuthorizationBundle\Services\LogicalAuthorization
-        arguments: ['@logical_permissions.facade', '@logauth.service.helper']
+        arguments: 
+            - '@logical_permissions.deserializer'
+            - '@logical_permissions.access_checker'
+            - '@logauth.service.helper'
         public: false
