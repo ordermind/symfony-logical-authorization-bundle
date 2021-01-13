@@ -14,5 +14,5 @@ interface SimpleConditionCheckerInterface
     /**
      * Checks the condition.
      */
-    public function checkCondition(array $context): bool;
+    public function checkCondition(object $context): bool;
 }

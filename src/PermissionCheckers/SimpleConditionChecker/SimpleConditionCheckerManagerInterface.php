@@ -27,7 +27,7 @@ interface SimpleConditionCheckerManagerInterface extends PermissionCheckerInterf
      * Checks a simple condition in a given context.
      *
      * @param string $name    The name of the condition to evaluate
-     * @param array  $context The context for evaluating the condition. For more specific information, check the
+     * @param object $context The context for evaluating the condition. For more specific information, check the
      *                        documentation for the condition you want to evaluate.
      */
     public function checkPermission(string $name, $context): bool;
