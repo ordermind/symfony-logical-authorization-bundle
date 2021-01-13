@@ -30,7 +30,7 @@ interface LogicalAuthorizationRouteInterface
      * @param object|string $user (optional) Either a user object or a string to signify an anonymous user. If no user
      *                            is supplied, the current user will be used.
      */
-    public function getAvailableRoutes($user = null): array;
+    public function getAvailableRoutes($user): array;
 
     /**
      * Checks route access for a given user.
@@ -44,5 +44,5 @@ interface LogicalAuthorizationRouteInterface
      *
      * @return bool TRUE if access is granted or FALSE if access is denied
      */
-    public function checkRouteAccess(string $routeName, $user = null): bool;
+    public function checkRouteAccess(string $routeName, $user): bool;
 }

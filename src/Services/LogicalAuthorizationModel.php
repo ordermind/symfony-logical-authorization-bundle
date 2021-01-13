@@ -90,7 +90,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                     ],
                     $user,
                     new RawPermissionTree([]),
-                    [],
+                    null,
                     'No user was available during this permission check (not even an anonymous user). This usually '
                         . 'happens during unit testing. Access was therefore automatically granted.'
                 );
@@ -114,7 +114,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 ],
                 $user,
                 new RawPermissionTree([]),
-                [],
+                null,
                 'There was an error checking the model access and access was therefore automatically denied. '
                     . 'Please refer to the error log for more information.'
             );
@@ -136,7 +136,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 ],
                 $user,
                 new RawPermissionTree([]),
-                [],
+                null,
                 'There was an error checking the model access and access was therefore automatically denied. '
                     . 'Please refer to the error log for more information.'
             );
@@ -158,7 +158,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 ],
                 $user,
                 new RawPermissionTree([]),
-                [],
+                null,
                 'There was an error checking the model access and access was therefore automatically denied. '
                     . 'Please refer to the error log for more information.'
             );
@@ -180,7 +180,7 @@ class LogicalAuthorizationModel implements LogicalAuthorizationModelInterface
                 ],
                 $user,
                 new RawPermissionTree([]),
-                [],
+                null,
                 'There was an error checking the model access and access was therefore automatically denied. '
                     . 'Please refer to the error log for more information.'
             );

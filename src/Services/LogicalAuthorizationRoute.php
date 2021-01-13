@@ -38,7 +38,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      *
      * @return array
      */
-    public function getAvailableRoutes($user = null): array
+    public function getAvailableRoutes($user): array
     {
         if ($user instanceof ModelDecoratorInterface) {
             $user = $user->getModel();
@@ -81,7 +81,7 @@ class LogicalAuthorizationRoute implements LogicalAuthorizationRouteInterface
      *
      * @return bool
      */
-    public function checkRouteAccess(string $routeName, $user = null): bool
+    public function checkRouteAccess(string $routeName, $user): bool
     {
         if ($user instanceof ModelDecoratorInterface) {
             $user = $user->getModel();
