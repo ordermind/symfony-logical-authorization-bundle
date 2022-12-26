@@ -20,4 +20,4 @@ snowballstemmer==1.2.0
 sphinx-autobuild==0.5.2
 sphinx-rtd-theme==0.4.0
 sphinx-tabs==1.1.7
-wheel==0.24.0
+wheel==0.38.1
